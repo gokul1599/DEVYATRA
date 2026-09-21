@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Devyatra
 
-## Getting Started
+A premium AI-powered India Temple & Pilgrimage Explorer — built with Next.js (App Router), React 19, Tailwind v4.
 
-First, run the development server:
+## Features
+
+- **Explore hierarchy** — state → district → sub-unit (mandal/taluk/tehsil) → location drill-down
+- **Temple directory & filtering** — tradition, architecture, deity, badge, type
+- **Temple detail pages** — history timeline, timings with verification stamps, entry fees, booking trust hints, festivals, curated nearby, JSON-LD
+- **AI companion & planner** — context-scoped, never fabricates timings, prices, or booking URLs
+- **Verification engine** — `VERIFIED_OFFICIAL → GOVERNMENT_SOURCE → TRUSTED_SOURCE → COMMUNITY_REPORTED → UNVERIFIED` with source attribution
+- **Community reports** — report corrections; admins triage through the console
+- **Auth** — scrypt-hashed accounts (file-backed), in-memory sessions, seeded admin
+- **Journey** — per-device saved temples, account-linked when signed in
+- **Multilingual chrome** — 12 Indian languages via cookie `tem_lang`; server prose stays English
+- **Design** — dark cinematic + elegant light mode, `prefers-reduced-motion` respected
+
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `npm run dev` — dev server
+- `npm run build` — production build (includes lint + type-check)
+- `npx tsc --noEmit` — type check only
 
-## Learn More
+## Default admin
 
-To learn more about Next.js, take a look at the following resources:
+```
+admin@devyatra.dev / Devyatra@2026
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Data
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Temples live as in-memory typed seed modules under `src/data/` (no DB yet).
+Runtime state (users, sessions, reports) is file-backed in `.data/`.
 
-## Deploy on Vercel
+- Types: `src/lib/types.ts`
+- Registry + routing helpers: `src/lib/registry.ts`
+- Search: `src/lib/search.ts`
+- AI planner/companion: `src/lib/ai/engine.ts`
+- Auth: `src/lib/auth.ts`
+- Reports: `src/lib/reports.ts`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+See `docs/data-import.md` for the ingestion pipeline, and `prisma/schema.prisma`
+for the target relational model that the in-memory layer will eventually back.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Directories
+
+- `src/app/` — page routes and `api/` route handlers
+- `src/components/` — shared UI, temple blocks, shells
+- `src/lib/` — data, engine, auth, i18n, formatting

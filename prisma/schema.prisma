@@ -1,0 +1,198 @@
+// Target relational model for Devyatra's temple data.
+//
+// The app currently ships with in-memory seed modules (src/data/*.ts) behind
+// the registry in src/lib/registry.ts. When a database is introduced, this
+// schema is the target the seed modules should be migrated into.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model State {
+  id          String   @id @default(cuid())
+  code        String   @unique // ISO, e.g. "AP"
+  slug        String   @unique
+  name        String
+  nameLocal   String?
+  region      String
+  subUnitTerm String   @default("Tehsil") // Mandal / Taluk / Tehsil
+  capitals    String?
+  districts   District[]
+  temples     Temple[]
+}
+
+model District {
+  id         String  @id @default(cuid())
+  slug       String
+  name       String
+  nameLocal  String?
+  stateId    String
+  state      State   @relation(fields: [stateId], references: [id], onDelete: Cascade)
+  subUnits   SubUnit[]
+  temples    Temple[]
+  @@unique([stateId, slug])
+}
+
+model SubUnit {
+  id         String    @id @default(cuid())
+  slug       String
+  name       String
+  label      String?
+  districtId String
+  district   District  @relation(fields: [districtId], references: [id], onDelete: Cascade)
+  locations  Location[]
+  temples    Temple[]
+  @@unique([districtId, slug])
+}
+
+model Location {
+  id        String    @id @default(cuid())
+  slug      String
+  name      String
+  nameLocal String?
+  subunitId String?
+  subunit   SubUnit?  @relation(fields: [subunitId], references: [id], onDelete: Cascade)
+  villages  String    @default("")
+  temples   Temple[]
+}
+
+model Temple {
+  id           String   @id
+  slug         String   @unique
+  name         String
+  nameLocal    String?
+  aliases      String
+  description  String
+  type         String
+  tradition    String
+  style        String   // architectural style key
+  architecture String?
+  mainDeity    String
+  deities      String
+  establishedYear String?
+  historicalPeriod String?
+  stateCode    String
+  state        State    @relation(fields: [stateCode], references: [code])
+  districtId   String
+  district     District @relation(fields: [districtId], references: [id])
+  subunitId    String?
+  subunit      SubUnit? @relation(fields: [subunitId], references: [id])
+  locationId   String
+  location     Location @relation(fields: [locationId], references: [id])
+  latitude     Float
+  longitude    Float
+  badges       String
+  festivalIds  String
+  tl          TimelineItem[]
+  whyFamous    WhyFamous[]
+  festivals    Festival[]
+  timings      TimingSlots?
+  entryFee     EntryFee
+  booking      BookingInfo
+  nearby       NearbyPlace[]
+}
+
+model TimelineItem {
+  id     String @id @default(cuid())
+  year   String?
+  title  String
+  body   String
+  templeId String
+  temple Temple @relation(fields: [templeId], references: [id], onDelete: Cascade)
+}
+
+model WhyFamous {
+  id     String @id @default(cuid())
+  icon   String
+  title  String
+  body   String
+  templeId String
+  temple Temple @relation(fields: [templeId], references: [id], onDelete: Cascade)
+}
+
+model Festival {
+  id             String   @id
+  name           String
+  month          Int
+  day            Int
+  dateLabel      String
+  description    String
+  specialDarshan Boolean
+  templeId       String
+  temple         Temple   @relation(fields: [templeId], references: [id], onDelete: Cascade)
+  @@index([month, day])
+}
+
+model TimingSlots {
+  id             String @id @default(cuid())
+  slots          String // JSON
+  sourceNotice   String
+  verification   String // JSON
+  templeId       String @unique
+  temple         Temple @relation(fields: [templeId], references: [id], onDelete: Cascade)
+}
+
+model EntryFee {
+  id             String @id @default(cuid())
+  generalDarshan String @default("free")
+  specialDarshan String?
+  bookingOrg     String?
+  notes          String?
+  templeId       String @unique
+  temple         Temple @relation(fields: [templeId], references: [id], onDelete: Cascade)
+}
+
+model BookingInfo {
+  id           String @id @default(cuid())
+  bookingMode  String @default("onsite")
+  bookingUrl   String?
+  widget       String?
+  notes        String
+  verification String // JSON
+  templeId     String @unique
+  temple       Temple @relation(fields: [templeId], references: [id], onDelete: Cascade)
+}
+
+model NearbyPlace {
+  id             String  @id
+  templeId       String
+  temple         Temple  @relation(fields: [templeId], references: [id], onDelete: Cascade)
+  kind           String
+  name           String
+  distanceKm     Float
+  recommendation String?
+  priceHint      String?
+  cuisine        String?
+}
+
+model User {
+  id       String   @id
+  name     String
+  email    String   @unique
+  role     String   @default("user")
+  password String
+  created  String
+}
+
+model Saved {
+  id      String @id
+  userId  String
+  templeId String
+  savedAt String
+  @@unique([userId, templeId])
+}
+
+model Report {
+  id        String @id
+  templeId  String
+  email     String? // contact / submitter email (PII kept minimal)
+  topic     String
+  detail    String
+  status    String @default("open") // open | confirmed | resolved | rejected
+  created   String
+}
