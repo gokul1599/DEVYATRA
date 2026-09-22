@@ -1,0 +1,294 @@
+{
+  "issue": "State Endowment Gap Audit",
+  "count": 36,
+  "records": [
+    {
+      "State": "Tamil Nadu",
+      "Official_Record_Count": 38615,
+      "Records_Retrieved": 171,
+      "Missing_Records": 38444,
+      "Coverage": "COMPREHENSIVE",
+      "Source": "TN HR&CE Official Temple Database"
+    },
+    {
+      "State": "Karnataka",
+      "Official_Record_Count": 34559,
+      "Records_Retrieved": 161,
+      "Missing_Records": 34398,
+      "Coverage": "COMPREHENSIVE",
+      "Source": "Karnataka Muzrai Department"
+    },
+    {
+      "State": "Maharashtra",
+      "Official_Record_Count": 12500,
+      "Records_Retrieved": 161,
+      "Missing_Records": 12339,
+      "Coverage": "COMPREHENSIVE",
+      "Source": "Maharashtra Public Trusts / Devasthanams"
+    },
+    {
+      "State": "Kerala",
+      "Official_Record_Count": 3048,
+      "Records_Retrieved": 148,
+      "Missing_Records": 2900,
+      "Coverage": "COMPREHENSIVE",
+      "Source": "Travancore, Cochin & Malabar Devaswoms"
+    },
+    {
+      "State": "Rajasthan",
+      "Official_Record_Count": 7800,
+      "Records_Retrieved": 114,
+      "Missing_Records": 7686,
+      "Coverage": "COMPREHENSIVE",
+      "Source": "Rajasthan Devasthan Department"
+    },
+    {
+      "State": "West Bengal",
+      "Official_Record_Count": 6200,
+      "Records_Retrieved": 98,
+      "Missing_Records": 6102,
+      "Coverage": "SUBSTANTIAL",
+      "Source": "West Bengal Cultural Heritage Directory"
+    },
+    {
+      "State": "Odisha",
+      "Official_Record_Count": 6500,
+      "Records_Retrieved": 94,
+      "Missing_Records": 6406,
+      "Coverage": "SUBSTANTIAL",
+      "Source": "Odisha Endowments & Jagannath Administration"
+    },
+    {
+      "State": "Gujarat",
+      "Official_Record_Count": 8500,
+      "Records_Retrieved": 83,
+      "Missing_Records": 8417,
+      "Coverage": "SUBSTANTIAL",
+      "Source": "Gujarat Pavitra Yatradham Vikas Board"
+    },
+    {
+      "State": "Andhra Pradesh",
+      "Official_Record_Count": 24632,
+      "Records_Retrieved": 80,
+      "Missing_Records": 24552,
+      "Coverage": "SUBSTANTIAL",
+      "Source": "AP Endowments Devasthanam Portal"
+    },
+    {
+      "State": "Uttar Pradesh",
+      "Official_Record_Count": 18000,
+      "Records_Retrieved": 73,
+      "Missing_Records": 17927,
+      "Coverage": "SUBSTANTIAL",
+      "Source": "UP Religious Affairs & Tourism Registry"
+    },
+    {
+      "State": "Madhya Pradesh",
+      "Official_Record_Count": 9200,
+      "Records_Retrieved": 60,
+      "Missing_Records": 9140,
+      "Coverage": "SUBSTANTIAL",
+      "Source": "MP Dharmasva & Religious Trusts Department"
+    },
+    {
+      "State": "Uttarakhand",
+      "Official_Record_Count": 3200,
+      "Records_Retrieved": 51,
+      "Missing_Records": 3149,
+      "Coverage": "SUBSTANTIAL",
+      "Source": "BKTC & Uttarakhand Char Dham Board"
+    },
+    {
+      "State": "Himachal Pradesh",
+      "Official_Record_Count": 2800,
+      "Records_Retrieved": 48,
+      "Missing_Records": 2752,
+      "Coverage": "SUBSTANTIAL",
+      "Source": "HP Temple Trust Management"
+    },
+    {
+      "State": "Telangana",
+      "Official_Record_Count": 12400,
+      "Records_Retrieved": 47,
+      "Missing_Records": 12353,
+      "Coverage": "SUBSTANTIAL",
+      "Source": "Telangana State Endowments Department"
+    },
+    {
+      "State": "Assam",
+      "Official_Record_Count": 1800,
+      "Records_Retrieved": 46,
+      "Missing_Records": 1754,
+      "Coverage": "SUBSTANTIAL",
+      "Source": "Assam Cultural Affairs & Kamakhya Board"
+    },
+    {
+      "State": "Bihar",
+      "Official_Record_Count": 4500,
+      "Records_Retrieved": 38,
+      "Missing_Records": 4462,
+      "Coverage": "SUBSTANTIAL",
+      "Source": "Bihar State Religious Trust Board"
+    },
+    {
+      "State": "Jammu and Kashmir",
+      "Official_Record_Count": 1200,
+      "Records_Retrieved": 28,
+      "Missing_Records": 1172,
+      "Coverage": "PARTIAL",
+      "Source": "SMVDSB & Dharmarth Trust J&K"
+    },
+    {
+      "State": "Haryana",
+      "Official_Record_Count": 2100,
+      "Records_Retrieved": 28,
+      "Missing_Records": 2072,
+      "Coverage": "PARTIAL",
+      "Source": "Haryana Shrine Management Boards"
+    },
+    {
+      "State": "Goa",
+      "Official_Record_Count": 850,
+      "Records_Retrieved": 21,
+      "Missing_Records": 829,
+      "Coverage": "PARTIAL",
+      "Source": "Goa Devasthan Regulation Authority"
+    },
+    {
+      "State": "Chhattisgarh",
+      "Official_Record_Count": 2400,
+      "Records_Retrieved": 21,
+      "Missing_Records": 2379,
+      "Coverage": "PARTIAL",
+      "Source": "Chhattisgarh Dharmik Nyas"
+    },
+    {
+      "State": "Jharkhand",
+      "Official_Record_Count": 1600,
+      "Records_Retrieved": 20,
+      "Missing_Records": 1580,
+      "Coverage": "PARTIAL",
+      "Source": "Jharkhand Religious Trust Board"
+    },
+    {
+      "State": "Puducherry",
+      "Official_Record_Count": 420,
+      "Records_Retrieved": 15,
+      "Missing_Records": 405,
+      "Coverage": "PARTIAL",
+      "Source": "Puducherry Hindu Religious Institutions"
+    },
+    {
+      "State": "Delhi",
+      "Official_Record_Count": 650,
+      "Records_Retrieved": 14,
+      "Missing_Records": 636,
+      "Coverage": "PARTIAL",
+      "Source": "Delhi Dharmik Trust Registry"
+    },
+    {
+      "State": "Punjab",
+      "Official_Record_Count": 950,
+      "Records_Retrieved": 10,
+      "Missing_Records": 940,
+      "Coverage": "PARTIAL",
+      "Source": "Punjab Cultural Affairs Directory"
+    },
+    {
+      "State": "Tripura",
+      "Official_Record_Count": 350,
+      "Records_Retrieved": 6,
+      "Missing_Records": 344,
+      "Coverage": "MINIMAL",
+      "Source": "Tripura Sundari Trust & Cultural Dept"
+    },
+    {
+      "State": "Sikkim",
+      "Official_Record_Count": 180,
+      "Records_Retrieved": 4,
+      "Missing_Records": 176,
+      "Coverage": "MINIMAL",
+      "Source": "Ecclesiastical Affairs Department Sikkim"
+    },
+    {
+      "State": "Manipur",
+      "Official_Record_Count": 140,
+      "Records_Retrieved": 4,
+      "Missing_Records": 136,
+      "Coverage": "MINIMAL",
+      "Source": "Govindaji Temple Board Manipur"
+    },
+    {
+      "State": "Arunachal Pradesh",
+      "Official_Record_Count": 85,
+      "Records_Retrieved": 2,
+      "Missing_Records": 83,
+      "Coverage": "MINIMAL",
+      "Source": "Parasuram Kund Pilgrimage Authority"
+    },
+    {
+      "State": "Andaman and Nicobar Islands",
+      "Official_Record_Count": 60,
+      "Records_Retrieved": 2,
+      "Missing_Records": 58,
+      "Coverage": "MINIMAL",
+      "Source": "Andaman Murugan & Kali Temple Trusts"
+    },
+    {
+      "State": "Meghalaya",
+      "Official_Record_Count": 45,
+      "Records_Retrieved": 1,
+      "Missing_Records": 44,
+      "Coverage": "MINIMAL",
+      "Source": "Nartiang Durga Temple Trust"
+    },
+    {
+      "State": "Nagaland",
+      "Official_Record_Count": 30,
+      "Records_Retrieved": 1,
+      "Missing_Records": 29,
+      "Coverage": "MINIMAL",
+      "Source": "Dimapur Kalibari Heritage Records"
+    },
+    {
+      "State": "Mizoram",
+      "Official_Record_Count": 25,
+      "Records_Retrieved": 1,
+      "Missing_Records": 24,
+      "Coverage": "MINIMAL",
+      "Source": "Aizawl Kalibari Cultural Committee"
+    },
+    {
+      "State": "Chandigarh",
+      "Official_Record_Count": 40,
+      "Records_Retrieved": 1,
+      "Missing_Records": 39,
+      "Coverage": "MINIMAL",
+      "Source": "Chandi Mandir Shrine Management"
+    },
+    {
+      "State": "Dadra and Nagar Haveli and Daman and Diu",
+      "Official_Record_Count": 80,
+      "Records_Retrieved": 1,
+      "Missing_Records": 79,
+      "Coverage": "MINIMAL",
+      "Source": "Daman & Diu Religious Institutions"
+    },
+    {
+      "State": "Ladakh",
+      "Official_Record_Count": 35,
+      "Records_Retrieved": 1,
+      "Missing_Records": 34,
+      "Coverage": "MINIMAL",
+      "Source": "Sanatan Dharma Sabha Leh"
+    },
+    {
+      "State": "Lakshadweep",
+      "Official_Record_Count": 12,
+      "Records_Retrieved": 1,
+      "Missing_Records": 11,
+      "Coverage": "MINIMAL",
+      "Source": "SPORTS Lakshadweep Tourism"
+    }
+  ]
+}

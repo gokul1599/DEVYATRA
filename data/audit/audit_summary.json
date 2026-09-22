@@ -1,0 +1,26 @@
+{
+  "total_temples": 1655,
+  "total_states": 36,
+  "total_districts": 282,
+  "total_admin_units": 330,
+  "verification_breakdown": {
+    "VERIFIED_OFFICIAL": 481,
+    "VERIFIED_SOURCE": 1174
+  },
+  "confidence_breakdown": {
+    "75": 29,
+    "85": 1145,
+    "90": 3,
+    "95": 443,
+    "HIGH": 35
+  },
+  "genuine_official_websites": 364,
+  "active_online_booking_portals": 28,
+  "verified_timing_schedules": 481,
+  "p0_issues": {
+    "centroid_fallbacks": 7,
+    "synthetic_place_ids": 1323,
+    "boilerplate_festivals": 1608,
+    "bare_monument_names": 4
+  }
+}

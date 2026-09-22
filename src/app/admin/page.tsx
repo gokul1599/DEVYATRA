@@ -3,19 +3,23 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { getUserByToken, SESSION_COOKIE } from "@/lib/auth";
 import { readReports } from "@/lib/reports";
-import { TEMPLES, getTemple } from "@/lib/registry";
+import { getTemple } from "@/lib/registry";
+import { getAdminDashboardData } from "@/lib/db/directory";
 import { AdminConsole } from "@/components/admin-console";
 import { DevyatraArt } from "@/components/devyatra-art";
 import { Container, SectionHeading } from "@/components/ui";
 
-export const metadata: Metadata = { title: "Admin console" };
+export const metadata: Metadata = { title: "Admin Operations Command Center" };
 
 export default async function AdminPage() {
   const store = await cookies();
   const user = getUserByToken(store.get(SESSION_COOKIE)?.value);
   if (!user || user.role !== "admin") redirect("/login");
 
-  const reports = readReports().map((r) => ({ ...r, templeName: getTemple(r.templeId)?.name ?? r.templeId }));
+  const [reports, dashboardData] = await Promise.all([
+    readReports().map((r) => ({ ...r, templeName: getTemple(r.templeId)?.name ?? r.templeId })),
+    getAdminDashboardData(),
+  ]);
 
   return (
     <>
@@ -25,14 +29,14 @@ export default async function AdminPage() {
         </div>
         <Container>
           <SectionHeading
-            eyebrow="Admin console"
-            title="From reports to verified listings"
-            sub={`Signed in as ${user.email}`}
+            eyebrow="Admin Operations Command Center"
+            title="Temple Verification & Provenance Console"
+            sub={`Signed in as ${user.email} (${user.role.toUpperCase()})`}
           />
         </Container>
       </section>
       <Container className="pb-20">
-        <AdminConsole reports={reports} templeCount={TEMPLES.length} role={user.role} />
+        <AdminConsole data={dashboardData} reports={reports} role={user.role} />
       </Container>
     </>
   );

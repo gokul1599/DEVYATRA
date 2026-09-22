@@ -1,0 +1,488 @@
+[
+  {
+    "temple1": {
+      "id": "IN-KA-VIJ-000519",
+      "name": "Jain Temple on the Hillside close to Vishnu Temple",
+      "state": "KA",
+      "district": "Vijayanagara"
+    },
+    "temple2": {
+      "id": "IN-KA-VIJ-000508",
+      "name": "iii) Stone Aqueduct &amp; Small Underground Shrine Chamber",
+      "state": "KA",
+      "district": "Vijayanagara"
+    },
+    "match": {
+      "classification": "EXACT_DUPLICATE",
+      "confidenceScore": 1,
+      "nameSimilarity": 1,
+      "distanceMeters": 0,
+      "deityMatch": true,
+      "stateMatch": true,
+      "districtMatch": true,
+      "notes": [
+        "Near-coincident location (<100m: 0m)",
+        "Main deity matches"
+      ]
+    }
+  },
+  {
+    "temple1": {
+      "id": "IN-KA-VIJ-000519",
+      "name": "Jain Temple on the Hillside close to Vishnu Temple",
+      "state": "KA",
+      "district": "Vijayanagara"
+    },
+    "temple2": {
+      "id": "IN-KA-VIJ-000522",
+      "name": "Old Siva Temple on the North-East side of Vittala Temple",
+      "state": "KA",
+      "district": "Vijayanagara"
+    },
+    "match": {
+      "classification": "EXACT_DUPLICATE",
+      "confidenceScore": 1,
+      "nameSimilarity": 1,
+      "distanceMeters": 0,
+      "deityMatch": true,
+      "stateMatch": true,
+      "districtMatch": true,
+      "notes": [
+        "Near-coincident location (<100m: 0m)",
+        "Main deity matches"
+      ]
+    }
+  },
+  {
+    "temple1": {
+      "id": "IN-KA-VIJ-000508",
+      "name": "iii) Stone Aqueduct &amp; Small Underground Shrine Chamber",
+      "state": "KA",
+      "district": "Vijayanagara"
+    },
+    "temple2": {
+      "id": "IN-KA-VIJ-000522",
+      "name": "Old Siva Temple on the North-East side of Vittala Temple",
+      "state": "KA",
+      "district": "Vijayanagara"
+    },
+    "match": {
+      "classification": "EXACT_DUPLICATE",
+      "confidenceScore": 1,
+      "nameSimilarity": 1,
+      "distanceMeters": 0,
+      "deityMatch": true,
+      "stateMatch": true,
+      "districtMatch": true,
+      "notes": [
+        "Near-coincident location (<100m: 0m)",
+        "Main deity matches"
+      ]
+    }
+  },
+  {
+    "temple1": {
+      "id": "IN-RJ-TON-000519",
+      "name": "Yupa Pillars in Bichpuria Temple",
+      "state": "RJ",
+      "district": "Tonk"
+    },
+    "temple2": {
+      "id": "IN-RJ-DHO-000521",
+      "name": "Jogni-Jogna Temple",
+      "state": "RJ",
+      "district": "Dholpur"
+    },
+    "match": {
+      "classification": "EXACT_DUPLICATE",
+      "confidenceScore": 0.7,
+      "nameSimilarity": 1,
+      "distanceMeters": 0,
+      "deityMatch": true,
+      "stateMatch": true,
+      "districtMatch": false,
+      "notes": [
+        "Near-coincident location (<100m: 0m)",
+        "Main deity matches",
+        "Different districts in same state"
+      ]
+    }
+  },
+  {
+    "temple1": {
+      "id": "IN-UP-BUL-000503",
+      "name": "Masonry tank and ancient temple",
+      "state": "UP",
+      "district": "Bulandshahr"
+    },
+    "temple2": {
+      "id": "IN-UP-BUL-000504",
+      "name": "Ahirpura mound or lesser temple mound",
+      "state": "UP",
+      "district": "Bulandshahr"
+    },
+    "match": {
+      "classification": "EXACT_DUPLICATE",
+      "confidenceScore": 1,
+      "nameSimilarity": 1,
+      "distanceMeters": 0,
+      "deityMatch": true,
+      "stateMatch": true,
+      "districtMatch": true,
+      "notes": [
+        "Near-coincident location (<100m: 0m)",
+        "Main deity matches"
+      ]
+    }
+  },
+  {
+    "temple1": {
+      "id": "IN-UP-BUL-000503",
+      "name": "Masonry tank and ancient temple",
+      "state": "UP",
+      "district": "Bulandshahr"
+    },
+    "temple2": {
+      "id": "IN-UP-BUL-000505",
+      "name": "Kundanpura mound or the great temple mound",
+      "state": "UP",
+      "district": "Bulandshahr"
+    },
+    "match": {
+      "classification": "EXACT_DUPLICATE",
+      "confidenceScore": 1,
+      "nameSimilarity": 1,
+      "distanceMeters": 0,
+      "deityMatch": true,
+      "stateMatch": true,
+      "districtMatch": true,
+      "notes": [
+        "Near-coincident location (<100m: 0m)",
+        "Main deity matches"
+      ]
+    }
+  },
+  {
+    "temple1": {
+      "id": "IN-UP-BUL-000504",
+      "name": "Ahirpura mound or lesser temple mound",
+      "state": "UP",
+      "district": "Bulandshahr"
+    },
+    "temple2": {
+      "id": "IN-UP-BUL-000505",
+      "name": "Kundanpura mound or the great temple mound",
+      "state": "UP",
+      "district": "Bulandshahr"
+    },
+    "match": {
+      "classification": "EXACT_DUPLICATE",
+      "confidenceScore": 1,
+      "nameSimilarity": 1,
+      "distanceMeters": 0,
+      "deityMatch": true,
+      "stateMatch": true,
+      "districtMatch": true,
+      "notes": [
+        "Near-coincident location (<100m: 0m)",
+        "Main deity matches"
+      ]
+    }
+  },
+  {
+    "temple1": {
+      "id": "IN-OD-CUT-000502",
+      "name": "Ruins of the Buddhist temples and images",
+      "state": "OD",
+      "district": "Cuttack"
+    },
+    "temple2": {
+      "id": "IN-OD-CUT-000146",
+      "name": "Charchika Temple",
+      "state": "OD",
+      "district": "Cuttack"
+    },
+    "match": {
+      "classification": "EXACT_DUPLICATE",
+      "confidenceScore": 0.9,
+      "nameSimilarity": 1,
+      "distanceMeters": 0,
+      "deityMatch": false,
+      "stateMatch": true,
+      "districtMatch": true,
+      "notes": [
+        "Near-coincident location (<100m: 0m)"
+      ]
+    }
+  },
+  {
+    "temple1": {
+      "id": "IN-WB-BAN-000509",
+      "name": "Temple site now represented only by a mound",
+      "state": "WB",
+      "district": "Bankura"
+    },
+    "temple2": {
+      "id": "IN-WB-BAN-000507",
+      "name": "Temple site now represented only by a mound and a statue of Surya",
+      "state": "WB",
+      "district": "Bankura"
+    },
+    "match": {
+      "classification": "EXACT_DUPLICATE",
+      "confidenceScore": 1,
+      "nameSimilarity": 1,
+      "distanceMeters": 0,
+      "deityMatch": true,
+      "stateMatch": true,
+      "districtMatch": true,
+      "notes": [
+        "Near-coincident location (<100m: 0m)",
+        "Main deity matches"
+      ]
+    }
+  },
+  {
+    "temple1": {
+      "id": "IN-WB-BAN-000509",
+      "name": "Temple site now represented only by a mound",
+      "state": "WB",
+      "district": "Bankura"
+    },
+    "temple2": {
+      "id": "IN-WB-BAN-000511",
+      "name": "Temple site now represented only by a mound with an Image of Nandi on it",
+      "state": "WB",
+      "district": "Bankura"
+    },
+    "match": {
+      "classification": "EXACT_DUPLICATE",
+      "confidenceScore": 1,
+      "nameSimilarity": 1,
+      "distanceMeters": 0,
+      "deityMatch": true,
+      "stateMatch": true,
+      "districtMatch": true,
+      "notes": [
+        "Near-coincident location (<100m: 0m)",
+        "Main deity matches"
+      ]
+    }
+  },
+  {
+    "temple1": {
+      "id": "IN-WB-BAN-000509",
+      "name": "Temple site now represented only by a mound",
+      "state": "WB",
+      "district": "Bankura"
+    },
+    "temple2": {
+      "id": "IN-WB-BAN-000510",
+      "name": "Temple site now represented only by a Mound with statues of Ganesh and Nandi on it",
+      "state": "WB",
+      "district": "Bankura"
+    },
+    "match": {
+      "classification": "EXACT_DUPLICATE",
+      "confidenceScore": 1,
+      "nameSimilarity": 1,
+      "distanceMeters": 0,
+      "deityMatch": true,
+      "stateMatch": true,
+      "districtMatch": true,
+      "notes": [
+        "Near-coincident location (<100m: 0m)",
+        "Main deity matches"
+      ]
+    }
+  },
+  {
+    "temple1": {
+      "id": "IN-WB-BAN-000509",
+      "name": "Temple site now represented only by a mound",
+      "state": "WB",
+      "district": "Bankura"
+    },
+    "temple2": {
+      "id": "IN-WB-BAN-000147",
+      "name": "Bir Hambir",
+      "state": "WB",
+      "district": "Bankura"
+    },
+    "match": {
+      "classification": "EXACT_DUPLICATE",
+      "confidenceScore": 1,
+      "nameSimilarity": 1,
+      "distanceMeters": 0,
+      "deityMatch": true,
+      "stateMatch": true,
+      "districtMatch": true,
+      "notes": [
+        "Near-coincident location (<100m: 0m)",
+        "Main deity matches"
+      ]
+    }
+  },
+  {
+    "temple1": {
+      "id": "IN-WB-BAN-000507",
+      "name": "Temple site now represented only by a mound and a statue of Surya",
+      "state": "WB",
+      "district": "Bankura"
+    },
+    "temple2": {
+      "id": "IN-WB-BAN-000511",
+      "name": "Temple site now represented only by a mound with an Image of Nandi on it",
+      "state": "WB",
+      "district": "Bankura"
+    },
+    "match": {
+      "classification": "EXACT_DUPLICATE",
+      "confidenceScore": 1,
+      "nameSimilarity": 1,
+      "distanceMeters": 0,
+      "deityMatch": true,
+      "stateMatch": true,
+      "districtMatch": true,
+      "notes": [
+        "Near-coincident location (<100m: 0m)",
+        "Main deity matches"
+      ]
+    }
+  },
+  {
+    "temple1": {
+      "id": "IN-WB-BAN-000507",
+      "name": "Temple site now represented only by a mound and a statue of Surya",
+      "state": "WB",
+      "district": "Bankura"
+    },
+    "temple2": {
+      "id": "IN-WB-BAN-000510",
+      "name": "Temple site now represented only by a Mound with statues of Ganesh and Nandi on it",
+      "state": "WB",
+      "district": "Bankura"
+    },
+    "match": {
+      "classification": "EXACT_DUPLICATE",
+      "confidenceScore": 1,
+      "nameSimilarity": 1,
+      "distanceMeters": 0,
+      "deityMatch": true,
+      "stateMatch": true,
+      "districtMatch": true,
+      "notes": [
+        "Near-coincident location (<100m: 0m)",
+        "Main deity matches"
+      ]
+    }
+  },
+  {
+    "temple1": {
+      "id": "IN-WB-BAN-000507",
+      "name": "Temple site now represented only by a mound and a statue of Surya",
+      "state": "WB",
+      "district": "Bankura"
+    },
+    "temple2": {
+      "id": "IN-WB-BAN-000147",
+      "name": "Bir Hambir",
+      "state": "WB",
+      "district": "Bankura"
+    },
+    "match": {
+      "classification": "EXACT_DUPLICATE",
+      "confidenceScore": 1,
+      "nameSimilarity": 1,
+      "distanceMeters": 0,
+      "deityMatch": true,
+      "stateMatch": true,
+      "districtMatch": true,
+      "notes": [
+        "Near-coincident location (<100m: 0m)",
+        "Main deity matches"
+      ]
+    }
+  },
+  {
+    "temple1": {
+      "id": "IN-WB-BAN-000511",
+      "name": "Temple site now represented only by a mound with an Image of Nandi on it",
+      "state": "WB",
+      "district": "Bankura"
+    },
+    "temple2": {
+      "id": "IN-WB-BAN-000510",
+      "name": "Temple site now represented only by a Mound with statues of Ganesh and Nandi on it",
+      "state": "WB",
+      "district": "Bankura"
+    },
+    "match": {
+      "classification": "EXACT_DUPLICATE",
+      "confidenceScore": 1,
+      "nameSimilarity": 1,
+      "distanceMeters": 0,
+      "deityMatch": true,
+      "stateMatch": true,
+      "districtMatch": true,
+      "notes": [
+        "Near-coincident location (<100m: 0m)",
+        "Main deity matches"
+      ]
+    }
+  },
+  {
+    "temple1": {
+      "id": "IN-WB-BAN-000511",
+      "name": "Temple site now represented only by a mound with an Image of Nandi on it",
+      "state": "WB",
+      "district": "Bankura"
+    },
+    "temple2": {
+      "id": "IN-WB-BAN-000147",
+      "name": "Bir Hambir",
+      "state": "WB",
+      "district": "Bankura"
+    },
+    "match": {
+      "classification": "EXACT_DUPLICATE",
+      "confidenceScore": 1,
+      "nameSimilarity": 1,
+      "distanceMeters": 0,
+      "deityMatch": true,
+      "stateMatch": true,
+      "districtMatch": true,
+      "notes": [
+        "Near-coincident location (<100m: 0m)",
+        "Main deity matches"
+      ]
+    }
+  },
+  {
+    "temple1": {
+      "id": "IN-WB-BAN-000510",
+      "name": "Temple site now represented only by a Mound with statues of Ganesh and Nandi on it",
+      "state": "WB",
+      "district": "Bankura"
+    },
+    "temple2": {
+      "id": "IN-WB-BAN-000147",
+      "name": "Bir Hambir",
+      "state": "WB",
+      "district": "Bankura"
+    },
+    "match": {
+      "classification": "EXACT_DUPLICATE",
+      "confidenceScore": 1,
+      "nameSimilarity": 1,
+      "distanceMeters": 0,
+      "deityMatch": true,
+      "stateMatch": true,
+      "districtMatch": true,
+      "notes": [
+        "Near-coincident location (<100m: 0m)",
+        "Main deity matches"
+      ]
+    }
+  }
+]

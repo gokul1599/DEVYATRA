@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { ArrowRight, Landmark, Layers } from "lucide-react";
 import { getStates, getState, templesByDistrict, templesByState, slugify } from "@/lib/registry";
+import { getStateBySlug, listDistricts } from "@/lib/db/directory";
 import { Container, SectionHeading, Breadcrumbs, EmptyState } from "@/components/ui";
 import { DevyatraArt } from "@/components/devyatra-art";
 import { Stagger, StaggerItem } from "@/components/motion";
@@ -12,40 +14,60 @@ export function generateStaticParams() {
   return getStates().map((s) => ({ state: s.slug }));
 }
 
-export function generateMetadata({ params }: { params: Promise<{ state: string }> }) {
-  return { title: params.then((p) => getState(p.state)?.name ?? "Explore") };
+export async function generateMetadata({ params }: { params: Promise<{ state: string }> }): Promise<Metadata> {
+  const { state: stateSlug } = await params;
+  const dbState = await getStateBySlug(stateSlug);
+  const staticState = getState(stateSlug);
+  const name = dbState?.name || staticState?.name || "State";
+  return { title: `${name} — Temples & Sacred Geography` };
 }
 
 export default async function StatePage({ params }: { params: Promise<{ state: string }> }) {
   const { state: stateSlug } = await params;
-  const state = getState(stateSlug);
-  if (!state) notFound();
+  const dbState = await getStateBySlug(stateSlug);
+  const staticState = getState(stateSlug);
+  if (!dbState && !staticState) notFound();
 
-  const districts = state.districts.map((name) => ({
-    name,
-    slug: slugify(name),
-    count: templesByDistrict(state.code, slugify(name)).length,
-  }));
-  const total = templesByState(state.code).length;
+  const stateName = dbState?.name || staticState?.name || "";
+  const stateType = dbState?.type || staticState?.type || "state";
+  const capital = dbState?.capital || staticState?.capital || "Capital";
+  const subUnitTerm = dbState?.adminUnitTerm || staticState?.subUnitTerm || "subdivision";
+  const stateCode = dbState?.code || staticState?.code || "";
+
+  const dbDistricts = await listDistricts(stateSlug);
+  const districts = dbDistricts.length > 0
+    ? dbDistricts.map((d) => ({
+        name: d.name,
+        slug: d.slug,
+        count: d.templeCount,
+      }))
+    : (staticState?.districts || []).map((name) => ({
+        name,
+        slug: slugify(name),
+        count: templesByDistrict(stateCode, slugify(name)).length,
+      }));
+
+  const total = dbState ? dbState.templeCount : templesByState(stateCode).length;
+  const mappedDistrictsCount = districts.filter((d) => d.count > 0).length;
 
   return (
     <>
       <section className="relative overflow-hidden pb-10 pt-32">
         <div className="absolute inset-0 -z-10 opacity-40">
-          <DevyatraArt seed={`explore-${state.slug}`} variant="banner" className="h-full w-full" />
+          <DevyatraArt seed={`explore-${stateSlug}`} variant="banner" className="h-full w-full" />
         </div>
         <Container>
           <Breadcrumbs
-            crumbs={[{ label: "Home", href: "/" }, { label: "Explore India", href: "/explore" }, { label: state.name }]}
+            crumbs={[{ label: "Home", href: "/" }, { label: "Explore India", href: "/explore" }, { label: stateName }]}
             className="mb-4"
           />
           <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-gold">
-            {state.type} · Capital {state.capital} · {state.subUnitTerm} subdivisions
+            {stateType === "union_territory" ? "Union Territory" : "State"} · Capital {capital} · {subUnitTerm} subdivisions
           </p>
-          <h1 className="font-display text-4xl font-medium text-ivory sm:text-5xl">{state.name}</h1>
+          <h1 className="font-display text-4xl font-medium text-ivory sm:text-5xl">{stateName}</h1>
           <p className="mt-3 max-w-xl text-[15px] text-ivory-dim">
             {total > 0
-              ? `${total} temple${total === 1 ? "" : "s"} across ${districts.filter((d) => d.count).length} districts currently mapped.`
+              ? `${total} authentic temple${total === 1 ? "" : "s"} across ${mappedDistrictsCount} districts currently catalogued.`
               : "This state is part of the atlas expansion pipeline — temples here are being sourced and verified."}
           </p>
         </Container>
@@ -55,7 +77,7 @@ export default async function StatePage({ params }: { params: Promise<{ state: s
         <SectionHeading
           eyebrow="Districts"
           title={`Choose a district${total > 0 ? "" : " (pending)"}`}
-          sub={state.subUnitTerm}
+          sub={subUnitTerm}
         />
 
         {total === 0 ? (
@@ -74,7 +96,7 @@ export default async function StatePage({ params }: { params: Promise<{ state: s
             {districts.map((d) => (
               <StaggerItem key={d.slug}>
                 <Link
-                  href={`/explore/${state.slug}/${d.slug}`}
+                  href={`/explore/${stateSlug}/${d.slug}`}
                   className={`group flex items-center justify-between rounded-2xl border p-5 transition-all ${
                     d.count
                       ? "border-line bg-obsidian-2 hover:-translate-y-0.5 hover:border-gold/30"

@@ -90,7 +90,14 @@ export function VerifyBadge({
   compact?: boolean;
 }) {
   if (!verification?.status) return null;
-  const tone = VERIFY_COLOR[verification.status];
+  const tone = VERIFY_COLOR[verification.status] || "bg-zinc-500/15 text-zinc-400 border-zinc-600/30";
+  let label = VERIFY_LABEL[verification.status] || verification.status.replace(/_/g, " ");
+  if (compact) {
+    if (verification.status === "VERIFIED_OFFICIAL") label = "✓ Official";
+    else if (verification.status === "VERIFIED_SOURCE") label = "◐ Source Verified";
+    else if (verification.status === "NEEDS_VERIFICATION") label = "⚠ Pending";
+    else label = verification.status.replace(/_/g, " ");
+  }
   return (
     <span
       title={verification.source?.org ? `Source: ${verification.source.org}` : undefined}
@@ -100,7 +107,7 @@ export function VerifyBadge({
       )}
     >
       <span className="h-1.5 w-1.5 rounded-full bg-current" aria-hidden />
-      {compact ? verification.status.replace("_", " ") : VERIFY_LABEL[verification.status]}
+      {label}
     </span>
   );
 }

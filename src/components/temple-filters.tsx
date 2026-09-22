@@ -25,6 +25,7 @@ export function TempleFilters({
     const next = new URLSearchParams(sp.toString());
     if (value) next.set(key, value);
     else next.delete(key);
+    next.delete("page");
     const qs = next.toString();
     router.replace(qs ? `/temples?${qs}` : "/temples");
   };

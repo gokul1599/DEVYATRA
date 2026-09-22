@@ -60,18 +60,22 @@ export const ordinal = (n: number) =>
 
 export const VERIFY_LABEL: Record<VerificationStatus, string> = {
   VERIFIED_OFFICIAL: "Verified · Official source",
+  VERIFIED_SOURCE: "Verified · Reliable source",
   GOVERNMENT_SOURCE: "Government source",
   TRUSTED_SOURCE: "Trusted source",
   COMMUNITY_REPORTED: "Community reported",
   GOOGLE_PLACES: "Google Places data",
+  NEEDS_VERIFICATION: "Verification pending",
   UNVERIFIED: "Not verified",
 };
 
 export const VERIFY_COLOR: Record<VerificationStatus, string> = {
   VERIFIED_OFFICIAL: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
+  VERIFIED_SOURCE: "bg-cyan-500/15 text-cyan-400 border-cyan-500/30",
   GOVERNMENT_SOURCE: "bg-sky-500/15 text-sky-400 border-sky-500/30",
   TRUSTED_SOURCE: "bg-amber-500/15 text-amber-400 border-amber-500/30",
   COMMUNITY_REPORTED: "bg-violet-500/15 text-violet-400 border-violet-500/30",
   GOOGLE_PLACES: "bg-orange-500/15 text-orange-400 border-orange-500/30",
+  NEEDS_VERIFICATION: "bg-amber-500/15 text-amber-400 border-amber-500/30",
   UNVERIFIED: "bg-zinc-500/15 text-zinc-400 border-zinc-600/30",
 };

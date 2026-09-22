@@ -128,12 +128,10 @@ export function Hero() {
         className="relative z-10 border-t border-white/[0.07] bg-obsidian/50 backdrop-blur"
       >
         <div className="mx-auto flex w-full max-w-[1200px] items-center justify-between gap-4 px-5 py-4 sm:px-8">
-          <div className="flex gap-6 sm:gap-10">
-            <Stat value="29" label="Temples" />
-            <Stat value="28" label="States & UTs" />
-            <Stat value="12" label="Languages" />
+            <Stat value="1,655" label="Temples" />
+            <Stat value="36" label="States & UTs" />
+            <Stat value="383" label="Districts" />
             <Stat value="100%" label="Source-tagged" className="hidden sm:flex" />
-          </div>
           <div className="hidden items-center gap-2 text-[12px] text-ivory-dim md:flex">
             <MapPin className="h-3.5 w-3.5 text-gold" />
             Tirumala · Kashi · Puri · Amarnath

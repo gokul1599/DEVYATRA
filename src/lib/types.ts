@@ -1,9 +1,11 @@
 export type VerificationStatus =
   | "VERIFIED_OFFICIAL"
+  | "VERIFIED_SOURCE"
   | "GOVERNMENT_SOURCE"
   | "TRUSTED_SOURCE"
   | "COMMUNITY_REPORTED"
   | "GOOGLE_PLACES"
+  | "NEEDS_VERIFICATION"
   | "UNVERIFIED";
 
 export type SourceType =
@@ -94,6 +96,7 @@ export interface Temple {
   images: string[];
   badges: TempleBadge[];
   verified: boolean;
+  isCentroidFallback?: boolean;
   entryFee: EntryFee;
   source: SourceRef;
 }

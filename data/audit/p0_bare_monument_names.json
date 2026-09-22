@@ -1,0 +1,42 @@
+{
+  "issue": "Bare Monument Name 'Temple'",
+  "count": 4,
+  "records": [
+    {
+      "Temple_ID": "IN-MH-NAG-000548",
+      "Temple_Name": "Temple",
+      "State": "Maharashtra",
+      "District": "Nagpur",
+      "Village_City_Town": "Ghogra",
+      "Official_Record_ID": "N-MH-N77",
+      "Primary_Source": "Archaeological Survey of India Centrally Protected Monuments Registry"
+    },
+    {
+      "Temple_ID": "IN-RJ-BAR-000513",
+      "Temple_Name": "Temple",
+      "State": "Rajasthan",
+      "District": "Baran",
+      "Village_City_Town": "Baran",
+      "Official_Record_ID": "N-RJ-92",
+      "Primary_Source": "Archaeological Survey of India Centrally Protected Monuments Registry"
+    },
+    {
+      "Temple_ID": "IN-RJ-KOT-000516",
+      "Temple_Name": "Temple",
+      "State": "Rajasthan",
+      "District": "Kota",
+      "Village_City_Town": "Dara or Mukandara",
+      "Official_Record_ID": "N-RJ-96",
+      "Primary_Source": "Archaeological Survey of India Centrally Protected Monuments Registry"
+    },
+    {
+      "Temple_ID": "IN-WB-NAD-000525",
+      "Temple_Name": "Temple",
+      "State": "West Bengal",
+      "District": "Nadia",
+      "Village_City_Town": "Palpara",
+      "Official_Record_ID": "N-WB-132",
+      "Primary_Source": "Archaeological Survey of India Centrally Protected Monuments Registry"
+    }
+  ]
+}

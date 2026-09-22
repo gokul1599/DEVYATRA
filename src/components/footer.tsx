@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { ShieldCheck, MapPin, Landmark, CalendarDays, Sparkles, ExternalLink } from "lucide-react";
 import { Container, Logo } from "@/components/ui";
-import { TEMPLES } from "@/lib/data/temples";
-import { getStates } from "@/lib/registry";
+
 
 const cols = [
   {
@@ -34,10 +33,9 @@ const cols = [
 ];
 
 export function Footer() {
-  const states = getStates();
   const sStats = {
-    temples: TEMPLES.length,
-    states: states.length,
+    temples: "1,655",
+    states: "36",
   };
   return (
     <footer className="relative mt-24 border-t border-line bg-obsidian-2/60">

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { askCompanion } from "@/lib/ai/engine";
 import { getTemple } from "@/lib/registry";
+import { resolveTemple } from "@/lib/db/directory";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -16,7 +17,7 @@ export async function POST(req: NextRequest) {
   if (!templeId || !question?.trim()) {
     return NextResponse.json({ error: "templeId and question are required" }, { status: 400 });
   }
-  const temple = getTemple(templeId);
+  const temple = (await resolveTemple(templeId)) ?? getTemple(templeId);
   if (!temple) {
     return NextResponse.json({ error: "Unknown temple" }, { status: 404 });
   }

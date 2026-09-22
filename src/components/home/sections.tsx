@@ -24,6 +24,7 @@ import {
   Trees,
 } from "lucide-react";
 import { getStates, templesByState, getFestivalAll, nearbyFor, nearbyCategories, templeUrl } from "@/lib/registry";
+import { listStates } from "@/lib/db/directory";
 import { TEMPLE_INDEX } from "@/lib/data/temples";
 import { SectionHeading, Container } from "@/components/ui";
 import { TempleCard } from "@/components/temple-card";
@@ -34,11 +35,17 @@ import { festivalDate, fmtDate } from "@/lib/format";
 /* Explore India                                                              */
 /* -------------------------------------------------------------------------- */
 
-export function ExploreIndia() {
-  const states = getStates()
-    .map((s) => ({ s, count: templesByState(s.code).length }))
-    .filter((x) => x.count > 0)
-    .sort((a, b) => b.count - a.count || a.s.name.localeCompare(b.s.name));
+export async function ExploreIndia() {
+  const dbStates = await listStates();
+  const states = dbStates.length > 0
+    ? dbStates
+        .filter((s) => s.templeCount > 0)
+        .sort((a, b) => b.templeCount - a.templeCount || a.name.localeCompare(b.name))
+        .map((s) => ({ s: { name: s.name, slug: s.slug, code: s.code }, count: s.templeCount }))
+    : getStates()
+        .map((s) => ({ s, count: templesByState(s.code).length }))
+        .filter((x) => x.count > 0)
+        .sort((a, b) => b.count - a.count || a.s.name.localeCompare(b.s.name));
 
   return (
     <section id="explore-india" className="relative py-20 md:py-28">
@@ -66,11 +73,11 @@ export function ExploreIndia() {
               >
                 <div className="pointer-events-none absolute -right-6 -top-6 h-20 w-20 rounded-full bg-gold/10 blur-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                 <div className="flex items-center justify-between">
-                  <span className="font-display text-2xl font-semibold text-ivory transition-colors group-hover:text-gold-bright">
-                    {s.name.slice(0, 12)}
-                    {s.name.length > 12 ? "…" : ""}
+                  <span className="font-display text-xl font-semibold text-ivory transition-colors group-hover:text-gold-bright">
+                    {s.name.slice(0, 14)}
+                    {s.name.length > 14 ? "…" : ""}
                   </span>
-                  <MapPin className="h-4 w-4 text-gold-dim" />
+                  <MapPin className="h-4 w-4 text-gold-dim shrink-0" />
                 </div>
                 <div className="mt-6 flex items-center justify-between">
                   <span className="text-[11px] uppercase tracking-wider text-ivory-dim">
@@ -279,7 +286,7 @@ export function PlanBand() {
 
             <div className="space-y-3">
               {[
-                { n: "01", t: "Pick your temple", d: "Search 29 shrines across India.", icon: Landmark },
+                { n: "01", t: "Pick your temple", d: "Search 1,655 shrines across India.", icon: Landmark },
                 { n: "02", t: "Set your window", d: "Start time, hours, budget, pace & interests.", icon: ScrollText },
                 { n: "03", t: "Get your day", d: "A time-ordered itinerary with reasons and sources.", icon: BadgeCheck },
               ].map((s) => (

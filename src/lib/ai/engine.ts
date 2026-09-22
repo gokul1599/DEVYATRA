@@ -73,8 +73,8 @@ function min(str: string) {
 
 const safeAdd = (base: number, extra: number) => Math.min(base + extra, Math.max(base, 24 * 60 - 30));
 
-export function buildPlan(req: PlanRequest): PlanResult {
-  const temple = getTemple(req.templeId);
+export function buildPlan(req: PlanRequest, templeOverride?: Temple): PlanResult {
+  const temple = templeOverride ?? getTemple(req.templeId);
   if (!temple)
     return {
       summary: translate(req.lang, "ai_not_verified"),
@@ -300,8 +300,9 @@ export function askCompanion(temple: Temple, question: string, lang = "en"): Com
     const b = temple.booking;
     const mode = b.bookingMode === "online" ? "online booking (official channel)" : b.bookingMode === "offline" ? "offline counter" : b.generalDarshan;
     const url = b.bookingUrl ? `\nOfficial booking: ${b.bookingUrl}` : "";
+    const warn = b.verification.status === "UNVERIFIED" ? `\n\nNote: Booking details are unverified with the devasthanam trust.` : "";
     return {
-      text: `Entry: ${b.generalDarshan === "free" ? "No ticket required for general darshan (free entry)" : b.generalDarshan}. ${b.specialDarshan ?? ""} Mode: ${mode}.${url}`,
+      text: `Entry: ${b.generalDarshan === "free" ? "No ticket required for general darshan (free entry)" : b.generalDarshan}. ${b.specialDarshan ?? ""} Mode: ${mode}.${url}${warn}`,
       facts: [{ label: "Booking", value: b.bookingOrg ?? mode, source: b.verification.source?.org }],
     };
   }

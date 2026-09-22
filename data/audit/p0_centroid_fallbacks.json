@@ -1,0 +1,90 @@
+{
+  "issue": "National Centroid Fallback (20.5937, 78.9629)",
+  "count": 7,
+  "records": [
+    {
+      "Temple_ID": "IN-AP-AND-000103",
+      "Temple_Name": "Ashta Someswaras",
+      "State": "Andhra Pradesh",
+      "District": "Andhra Pradesh Central",
+      "Mandal_Taluk_Tehsil": "Andhra Pradesh Central Mandal",
+      "Village_City_Town": "Andhra Pradesh Central",
+      "Latitude": "20.5937",
+      "Longitude": "78.9629",
+      "Source_URL": "https://en.wikipedia.org/wiki/Ashta%20Someswaras",
+      "Official_Record_ID": "Q111759084"
+    },
+    {
+      "Temple_ID": "IN-RJ-TON-000519",
+      "Temple_Name": "Yupa Pillars in Bichpuria Temple",
+      "State": "Rajasthan",
+      "District": "Tonk",
+      "Mandal_Taluk_Tehsil": "Tonk Tehsil",
+      "Village_City_Town": "Nagar",
+      "Latitude": "20.5937",
+      "Longitude": "78.9629",
+      "Source_URL": "https://en.wikipedia.org/wiki/List%20of%20Monuments%20of%20National%20Importance%20in%20Rajasthan",
+      "Official_Record_ID": "N-RJ-111"
+    },
+    {
+      "Temple_ID": "IN-RJ-DHO-000521",
+      "Temple_Name": "Jogni-Jogna Temple",
+      "State": "Rajasthan",
+      "District": "Dholpur",
+      "Mandal_Taluk_Tehsil": "Dholpur Tehsil",
+      "Village_City_Town": "Dholpur / Sone- ka \u2013 Gurja",
+      "Latitude": "20.5937",
+      "Longitude": "78.9629",
+      "Source_URL": "https://en.wikipedia.org/wiki/List%20of%20Monuments%20of%20National%20Importance%20in%20Rajasthan",
+      "Official_Record_ID": "N-RJ-152"
+    },
+    {
+      "Temple_ID": "IN-UP-BUL-000503",
+      "Temple_Name": "Masonry tank and ancient temple",
+      "State": "Uttar Pradesh",
+      "District": "Bulandshahr",
+      "Mandal_Taluk_Tehsil": "Bulandshahr Tehsil",
+      "Village_City_Town": "Dankaur",
+      "Latitude": "20.5937",
+      "Longitude": "78.9629",
+      "Source_URL": "https://en.wikipedia.org/wiki/List%20of%20Monuments%20of%20National%20Importance%20in%20Agra%20circle",
+      "Official_Record_ID": "N-UP-A126"
+    },
+    {
+      "Temple_ID": "IN-UP-BUL-000504",
+      "Temple_Name": "Ahirpura mound or lesser temple mound",
+      "State": "Uttar Pradesh",
+      "District": "Bulandshahr",
+      "Mandal_Taluk_Tehsil": "Bulandshahr Tehsil",
+      "Village_City_Town": "Indor",
+      "Latitude": "20.5937",
+      "Longitude": "78.9629",
+      "Source_URL": "https://en.wikipedia.org/wiki/List%20of%20Monuments%20of%20National%20Importance%20in%20Agra%20circle",
+      "Official_Record_ID": "N-UP-A127"
+    },
+    {
+      "Temple_ID": "IN-UP-BUL-000505",
+      "Temple_Name": "Kundanpura mound or the great temple mound",
+      "State": "Uttar Pradesh",
+      "District": "Bulandshahr",
+      "Mandal_Taluk_Tehsil": "Bulandshahr Tehsil",
+      "Village_City_Town": "Indor",
+      "Latitude": "20.5937",
+      "Longitude": "78.9629",
+      "Source_URL": "https://en.wikipedia.org/wiki/List%20of%20Monuments%20of%20National%20Importance%20in%20Agra%20circle",
+      "Official_Record_ID": "N-UP-A128"
+    },
+    {
+      "Temple_ID": "IN-WB-PUR-000520",
+      "Temple_Name": "Group of 12 temples as below",
+      "State": "West Bengal",
+      "District": "Purba Bardhaman",
+      "Mandal_Taluk_Tehsil": "Purba Bardhaman Sub-Division",
+      "Village_City_Town": "Kalna",
+      "Latitude": "20.5937",
+      "Longitude": "78.9629",
+      "Source_URL": "https://en.wikipedia.org/wiki/List%20of%20Monuments%20of%20National%20Importance%20in%20West%20Bengal",
+      "Official_Record_ID": "N-WB-54"
+    }
+  ]
+}

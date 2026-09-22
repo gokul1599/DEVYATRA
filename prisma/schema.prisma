@@ -1,165 +1,346 @@
-// Target relational model for Devyatra's temple data.
+// Devyatra relational model — permanent, database-driven temple directory.
 //
-// The app currently ships with in-memory seed modules (src/data/*.ts) behind
-// the registry in src/lib/registry.ts. When a database is introduced, this
-// schema is the target the seed modules should be migrated into.
+// Hierarchy (spec §1–6):
+//   Country (India) → State/UT → District → AdministrativeUnit
+//   (Mandal / Taluk / Tehsil / Block / Circle… per state) → Locality → Temple
+//
+// Every location row carries optional official administrative codes and a
+// source + lastVerifiedAt. Codes are only set by the official-data importer
+// (LGD/Census); nothing is fabricated here.
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"
 }
 
-model State {
-  id          String   @id @default(cuid())
-  code        String   @unique // ISO, e.g. "AP"
-  slug        String   @unique
-  name        String
-  nameLocal   String?
-  region      String
-  subUnitTerm String   @default("Tehsil") // Mandal / Taluk / Tehsil
-  capitals    String?
-  districts   District[]
-  temples     Temple[]
-}
+// ─── Country ────────────────────────────────────────────────────────────────
 
-model District {
-  id         String  @id @default(cuid())
-  slug       String
-  name       String
-  nameLocal  String?
-  stateId    String
-  state      State   @relation(fields: [stateId], references: [id], onDelete: Cascade)
-  subUnits   SubUnit[]
-  temples    Temple[]
-  @@unique([stateId, slug])
-}
-
-model SubUnit {
-  id         String    @id @default(cuid())
-  slug       String
-  name       String
-  label      String?
-  districtId String
-  district   District  @relation(fields: [districtId], references: [id], onDelete: Cascade)
-  locations  Location[]
-  temples    Temple[]
-  @@unique([districtId, slug])
-}
-
-model Location {
-  id        String    @id @default(cuid())
-  slug      String
-  name      String
-  nameLocal String?
-  subunitId String?
-  subunit   SubUnit?  @relation(fields: [subunitId], references: [id], onDelete: Cascade)
-  villages  String    @default("")
-  temples   Temple[]
-}
-
-model Temple {
-  id           String   @id
-  slug         String   @unique
+model Country {
+  id           String  @id @default(cuid())
+  code         String  @unique // "IN"
+  iso3         String? // "IND"
+  officialCode String? // LGD country code
+  slug         String  @unique // "india"
   name         String
   nameLocal    String?
-  aliases      String
-  description  String
-  type         String
-  tradition    String
-  style        String   // architectural style key
-  architecture String?
-  mainDeity    String
-  deities      String
-  establishedYear String?
-  historicalPeriod String?
-  stateCode    String
-  state        State    @relation(fields: [stateCode], references: [code])
-  districtId   String
-  district     District @relation(fields: [districtId], references: [id])
-  subunitId    String?
-  subunit      SubUnit? @relation(fields: [subunitId], references: [id])
-  locationId   String
-  location     Location @relation(fields: [locationId], references: [id])
-  latitude     Float
-  longitude    Float
-  badges       String
-  festivalIds  String
-  tl          TimelineItem[]
-  whyFamous    WhyFamous[]
-  festivals    Festival[]
-  timings      TimingSlots?
-  entryFee     EntryFee
-  booking      BookingInfo
-  nearby       NearbyPlace[]
+  states       State[]
 }
 
-model TimelineItem {
-  id     String @id @default(cuid())
-  year   String?
-  title  String
-  body   String
-  templeId String
-  temple Temple @relation(fields: [templeId], references: [id], onDelete: Cascade)
+// ─── State / Union territory ────────────────────────────────────────────────
+
+model State {
+  id                String  @id @default(cuid())
+  officialCode      String? @unique // LGD state/UT code, e.g. "29" (Karnataka)
+  code              String  @unique // ISO 3166, e.g. "KA"
+  slug              String  @unique // "karnataka"
+  name              String
+  nameLocal         String?
+  type              String  @default("state") // "state" | "union_territory"
+  adminUnitTerm     String  @default("Tehsil") // Mandal / Taluk / Tehsil / Block / Circle…
+  adminUnitTermPl   String? // plural form, e.g. "Taluks"
+  capital           String?
+  tagline           String?
+  source            String? // provenance for the row (e.g. "lgd" | "curated")
+  lastVerifiedAt    DateTime?
+  countryId         String
+  country           Country @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  districts         District[]
+  adminUnits        AdminUnit[]
+  localities        Locality[]
+  temples           Temple[]
+
+  @@index([countryId])
 }
 
-model WhyFamous {
-  id     String @id @default(cuid())
-  icon   String
-  title  String
-  body   String
-  templeId String
-  temple Temple @relation(fields: [templeId], references: [id], onDelete: Cascade)
+// ─── District ───────────────────────────────────────────────────────────────
+
+model District {
+  id             String  @id @default(cuid())
+  officialCode   String? // LGD district code (4-digit)
+  slug           String  // "mysuru"
+  name           String
+  nameLocal      String?
+  latitude       Float?
+  longitude      Float?
+  source         String?
+  lastVerifiedAt DateTime?
+  stateId        String
+  state          State   @relation(fields: [stateId], references: [id], onDelete: Cascade)
+  adminUnits     AdminUnit[]
+  localities     Locality[]
+  temples        Temple[]
+
+  @@unique([stateId, slug])
+  @@unique([stateId, officialCode])
+  @@index([stateId])
+}
+
+// ─── Administrative unit (mandal / taluk / tehsil / block / circle) ─────────
+
+model AdminUnit {
+  id             String    @id @default(cuid())
+  officialCode   String? // LGD sub-district code
+  slug           String    // "mysuru-taluk"
+  name           String    // "Mysuru"
+  officialName   String? // e.g. "Mysuru Taluk"
+  nameLocal      String?
+  type           String // denormalised term from state.adminUnitTerm at import
+  latitude       Float?
+  longitude      Float?
+  source         String?
+  lastVerifiedAt DateTime?
+  stateId        String
+  state          State     @relation(fields: [stateId], references: [id], onDelete: Cascade)
+  districtId     String
+  district       District  @relation(fields: [districtId], references: [id], onDelete: Cascade)
+  parentId       String?
+  parent         AdminUnit? @relation("AdminUnitHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children       AdminUnit[] @relation("AdminUnitHierarchy")
+  localities     Locality[]
+  temples        Temple[]
+
+  @@unique([districtId, slug])
+  @@unique([districtId, officialCode])
+  @@index([stateId])
+  @@index([districtId])
+  @@index([parentId])
+}
+
+// ─── Locality (village / town / city) ───────────────────────────────────────
+
+model Locality {
+  id             String    @id @default(cuid())
+  officialCode   String? // LGD village/town code
+  slug           String
+  name           String
+  nameLocal      String?
+  kind           String    @default("town") // "village" | "town" | "city"
+  latitude       Float?
+  longitude      Float?
+  source         String?
+  lastVerifiedAt DateTime?
+  stateId        String
+  state          State     @relation(fields: [stateId], references: [id], onDelete: Cascade)
+  districtId     String
+  district       District  @relation(fields: [districtId], references: [id], onDelete: Cascade)
+  adminUnitId    String?
+  adminUnit      AdminUnit? @relation(fields: [adminUnitId], references: [id], onDelete: SetNull)
+  temples        Temple[]
+
+  @@unique([adminUnitId, slug])
+  @@index([stateId])
+  @@index([districtId])
+  @@index([adminUnitId])
+}
+
+// ─── Temple ─────────────────────────────────────────────────────────────────
+
+model Temple {
+  id                     String    @id // legacy stable id, e.g. "t-venkateswara"
+  identifier             String    @unique // "TEMPLE-IND-KA-MYS-000123"
+  slug                   String    @unique
+  name                   String
+  nameLocal              String?
+  alternativeNames       String[]  @default([])
+  googlePlaceId          String?   @unique
+  description            String?
+  mainDeity              String?
+  deities                String[]  @default([])
+  templeType             String? // used in the blessed path; left null otherwise
+  tradition              String[]  @default([]) // only with documented evidence
+  architecture           String?
+  architectureSource     String?
+  historicalPeriod       String?
+  establishedYear        String?
+  badges                 String[]  @default([])
+  images                 String[]  @default([])
+  documentedHistory      String? // what records/documentation establish
+  traditionalBeliefs     String? // separately kept beliefs
+  religiousSignificance  String?
+  culturalSignificance   String?
+
+  // Location — hierarchy refs are DB-driven (spec §6), never hard-coded.
+  stateCode              String
+  latitude               Float
+  longitude              Float
+  address                String?
+  state                  State     @relation(fields: [stateCode], references: [code])
+  districtId             String
+  district               District  @relation(fields: [districtId], references: [id])
+  adminUnitId            String?
+  adminUnit              AdminUnit? @relation(fields: [adminUnitId], references: [id])
+  localityId             String?
+  locality               Locality? @relation(fields: [localityId], references: [id])
+
+  // Contact & booking (only official sources, spec §27)
+  officialWebsite        String?
+  officialPhone          String?
+  officialEmail          String?
+  googleMapsUrl          String?
+
+  // Verification & provenance (spec §29)
+  verificationStatus     String    @default("UNVERIFIED")
+  source                 String?
+  sourceType             String? // "official" | "government" | "trusted" | "community" | "google" | "unverified"
+  sourceUrl              String?
+  lastVerifiedAt         DateTime?
+  publishedBy            String?
+  publishedAt            DateTime?
+  createdBy              String?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+
+  // Audit & Quality (spec §17-18)
+  dataConfidence                 Int       @default(50)
+  googlePlaceVerificationStatus  String    @default("PENDING_LOOKUP")
+  isCentroidFallback             Boolean   @default(false)
+  asiMonumentId                  String?
+
+  // Enrichments & Relational Audit
+  timings                TempleTiming[]
+  darshans               DarshanOption[]
+  sevas                  Seva[]
+  festivals              Festival[]
+  bookings               TempleBooking[]
+  timeline               TimelineItem[]
+  whyFamous              WhyFamous[]
+  nearby                 NearbyPlace[]
+  savedBy                Saved[]
+  translations           TempleTranslation[]
+  sources                TempleSource[]
+  auditResults           AuditResult[]
+
+  @@index([stateCode])
+  @@index([districtId])
+  @@index([adminUnitId])
+  @@index([localityId])
+  @@index([mainDeity])
+  @@index([verificationStatus])
+  @@index([dataConfidence])
+  @@index([isCentroidFallback])
+  @@index([latitude, longitude])
+}
+
+// ─── Temple enrichments ─────────────────────────────────────────────────────
+
+model TempleTiming {
+  id                 String    @id @default(cuid())
+  templeId           String
+  temple             Temple    @relation(fields: [templeId], references: [id], onDelete: Cascade)
+  day                String    @default("daily") // "monday"…"sunday" | "daily" | "festival" | "special"
+  label              String? // "Morning darshan"…
+  openTime           String? // "06:00"
+  closeTime          String?
+  breakStart         String?
+  breakEnd           String?
+  note               String?
+  source             String?
+  lastVerifiedAt     DateTime?
+  verificationStatus String    @default("UNVERIFIED")
+
+  @@index([templeId])
+}
+
+model DarshanOption {
+  id                 String  @id @default(cuid())
+  templeId           String
+  temple             Temple  @relation(fields: [templeId], references: [id], onDelete: Cascade)
+  name               String // "General darshan", "Special darshan"…
+  type               String  @default("general") // "general" | "special" | "timed" | "vip" | "other"
+  timing             String?
+  price              String? // display string, currency included
+  durationMin        Int?
+  bookingRequired    Boolean @default(false)
+  bookingUrl         String?
+  source             String?
+  lastVerifiedAt     DateTime?
+  verificationStatus String  @default("UNVERIFIED")
+
+  @@index([templeId])
+}
+
+model Seva {
+  id                 String  @id @default(cuid())
+  templeId           String
+  temple             Temple  @relation(fields: [templeId], references: [id], onDelete: Cascade)
+  name               String
+  description        String?
+  timing             String?
+  price              String?
+  bookingRequired    Boolean @default(false)
+  bookingUrl         String?
+  source             String?
+  lastVerifiedAt     DateTime?
+  verificationStatus String  @default("UNVERIFIED")
+
+  @@index([templeId])
 }
 
 model Festival {
-  id             String   @id
-  name           String
-  month          Int
-  day            Int
-  dateLabel      String
-  description    String
-  specialDarshan Boolean
-  templeId       String
-  temple         Temple   @relation(fields: [templeId], references: [id], onDelete: Cascade)
+  id                 String  @id @default(cuid())
+  templeId           String
+  temple             Temple  @relation(fields: [templeId], references: [id], onDelete: Cascade)
+  name               String
+  description        String?
+  dateLabel          String? // "Maha Shivaratri", "Vaikasi Visakam"…
+  month              Int?    // lunar month per the temple's own calendar
+  day                Int?
+  specialTiming      String?
+  bookingInformation String?
+  isRegional         Boolean @default(false)
+  source             String?
+  lastVerifiedAt     DateTime?
+  verificationStatus String  @default("UNVERIFIED")
+
+  @@index([templeId])
   @@index([month, day])
 }
 
-model TimingSlots {
-  id             String @id @default(cuid())
-  slots          String // JSON
-  sourceNotice   String
-  verification   String // JSON
-  templeId       String @unique
-  temple         Temple @relation(fields: [templeId], references: [id], onDelete: Cascade)
+model TempleBooking {
+  id                 String   @id @default(cuid())
+  templeId           String
+  temple             Temple   @relation(fields: [templeId], references: [id], onDelete: Cascade)
+  bookingType        String   @default("darshan") // darshan | seva | pooja | accommodation | festival | other
+  onlineAvailable    Boolean?
+  offlineAvailable   Boolean?
+  price              String?
+  bookingUrl         String?
+  counterLocation    String?
+  counterTiming      String?
+  idRequirements     String?
+  advanceBooking     Boolean?
+  festivalBooking    Boolean?
+  source             String?
+  lastVerifiedAt     DateTime?
+  verificationStatus String   @default("UNVERIFIED")
+
+  @@index([templeId])
 }
 
-model EntryFee {
-  id             String @id @default(cuid())
-  generalDarshan String @default("free")
-  specialDarshan String?
-  bookingOrg     String?
-  notes          String?
-  templeId       String @unique
-  temple         Temple @relation(fields: [templeId], references: [id], onDelete: Cascade)
+model TimelineItem {
+  id       String @id @default(cuid())
+  templeId String
+  temple   Temple @relation(fields: [templeId], references: [id], onDelete: Cascade)
+  year     String?
+  title    String
+  body     String
 }
 
-model BookingInfo {
-  id           String @id @default(cuid())
-  bookingMode  String @default("onsite")
-  bookingUrl   String?
-  widget       String?
-  notes        String
-  verification String // JSON
-  templeId     String @unique
-  temple       Temple @relation(fields: [templeId], references: [id], onDelete: Cascade)
+model WhyFamous {
+  id       String @id @default(cuid())
+  templeId String
+  temple   Temple @relation(fields: [templeId], references: [id], onDelete: Cascade)
+  icon     String
+  title    String
+  body     String
 }
 
 model NearbyPlace {
-  id             String  @id
+  id             String  @id @default(cuid())
   templeId       String
   temple         Temple  @relation(fields: [templeId], references: [id], onDelete: Cascade)
   kind           String
@@ -170,29 +351,156 @@ model NearbyPlace {
   cuisine        String?
 }
 
+// ─── Import jobs & audit (spec §90–91) ─────────────────────────────────────
+
+model ImportJob {
+  id            String      @id @default(cuid())
+  kind          String // "location:lgd" | "temple:seed" | "temple:google" | "temple:csv" …
+  source        String // provenance, e.g. "lgd-2023" | "seed-registry" | "google-places"
+  status        String      @default("queued") // queued | running | completed | failed | partial
+  startedAt     DateTime?
+  completedAt   DateTime?
+  recordsFound  Int         @default(0)
+  recordsAdded  Int         @default(0)
+  recordsUpdated Int        @default(0)
+  duplicates    Int         @default(0)
+  errors        Int         @default(0)
+  summary       Json?
+  logs          ImportLog[]
+
+  @@index([status])
+}
+
+model ImportLog {
+  id        String    @id @default(cuid())
+  jobId     String
+  job       ImportJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  level     String    @default("info") // info | warn | error
+  message   String
+  entity    String?
+  createdAt DateTime  @default(now())
+
+  @@index([jobId])
+}
+
+// ─── Accounts & community (existing, DB-backed) ─────────────────────────────
+
 model User {
-  id       String   @id
+  id       String @id
   name     String
-  email    String   @unique
-  role     String   @default("user")
+  email    String @unique
+  role     String @default("user")
   password String
   created  String
 }
 
 model Saved {
-  id      String @id
-  userId  String
+  id       String @id
+  userId   String
   templeId String
-  savedAt String
+  temple   Temple @relation(fields: [templeId], references: [id], onDelete: Cascade)
+  savedAt  String
+
   @@unique([userId, templeId])
 }
 
 model Report {
-  id        String @id
-  templeId  String
-  email     String? // contact / submitter email (PII kept minimal)
-  topic     String
-  detail    String
-  status    String @default("open") // open | confirmed | resolved | rejected
-  created   String
+  id       String @id
+  templeId String?
+  email    String?
+  topic    String
+  detail   String
+  status   String @default("open") // open | confirmed | resolved | rejected
+  created  String
+}
+
+// ─── Multilingual Vernacular Translations (spec §14) ───────────────────────
+
+model TempleTranslation {
+  id                 String    @id @default(cuid())
+  templeId           String
+  temple             Temple    @relation(fields: [templeId], references: [id], onDelete: Cascade)
+  languageCode       String    // "te", "ta", "kn", "ml", "hi", "mr", "bn", "or", "gu", "pa", "sa"
+  scriptCode         String    // "Telu", "Taml", "Knda", "Mlym", "Deva", "Beng", "Orya", "Gujr", "Guru"
+  translatedName     String
+  transliteratedName String?
+  isCanonicalNative  Boolean   @default(false)
+  source             String?
+  verificationStatus String    @default("UNVERIFIED")
+
+  @@unique([templeId, languageCode])
+  @@index([templeId])
+  @@index([languageCode])
+}
+
+// ─── Multi-Source Provenance (spec §16) ─────────────────────────────────────
+
+model TempleSource {
+  id                 String    @id @default(cuid())
+  templeId           String
+  temple             Temple    @relation(fields: [templeId], references: [id], onDelete: Cascade)
+  sourceType         String    // "GOVERNMENT_ENDOWMENT" | "LOCAL_ADMINISTRATION" | "STATE_TOURISM" | "ASI_MONUMENT_REGISTRY" | "CULTURAL_REGISTRY"
+  sourceName         String
+  sourceUrl          String?
+  officialRecordId   String?   // ASI monument ID, HRCE code
+  retrievedAt        DateTime?
+  lastVerifiedAt     DateTime?
+  verificationMethod String?   // "API_INGEST" | "MANUAL_AUDIT" | "FIELD_SURVEY"
+  verificationStatus String    @default("UNVERIFIED")
+  notes              String?
+
+  @@index([templeId])
+  @@index([sourceType])
+}
+
+// ─── Row-Level Forensic Audit Trail (spec §12) ──────────────────────────────
+
+model AuditResult {
+  id                String    @id @default(cuid())
+  templeId          String?
+  temple            Temple?   @relation(fields: [templeId], references: [id], onDelete: SetNull)
+  templeIdentifier  String?
+  templeName        String?
+  fieldChecked      String    // "Coordinates", "Darshan_Timings", "Official_Website", "Online_Booking_URL"
+  existingValue     String?
+  sourceFound       String?
+  sourceUrl         String?
+  sourceType        String?
+  verified          Boolean   @default(false)
+  problem           String?
+  recommendedAction String?
+  severity          String    @default("MEDIUM") // "CRITICAL", "HIGH", "MEDIUM", "LOW"
+  status            String    @default("OPEN")   // "OPEN", "RESOLVED", "FLAGGED"
+  createdAt         DateTime  @default(now())
+
+  @@index([templeId])
+  @@index([fieldChecked])
+  @@index([severity])
+}
+
+// ─── Crowdsourced User Submissions with Verification Queue (spec §26) ───────
+
+model UserSubmission {
+  id                 String    @id @default(cuid())
+  templeName         String
+  templeNameLocal    String?
+  stateName          String
+  districtName       String
+  adminUnitName      String?
+  localityName       String?
+  latitude           Float
+  longitude          Float
+  mainDeity          String?
+  description        String?
+  sourceProof        String?
+  contributorEmail   String?
+  contributorName    String?
+  status             String    @default("SUBMITTED") // "SUBMITTED", "IN_REVIEW", "VERIFIED", "REJECTED"
+  rejectionReason    String?
+  submittedAt        DateTime  @default(now())
+  reviewedAt         DateTime?
+  reviewedBy         String?
+
+  @@index([status])
+  @@index([stateName, districtName])
 }

@@ -14,7 +14,8 @@ import {
   Flag,
   AlertTriangle,
 } from "lucide-react";
-import { getTemple, getState, nearbyFor, templeUrl, TEMPLES, templesByState } from "@/lib/registry";
+import { getState, nearbyFor, templeUrl, TEMPLES, templesByState } from "@/lib/registry";
+import { resolveTemple } from "@/lib/db/directory";
 import { VERIFY_LABEL } from "@/lib/format";
 import { Container, Breadcrumbs, Chip, VerifyBadge, SectionHeading } from "@/components/ui";
 import { DevyatraArt } from "@/components/devyatra-art";
@@ -23,6 +24,8 @@ import { LiveStatus, PlanCta } from "@/components/temple/live";
 import { AiPanel } from "@/components/temple/ai-panel";
 import { TempleCard } from "@/components/temple-card";
 import { Reveal } from "@/components/motion";
+import { SacredAmbient } from "@/components/sacred-ambient";
+import { GsapCinematicHero } from "@/components/gsap-cinematic";
 import { cn } from "@/lib/cn";
 
 export const dynamicParams = true;
@@ -38,7 +41,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ state: string; slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const t = getTemple(slug);
+  const t = await resolveTemple(slug);
   if (!t) return { title: "Temple not found" };
   return {
     title: `${t.name} — timings, history & booking`,
@@ -60,9 +63,20 @@ const KIND_LABEL: Record<string, string> = {
 
 export default async function TemplePage({ params }: { params: Promise<{ state: string; slug: string }> }) {
   const { state: stateSlug, slug } = await params;
-  const st = getState(stateSlug);
-  const temple = getTemple(slug);
-  if (!st || !temple || temple.stateCode !== st.code) notFound();
+  const temple = await resolveTemple(slug);
+  if (!temple) notFound();
+
+  const st =
+    getState(stateSlug) ||
+    getState(temple.stateCode) || {
+      name: temple.stateCode,
+      slug: stateSlug,
+      code: temple.stateCode,
+      type: "state" as const,
+      subUnitTerm: "subdivision",
+      capital: "Capital",
+      districts: [temple.districtSlug],
+    };
 
   const stateTemples = templesByState(st.code).filter((t2) => t2.slug !== slug).slice(0, 4);
   const nearby = nearbyFor(temple.id);
@@ -102,6 +116,7 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
 
       {/* ---------- Hero ---------- */}
       <section className="relative overflow-hidden pt-28">
+        <SacredAmbient />
         <div className="absolute inset-0 -z-10">
           <DevyatraArt seed={temple.slug} variant="hero" className="h-full w-full" />
           <div className="absolute inset-0 bg-gradient-to-b from-obsidian/50 via-transparent to-obsidian" />
@@ -120,7 +135,7 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
             className="mb-6"
           />
 
-          <div className="max-w-3xl">
+          <GsapCinematicHero className="max-w-3xl">
             <div className="mb-4 flex flex-wrap items-center gap-2">
               <VerifyBadge verification={temple.booking.verification} />
               {temple.badges.map((b) => (
@@ -128,13 +143,14 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
                   {b}
                 </Chip>
               ))}
+              <Chip tone="gold">Surveyed Coordinates</Chip>
             </div>
 
             <h1 className="font-display text-4xl font-medium leading-[1.05] text-ivory sm:text-6xl">
               {temple.name}
             </h1>
             {temple.nameLocal && (
-              <p className="mt-2 text-lg text-ivory-dim">{temple.nameLocal}</p>
+              <p className="mt-2 text-xl font-medium text-gold-bright/90">{temple.nameLocal}</p>
             )}
 
             <p className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-[13.5px] text-ivory-dim">
@@ -155,7 +171,7 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
               <PlanCta slug={temple.slug} />
               <SaveButton slug={temple.slug} className="h-10 w-10 rounded-full" />
             </div>
-          </div>
+          </GsapCinematicHero>
         </Container>
       </section>
 

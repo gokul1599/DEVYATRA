@@ -2,21 +2,25 @@ import { TEMPLES } from "./data/temples";
 import { getState } from "./registry";
 import { Temple } from "./types";
 
-/** Canonicalise text for matching: lower-case, strip diacritics, collapse spaces. */
+/** Canonicalise text for matching: lower-case, strip combining diacritics, collapse spaces.
+ * Preserves Indian vernacular Unicode scripts (Telugu, Tamil, Devanagari, Kannada, etc.). */
 export const canonical = (s: string) =>
   s
     .toLowerCase()
-    .normalize("NFKD")
+    .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, " ")
+    .normalize("NFC")
+    .replace(/[^\p{L}\p{M}\p{N}]+/gu, " ")
     .trim();
 
-/** Common transliteration alternatives so 'Tirupathi' still matches 'Tirupati'. */
+/** Common transliteration & deity alternatives so 'Tirupathi' matches 'Tirupati', 'Siva' matches 'Shiva'. */
 const TRANSLIT: [RegExp, string][] = [
   [/th/g, "t"],
   [/ksh/g, "k"],
   [/sh/g, "s"],
   [/j/g, "z"],
+  [/ee/g, "i"],
+  [/oo/g, "u"],
 ];
 
 const alternate = (s: string): string[] => {
@@ -35,7 +39,7 @@ interface Scored {
 
 function scoreTemple(t: Temple, q: string, qTokens: Set<string>): number {
   let s = 0;
-  const names = [t.name, ...t.aliases, t.mainDeity, ...t.deities, t.location, t.district, t.subUnit ?? "", t.type];
+  const names = [t.name, t.nameLocal ?? "", ...t.aliases, t.mainDeity, ...t.deities, t.location, t.district, t.subUnit ?? "", t.type];
   for (const variant of alternate(q)) {
     const vc = canonical(variant);
     for (const n of names) {
@@ -45,7 +49,7 @@ function scoreTemple(t: Temple, q: string, qTokens: Set<string>): number {
       else if (nc.includes(vc)) s += 40;
     }
   }
-  const all = tokenSet([t.name, ...t.aliases, t.location, t.district, t.mainDeity, t.type].join(" "));
+  const all = tokenSet([t.name, t.nameLocal ?? "", ...t.aliases, t.location, t.district, t.mainDeity, t.type].join(" "));
   let hits = 0;
   for (const qt of qTokens) if (all.has(qt)) hits++;
   s += hits * 12;

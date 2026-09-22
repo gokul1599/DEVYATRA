@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { buildPlan, type PlanRequest } from "@/lib/ai/engine";
 import { getTemple } from "@/lib/registry";
+import { resolveTemple } from "@/lib/db/directory";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -29,7 +30,9 @@ export async function POST(req: NextRequest) {
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
-  if (!getTemple(body.templeId)) {
+
+  const temple = (await resolveTemple(body.templeId)) ?? getTemple(body.templeId);
+  if (!temple) {
     return NextResponse.json({ error: "Unknown temple" }, { status: 404 });
   }
 
@@ -60,6 +63,6 @@ export async function POST(req: NextRequest) {
     lang: body.lang ?? "en",
   };
 
-  const result = buildPlan(reqPlan);
-  return NextResponse.json(result);
+  const plan = buildPlan(reqPlan, temple);
+  return NextResponse.json({ plan });
 }
