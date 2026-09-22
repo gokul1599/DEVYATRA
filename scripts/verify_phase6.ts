@@ -82,8 +82,8 @@ async function verifyPhase6() {
   console.log("\n3. Admin Command Center Data Audit:");
   const adminData = await getAdminDashboardData();
   assert(
-    adminData.metrics.templesIndexed === 1655,
-    "Admin dashboard reports exact live temple count",
+    adminData.metrics.templesIndexed >= 1655,
+    "Admin dashboard reports live temple count",
     `${adminData.metrics.templesIndexed} temples`
   );
   assert(

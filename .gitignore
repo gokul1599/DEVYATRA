@@ -39,8 +39,9 @@ yarn-error.log*
 # prisma generated client
 /src/generated/
 
-# runtime state (accounts, sessions, reports, feeds)
+# runtime state (accounts, sessions, reports, feeds, backups)
 /.data
+/backups/
 
 # vercel
 .vercel

@@ -23,6 +23,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/cn";
 import { FeedPanel } from "@/components/feed-panel";
 import { DiscoverConsole } from "@/components/discover-console";
+import { AdminCoverageTab } from "@/components/admin-coverage-tab";
 import type { AdminDashboardData } from "@/lib/db/directory";
 
 interface ReportRow {
@@ -45,6 +46,7 @@ const STATUS_STYLE: Record<ReportRow["status"], string> = {
 
 export type AdminTab =
   | "overview"
+  | "coverage"
   | "workbench"
   | "duplicates"
   | "coordinates"
@@ -193,6 +195,7 @@ export function AdminConsole({
       <div className="flex flex-wrap gap-2 border-b border-line pb-4">
         {[
           { id: "overview", label: "Overview", icon: Layers },
+          { id: "coverage", label: "National Coverage Matrix", icon: Landmark },
           { id: "workbench", label: "Verification Workbench", icon: FileCheck2 },
           { id: "duplicates", label: "Duplicate Review", icon: Copy },
           { id: "coordinates", label: "Coordinate Audit", icon: MapPin },
@@ -300,6 +303,17 @@ export function AdminConsole({
                 ))}
               </div>
             </div>
+          </motion.div>
+        )}
+
+        {activeTab === "coverage" && (
+          <motion.div
+            key="coverage"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+          >
+            <AdminCoverageTab />
           </motion.div>
         )}
 

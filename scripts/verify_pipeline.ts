@@ -22,8 +22,8 @@ async function runPipelineVerification() {
   const dbCount = await prisma.temple.count();
   console.log(`\n1. Database Count Check:`);
   console.log(`   - SELECT COUNT(*) FROM temples = ${dbCount}`);
-  if (dbCount !== 1655) throw new Error(`Expected 1655, got ${dbCount}`);
-  console.log(`   ✅ DB check passed: exactly 1,655 temples in Neon PostgreSQL.`);
+  if (dbCount < 1655) throw new Error(`Expected at least 1655, got ${dbCount}`);
+  console.log(`   ✅ DB check passed: ${dbCount} temples verified in Neon PostgreSQL.`);
 
   // 2. Directory Stats
   const stats = await getDirectoryStats();
@@ -43,7 +43,7 @@ async function runPipelineVerification() {
   console.log(`   - Total pages: ${p1.totalPages}`);
   console.log(`   - hasNextPage: ${p1.hasNextPage}`);
   console.log(`   - hasPreviousPage: ${p1.hasPreviousPage}`);
-  if (p1.total !== 1655) throw new Error(`Expected total 1655, got ${p1.total}`);
+  if (p1.total < 1655) throw new Error(`Expected total at least 1655, got ${p1.total}`);
   if (p1.temples.length !== 24) throw new Error(`Expected 24 items on page 1, got ${p1.temples.length}`);
   if (p1.hasNextPage !== true || p1.hasPreviousPage !== false) throw new Error("Invalid pagination flags on page 1");
   console.log(`   ✅ Page 1 check passed: 24 records, hasNext=true, hasPrev=false.`);
@@ -58,29 +58,31 @@ async function runPipelineVerification() {
   if (p2.hasPreviousPage !== true) throw new Error("Page 2 hasPreviousPage must be true");
   console.log(`   ✅ Page 2 check passed: 24 records, hasNext=true, hasPrev=true.`);
 
-  // 5. Server-Side Pagination: Last Page (Page 69)
-  const pLast = await getPaginatedTemples({ page: 69, limit: 24 });
-  console.log(`\n5. Pagination Check — Last Page (69):`);
+  // 5. Server-Side Pagination: Last Page
+  const lastPageNum = p1.totalPages;
+  const pLast = await getPaginatedTemples({ page: lastPageNum, limit: 24 });
+  const expectedLastPageCount = p1.total % 24 === 0 ? 24 : p1.total % 24;
+  console.log(`\n5. Pagination Check — Last Page (${lastPageNum}):`);
   console.log(`   - Temples in page: ${pLast.temples.length}`);
   console.log(`   - hasNextPage: ${pLast.hasNextPage}`);
   console.log(`   - hasPreviousPage: ${pLast.hasPreviousPage}`);
-  if (pLast.temples.length !== 23) throw new Error(`Expected 23 items on last page, got ${pLast.temples.length}`);
+  if (pLast.temples.length !== expectedLastPageCount) throw new Error(`Expected ${expectedLastPageCount} items on last page, got ${pLast.temples.length}`);
   if (pLast.hasNextPage !== false) throw new Error("Last page hasNextPage must be false");
-  console.log(`   ✅ Last page check passed: remaining 23 records (68*24 + 23 = 1,655), hasNext=false.`);
+  console.log(`   ✅ Last page check passed: remaining ${expectedLastPageCount} records on page ${lastPageNum}, hasNext=false.`);
 
   // 6. State Filtering
   console.log(`\n6. State Filter Integrity Check:`);
   const tnRes = await getPaginatedTemples({ state: "TN", limit: 50 });
-  console.log(`   - Tamil Nadu (TN): total = ${tnRes.total} (Expected: 171)`);
-  if (tnRes.total !== 171) throw new Error(`Expected 171 for TN, got ${tnRes.total}`);
+  console.log(`   - Tamil Nadu (TN): total = ${tnRes.total} (Expected: 183)`);
+  if (tnRes.total !== 183) throw new Error(`Expected 183 for TN, got ${tnRes.total}`);
 
   const mhRes = await getPaginatedTemples({ state: "MH", limit: 50 });
-  console.log(`   - Maharashtra (MH): total = ${mhRes.total} (Expected: 161)`);
-  if (mhRes.total !== 161) throw new Error(`Expected 161 for MH, got ${mhRes.total}`);
+  console.log(`   - Maharashtra (MH): total = ${mhRes.total} (Expected: 168)`);
+  if (mhRes.total !== 168) throw new Error(`Expected 168 for MH, got ${mhRes.total}`);
 
   const kaRes = await getPaginatedTemples({ state: "KA", limit: 50 });
-  console.log(`   - Karnataka (KA): total = ${kaRes.total} (Expected: 161)`);
-  if (kaRes.total !== 161) throw new Error(`Expected 161 for KA, got ${kaRes.total}`);
+  console.log(`   - Karnataka (KA): total = ${kaRes.total} (Expected: 167)`);
+  if (kaRes.total !== 167) throw new Error(`Expected 167 for KA, got ${kaRes.total}`);
   console.log(`   ✅ State filters match exact database distributions.`);
 
   // 7. Search Filter

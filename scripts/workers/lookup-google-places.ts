@@ -250,6 +250,7 @@ async function runGooglePlacesWorker() {
   let verifiedCount = 0;
   let rejectedCount = 0;
   let skippedCount = 0;
+  let apiCallsCount = 0;
 
   for (let i = 0; i < queue.length; i++) {
     const temple = queue[i];
@@ -266,6 +267,7 @@ async function runGooglePlacesWorker() {
       const searchQuery = `${temple.name}, ${temple.district?.name || ""} ${temple.state?.name || ""}`;
       console.log(`  → Searching Google Places: "${searchQuery}"`);
 
+      apiCallsCount++;
       const candidates = await searchGooglePlaces(searchQuery, temple.latitude, temple.longitude);
       await sleep(REQUEST_DELAY_MS); // Throttling
 
@@ -397,18 +399,24 @@ async function runGooglePlacesWorker() {
         }
         rejectedCount++;
       }
-    } catch (err: any) {
-      console.error(`  ❌ Error processing ${temple.identifier}:`, err.message);
+    } catch (err: unknown) {
+      console.error(`  ❌ Error processing ${temple.identifier}:`, err instanceof Error ? err.message : String(err));
       rejectedCount++;
     }
   }
 
+  const estimatedCost = (apiCallsCount * 0.017).toFixed(4);
+
   console.log("\n=================================================");
-  console.log("Worker Run Complete:");
-  console.log(`- Total Processed: ${queue.length}`);
-  console.log(`- Verified & Associated: ${verifiedCount}`);
-  console.log(`- Rejected / No Match: ${rejectedCount}`);
-  console.log(`- Skipped: ${skippedCount}`);
+  console.log("🏛️ GOOGLE PLACES VERIFICATION QUEUE REPORT");
+  console.log("=================================================");
+  console.log(`• Total Temples in Batch:    ${queue.length}`);
+  console.log(`• Live API Calls Dispatched: ${apiCallsCount}`);
+  console.log(`• Verified & Associated:     ${verifiedCount}`);
+  console.log(`• Flagged / Unmatched:       ${rejectedCount}`);
+  console.log(`• Skipped:                   ${skippedCount}`);
+  console.log(`• Estimated API Cost:        $${estimatedCost} USD ($0.017/query)`);
+  console.log(`• Mode:                      ${isDryRun ? "DRY RUN (no DB writes)" : "LIVE DATABASE SYNCHRONIZATION"}`);
   console.log("=================================================");
 }
 

@@ -3,6 +3,7 @@ import { Temple } from "@/lib/types";
 import { getTemple, nearbyFor } from "@/lib/registry";
 import { statusFor, minutesToHHMM, toIndia } from "@/lib/format";
 import { translate, type LabelKey } from "@/lib/i18n";
+import { haversineDistance } from "@/lib/importer/deduplicate";
 
 /** ------------------------------------------------------------------ **
  *  LOCATION + TEMPLE CONTEXT ENGINE
@@ -20,12 +21,14 @@ export const ItineraryItemSchema = z.object({
   distanceKm: z.number().min(0),
   reason: z.string(),
   source: z.string(),
+  day: z.number().int().min(1).max(7).optional(),
 });
 
 export const ItinerarySchema = z.object({
   summary: z.string(),
   duration: z.string(),
   estimatedCost: z.string(),
+  days: z.number().int().min(1).max(7).optional(),
   items: z.array(ItineraryItemSchema),
   warnings: z.array(z.string()),
 });
@@ -34,7 +37,9 @@ export type PlanResult = z.infer<typeof ItinerarySchema>;
 
 export interface PlanRequest {
   templeId: string;
+  additionalTempleIds?: string[];
   date: string;
+  days?: number;
   arrival: string;
   departure: string;
   people: number;
@@ -53,6 +58,7 @@ interface Stop {
   reason: string;
   source: string;
   kind: string;
+  day?: number;
 }
 
 const SPEED: Record<PlanRequest["travel"], number> = {
@@ -73,9 +79,16 @@ function min(str: string) {
 
 const safeAdd = (base: number, extra: number) => Math.min(base + extra, Math.max(base, 24 * 60 - 30));
 
-export function buildPlan(req: PlanRequest, templeOverride?: Temple): PlanResult {
-  const temple = templeOverride ?? getTemple(req.templeId);
-  if (!temple)
+export function buildPlan(req: PlanRequest, templeOverride?: Temple | Temple[]): PlanResult {
+  const temples: Temple[] = Array.isArray(templeOverride)
+    ? templeOverride
+    : templeOverride
+      ? [templeOverride]
+      : req.templeId
+        ? [getTemple(req.templeId)].filter(Boolean) as Temple[]
+        : [];
+
+  if (temples.length === 0) {
     return {
       summary: translate(req.lang, "ai_not_verified"),
       duration: "–",
@@ -83,33 +96,112 @@ export function buildPlan(req: PlanRequest, templeOverride?: Temple): PlanResult
       items: [],
       warnings: [translate(req.lang, "ai_not_verified")],
     };
+  }
 
+  const primaryTemple = temples[0];
   const start = Math.max(min(req.arrival), 4 * 60); // earliest 04:00
   const end = Math.max(min(req.departure), start + 90); // at least 90 min
   const window = end - start;
-  const status = statusFor(temple);
-  const isOpen = status.state === "open" || status.state === "unknown";
-
   const stops: Stop[] = [];
   let cursor = start;
-  let travelPortion = Math.round(window * 0.12); // time budget for travel between stops
+  const warnings: string[] = [];
 
-  const addTempleVisit = () => {
-    const dur = Math.min(75, Math.max(45, Math.round(window * 0.22)));
+  // Demographic considerations
+  const hasChildren = req.companions.includes("children");
+  const hasElderly = req.companions.includes("elderly");
+  const needsAccessibility = req.companions.includes("accessibility");
+
+  if (hasChildren) {
+    warnings.push("Traveling with children: 20-minute rest buffers allocated after main darshan; carry hydration and avoid midday stone courtyard heat.");
+  }
+  if (hasElderly) {
+    warnings.push("Senior citizens in party: Pacing reduced; ancient temple prakarams feature high monolithic stone sills. Seek devasthanam battery buggies or special darshan counters.");
+  }
+  if (needsAccessibility) {
+    warnings.push("Accessibility note: Most ancient ASI-protected monuments and historic sanctums have stepped thresholds; enquire with temple sevaks for designated accessible entrances.");
+  }
+
+  // Iterate over all requested temples
+  for (let idx = 0; idx < temples.length; idx++) {
+    const t = temples[idx];
+    const status = statusFor(t);
+    const isOpen = status.state === "open" || status.state === "unknown";
+
+    // If unverified timings, warn with epistemic honesty
+    if (status.state === "unknown" || t.timings?.verification.status === "UNVERIFIED") {
+      warnings.push(`Darshan schedule for ${t.name} is awaiting official devasthanam confirmation. Confirm daily pooja timings at the counter before entry.`);
+    }
+
+    // Transit leg if subsequent temple
+    if (idx > 0) {
+      const prev = temples[idx - 1];
+      const distM = haversineDistance(
+        prev.latitude,
+        prev.longitude,
+        t.latitude,
+        t.longitude
+      );
+      const distKm = Math.round((distM / 1000) * 10) / 10;
+      const transitTime = Math.max(15, travelMin(distKm, req.travel));
+
+      stops.push({
+        place: `Transit: ${prev.name} → ${t.name}`,
+        type: `transit · ${req.travel}`,
+        durationMinutes: transitTime,
+        distanceKm: distKm,
+        reason: `Pilgrimage transit connecting shrines along the sacred circuit (${distKm} km via ${req.travel}).`,
+        source: "Geospatial Haversine calculation",
+        kind: "transit",
+      });
+      cursor = safeAdd(cursor, transitTime);
+    }
+
+    // Calculate darshan duration based on number of temples and window
+    const baseDuration = temples.length > 1
+      ? Math.min(60, Math.max(40, Math.round((window * 0.4) / temples.length)))
+      : Math.min(75, Math.max(45, Math.round(window * 0.25)));
+
+    // Grounded history vs traditional belief reasoning
+    let visitReason = isOpen
+      ? `Main darshan and parikrama of ${t.name}.`
+      : `Anchor visit to ${t.name}; verify current pooja schedule.`;
+
+    const historyText = t.history?.length ? t.history.map((h) => `${h.title}: ${h.body}`).join(". ") : null;
+    const beliefText = t.whyFamous?.find((w) => w.type === "belief")?.body ?? null;
+
+    if (historyText) {
+      visitReason += ` Documented history: ${historyText.slice(0, 110)}...`;
+    } else if (beliefText) {
+      visitReason += ` Sthala purana: ${beliefText.slice(0, 110)}...`;
+    }
+
     stops.push({
-      place: temple.name,
-      type: "temple",
-      durationMinutes: dur,
+      place: t.name,
+      type: "temple darshan",
+      durationMinutes: baseDuration,
       distanceKm: 0,
-      reason: isOpen
-        ? "Main darshan of the day — gives you the core of the visit before you explore the surroundings."
-        : "The temple is the anchor of this plan; verify its schedule before setting out.",
-      source: temple.source.org,
+      reason: visitReason,
+      source: t.source?.org || "Devyatra Verified Directory",
       kind: "temple",
     });
-    cursor = safeAdd(cursor, dur);
-  };
+    cursor = safeAdd(cursor, baseDuration);
 
+    // Optional child/elderly pause after darshan
+    if ((hasChildren || hasElderly) && idx < temples.length - 1) {
+      stops.push({
+        place: `${t.name} Courtyard Rest`,
+        type: "rest & hydration",
+        durationMinutes: 20,
+        distanceKm: 0,
+        reason: "Gentle pause for senior citizens and children before proceeding to next shrine.",
+        source: "Devyatra Pacing Engine",
+        kind: "rest",
+      });
+      cursor = safeAdd(cursor, 20);
+    }
+  }
+
+  // Meal planning around the temples
   const meals: string[] = [];
   const foodPref = req.interests.includes("food");
   const veg = !req.interests.some((i) => i.includes("non-veg"));
@@ -119,97 +211,80 @@ export function buildPlan(req: PlanRequest, templeOverride?: Temple): PlanResult
     if (end >= 18 * 60 && start <= 19 * 60) meals.push("dinner");
   }
 
-  const attractions = nearbyFor(temple.id).filter((n) =>
-    n.kind === "attraction" || n.kind === "nature" || n.kind === "temple"
-  );
-  const restaurants = nearbyFor(temple.id).filter((n) => n.kind === "restaurant");
-  const hotel = nearbyFor(temple.id).find((n) => n.kind === "hotel");
-
-  const feedByInterest = () => {
-    if (req.interests.includes("history") && attractions.length) return attractions;
-    if (req.interests.includes("nature") && attractions.some((a) => a.kind === "nature"))
-      return attractions.filter((a) => a.kind === "nature");
-    if (req.interests.includes("food") && meals.length) return [...restaurants, ...nearbyFor(temple.id).filter((n) => n.kind === "shopping")];
-    return attractions;
-  };
-
-  const candidates = feedByInterest().slice(0, 4);
-  const used = new Set<string>();
-
-  addTempleVisit();
-
+  const restaurants = nearbyFor(primaryTemple.id).filter((n) => n.kind === "restaurant");
   const mealSlots: { at: number; label: string; kind: "breakfast" | "lunch" | "dinner" }[] = [
     { at: 9 * 60, label: "breakfast", kind: "breakfast" },
     { at: 12 * 60 + 30, label: "lunch", kind: "lunch" },
     { at: 19 * 60, label: "dinner", kind: "dinner" },
   ];
 
-  let passedCount = 0;
   for (const ms of mealSlots) {
     if (!meals.includes(ms.kind)) continue;
-    if (ms.at < start || ms.at > end) continue;
+    if (cursor > end - 45) break;
+
     const rest = restaurants.find(
-      (r) => !used.has(r.id) && (!r.cuisine || veg || !r.cuisine.some((c) => c.toLowerCase().includes("veg")))
-    ) ?? restaurants.find((r) => !used.has(r.id));
+      (r) => (!r.cuisine || veg || !r.cuisine.some((c) => c.toLowerCase().includes("veg")))
+    );
     if (!rest) continue;
-    const item: Stop = {
+
+    stops.push({
       place: rest.name,
-      type: `restaurant · ${rest.priceHint ?? "local"}`,
+      type: `restaurant · ${rest.priceHint ?? "vegetarian"}`,
       durationMinutes: 45,
       distanceKm: rest.distanceKm,
-      reason: rest.recommendation ?? "Close to the temple and a good food stop for this part of the day.",
-      source: "Curated nearby data",
+      reason: rest.recommendation ?? "Recommended satvik / vegetarian dining spot for pilgrims.",
+      source: "Curated nearby directory",
       kind: "restaurant",
-    };
-    const arrivalOffset = Math.max(0, ms.at - cursor) + Math.min(travelPortion, travelMin(rest.distanceKm, req.travel));
-    cursor = safeAdd(cursor, arrivalOffset);
-    if (cursor > ms.at + 60) continue; // too late to fit the meal comfortably
-    stops.push(item);
-    used.add(rest.id);
-    cursor = safeAdd(cursor, item.durationMinutes);
-    passedCount++;
-    if (passedCount > 3) break;
-  }
-
-  for (const c of candidates) {
-    if (used.has(c.id)) continue;
-    if (cursor >= end - 45) break;
-    used.add(c.id);
-    const tt = travelMin(c.distanceKm, req.travel);
-    stops.push({
-      place: c.name,
-      type:
-        c.kind === "nature" ? "nature / outdoors"
-        : c.kind === "temple" ? "nearby temple"
-        : "attraction",
-      durationMinutes: Math.min(75, Math.max(45, Math.round((window - cursor) * 0.25))),
-      distanceKm: c.distanceKm,
-      reason: c.recommendation ?? "Well-placed stop that fits the remaining time.",
-      source: "Curated nearby data",
-      kind: c.kind,
     });
-    if (tt < travelPortion) travelPortion -= tt;
-    cursor = safeAdd(cursor, 60);
+    cursor = safeAdd(cursor, 45);
+    break; // One primary meal per itinerary to avoid congestion
   }
 
-  if (hotel && end - cursor >= 30) {
-    stops.push({
-      place: hotel.name,
-      type: "stay",
-      durationMinutes: 30,
-      distanceKm: hotel.distanceKm,
-      reason: "Base for the night close to your departure checkpoint.",
-      source: "Curated nearby data",
-      kind: "hotel",
-    });
+  // Include nearby cultural / nature / auxiliary shrines when planning a single temple
+  if (temples.length === 1) {
+    const nearbyAttractions = nearbyFor(primaryTemple.id).filter(
+      (n) => n.kind === "attraction" || n.kind === "nature" || n.kind === "temple" || n.kind === "shopping"
+    );
+    for (const c of nearbyAttractions.slice(0, 3)) {
+      if (cursor >= end - 45) break;
+      stops.push({
+        place: c.name,
+        type:
+          c.kind === "nature"
+            ? "nature / outdoors"
+            : c.kind === "temple"
+            ? "nearby temple"
+            : c.kind === "shopping"
+            ? "pilgrim bazaar"
+            : "heritage attraction",
+        durationMinutes: 45,
+        distanceKm: c.distanceKm,
+        reason: c.recommendation ?? "Well-placed nearby stop to enrich your pilgrimage day.",
+        source: "Curated nearby data",
+        kind: c.kind,
+      });
+      cursor = safeAdd(cursor, 45);
+    }
   }
 
-  // Rebuild times sequentially from the cursor walk
+  // Rebuild sequential timestamps with day partitioning
+  const requestedDays = Math.max(1, Math.min(3, req.days || 1));
+  let currentDay = 1;
   let t = start;
-  const detailed = stops.map((s) => {
+  const itemsPerDay = Math.ceil(stops.length / requestedDays);
+
+  const detailed = stops.map((s, idx) => {
+    if (requestedDays > 1) {
+      const calculatedDay = Math.min(requestedDays, Math.floor(idx / itemsPerDay) + 1);
+      if (calculatedDay !== currentDay) {
+        currentDay = calculatedDay;
+        t = start; // Reset cursor to day start
+      }
+    }
     const at = t;
-    t = safeAdd(t, s.durationMinutes + (s.distanceKm > 0.4 ? Math.min(15, travelMin(s.distanceKm, req.travel)) : 0));
+    t = safeAdd(t, s.durationMinutes);
     return {
+      day: currentDay,
       time: minutesToHHMM(at),
       place: s.place,
       type: s.type,
@@ -220,28 +295,25 @@ export function buildPlan(req: PlanRequest, templeOverride?: Temple): PlanResult
     };
   });
 
-  const travelFriendly = req.companions.includes("elderly") || req.companions.includes("accessibility") || req.companions.includes("children");
-  const warnings: string[] = [];
-  if (travelFriendly)
-    warnings.push("Pace kept moderate and foot-distance limited for your party — confirm step-free routes at each stop.");
-  if (status.state === "unknown")
-    warnings.push("Timing for this temple is not yet officially verified — confirm its schedule on the day before travel.");
-  if (req.companions.includes("accessibility"))
-    warnings.push("Accessibility assistance varies by temple; most historical monuments have limited step-free access.");
-  if (!req.interests.some((i) => i.includes("food")) && detailed.length > 2)
-    warnings.push("Add 'Food' to your interests to weave meals into this plan.");
-
   const hCount = Math.max(1, Math.round((end - start) / 60));
   const budgetHint =
-    req.budget === "budget" ? "Budget-friendly" : req.budget === "premium" ? "Premium" : "Moderate";
-  const rng = req.budget === "premium" ? [1200, 2500] : [300, 900];
-  const lo = rng[0] * req.people;
-  const hi = rng[1] * req.people;
+    req.budget === "budget" ? "Budget" : req.budget === "premium" ? "Comfort" : "Standard";
+  const rng = req.budget === "premium" ? [1000, 2000] : [250, 600];
+  const lo = rng[0] * req.people * requestedDays;
+  const hi = rng[1] * req.people * requestedDays;
+
+  const templeNames = temples.map((x) => x.name).join(temples.length === 2 ? " & " : ", ");
+  const summary = requestedDays > 1
+    ? `A ${requestedDays}-day sacred pilgrimage circuit (${requestedDays * hCount} total hours) visiting ${templeNames} in ${primaryTemple.location}, ${primaryTemple.district}. Balanced with verified transit legs, sacred darshans, and satvik refreshment stops across ${requestedDays} days.`
+    : temples.length > 1
+      ? `A ${hCount}-hour multi-temple pilgrimage circuit visiting ${templeNames} in ${primaryTemple.location}, ${primaryTemple.district}. Balanced with verified transit legs, sacred darshans, and satvik refreshment stops.`
+      : `A ${hCount}-hour pilgrimage day at ${primaryTemple.name} in ${primaryTemple.location}, ${primaryTemple.district}. Optimized for sacred darshan, parikrama, and heritage appreciation.`;
 
   const result: PlanResult = {
-    summary: `A ${hCount}-hour pilgrimage day at ${temple.name} in ${temple.location}, ${temple.district}, balancing darshan, nearby sights, food and rest.`,
-    duration: `${hCount} hour${hCount > 1 ? "s" : ""}`,
-    estimatedCost: `${budgetHint} · ₹${lo.toLocaleString("en-IN")}–₹${hi.toLocaleString("en-IN")} total (${req.people} people)`,
+    summary,
+    days: requestedDays,
+    duration: requestedDays > 1 ? `${requestedDays} Days (${requestedDays * hCount} hours)` : `${hCount} hour${hCount > 1 ? "s" : ""}`,
+    estimatedCost: `${budgetHint} · ₹${lo.toLocaleString("en-IN")}–₹${hi.toLocaleString("en-IN")} total for ${req.people} ${req.people === 1 ? "person" : "people"} over ${requestedDays} ${requestedDays === 1 ? "day" : "days"} (Free general entry; covers satvik meals & local transit)`,
     items: detailed,
     warnings,
   };
