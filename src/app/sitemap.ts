@@ -4,7 +4,7 @@ import { TEMPLES, getState } from "@/lib/registry";
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = "https://devyatra.dev";
+  const base = "https://templeora.vercel.app";
   const now = new Date();
 
   const staticRoutes = [

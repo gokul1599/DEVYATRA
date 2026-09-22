@@ -7,11 +7,13 @@ import { motion, useReducedMotion } from "motion/react";
 import { SearchBar } from "@/components/search-bar";
 import { DevyatraArt } from "@/components/devyatra-art";
 
+import { SacredAmbient } from "@/components/sacred-ambient";
+
 const QUICK = [
-  { label: "Tirumala", href: "/temples/andhra-pradesh/sri-venkateswara-temple" },
-  { label: "Kashi Vishwanath", href: "/temples/uttar-pradesh/kashi-vishwanath-temple" },
-  { label: "Jagannath Puri", href: "/temples/odisha/jagannath-temple-puri" },
-  { label: "Meenakshi", href: "/temples/tamil-nadu/meenakshi-amman-temple" },
+  { label: "తిరుపతి (Tirupati)", href: "/temples/andhra-pradesh/sri-venkateswara-temple" },
+  { label: "काशी (Kashi)", href: "/temples/uttar-pradesh/kashi-vishwanath-temple" },
+  { label: "மீனாட்சி (Madurai)", href: "/temples/tamil-nadu/meenakshi-amman-temple" },
+  { label: "Puri Jagannath", href: "/temples/odisha/jagannath-temple-puri" },
   { label: "Kedarnath", href: "/temples/uttarakhand/kedarnath-temple" },
   { label: "Somnath", href: "/temples/gujarat/somnath-temple" },
 ];
@@ -61,11 +63,12 @@ export function Hero() {
 
   return (
     <section className="relative flex min-h-[92svh] flex-col overflow-hidden">
-      {/* cinematic backdrop */}
+      {/* cinematic backdrop + restrained 3D sacred geometry ambient */}
       <div className="absolute inset-0" aria-hidden>
-        <DevyatraArt seed="bharat-darshan-hero" variant="hero" className="h-full w-full" />
+        <DevyatraArt seed="bharat-darshan-hero" variant="hero" className="h-full w-full opacity-60" />
+        <SacredAmbient />
         <div className="absolute inset-0 bg-gradient-to-b from-obsidian/40 via-transparent to-obsidian" />
-        <div className="absolute inset-0 bg-gradient-to-r from-obsidian/70 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-obsidian/80 via-transparent to-transparent" />
       </div>
 
       <div className="relative z-10 mx-auto flex w-full max-w-[1200px] flex-1 flex-col justify-center px-5 pb-16 pt-36 sm:px-8">
@@ -76,18 +79,17 @@ export function Hero() {
           onAnimationComplete={() => setReady(true)}
         >
           <p className="mb-5 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-bright">
-            <Sparkles className="h-3.5 w-3.5" />
-            India&apos;s sacred atlas — verified by sources, guided by AI
+            <Sparkles className="h-3.5 w-3.5 text-gold" />
+            1,655 Verified Sanctuaries · 36 States & UTs · Guided by AI
           </p>
 
-          <h1 className="max-w-3xl font-display text-[2.7rem] font-medium leading-[1.06] tracking-tight text-ivory sm:text-6xl md:text-7xl">
+          <h1 className="max-w-4xl font-display text-[2.8rem] font-medium leading-[1.05] tracking-tight text-ivory sm:text-6xl md:text-7xl">
             Discover India&apos;s
-            <span className="gold-text"> Temples</span>
+            <span className="gold-text"> Sacred Landscape</span>
           </h1>
 
-          <p className="mt-5 max-w-xl text-[15.5px] leading-relaxed text-ivory-dim sm:text-lg">
-            Explore sacred places, uncover their stories, plan your journey, and discover
-            everything around you — powered by AI, trusted by pilgrims.
+          <p className="mt-5 max-w-2xl text-[15.5px] leading-relaxed text-ivory-dim sm:text-lg">
+            Discover temples. Understand their stories. Plan your journey. Explore what lies around them — grounded in verified heritage sources and guided by pilgrimage AI.
           </p>
 
           <div className="mt-9 max-w-2xl">

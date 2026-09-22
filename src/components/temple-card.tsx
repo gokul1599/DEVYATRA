@@ -152,6 +152,13 @@ export function TempleCard({
             ))}
             {archOrType && <Chip>{archOrType}</Chip>}
           </div>
+
+          <div className="mt-4 flex items-center justify-between border-t border-white/[0.06] pt-3 text-[12px] font-medium text-ivory-dim/70 transition-colors group-hover:text-gold-bright">
+            <span className="text-[11.5px] uppercase tracking-wider text-ivory-dim/50">Heritage Sanctuary</span>
+            <span className="inline-flex items-center gap-1 transition-transform group-hover:translate-x-0.5">
+              Explore Shrine →
+            </span>
+          </div>
         </div>
       </Link>
     </Lift>
