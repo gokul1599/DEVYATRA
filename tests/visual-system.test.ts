@@ -112,4 +112,43 @@ describe("V2.5 — Premium Cinematic Visual Experience & Design Tokens", () => {
     assert.equal(tower.depthTier, 5);
     assert.ok(tower.coordinates.y > sanctum.coordinates.y, "Tower must ascend skyward above sanctum");
   });
+
+  test("resolves authentic multi-photo galleries with verified licensing", async () => {
+    const { getTempleGallery } = await import("../src/lib/images/registry");
+    const tirupatiGallery = getTempleGallery("sri-venkateswara-temple");
+    assert.ok(tirupatiGallery.length >= 3, "Tirupati must have at least 3 curated gallery images");
+
+    for (const img of tirupatiGallery) {
+      assert.ok(img.src.startsWith("https://"), "Gallery image source must be secure HTTPS");
+      assert.ok(img.rights, "Gallery image must have declared rights");
+      assert.ok(img.credit.length > 0, "Gallery image must have attribution credit");
+      assert.ok(img.caption && img.caption.length > 0, "Gallery image must have educational caption");
+    }
+
+    // Zero-hallucination check: non-existent temple returns empty gallery array
+    const emptyGallery = getTempleGallery("non-existent-temple");
+    assert.deepEqual(emptyGallery, []);
+  });
+
+  test("classifies temple architectural traditions and verifies Shilpa Shastra models", async () => {
+    const { getTraditionFromArchitecture, TRADITION_DETAILS } = await import(
+      "../src/lib/architecture/canonical-model"
+    );
+
+    assert.equal(getTraditionFromArchitecture("Dravidian Architecture"), "DRAVIDIAN");
+    assert.equal(getTraditionFromArchitecture("Nagara Style"), "NAGARA");
+    assert.equal(getTraditionFromArchitecture("Kalinga Rekha Deul"), "KALINGA");
+    assert.equal(getTraditionFromArchitecture("Hoysala Vesara"), "VESARA");
+    assert.equal(getTraditionFromArchitecture(undefined), "DRAVIDIAN");
+
+    const traditions = ["DRAVIDIAN", "NAGARA", "KALINGA", "VESARA"] as const;
+    for (const t of traditions) {
+      const details = TRADITION_DETAILS[t];
+      assert.ok(details, `Tradition details for "${t}" must be defined`);
+      assert.ok(details.name.length > 0);
+      assert.ok(details.sanskritName.length > 0, `Tradition "${t}" must include Sanskrit designation`);
+      assert.ok(details.superstructure.length > 0);
+      assert.ok(details.notableExamples.length >= 2, `Tradition "${t}" must list iconic shrines`);
+    }
+  });
 });

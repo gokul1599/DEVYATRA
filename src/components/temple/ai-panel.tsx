@@ -73,11 +73,17 @@ function AskStudio({ templeId, templeName, lang }: { templeId: string; templeNam
   ]);
   const [q, setQ] = useState("");
   const [busy, setBusy] = useState(false);
-  const end = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    end.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  }, [msgs, busy]);
+    // Only scroll internally within chat container if user has asked questions
+    if (msgs.length > 1 && messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTo({
+        top: messagesContainerRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  }, [msgs.length, busy]);
 
   const ask = async (question: string) => {
     const text = question.trim();
@@ -102,7 +108,7 @@ function AskStudio({ templeId, templeName, lang }: { templeId: string; templeNam
 
   return (
     <div className="flex h-[420px] flex-col px-5 py-4">
-      <div className="flex-1 space-y-3 overflow-y-auto pr-1">
+      <div ref={messagesContainerRef} className="flex-1 space-y-3 overflow-y-auto pr-1">
         {msgs.map((m, i) => (
           <div key={i} className={cn("flex gap-2.5", m.role === "user" && "flex-row-reverse")}>
             <span
@@ -133,7 +139,6 @@ function AskStudio({ templeId, templeName, lang }: { templeId: string; templeNam
             Thinking…
           </div>
         )}
-        <div ref={end} />
       </div>
 
       <div className="mt-3 flex flex-wrap gap-2">

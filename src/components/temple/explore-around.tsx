@@ -183,7 +183,7 @@ export function ExploreAround({
       </div>
 
       {/* Interactive Map Visualizer */}
-      <div className="mt-8">
+      <div id="nearby-map" className="mt-8 scroll-mt-28">
         <TempleNearbyMap
           templeName={templeName}
           templeLat={templeLat}
@@ -224,6 +224,14 @@ export function ExploreAround({
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {filteredAttractions.map((attr) => {
           const isSaved = savedIds.has(attr.id);
+          const driveMins = attr.estimatedDriveMinutes || 15;
+          const visitBadge =
+            driveMins <= 20
+              ? { text: "⚡ Quick Stop (~30m)", cls: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" }
+              : driveMins <= 45
+                ? { text: "⏳ Half-Day (~1.5h)", cls: "text-gold-bright bg-gold/10 border-gold/30" }
+                : { text: "🌄 Deep Visit (2h+)", cls: "text-saffron bg-saffron/10 border-saffron/30" };
+
           return (
             <div
               key={attr.id}
@@ -249,8 +257,11 @@ export function ExploreAround({
                   <p className="text-[12px] text-ivory-dim">{attr.nativeName}</p>
                 )}
 
-                {/* Subcategory & Protection */}
+                {/* Subcategory & Protection & Visitability Badge */}
                 <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px]">
+                  <span className={cn("rounded border px-2 py-0.5 text-[10.5px] font-medium", visitBadge.cls)}>
+                    {visitBadge.text}
+                  </span>
                   {attr.subcategory && (
                     <span className="rounded border border-line bg-surface px-1.5 py-0.5 text-ivory-dim">
                       {attr.subcategory}

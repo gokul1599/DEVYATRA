@@ -42,6 +42,9 @@ import { buildMasterDestinationIntelligence } from "@/lib/intelligence/context-e
 import { CinematicImage } from "@/components/ui/cinematic-image";
 import { getTempleImage } from "@/lib/images/registry";
 import { TempleArchitecture3D } from "@/components/3d/temple-architecture-3d";
+import { TempleScrollGuard } from "@/components/temple/temple-scroll-guard";
+import { TempleTopBar } from "@/components/temple/temple-top-bar";
+import { TempleMediaGallery } from "@/components/temple/temple-media-gallery";
 import { cn } from "@/lib/cn";
 
 export const dynamicParams = true;
@@ -140,6 +143,13 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structData) }} />
+      <TempleScrollGuard />
+      <TempleTopBar
+        templeSlug={temple.slug}
+        templeName={temple.name}
+        stateName={st.name}
+        stateCode={st.code}
+      />
 
       {/* ---------- Hero ---------- */}
       <section className="relative overflow-hidden pt-28">
@@ -210,48 +220,31 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
         </Container>
       </section>
 
-      {/* ---------- Quick nav ---------- */}
-      <div className="sticky top-16 z-40 border-y border-line bg-obsidian/80 backdrop-blur-md">
-        <Container className="flex gap-5 overflow-x-auto py-2.5 text-[12.5px]">
-          {[
-            ["#command-center", "Command Center"],
-            ["#intelligence", "Live Intelligence"],
-            ["#access-points", "Access Points"],
-            ["#logistics", "Logistics & Rules"],
-            ["#overview", "Overview"],
-            ["#history", "History"],
-            ["#accessibility", "Accessibility & Families"],
-            ["#timings", "Timings"],
-            ["#booking", "Booking"],
-            ["#what-changed", "What Changed & Sources"],
-            ["#festivals", "Festivals"],
-            ["#extend-your-yatra", "Extend Yatra (300 km)"],
-            ["#explore-around", "Explore Around"],
-            ["#ask-ai", "Ask AI"],
-          ].map(([href, label]) => (
-            <a key={href} href={href} className="shrink-0 whitespace-nowrap text-ivory-dim transition-colors hover:text-gold-bright">
-              {label}
-            </a>
-          ))}
-        </Container>
-      </div>
-
       <Container className="pt-10">
         {/* Destination Command Center */}
-        <section id="command-center" className="mb-12">
+        <section id="command-center" className="mb-12 scroll-mt-28">
           <TempleDayView temple={temple} />
+        </section>
+
+        {/* Visual Heritage Archive / Authentic Photo Gallery */}
+        <section id="gallery" className="mb-12 scroll-mt-28">
+          <TempleMediaGallery
+            templeSlug={temple.slug}
+            templeName={temple.name}
+            architectureStyle={temple.architecture}
+          />
         </section>
 
         <div className="grid gap-12 lg:grid-cols-[1.6fr_1fr]">
           <div className="min-w-0 space-y-16">
             {/* Live Intelligence Section */}
-            <section id="intelligence">
+            <section id="intelligence" className="scroll-mt-28">
               <LiveTempleIntelligence temple={temple} />
             </section>
 
             {/* Exact Access Points */}
             {masterIntelligence && (
-              <section id="access-points">
+              <section id="access-points" className="scroll-mt-28">
                 <AccessPointsCard
                   templeName={temple.name}
                   accessPoints={masterIntelligence.accessPoints}
@@ -261,7 +254,7 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
 
             {/* Visit Logistics & Courtyard Protocol */}
             {masterIntelligence && (
-              <section id="logistics">
+              <section id="logistics" className="scroll-mt-28">
                 <VisitLogisticsPanel
                   logistics={masterIntelligence.visitLogistics}
                   templeName={temple.name}
@@ -270,7 +263,7 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
             )}
 
             {/* Overview */}
-            <section id="overview">
+            <section id="overview" className="scroll-mt-28">
               <p className="text-[15.5px] leading-relaxed text-ivory/90">{temple.description}</p>
 
               <div className="mt-8 grid gap-4 sm:grid-cols-2">
@@ -289,7 +282,7 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
             </section>
 
             {/* History */}
-            <section id="history">
+            <section id="history" className="scroll-mt-28">
               <SectionHeading eyebrow="History" title="Through the centuries" />
               <ol className="relative space-y-6 border-l border-line pl-6">
                 {temple.history.map((h, i) => (
@@ -310,7 +303,7 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
             </section>
 
             {/* Architecture & Sacred Geometry */}
-            <section id="architecture" className="space-y-6">
+            <section id="spatial-form" className="space-y-6 scroll-mt-28">
               <SectionHeading
                 eyebrow="Sacred Geometry & Form"
                 title={`${temple.architecture ? `${temple.architecture} Architecture` : "Sacred Temple Architecture"}`}
@@ -319,6 +312,7 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
               <TempleArchitecture3D
                 title={`${temple.name} — Spatial Form`}
                 subtitle={`Architectural layout grounded in canonical ${temple.architecture || "Vedic"} sacred design principles.`}
+                templeArchitecture={temple.architecture}
               />
             </section>
 
@@ -362,7 +356,7 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
             <VisitCommandCenter temple={temple} />
 
             {/* Timings */}
-            <section id="timings" className="rounded-3xl border border-line bg-obsidian-2 p-6">
+            <section id="timings" className="rounded-3xl border border-line bg-obsidian-2 p-6 scroll-mt-28">
               <div className="mb-4 flex items-center justify-between">
                 <p className="flex items-center gap-2 font-display text-lg text-ivory">
                   <Clock className="h-5 w-5 text-gold" /> Timings & darshan
@@ -399,7 +393,7 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
             </section>
 
             {/* Booking / entry */}
-            <section id="booking" className="rounded-3xl border border-line bg-obsidian-2 p-6">
+            <section id="booking" className="rounded-3xl border border-line bg-obsidian-2 p-6 scroll-mt-28">
               <p className="mb-4 flex items-center gap-2 font-display text-lg text-ivory">
                 <Ticket className="h-5 w-5 text-gold" /> Booking & entry
               </p>
@@ -442,7 +436,7 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
 
             {/* What Changed & Source Ledger */}
             {masterIntelligence && (
-              <section id="what-changed">
+              <section id="what-changed" className="scroll-mt-28">
                 <WhatChangedCard
                   recentChanges={masterIntelligence.recentChanges}
                   sourceLedger={masterIntelligence.sourceLedger}
@@ -473,7 +467,7 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
         </div>
 
         {/* ---------- Explore Around This Temple (Normalized Heritage & Famous Places) ---------- */}
-        <section id="explore-around" className="mt-16">
+        <section id="explore-around" className="mt-16 scroll-mt-28">
           <ExploreAround
             templeId={temple.id}
             templeSlug={temple.slug}
@@ -487,7 +481,7 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
         </section>
 
         {/* ---------- Extend Your Yatra (300 km Regional Sacred Atlas) ---------- */}
-        <section id="extend-your-yatra" className="mt-16">
+        <section id="extend-your-yatra" className="mt-16 scroll-mt-28">
           <TempleExtendedDiscovery
             templeId={temple.id}
             templeName={temple.name}
@@ -498,7 +492,7 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
         </section>
 
         {/* ---------- Nearby ---------- */}
-        <section id="nearby" className="mt-16">
+        <section id="nearby" className="mt-16 scroll-mt-28">
           <SectionHeading
             eyebrow="Around the shrine"
             title="What's close by"
@@ -540,7 +534,7 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
         </section>
 
         {/* ---------- AI ---------- */}
-        <section id="ask-ai" className="mt-16">
+        <section id="ask-ai" className="mt-16 scroll-mt-28">
           <SectionHeading
             eyebrow="AI companion"
             title="Ask anything. Plan beautifully."
