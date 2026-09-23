@@ -347,7 +347,7 @@ export default function PlanStudio() {
         <div>
           <p className="font-display text-xl font-medium text-ivory">Design Your Pilgrimage Circuit</p>
           <p className="mt-1 text-xs text-ivory-dim">
-            Select 1 to 5 temples across India (2,084 shrines in 714 districts · 77.8% national coverage). The AI sequences travel legs, darshan pacing, and meal breaks.
+            Select 1 to 5 temples across India. The AI sequences travel legs, darshan pacing, and meal breaks based on your itinerary.
           </p>
         </div>
 

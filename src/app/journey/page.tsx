@@ -70,7 +70,8 @@ export default function JourneyPage() {
   const [journeys, setJourneys] = useState<SavedJourney[]>([]);
   const [alerts, setAlerts] = useState<TempleAlert[]>([]);
   const [recommendations, setRecommendations] = useState<ScoredTemple[]>([]);
-  const [activeTab, setActiveTab] = useState<"saved" | "journeys" | "alerts" | "recommendations" | "preferences">("saved");
+  const [activeTab, setActiveTab] = useState<"saved" | "places" | "journeys" | "alerts" | "recommendations" | "preferences">("saved");
+  const [savedPlaces, setSavedPlaces] = useState<Array<{ id: string; name: string; category: string; location: string }>>([]);
 
   // Editable preferences
   const [prefs, setPrefs] = useState<UserPreferences>({
@@ -125,6 +126,14 @@ export default function JourneyPage() {
           const stored = localStorage.getItem(SAVED_KEY);
           if (stored) setSaved(JSON.parse(stored));
         }
+
+        try {
+          const raw = localStorage.getItem("tem_saved_places_rich");
+          if (raw) {
+            const list = JSON.parse(raw) as Array<{ id: string; name: string; category: string; location: string }>;
+            setSavedPlaces(list);
+          }
+        } catch {}
       })
       .catch(() => {});
   }, []);
@@ -287,6 +296,23 @@ export default function JourneyPage() {
             </button>
 
             <button
+              onClick={() => setActiveTab("places")}
+              className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-medium transition-all ${
+                activeTab === "places"
+                  ? "bg-gold text-obsidian font-semibold"
+                  : "bg-white/[0.04] text-ivory-dim hover:text-ivory hover:bg-white/[0.08]"
+              }`}
+            >
+              <MapPin className="h-3.5 w-3.5" />
+              <span>Saved Places</span>
+              {savedPlaces.length > 0 && (
+                <span className={`rounded-full px-1.5 py-0.2 text-[10px] ${activeTab === "places" ? "bg-obsidian/20 text-obsidian" : "bg-white/10 text-ivory-dim"}`}>
+                  {savedPlaces.length}
+                </span>
+              )}
+            </button>
+
+            <button
               onClick={() => setActiveTab("journeys")}
               className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-medium transition-all ${
                 activeTab === "journeys"
@@ -354,13 +380,13 @@ export default function JourneyPage() {
                 <Heart className="h-8 w-8 text-gold-dim/50" />
                 <p className="mt-3 font-display text-lg text-ivory">No saved temples yet</p>
                 <p className="mt-1 max-w-sm text-xs text-ivory-dim">
-                  Tap the bookmark icon on any temple across the 2,084 national shrines to save it to your pilgrimage list.
+                  Tap the bookmark icon on any temple page to save it to your pilgrimage list.
                 </p>
                 <Link
                   href="/temples"
                   className="mt-6 inline-flex items-center gap-2 rounded-full bg-gold px-5 py-2.5 text-xs font-semibold text-obsidian hover:bg-gold-bright"
                 >
-                  <Sparkles className="h-4 w-4" /> Browse 2,084 Temples
+                  <Sparkles className="h-4 w-4" /> Browse Temples
                 </Link>
               </div>
             ) : (
@@ -418,6 +444,68 @@ export default function JourneyPage() {
                     </div>
                   );
                 })}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── TAB 1b: SAVED PLACES ── */}
+        {activeTab === "places" && (
+          <div>
+            {savedPlaces.length === 0 ? (
+              <div className="flex flex-col items-center rounded-3xl border border-dashed border-line px-6 py-16 text-center">
+                <MapPin className="h-8 w-8 text-gold-dim/50" />
+                <p className="mt-3 font-display text-lg text-ivory">No saved places yet</p>
+                <p className="mt-1 max-w-sm text-xs text-ivory-dim">
+                  While exploring a temple, tap the bookmark icon next to any nearby attraction (heritage site, nature spot, etc.) to save it here.
+                </p>
+                <Link
+                  href="/explore"
+                  className="mt-6 inline-flex items-center gap-2 rounded-full bg-gold px-5 py-2.5 text-xs font-semibold text-obsidian hover:bg-gold-bright"
+                >
+                  <Sparkles className="h-4 w-4" /> Explore Temples
+                </Link>
+              </div>
+            ) : (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {savedPlaces.map((place) => (
+                  <div
+                    key={place.id}
+                    className="group relative flex flex-col justify-between rounded-2xl border border-line bg-obsidian-2 p-5 transition-all hover:border-gold/30"
+                  >
+                    <div>
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="font-display text-base font-medium text-ivory group-hover:text-gold-bright">
+                          {place.name}
+                        </p>
+                        <button
+                          onClick={() => {
+                            const next = savedPlaces.filter((p) => p.id !== place.id);
+                            setSavedPlaces(next);
+                            try {
+                              localStorage.setItem("tem_saved_places_rich", JSON.stringify(next));
+                              const rawIds = localStorage.getItem("tem_saved_places");
+                              const ids: string[] = rawIds ? JSON.parse(rawIds) : [];
+                              localStorage.setItem("tem_saved_places", JSON.stringify(ids.filter((id) => id !== place.id)));
+                            } catch {}
+                          }}
+                          title="Remove from saved places"
+                          className="rounded-lg p-1.5 text-xs text-ivory-dim hover:bg-red-500/10 hover:text-red-300"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                      <p className="mt-1 flex items-center gap-1 text-xs text-ivory-dim">
+                        <MapPin className="h-3 w-3 text-gold/60" /> {place.location}
+                      </p>
+                    </div>
+                    <div className="mt-4 flex items-center justify-between border-t border-white/[0.06] pt-3 text-xs">
+                      <span className="font-mono text-[11px] uppercase tracking-wider text-gold-dim">
+                        {place.category.replace(/_/g, " ")}
+                      </span>
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
           </div>

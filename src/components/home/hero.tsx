@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Sparkles, MapPin, ChevronDown, ArrowRight, Navigation } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
@@ -58,8 +58,35 @@ function NearMeButton() {
   );
 }
 
+interface PlatformStats {
+  temples: number;
+  districts: number;
+  states: number;
+  famousPlaces: number;
+  spatialLinks: number;
+}
+
+function formatCount(n: number): string {
+  return n.toLocaleString("en-IN");
+}
+
 export function Hero() {
   const [ready, setReady] = useState(false);
+  // Fallback values shown immediately; replaced with live data once fetched
+  const [stats, setStats] = useState<PlatformStats>({
+    temples: 2205,
+    districts: 725,
+    states: 36,
+    famousPlaces: 22,
+    spatialLinks: 36,
+  });
+
+  useEffect(() => {
+    fetch("/api/stats")
+      .then((r) => r.json())
+      .then((data: PlatformStats) => setStats(data))
+      .catch(() => {}); // keep fallback values on error
+  }, []);
 
   return (
     <section className="relative flex min-h-[92svh] flex-col overflow-hidden">
@@ -80,7 +107,7 @@ export function Hero() {
         >
           <p className="mb-5 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-bright">
             <Sparkles className="h-3.5 w-3.5 text-gold" />
-            2,084 Verified Sanctuaries · 36 States & UTs · Guided by AI
+            {formatCount(stats.temples)} Verified Sanctuaries · {stats.states} States &amp; UTs · Guided by AI
           </p>
 
           <h1 className="max-w-4xl font-display text-[2.8rem] font-medium leading-[1.05] tracking-tight text-ivory sm:text-6xl md:text-7xl">
@@ -130,9 +157,9 @@ export function Hero() {
         className="relative z-10 border-t border-white/[0.07] bg-obsidian/50 backdrop-blur"
       >
         <div className="mx-auto flex w-full max-w-[1200px] items-center justify-between gap-4 px-5 py-4 sm:px-8">
-            <Stat value="2,084" label="Temples" />
-            <Stat value="36" label="States & UTs" />
-            <Stat value="714" label="Districts" />
+            <Stat value={formatCount(stats.temples)} label="Temples" />
+            <Stat value={String(stats.states)} label="States & UTs" />
+            <Stat value={formatCount(stats.districts)} label="Districts" />
             <Stat value="100%" label="Source-tagged" className="hidden sm:flex" />
           <div className="hidden items-center gap-2 text-[12px] text-ivory-dim md:flex">
             <MapPin className="h-3.5 w-3.5 text-gold" />

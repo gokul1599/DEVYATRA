@@ -27,6 +27,7 @@ const NAV = [
   { href: "/map", key: "nav_map", icon: MapPin },
   { href: "/temples", key: "nav_temples", icon: Landmark },
   { href: "/festivals", key: "nav_festivals", icon: CalendarDays },
+  { href: "/journey", key: "nav_saved", icon: User },
 ] as const;
 
 const isActive = (pathname: string, href: string) =>

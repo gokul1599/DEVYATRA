@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Compass,
   Sparkles,
@@ -51,19 +51,73 @@ export function ExploreAround({
   const [showDayModal, setShowDayModal] = useState<boolean>(false);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [dayPlanResult, setDayPlanResult] = useState<DayAroundTempleResult | null>(null);
-
-  // Day plan options
   const [pace, setPace] = useState<"relaxed" | "standard" | "intensive">("standard");
   const [isElderly, setIsElderly] = useState<boolean>(false);
   const [includeFood, setIncludeFood] = useState<boolean>(true);
 
-  const toggleSave = (id: string) => {
+  // Initialize saved IDs from localStorage after mount (client-only, avoids hydration mismatch)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      try {
+        const raw = localStorage.getItem("tem_saved_places");
+        if (raw) {
+          const arr: string[] = JSON.parse(raw);
+          setSavedIds(new Set(arr));
+        }
+      } catch {}
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const toggleSave = async (attr: NormalizedAttraction) => {
+    const nextSaved = !savedIds.has(attr.id);
     setSavedIds((prev) => {
       const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
+      if (nextSaved) next.add(attr.id);
+      else next.delete(attr.id);
       return next;
     });
+
+    // Update localStorage
+    if (typeof window !== "undefined") {
+      try {
+        const raw = localStorage.getItem("tem_saved_places");
+        const list: string[] = raw ? JSON.parse(raw) : [];
+        const updated = nextSaved
+          ? [...new Set([...list, attr.id])]
+          : list.filter((id) => id !== attr.id);
+        localStorage.setItem("tem_saved_places", JSON.stringify(updated));
+
+        // Also store rich place object for offline access
+        const richRaw = localStorage.getItem("tem_saved_places_rich");
+        const richList: Array<{ id: string; name: string; category: string; location: string }> = richRaw ? JSON.parse(richRaw) : [];
+        const richUpdated = nextSaved
+          ? [...richList.filter((p) => p.id !== attr.id), { id: attr.id, name: attr.name, category: attr.category, location: attr.city || attr.district || location }]
+          : richList.filter((p) => p.id !== attr.id);
+        localStorage.setItem("tem_saved_places_rich", JSON.stringify(richUpdated));
+      } catch {}
+    }
+
+    // Sync to backend if authenticated
+    try {
+      await fetch("/api/saved", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          add: nextSaved,
+          item: {
+            id: attr.id,
+            kind: "place",
+            name: attr.name,
+            category: attr.category,
+            location: attr.city || attr.district || location,
+            state: attr.state || undefined,
+          },
+        }),
+      });
+    } catch {
+      // Local storage remains source of truth for offline/anonymous users
+    }
   };
 
   const filteredAttractions =
@@ -223,7 +277,7 @@ export function ExploreAround({
                 </span>
 
                 <button
-                  onClick={() => toggleSave(attr.id)}
+                  onClick={() => toggleSave(attr)}
                   className={cn(
                     "flex items-center gap-1 rounded-full px-2.5 py-1 text-[11.5px] font-medium transition-colors",
                     isSaved

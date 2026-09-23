@@ -1,7 +1,9 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ShieldCheck, MapPin, Landmark, CalendarDays, Sparkles, ExternalLink } from "lucide-react";
 import { Container, Logo } from "@/components/ui";
-
 
 const cols = [
   {
@@ -33,10 +35,25 @@ const cols = [
 ];
 
 export function Footer() {
-  const sStats = {
-    temples: "2,084",
+  const [stats, setStats] = useState({
+    temples: "2,205",
     states: "36",
-  };
+  });
+
+  useEffect(() => {
+    fetch("/api/stats")
+      .then((r) => r.json())
+      .then((data: { temples?: number; states?: number }) => {
+        if (data.temples && data.states) {
+          setStats({
+            temples: data.temples.toLocaleString("en-IN"),
+            states: String(data.states),
+          });
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <footer className="relative mt-24 border-t border-line bg-obsidian-2/60">
       {/* trust strip */}
@@ -47,8 +64,8 @@ export function Footer() {
             <span className="text-[13.5px] font-medium">Verified temple information, intelligently explored.</span>
           </div>
           <div className="flex items-center gap-6 text-[12.5px] text-ivory-dim">
-            <span className="flex items-center gap-1.5"><Landmark className="h-3.5 w-3.5 text-gold-dim" /> {sStats.temples} temples</span>
-            <span className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5 text-gold-dim" /> {sStats.states} states &amp; UTs</span>
+            <span className="flex items-center gap-1.5"><Landmark className="h-3.5 w-3.5 text-gold-dim" /> {stats.temples} temples</span>
+            <span className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5 text-gold-dim" /> {stats.states} states &amp; UTs</span>
             <span className="flex items-center gap-1.5"><CalendarDays className="h-3.5 w-3.5 text-gold-dim" /> Live schedules</span>
           </div>
         </Container>

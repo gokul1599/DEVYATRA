@@ -29,6 +29,7 @@ import { SacredAmbient } from "@/components/sacred-ambient";
 import { GsapCinematicHero } from "@/components/gsap-cinematic";
 import { NearbyPlaceEngine } from "@/lib/nearby/engine";
 import { ExploreAround } from "@/components/temple/explore-around";
+import { VisitCommandCenter } from "@/components/temple/visit-command-center";
 import { cn } from "@/lib/cn";
 
 export const dynamicParams = true;
@@ -279,6 +280,9 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
 
           {/* ---------- Side rail ---------- */}
           <aside className="space-y-6 lg:sticky lg:top-32 lg:self-start">
+            {/* Visit Command Center */}
+            <VisitCommandCenter temple={temple} />
+
             {/* Timings */}
             <section id="timings" className="rounded-3xl border border-line bg-obsidian-2 p-6">
               <div className="mb-4 flex items-center justify-between">
