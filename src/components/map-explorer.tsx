@@ -2,50 +2,64 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Compass, ExternalLink, LocateFixed, Search, ShieldCheck, WifiOff, X, ZoomIn, ZoomOut } from "lucide-react";
+import {
+  Compass,
+  ExternalLink,
+  List,
+  LocateFixed,
+  Map as MapIcon,
+  Navigation2,
+  Search,
+  ShieldCheck,
+  WifiOff,
+  X,
+  MapPin,
+  Car,
+} from "lucide-react";
 import { cn } from "@/lib/cn";
 import { useApp } from "@/components/providers";
 import { GoogleAttribution } from "@/components/google-attribution";
 import type { DiscoveredPlace, DiscoveryResult } from "@/lib/google/types";
+import {
+  assessLocationQuality,
+  isWithinIndiaBounds,
+  INDIA_BOUNDS,
+  type LocationQualityAssessment,
+} from "@/lib/map/location-quality";
+import { discoveredPlacesToGeoJSON } from "@/lib/map/geojson";
+import * as maplibregl from "maplibre-gl";
 
-const LNG0 = 66.5;
-const LNG1 = 98.5;
-const LAT0 = 5.6;
-const LAT1 = 37.8;
+import "maplibre-gl/dist/maplibre-gl.css";
 
-const toWorld = (lat: number, lng: number) => ({ x: (lng - LNG0) / (LNG1 - LNG0), y: (LAT1 - lat) / (LAT1 - LAT0) });
-const toLatLng = (wx: number, wy: number) => ({ lat: LAT1 - wy * (LAT1 - LAT0), lng: LNG0 + wx * (LNG1 - LNG0) });
-
-const hav = (a: number, b: number, c: number, d: number) => {
-  const R = 6371;
-  const toRad = (x: number) => (x * Math.PI) / 180;
-  const dLat = toRad(c - a);
-  const dLng = toRad(d - b);
-  const s = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(a)) * Math.cos(toRad(c)) * Math.sin(dLng / 2) ** 2;
-  return 2 * R * Math.asin(Math.sqrt(s));
+// Map Style URLs
+const MAP_STYLES = {
+  dark: "https://tiles.openfreemap.org/styles/dark",
+  liberty: "https://tiles.openfreemap.org/styles/liberty",
+  satellite: {
+    version: 8,
+    sources: {
+      "esri-satellite": {
+        type: "raster",
+        tiles: [
+          "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        ],
+        tileSize: 256,
+        attribution: "Esri, Maxar, Earthstar Geographics",
+      },
+    },
+    layers: [
+      {
+        id: "esri-satellite-layer",
+        type: "raster",
+        source: "esri-satellite",
+        minzoom: 0,
+        maxzoom: 19,
+      },
+    ],
+  },
 };
 
-const COL = {
-  grid: "#2a241c",
-  bg: "#0d0b09",
-  verified: "#e4be72",
-  google: "#ff8c42",
-  cached: "#9aa3b0",
-  open: "#34d399",
-  closed: "#f87171",
-  unknown: "#5b6470",
-};
-
-const DEFAULT_ANCHOR = { lat: 9.9196, lng: 78.1198 }; // Madurai — temple-dense, fast first result
-const MIN_VIEW_SCALE = 200;
-const MAX_VIEW_SCALE = 120000;
-const MAX_AREA_KM = 50;
-
-interface ViewState {
-  x: number;
-  y: number;
-  scale: number; // px per world-unit
-}
+const DEFAULT_ANCHOR = { lat: 9.9196, lng: 78.1198 }; // Madurai
 
 interface Suggestion {
   type: "place" | "query";
@@ -53,93 +67,89 @@ interface Suggestion {
   text: string;
 }
 
-function sourceColor(p: DiscoveredPlace): string {
-  if (p.source === "verified") return COL.verified;
-  if (p.source === "cached") return COL.cached;
-  return COL.google;
-}
-
-function certaintyLabel(c: DiscoveredPlace["certainty"]): string {
-  switch (c) {
-    case "likely_temple":
-      return "Likely a temple";
-    case "religious_site":
-      return "Religious site";
-    case "uncertain":
-      return "Could not confirm if this is a temple";
-    default:
-      return "Temple";
-  }
-}
-
-function openNowLabel(p: DiscoveredPlace): string {
-  if (p.businessStatus === "CLOSED_TEMPORARILY") return "Temporarily closed (per live data)";
-  if (p.businessStatus === "CLOSED_PERMANENTLY") return "Permanently closed (per live data)";
-  if (p.openNow === null) return "Live status unavailable";
-  return p.openNow ? "Open (per live data)" : "Closed (per live data)";
-}
-
 export function MapExplorer() {
   const { t } = useApp();
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [size, setSize] = useState({ w: 0, h: 0 });
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<maplibregl.Map | null>(null);
+  const userMarkerRef = useRef<maplibregl.Marker | null>(null);
 
-  const [view, setView] = useState<ViewState>({ x: 0, y: 0, scale: 900 });
+  const [activeTab, setActiveTab] = useState<"map" | "list">("map");
+  const [mapStyleKey, setMapStyleKey] = useState<"dark" | "liberty" | "satellite">("dark");
   const [items, setItems] = useState<DiscoveredPlace[]>([]);
   const [loading, setLoading] = useState(true);
   const [mode, setMode] = useState<DiscoveryResult["mode"] | null>(null);
   const [stale, setStale] = useState(false);
-  const [warnings, setWarnings] = useState<string[]>([]);
   const [failed, setFailed] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [hoverId, setHoverId] = useState<string | null>(null);
   const [filterCategory, setFilterCategory] = useState<"all" | "verified" | "open">("all");
+  const [showAreaSearchPill, setShowAreaSearchPill] = useState(false);
+
+  // Autocomplete state
+  const [q, setQ] = useState("");
+  const [ac, setAc] = useState<Suggestion[]>([]);
+  const [acOpen, setAcOpen] = useState(false);
+  const [acIdx, setAcIdx] = useState(-1);
 
   const filteredItems = items.filter((p) => {
+    // Zero centroid fallback guarantee
+    if ((p as unknown as { isCentroidFallback?: boolean }).isCentroidFallback) return false;
     if (filterCategory === "verified") return p.verified || p.source === "verified";
     if (filterCategory === "open") return p.openNow === true;
     return true;
   });
 
-  const [q, setQ] = useState("");
-  const [ac, setAc] = useState<Suggestion[]>([]);
-  const [acOpen, setAcOpen] = useState(false);
-  const [acLoading, setAcLoading] = useState(false);
-  const [acIdx, setAcIdx] = useState(-1);
-
-  const drag = useRef<{ px: number; py: number; viewAtDown: ViewState; moved: boolean } | null>(null);
+  const filteredItemsRef = useRef(filteredItems);
+  useEffect(() => {
+    filteredItemsRef.current = filteredItems;
+  }, [filteredItems]);
 
   const selected = items.find((i) => i.id === selectedId) ?? null;
 
-  // ---- size observation ---------------------------------------------------------
-  useEffect(() => {
-    const el = wrapRef.current;
-    if (!el) return;
-    const ro = new ResizeObserver((entries) => {
-      const r = entries[0].contentRect;
-      setSize({ w: Math.max(r.width, 300), h: Math.max(r.height, 300) });
-    });
-    ro.observe(el);
-    return () => ro.disconnect();
+  // Selected place quality assessment
+  const selectedQuality: LocationQualityAssessment | null = selected
+    ? assessLocationQuality({
+        latitude: selected.latitude,
+        longitude: selected.longitude,
+        verificationStatus: selected.verified ? "VERIFIED_OFFICIAL" : selected.source === "verified" ? "VERIFIED_OFFICIAL" : "VERIFIED_SOURCE",
+        sourceType: selected.source,
+        googlePlaceId: selected.googlePlaceId,
+      })
+    : null;
+
+  // Sync GeoJSON features to MapLibre source
+  const updateMapSource = useCallback((placesList: DiscoveredPlace[]) => {
+    const map = mapRef.current;
+    if (!map || !map.isStyleLoaded()) return;
+
+    const source = map.getSource("destinations") as maplibregl.GeoJSONSource | undefined;
+    if (!source) return;
+
+    const geojson = discoveredPlacesToGeoJSON(placesList);
+    source.setData(geojson);
   }, []);
 
-  // ---- initial discovery ----------------------------------------------------------
+  // Fetch discoveries for area
   const fetchArea = useCallback(
-    async (lat: number, lng: number, radiusKm: number, panTo?: { lat: number; lng: number }) => {
+    async (lat: number, lng: number, radiusKm: number, panToCenter = false) => {
       setLoading(true);
       setFailed(false);
+      setShowAreaSearchPill(false);
       try {
-        const res = await fetch(`/api/temples/discover?lat=${lat.toFixed(4)}&lng=${lng.toFixed(4)}&radius=${Math.round(radiusKm)}&limit=60&forceLive=1`);
+        const res = await fetch(
+          `/api/temples/discover?lat=${lat.toFixed(4)}&lng=${lng.toFixed(4)}&radius=${Math.round(radiusKm)}&limit=80&forceLive=1`
+        );
         const data = (await res.json()) as DiscoveryResult;
         setItems(data.items);
         setMode(data.mode);
         setStale(data.stale);
-        setWarnings(data.warnings);
-        setSelectedId(null);
-        if (panTo) {
-          const w = toWorld(panTo.lat, panTo.lng);
-          setView((v) => ({ ...v, x: w.x, y: w.y }));
+
+        if (panToCenter && mapRef.current) {
+          const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          if (prefersReducedMotion) {
+            mapRef.current.jumpTo({ center: [lng, lat], zoom: 12.5 });
+          } else {
+            mapRef.current.flyTo({ center: [lng, lat], zoom: 12.5, essential: true });
+          }
         }
       } catch {
         setFailed(true);
@@ -151,48 +161,287 @@ export function MapExplorer() {
     []
   );
 
+  // Initial fetch on mount
   useEffect(() => {
-    const id = setTimeout(() => {
-      fetchArea(DEFAULT_ANCHOR.lat, DEFAULT_ANCHOR.lng, 20, { lat: DEFAULT_ANCHOR.lat, lng: DEFAULT_ANCHOR.lng });
+    const timer = setTimeout(() => {
+      fetchArea(DEFAULT_ANCHOR.lat, DEFAULT_ANCHOR.lng, 25);
     }, 0);
-    return () => clearTimeout(id);
+    return () => clearTimeout(timer);
   }, [fetchArea]);
 
-  const centerOfView = (v: ViewState): { lat: number; lng: number } => {
-    const w = size.w > 0 ? size.w : 900;
-    const h = size.h > 0 ? size.h : 600;
-    return toLatLng(v.x + w / 2 / v.scale, v.y + h / 2 / v.scale);
-  };
+  // Synchronize GeoJSON features whenever filteredItems change
+  useEffect(() => {
+    updateMapSource(filteredItems);
+  }, [filteredItems, updateMapSource]);
 
-  const radiusOfView = (v: ViewState): number => {
-    const w = size.w > 0 ? size.w : 900;
-    const h = size.h > 0 ? size.h : 600;
-    const tl = toLatLng(v.x, v.y);
-    const br = toLatLng(v.x + w / v.scale, v.y + h / v.scale);
-    return Math.min(Math.max(hav(tl.lat, tl.lng, br.lat, br.lng) / 2, 2), MAX_AREA_KM);
-  };
+  // Initialize MapLibre GL Map
+  useEffect(() => {
+    if (!mapContainerRef.current) return;
+    let isCancelled = false;
 
-  const searchThisArea = () => {
-    const c = centerOfView(view);
+    function initMap() {
+      if (isCancelled || !mapContainerRef.current) return;
+
+      const styleDef =
+        mapStyleKey === "satellite" ? MAP_STYLES.satellite : MAP_STYLES[mapStyleKey];
+
+      const map = new maplibregl.Map({
+        container: mapContainerRef.current,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        style: styleDef as any,
+        center: [DEFAULT_ANCHOR.lng, DEFAULT_ANCHOR.lat],
+        zoom: 11.5,
+        minZoom: 3.5,
+        maxZoom: 18.5,
+        maxBounds: [
+          [INDIA_BOUNDS.minLng - 10, INDIA_BOUNDS.minLat - 5],
+          [INDIA_BOUNDS.maxLng + 10, INDIA_BOUNDS.maxLat + 5],
+        ],
+        attributionControl: false,
+      });
+
+      mapRef.current = map;
+
+      map.addControl(new maplibregl.NavigationControl({ showCompass: true, visualizePitch: true }), "top-right");
+
+      map.on("load", () => {
+        if (isCancelled) return;
+
+        // Add clustered GeoJSON source
+        map.addSource("destinations", {
+          type: "geojson",
+          data: discoveredPlacesToGeoJSON(filteredItemsRef.current),
+          cluster: true,
+          clusterRadius: 45,
+          clusterMaxZoom: 14,
+        });
+
+        // 1. Cluster Circles Layer
+        map.addLayer({
+          id: "clusters",
+          type: "circle",
+          source: "destinations",
+          filter: ["has", "point_count"],
+          paint: {
+            "circle-color": [
+              "step",
+              ["get", "point_count"],
+              "#c8a24b", // Gold for < 10
+              10,
+              "#d9822b", // Saffron for 10-30
+              30,
+              "#ff8c42", // Vivid Saffron for 30+
+            ],
+            "circle-radius": [
+              "step",
+              ["get", "point_count"],
+              18,
+              10,
+              24,
+              30,
+              30,
+            ],
+            "circle-stroke-width": 2.5,
+            "circle-stroke-color": "#ffffff",
+            "circle-opacity": 0.92,
+          },
+        });
+
+        // 2. Cluster Count Text Layer
+        map.addLayer({
+          id: "cluster-count",
+          type: "symbol",
+          source: "destinations",
+          filter: ["has", "point_count"],
+          layout: {
+            "text-field": "{point_count_abbreviated}",
+            "text-size": 12,
+            "text-allow-overlap": true,
+            "text-ignore-placement": true,
+          },
+          paint: {
+            "text-color": "#0d0b09",
+          },
+        });
+
+        // 3. Unclustered Single Point Halo (Outer Glow)
+        map.addLayer({
+          id: "unclustered-halo",
+          type: "circle",
+          source: "destinations",
+          filter: ["!", ["has", "point_count"]],
+          paint: {
+            "circle-color": "rgba(228, 190, 114, 0.25)",
+            "circle-radius": 14,
+            "circle-stroke-width": 0,
+          },
+        });
+
+        // 4. Unclustered Single Point Inner Pin
+        map.addLayer({
+          id: "unclustered-point",
+          type: "circle",
+          source: "destinations",
+          filter: ["!", ["has", "point_count"]],
+          paint: {
+            "circle-color": [
+              "case",
+              ["get", "isVerified"],
+              "#e4be72", // Gold for verified
+              "#ff8c42", // Saffron for live/other
+            ],
+            "circle-radius": 7,
+            "circle-stroke-width": 2,
+            "circle-stroke-color": "#ffffff",
+          },
+        });
+
+        // Cluster Click -> Smooth Expansion
+        map.on("click", "clusters", async (e: maplibregl.MapLayerMouseEvent) => {
+          const features = map.queryRenderedFeatures(e.point, { layers: ["clusters"] });
+          if (!features.length) return;
+          const clusterId = features[0].properties?.cluster_id as number;
+          const source = map.getSource("destinations") as maplibregl.GeoJSONSource | undefined;
+          if (!source) return;
+
+          try {
+            const zoom = await source.getClusterExpansionZoom(clusterId);
+            const geom = features[0].geometry as { type: "Point"; coordinates: [number, number] };
+            map.easeTo({
+              center: geom.coordinates,
+              zoom: Math.min(zoom + 0.5, 17),
+            });
+          } catch (err) {
+            console.error("Cluster expansion error:", err);
+          }
+        });
+
+        // Point Click -> Select Destination
+        map.on("click", "unclustered-point", (e: maplibregl.MapLayerMouseEvent) => {
+          if (!e.features?.length) return;
+          const feat = e.features[0];
+          setSelectedId(feat.properties?.id ?? null);
+          const geom = feat.geometry as { type: "Point"; coordinates: [number, number] };
+          map.easeTo({
+            center: geom.coordinates,
+            offset: [0, 50],
+          });
+        });
+
+        // Pointer Cursor Management
+        map.on("mouseenter", "clusters", () => {
+          map.getCanvas().style.cursor = "pointer";
+        });
+        map.on("mouseleave", "clusters", () => {
+          map.getCanvas().style.cursor = "";
+        });
+        map.on("mouseenter", "unclustered-point", () => {
+          map.getCanvas().style.cursor = "pointer";
+        });
+        map.on("mouseleave", "unclustered-point", () => {
+          map.getCanvas().style.cursor = "";
+        });
+
+        // Detect user pan -> show "Search This Area" button
+        map.on("moveend", () => {
+          setShowAreaSearchPill(true);
+        });
+      });
+    }
+
+    initMap();
+
+    return () => {
+      isCancelled = true;
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
+    };
+  }, [mapStyleKey]);
+
+  // Search Area Trigger
+  const handleSearchThisArea = () => {
+    const map = mapRef.current;
+    if (!map) return;
+    const center = map.getCenter();
+    const bounds = map.getBounds();
+    const radius = Math.min(
+      Math.max(
+        Math.round(
+          bounds.getNorthEast().distanceTo(bounds.getSouthWest()) / 2000
+        ),
+        5
+      ),
+      60
+    );
     setSelectedId(null);
-    fetchArea(c.lat, c.lng, radiusOfView(view));
+    fetchArea(center.lat, center.lng, radius);
   };
 
-  const resetView = () => {
-    const w = toWorld(DEFAULT_ANCHOR.lat, DEFAULT_ANCHOR.lng);
-    setView({ x: w.x, y: w.y, scale: MIN_VIEW_SCALE * 3 });
+  // Reset to Sovereign India View
+  const resetToIndia = () => {
+    const map = mapRef.current;
+    if (!map) return;
+    map.fitBounds(
+      [
+        [INDIA_BOUNDS.minLng, INDIA_BOUNDS.minLat],
+        [INDIA_BOUNDS.maxLng, INDIA_BOUNDS.maxLat],
+      ],
+      { padding: 40, essential: true }
+    );
   };
 
-  // ---- autocomplete ---------------------------------------------------------------
+  // Locate User via Browser Geolocation
+  const locateUser = () => {
+    if (!("geolocation" in navigator)) {
+      alert("Geolocation is not supported by your browser.");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const { latitude, longitude } = pos.coords;
+        if (!isWithinIndiaBounds(latitude, longitude)) {
+          alert("Your detected location is outside India bounds. Showing default pilgrimage centers.");
+          return;
+        }
+
+        // Add user marker
+        const map = mapRef.current;
+        if (map) {
+          if (userMarkerRef.current) {
+            userMarkerRef.current.remove();
+          }
+
+          const el = document.createElement("div");
+          el.className = "h-4 w-4 rounded-full bg-blue-500 border-2 border-white shadow-[0_0_12px_rgba(59,130,246,0.9)] animate-pulse";
+
+          userMarkerRef.current = new maplibregl.Marker({ element: el })
+            .setLngLat([longitude, latitude])
+            .addTo(map);
+
+          map.flyTo({ center: [longitude, latitude], zoom: 13, essential: true });
+        }
+
+        fetchArea(latitude, longitude, 20);
+      },
+      (err) => {
+        console.warn("Geolocation denied or error:", err);
+        alert("Location access was denied or timed out. You can still search any sacred site above.");
+      },
+      { timeout: 10000, enableHighAccuracy: true }
+    );
+  };
+
+  // Autocomplete logic
   useEffect(() => {
     const trimmed = q.trim();
     const id = setTimeout(async () => {
       if (trimmed.length < 2) {
         setAc([]);
-        setAcLoading(false);
         return;
       }
-      setAcLoading(true);
       try {
         const r = await fetch(`/api/places/autocomplete?q=${encodeURIComponent(trimmed)}&_t=${Date.now()}`);
         const data = (await r.json()) as { suggestions?: Suggestion[] };
@@ -200,8 +449,6 @@ export function MapExplorer() {
         setAcOpen(true);
       } catch {
         setAc([]);
-      } finally {
-        setAcLoading(false);
       }
     }, 250);
     return () => clearTimeout(id);
@@ -215,25 +462,27 @@ export function MapExplorer() {
         const r = await fetch(`/api/places/details?placeId=${encodeURIComponent(sug.placeId)}`);
         const data = (await r.json()) as { place?: { latitude: number; longitude: number } | null };
         if (data.place) {
-          fetchArea(data.place.latitude, data.place.longitude, 15, { lat: data.place.latitude, lng: data.place.longitude });
+          fetchArea(data.place.latitude, data.place.longitude, 18, true);
           return;
         }
       } catch {
         /* fall through to text search */
       }
     }
-    // text discovery
+
     setLoading(true);
     try {
-      const res = await fetch(`/api/temples/discover?q=${encodeURIComponent(sug.text)}&limit=40&forceLive=1`);
+      const res = await fetch(`/api/temples/discover?q=${encodeURIComponent(sug.text)}&limit=50&forceLive=1`);
       const data = (await res.json()) as DiscoveryResult;
       setItems(data.items);
       setMode(data.mode);
       setStale(data.stale);
-      setWarnings(data.warnings);
-      if (data.items[0]) {
-        const w = toWorld(data.items[0].latitude, data.items[0].longitude);
-        setView({ x: w.x, y: w.y, scale: Math.max(view.scale, MIN_VIEW_SCALE * 3) });
+      if (data.items[0] && mapRef.current) {
+        mapRef.current.flyTo({
+          center: [data.items[0].longitude, data.items[0].latitude],
+          zoom: 13,
+          essential: true,
+        });
         setSelectedId(data.items[0].id);
       }
     } catch {
@@ -243,386 +492,207 @@ export function MapExplorer() {
     }
   };
 
-  const onAcKey = (e: React.KeyboardEvent) => {
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setAcIdx((i) => Math.min(i + 1, ac.length - 1));
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setAcIdx((i) => Math.max(i - 1, 0));
-    } else if (e.key === "Enter") {
-      e.preventDefault();
-      const pick = ac[acIdx];
-      if (pick) goToPlace(pick);
-      else if (q.trim().length >= 2) goToPlace({ type: "query", text: q.trim() });
-    } else if (e.key === "Escape") {
-      setAcOpen(false);
-    }
-  };
-
-  // ---- drawing ----------------------------------------------------------------------
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas || size.w === 0) return;
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = size.w * dpr;
-    canvas.height = size.h * dpr;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.clearRect(0, 0, size.w, size.h);
-    ctx.fillStyle = COL.bg;
-    ctx.fillRect(0, 0, size.w, size.h);
-
-    // projected grid
-    ctx.strokeStyle = COL.grid;
-    ctx.lineWidth = 1;
-    const stepWorld = size.w / view.scale / 3;
-    for (let gx = Math.floor(view.x / stepWorld) - 1; gx < view.x / stepWorld + size.w / view.scale / stepWorld + 2; gx++) {
-      const sx = (gx * stepWorld - view.x) * view.scale;
-      ctx.beginPath();
-      ctx.moveTo(sx, 0);
-      ctx.lineTo(sx, size.h);
-      ctx.stroke();
-    }
-    for (let gy = Math.floor(view.y / stepWorld) - 1; gy < view.y / stepWorld + size.h / view.scale / stepWorld + 2; gy++) {
-      const sy = (gy * stepWorld - view.y) * view.scale;
-      ctx.beginPath();
-      ctx.moveTo(0, sy);
-      ctx.lineTo(size.w, sy);
-      ctx.stroke();
-    }
-
-    // cluster by grid cell in world coords
-    const cellPx = 34;
-    const cellWorld = cellPx / view.scale;
-    const clusters = new Map<string, { x: number; y: number; items: DiscoveredPlace[] }>();
-    const points = items.map((p) => {
-      const w = toWorld(p.latitude, p.longitude);
-      return { p, w };
-    });
-    for (const { p, w } of points) {
-      const key = `${Math.floor((w.x - view.x) / cellWorld)}:${Math.floor((w.y - view.y) / cellWorld)}`;
-      const c = clusters.get(key);
-      if (c) c.items.push(p);
-      else clusters.set(key, { x: w.x, y: w.y, items: [p] });
-    }
-
-    for (const [, cluster] of clusters) {
-      const sx = (cluster.x - view.x) * view.scale;
-      const sy = (cluster.y - view.y) * view.scale;
-      if (sx < -40 || sy < -40 || sx > size.w + 40 || sy > size.h + 40) continue;
-      const n = cluster.items.length;
-      if (n === 1) {
-        const p = cluster.items[0];
-        const col = sourceColor(p);
-        const ring = p.openNow === true ? COL.open : p.openNow === false ? COL.closed : "#20242a";
-        ctx.beginPath();
-        ctx.arc(sx, sy, 6, 0, Math.PI * 2);
-        ctx.fillStyle = ring;
-        ctx.globalAlpha = 0.9;
-        ctx.fill();
-        ctx.globalAlpha = 1;
-        ctx.beginPath();
-        ctx.arc(sx, sy, 4.2, 0, Math.PI * 2);
-        ctx.fillStyle = col;
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(sx, sy, 4.2, 0, Math.PI * 2);
-        ctx.strokeStyle = "#0d0b09";
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-      } else {
-        const r = Math.min(9 + n * 1.6, 22);
-        ctx.beginPath();
-        ctx.arc(sx, sy, r, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(200,162,75,0.16)";
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(sx, sy, r, 0, Math.PI * 2);
-        ctx.strokeStyle = "#c8a24b";
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-        ctx.fillStyle = "#e4be72";
-        ctx.font = "600 11px Geist, system-ui, sans-serif";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText(String(n), sx, sy + 0.5);
-      }
-    }
-
-    // selected halo / hover ring
-    if (selected) {
-      const w = toWorld(selected.latitude, selected.longitude);
-      const sx = (w.x - view.x) * view.scale;
-      const sy = (w.y - view.y) * view.scale;
-      ctx.beginPath();
-      ctx.arc(sx, sy, 13, 0, Math.PI * 2);
-      ctx.strokeStyle = "#e4be72";
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-    }
-    if (hoverId && hoverId !== selected?.id) {
-      const hp = items.find((p) => p.id === hoverId);
-      if (hp) {
-        const w = toWorld(hp.latitude, hp.longitude);
-        const sx = (w.x - view.x) * view.scale;
-        const sy = (w.y - view.y) * view.scale;
-        ctx.beginPath();
-        ctx.arc(sx, sy, 10, 0, Math.PI * 2);
-        ctx.strokeStyle = "rgba(242,236,225,0.5)";
-        ctx.lineWidth = 1;
-        ctx.stroke();
-      }
-    }
-  }, [items, view, size, selected, hoverId]);
-
-  const zoomAt = (factor: number, cxPx?: number, cyPx?: number) => {
-    const w = size.w > 0 ? size.w : 900;
-    const h = size.h > 0 ? size.h : 600;
-    const mx = cxPx ?? w / 2;
-    const my = cyPx ?? h / 2;
-    const wat = toLatLng(view.x + mx / view.scale, view.y + my / view.scale);
-    const wt = toWorld(wat.lat, wat.lng);
-    const ns = Math.min(Math.max(view.scale * factor, MIN_VIEW_SCALE), MAX_VIEW_SCALE);
-    if (ns === view.scale) return;
-    setView({ x: wt.x - mx / ns, y: wt.y - my / ns, scale: ns });
-  };
-
-  const onWheel = (e: React.WheelEvent) => {
-    e.preventDefault();
-    const rect = canvasRef.current?.getBoundingClientRect();
-    zoomAt(e.deltaY < 0 ? 1.18 : 1 / 1.18, (rect?.left ? e.clientX - rect.left : 0) || undefined, rect?.top ? e.clientY - rect.top : undefined);
-  };
-
-  const onPointerDown = (e: React.PointerEvent) => {
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
-    drag.current = { px: e.clientX, py: e.clientY, viewAtDown: view, moved: false };
-  };
-
-  const onPointerMove = (e: React.PointerEvent) => {
-    if (!drag.current) return;
-    const dx = e.clientX - drag.current.px;
-    const dy = e.clientY - drag.current.py;
-    if (Math.abs(dx) + Math.abs(dy) > 3) drag.current.moved = true;
-    if (drag.current.moved) {
-      setView((v) => ({ ...v, x: drag.current!.viewAtDown.x - dx / v.scale, y: drag.current!.viewAtDown.y - dy / v.scale }));
-    }
-    if (!drag.current.moved) {
-      const rect = canvasRef.current?.getBoundingClientRect();
-      if (!rect) return;
-      const cx = e.clientX - rect.left;
-      const cy = e.clientY - rect.top;
-      let hit: string | null = null;
-      for (const p of items) {
-        const w = toWorld(p.latitude, p.longitude);
-        const sx = (w.x - view.x) * view.scale;
-        const sy = (w.y - view.y) * view.scale;
-        if (Math.hypot(cx - sx, cy - sy) < 10) {
-          hit = p.id;
-          break;
-        }
-      }
-      setHoverId((prev) => (prev === hit ? prev : hit));
-    }
-  };
-
-  const onPointerUp = (e: React.PointerEvent) => {
-    const canvas = canvasRef.current;
-    const d = drag.current;
-    drag.current = null;
-    if (d?.moved || !canvas) return;
-    const rect = canvas.getBoundingClientRect();
-    const cx = e.clientX - rect.left;
-    const cy = e.clientY - rect.top;
-    const cellWorld = 34 / view.scale;
-    let hit: DiscoveredPlace | null = null;
-    let hitWorld: { x: number; y: number } | null = null;
-    const cells = new Map<string, DiscoveredPlace[]>();
-    for (const p of items) {
-      const w = toWorld(p.latitude, p.longitude);
-      const sx = (w.x - view.x) * view.scale;
-      const sy = (w.y - view.y) * view.scale;
-      if (Math.hypot(cx - sx, cy - sy) < 10) {
-        const key = `${Math.floor((w.x - view.x) / cellWorld)}:${Math.floor((w.y - view.y) / cellWorld)}`;
-        cells.set(key, [...(cells.get(key) ?? []), p]);
-        hitWorld = w;
-      }
-    }
-    if (cells.size >= 1) {
-      const bucket = [...cells.values()][0];
-      if (bucket.length > 1 && hitWorld) {
-        setView((v) => ({ x: hitWorld!.x, y: hitWorld!.y, scale: Math.min(v.scale * 2.2, MAX_VIEW_SCALE) }));
-      } else {
-        hit = bucket[0];
-      }
-    }
-    if (hit) setSelectedId(hit.id);
-  };
-
   return (
-    <div className="flex h-[calc(100vh-0px)] w-full flex-col overflow-hidden lg:flex-row">
-      {/* Map canvas */}
-      <div ref={wrapRef} className="relative min-h-[52vh] flex-1 lg:min-h-0">
-        <canvas
-          ref={canvasRef}
-          className={cn("h-full w-full touch-none", loading && "animate-pulse")}
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={onPointerUp}
-          onWheel={onWheel}
-          aria-label="Temple discovery map"
-          role="application"
-        />
-
-        {/* Search + controls overlay */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex flex-col gap-2 p-3 sm:p-4">
-          <div className="pointer-events-auto mx-auto flex w-full max-w-xl items-center gap-2">
-            <div className="relative flex-1">
-              <div className="glass flex items-center gap-2.5 rounded-2xl border border-line px-3.5 py-2.5">
-                <Search className="h-4 w-4 shrink-0 text-gold-dim" />
-                <input
-                  value={q}
-                  onChange={(e) => {
-                    setQ(e.target.value);
-                    setAcIdx(-1);
-                    if (e.target.value.trim().length >= 2) setAcOpen(true);
+    <div className="relative flex h-[calc(100vh-4rem)] lg:h-[calc(100vh-4.5rem)] w-full flex-col lg:flex-row overflow-hidden bg-obsidian">
+      {/* Top Floating Controls Rail */}
+      <div className="pointer-events-none absolute inset-x-0 top-3 z-20 flex flex-col gap-2 px-3 sm:px-6">
+        <div className="pointer-events-auto mx-auto flex w-full max-w-xl items-center gap-2">
+          {/* Autocomplete Search Bar */}
+          <div className="relative flex-1">
+            <div className="glass flex items-center gap-2 rounded-2xl border border-line px-3.5 py-2.5 shadow-2xl transition-colors focus-within:border-gold/50">
+              <Search className="h-4 w-4 shrink-0 text-gold-dim" />
+              <input
+                type="text"
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                onFocus={() => ac.length > 0 && setAcOpen(true)}
+                placeholder={t("map_search")}
+                className="w-full bg-transparent text-[13.5px] text-ivory placeholder-ivory-dim/60 outline-none"
+                aria-label={t("map_search")}
+              />
+              {q && (
+                <button
+                  onClick={() => {
+                    setQ("");
+                    setAc([]);
+                    setAcOpen(false);
                   }}
-                  onFocus={() => ac.length > 0 && setAcOpen(true)}
-                  onKeyDown={onAcKey}
-                  placeholder={t("map_search")}
-                  aria-label="Search a place"
-                  className="w-full bg-transparent text-[13.5px] text-ivory placeholder:text-ivory-dim/45 focus:outline-none"
-                />
-                {acLoading && <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-gold/30 border-t-gold" />}
-                {q && (
-                  <button
-                    onClick={() => {
-                      setQ("");
-                      setAc([]);
-                      setAcOpen(false);
-                    }}
-                    aria-label="Clear"
-                    className="text-ivory-dim hover:text-ivory"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                )}
-              </div>
-              {acOpen && ac.length > 0 && (
-                <div className="glass absolute inset-x-0 top-full z-20 mt-1.5 overflow-hidden rounded-2xl border border-line p-1 shadow-2xl">
-                  {ac.map((s, i) => (
-                    <button
-                      key={`${s.type}-${s.text}-${i}`}
-                      onMouseEnter={() => setAcIdx(i)}
-                      onClick={() => goToPlace(s)}
-                      className={cn(
-                        "flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-[13px] transition-colors",
-                        acIdx === i ? "bg-gold/12 text-ivory" : "text-ivory-dim hover:bg-white/[0.05]"
-                      )}
-                    >
-                      <LocateFixed className={cn("h-3.5 w-3.5 shrink-0", acIdx === i ? "text-gold-bright" : "text-gold-dim")} />
-                      <span className="truncate">{s.text}</span>
-                    </button>
-                  ))}
-                </div>
+                  aria-label="Clear Search"
+                  className="text-ivory-dim hover:text-ivory"
+                >
+                  <X className="h-4 w-4" />
+                </button>
               )}
             </div>
-            <button
-              onClick={searchThisArea}
-              disabled={loading}
-              className="pointer-events-auto flex shrink-0 items-center gap-1.5 rounded-2xl border border-gold/30 bg-gold/15 px-4 py-2.5 text-[13px] font-medium text-gold-bright transition-colors hover:bg-gold/25 disabled:opacity-50"
-            >
-              <LocateFixed className="h-4 w-4" />
-              {t("map_search_this_area")}
-            </button>
+
+            {/* Suggestions dropdown */}
+            {acOpen && ac.length > 0 && (
+              <div className="glass absolute inset-x-0 top-full z-30 mt-1.5 overflow-hidden rounded-2xl border border-line p-1 shadow-2xl backdrop-blur-xl">
+                {ac.map((s, i) => (
+                  <button
+                    key={`${s.type}-${s.text}-${i}`}
+                    onMouseEnter={() => setAcIdx(i)}
+                    onClick={() => goToPlace(s)}
+                    className={cn(
+                      "flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-[13px] transition-colors",
+                      acIdx === i ? "bg-gold/15 text-ivory" : "text-ivory-dim hover:bg-white/[0.05]"
+                    )}
+                  >
+                    <LocateFixed className={cn("h-3.5 w-3.5 shrink-0", acIdx === i ? "text-gold-bright" : "text-gold-dim")} />
+                    <span className="truncate">{s.text}</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
-          <div className="pointer-events-auto mx-auto flex w-full max-w-xl items-center justify-between gap-2">
-            <div className="flex items-center gap-1.5">
-              <button
-                onClick={() => zoomAt(1.3)}
-                aria-label="Zoom in"
-                className="glass flex h-9 w-9 items-center justify-center rounded-xl border border-line text-ivory-dim transition-colors hover:text-ivory"
-              >
-                <ZoomIn className="h-4 w-4" />
-              </button>
-              <button
-                onClick={() => zoomAt(1 / 1.3)}
-                aria-label="Zoom out"
-                className="glass flex h-9 w-9 items-center justify-center rounded-xl border border-line text-ivory-dim transition-colors hover:text-ivory"
-              >
-                <ZoomOut className="h-4 w-4" />
-              </button>
-              <button
-                onClick={resetView}
-                aria-label={t("map_reset")}
-                className="glass flex h-9 items-center gap-1.5 rounded-xl border border-line px-3 text-[12px] text-ivory-dim transition-colors hover:text-ivory"
-              >
-                <Compass className="h-3.5 w-3.5" />
-                {t("map_reset")}
-              </button>
-            </div>
-            <ModeChip loading={loading} mode={mode} stale={stale} />
+          {/* Tab Switcher: Map vs List View */}
+          <div className="glass flex items-center rounded-2xl border border-line p-1 shadow-2xl">
+            <button
+              onClick={() => setActiveTab("map")}
+              aria-label="Interactive Map View"
+              className={cn(
+                "flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium transition-colors",
+                activeTab === "map" ? "bg-gold text-obsidian font-semibold shadow" : "text-ivory-dim hover:text-ivory"
+              )}
+            >
+              <MapIcon className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Map</span>
+            </button>
+            <button
+              onClick={() => setActiveTab("list")}
+              aria-label="List View"
+              className={cn(
+                "flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium transition-colors",
+                activeTab === "list" ? "bg-gold text-obsidian font-semibold shadow" : "text-ivory-dim hover:text-ivory"
+              )}
+            >
+              <List className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">List</span>
+              <span className="ml-0.5 rounded-full bg-black/20 px-1.5 py-0.2 text-[10px]">
+                {filteredItems.length}
+              </span>
+            </button>
           </div>
         </div>
 
-        {/* status overlay */}
-        {(failed || (mode === "degraded" && !stale)) && (
-          <div className="pointer-events-none absolute inset-x-0 bottom-28 z-10 flex justify-center px-4 lg:bottom-6">
-            <div className="pointer-events-auto flex max-w-lg items-center gap-2.5 rounded-2xl border border-gold/20 bg-obsidian-3/95 px-4 py-3 text-[12.5px] text-ivory-dim shadow-2xl">
-              <WifiOff className="h-4 w-4 shrink-0 text-gold-dim" />
-              <span>
-                {t("discover_degraded")}. {t("discover_stale")}
-              </span>
-            </div>
+        {/* Quick Filters Pill Bar */}
+        <div className="pointer-events-auto mx-auto flex w-full max-w-xl items-center justify-between gap-2 overflow-x-auto py-0.5">
+          <div className="flex items-center gap-1.5">
+            {(["all", "verified", "open"] as const).map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setFilterCategory(cat)}
+                className={cn(
+                  "rounded-full px-3 py-1 text-[11px] font-medium transition-all shadow-md",
+                  filterCategory === cat
+                    ? "bg-gold text-obsidian font-semibold shadow-gold/20"
+                    : "glass border border-line text-ivory-dim hover:text-ivory"
+                )}
+              >
+                {cat === "all" ? "All Shrines" : cat === "verified" ? "Verified Atlas" : "Open Now"}
+              </button>
+            ))}
           </div>
-        )}
 
-        {/* explanatory footer */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 px-4 pb-3">
-          <div className="mx-auto flex max-w-xl flex-col items-center gap-0.5 text-center">
-            {mode === "live" && warnings.length > 0 && (
-              <p className="max-w-full truncate text-[10px] text-gold-dim/70">{warnings.slice(0, 2).join(" · ")}</p>
-            )}
-            <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
-              <span className="text-[10.5px] text-ivory-dim/60">{t("discover_note")}</span>
-              <GoogleAttribution className="text-[10.5px] text-ivory-dim/60" />
-            </div>
+          {/* Map Style Switcher (Dark / Roads / Satellite) */}
+          <div className="glass flex items-center rounded-xl border border-line p-0.5 shadow-md">
+            {(["dark", "liberty", "satellite"] as const).map((style) => (
+              <button
+                key={style}
+                onClick={() => setMapStyleKey(style)}
+                className={cn(
+                  "rounded-lg px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider transition-colors",
+                  mapStyleKey === style ? "bg-white/15 text-gold-bright" : "text-ivory-dim/70 hover:text-ivory"
+                )}
+              >
+                {style === "dark" ? "Dark" : style === "liberty" ? "Roads" : "Satellite"}
+              </button>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Results list */}
-      <aside className="flex max-h-[46vh] w-full flex-col border-t border-line bg-obsidian-2/90 lg:max-h-none lg:w-[360px] lg:border-l lg:border-t-0">
+      {/* Floating "Search This Area" Pill */}
+      {showAreaSearchPill && activeTab === "map" && (
+        <div className="pointer-events-none absolute inset-x-0 top-24 z-20 flex justify-center">
+          <button
+            onClick={handleSearchThisArea}
+            disabled={loading}
+            className="pointer-events-auto flex items-center gap-1.5 rounded-full border border-gold/40 bg-obsidian-2/95 px-4 py-2 text-xs font-semibold text-gold-bright shadow-2xl backdrop-blur-md transition-transform hover:scale-105 active:scale-95 disabled:opacity-50"
+          >
+            <LocateFixed className="h-3.5 w-3.5 text-gold" />
+            {t("map_search_this_area")}
+          </button>
+        </div>
+      )}
+
+      {/* Map View Container */}
+      <div
+        className={cn(
+          "relative flex-1 w-full h-full",
+          activeTab === "list" ? "hidden lg:block" : "block"
+        )}
+      >
+        <div ref={mapContainerRef} className="h-full w-full" tabIndex={0} aria-label="Interactive Geographic Map" />
+
+        {/* Floating Bottom Navigation & Controls */}
+        <div className="pointer-events-none absolute bottom-4 right-4 z-10 flex flex-col gap-2">
+          <button
+            onClick={locateUser}
+            aria-label="Locate me"
+            className="glass pointer-events-auto flex h-10 w-10 items-center justify-center rounded-xl border border-line text-ivory-dim shadow-xl transition-all hover:border-gold hover:text-gold-bright active:scale-95"
+          >
+            <Navigation2 className="h-4 w-4" />
+          </button>
+          <button
+            onClick={resetToIndia}
+            aria-label="Reset to India view"
+            className="glass pointer-events-auto flex h-10 w-10 items-center justify-center rounded-xl border border-line text-ivory-dim shadow-xl transition-all hover:border-gold hover:text-gold-bright active:scale-95"
+          >
+            <Compass className="h-4 w-4" />
+          </button>
+        </div>
+
+        {/* Degradation / Wifi Alert */}
+        {(failed || (mode === "degraded" && !stale)) && (
+          <div className="pointer-events-none absolute inset-x-0 bottom-6 z-10 flex justify-center px-4">
+            <div className="pointer-events-auto flex max-w-md items-center gap-2 rounded-2xl border border-amber-500/30 bg-obsidian-3/95 px-4 py-2.5 text-xs text-ivory shadow-2xl backdrop-blur-md">
+              <WifiOff className="h-4 w-4 shrink-0 text-amber-400" />
+              <span>{t("discover_degraded")}. {t("discover_stale")}</span>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Results List / Side Rail */}
+      <aside
+        className={cn(
+          "flex flex-col border-line bg-obsidian-2/95 backdrop-blur-xl lg:w-[380px] lg:border-l",
+          activeTab === "map"
+            ? "max-h-[44vh] w-full border-t lg:max-h-none lg:border-t-0"
+            : "flex-1 w-full"
+        )}
+      >
         <div className="flex items-center justify-between border-b border-line px-4 py-3">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gold-dim">
-            {mode === "live" ? t("discover_live") : mode === "cache" ? t("discover_cache") : mode === "degraded" ? t("discover_degraded") : ""}
-          </p>
-          <p className="text-[11.5px] text-ivory-dim">
-            {loading ? "…" : `${filteredItems.length} shrine${filteredItems.length === 1 ? "" : "s"}`}
-          </p>
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gold-dim">
+              {mode === "live" ? t("discover_live") : mode === "cache" ? t("discover_cache") : "Sacred Destinations"}
+            </p>
+            <p className="text-xs text-ivory-dim">
+              {loading ? "Searching geography…" : `${filteredItems.length} verified pilgrimage places`}
+            </p>
+          </div>
+          <GoogleAttribution className="text-[10px] text-ivory-dim/50" />
         </div>
 
-        {/* Layer Filters */}
-        <div className="flex items-center gap-1.5 border-b border-line px-3 py-2 bg-obsidian-3/40 overflow-x-auto text-[11px]">
-          {(["all", "verified", "open"] as const).map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setFilterCategory(cat)}
-              className={cn(
-                "rounded-full px-2.5 py-0.5 font-medium transition-colors shrink-0",
-                filterCategory === cat
-                  ? "bg-gold text-obsidian font-semibold"
-                  : "bg-white/[0.04] text-ivory-dim hover:text-ivory hover:bg-white/[0.08]"
-              )}
-            >
-              {cat === "all" ? "All Shrines" : cat === "verified" ? "Verified Atlas" : "Open Now"}
-            </button>
-          ))}
-        </div>
-
-        <div className="flex-1 space-y-2 overflow-y-auto p-3">
+        {/* Destination List (Accessible & Keyboard Navigable) */}
+        <div
+          role="region"
+          aria-label="Pilgrimage Destinations List"
+          aria-live="polite"
+          className="flex-1 space-y-2.5 overflow-y-auto p-3"
+        >
           {loading && (
             <div className="space-y-2">
               {[0, 1, 2, 3].map((i) => (
@@ -630,163 +700,188 @@ export function MapExplorer() {
               ))}
             </div>
           )}
+
           {!loading && filteredItems.length === 0 && (
-            <p className="rounded-2xl border border-dashed border-line px-4 py-10 text-center text-[12.5px] text-ivory-dim">
-              {t("map_empty")}
-            </p>
+            <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-line p-8 text-center">
+              <MapPin className="h-8 w-8 text-gold-dim mb-2 opacity-50" />
+              <p className="text-xs text-ivory-dim">{t("map_empty")}</p>
+              <button
+                onClick={resetToIndia}
+                className="mt-3 rounded-xl border border-gold/30 px-3 py-1.5 text-xs text-gold-bright hover:bg-gold/10"
+              >
+                Explore National Map
+              </button>
+            </div>
           )}
+
           {!loading &&
-            [...filteredItems]
-              .sort((a, b) => (a.distanceKm ?? 0) - (b.distanceKm ?? 0))
-              .slice(0, 60)
-              .map((p) => (
+            filteredItems.map((p) => {
+              const quality = assessLocationQuality({
+                latitude: p.latitude,
+                longitude: p.longitude,
+                verificationStatus: p.verified ? "VERIFIED_OFFICIAL" : p.source === "verified" ? "VERIFIED_OFFICIAL" : "VERIFIED_SOURCE",
+                sourceType: p.source,
+                googlePlaceId: p.googlePlaceId,
+              });
+
+              return (
                 <button
                   key={p.id}
                   onClick={() => {
                     setSelectedId(p.id);
-                    const w = toWorld(p.latitude, p.longitude);
-                    setView((v) => ({ ...v, x: w.x, y: w.y }));
+                    if (mapRef.current) {
+                      mapRef.current.flyTo({
+                        center: [p.longitude, p.latitude],
+                        zoom: 14.5,
+                        essential: true,
+                      });
+                    }
                   }}
                   className={cn(
-                    "flex w-full items-start gap-3 rounded-2xl border p-3.5 text-left transition-colors",
-                    selectedId === p.id ? "border-gold/40 bg-gold/10" : "border-line bg-obsidian-3/90 hover:border-gold/25"
+                    "flex w-full items-start gap-3 rounded-2xl border p-3.5 text-left transition-all",
+                    selectedId === p.id
+                      ? "border-gold/50 bg-gold/10 shadow-lg shadow-gold/5"
+                      : "border-line bg-obsidian-3/80 hover:border-gold/30 hover:bg-obsidian-3"
                   )}
                 >
-                  <span className="mt-1 grid h-9 w-9 shrink-0 place-items-center rounded-xl text-lg">
-                    {p.verified ? <ShieldCheck className="h-4.5 w-4.5 text-gold-bright" /> : "🛕"}
+                  <span className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-white/[0.04] text-lg">
+                    {p.verified ? <ShieldCheck className="h-5 w-5 text-gold-bright" /> : "🛕"}
                   </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="flex items-center gap-2">
-                      <span className="truncate text-[13.5px] font-medium text-ivory">{p.name}</span>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-1.5">
+                      <span className="truncate text-sm font-medium text-ivory">{p.name}</span>
                       {p.openNow !== null && (
-                        <span className={cn("mt-px inline-block h-2 w-2 shrink-0 rounded-full", p.openNow ? "bg-emerald-400" : "bg-red-400")} />
+                        <span
+                          className={cn(
+                            "h-2 w-2 shrink-0 rounded-full",
+                            p.openNow ? "bg-emerald-400" : "bg-red-400"
+                          )}
+                          title={p.openNow ? "Open now" : "Closed"}
+                        />
                       )}
-                    </span>
-                    <span className="mt-0.5 block truncate text-[11.5px] text-ivory-dim">
+                    </div>
+                    <p className="mt-0.5 truncate text-xs text-ivory-dim">
                       {p.region ? `${p.region} · ` : ""}
-                      {p.distanceKm ? `${p.distanceKm.toFixed(1)} km away` : "area"}
-                    </span>
-                    <span className="mt-1 inline-flex flex-wrap gap-1">
-                      <span className="rounded-full border border-line px-2 py-0.5 text-[10px] text-ivory-dim">{certaintyLabel(p.certainty)}</span>
-                      {p.verified && <span className="rounded-full border border-gold/25 bg-gold/10 px-2 py-0.5 text-[10px] text-gold-bright">{t("discover_verified")}</span>}
-                    </span>
-                  </span>
+                      {p.distanceKm ? `${p.distanceKm.toFixed(1)} km away` : p.address || "India"}
+                    </p>
+                    <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                      {/* Location Quality Badge */}
+                      <span
+                        className={cn(
+                          "rounded-full px-2 py-0.5 text-[10px] font-medium border",
+                          quality.badgeVariant === "gold"
+                            ? "border-gold/30 bg-gold/10 text-gold-bright"
+                            : quality.badgeVariant === "emerald"
+                              ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
+                              : "border-amber-500/30 bg-amber-500/10 text-amber-300"
+                        )}
+                      >
+                        {quality.accuracyLabel}
+                      </span>
+                      {p.verified && (
+                        <span className="rounded-full border border-gold/25 bg-gold/10 px-2 py-0.5 text-[10px] text-gold-bright font-medium">
+                          Verified Shrine
+                        </span>
+                      )}
+                    </div>
+                  </div>
                 </button>
-              ))}
+              );
+            })}
         </div>
       </aside>
 
-      {/* Selection detail card */}
+      {/* Floating Detailed Destination Drawer (Bottom/Side Modal) */}
       {selected && (
-        <div className="pointer-events-none fixed inset-x-0 bottom-20 z-30 flex justify-center px-4 lg:bottom-4 lg:left-1/2 lg:max-w-lg">
-          <DetailCard place={selected} onClose={() => setSelectedId(null)} />
+        <div className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center px-4 lg:left-1/2 lg:-translate-x-1/2 lg:max-w-xl">
+          <div className="pointer-events-auto w-full overflow-hidden rounded-3xl border border-line bg-obsidian-3/98 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.95)] backdrop-blur-2xl">
+            <div className="relative p-5">
+              <button
+                onClick={() => setSelectedId(null)}
+                aria-label="Close details"
+                className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-white/[0.08] text-ivory transition-colors hover:bg-white/20"
+              >
+                <X className="h-4 w-4" />
+              </button>
+
+              <div className="flex items-start gap-3.5 pr-8">
+                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gold/15 text-2xl text-gold-bright">
+                  {selected.verified ? <ShieldCheck className="h-7 w-7 text-gold-bright" /> : "🛕"}
+                </span>
+                <div className="min-w-0">
+                  <h3 className="font-display text-lg font-medium leading-tight text-ivory">
+                    {selected.name}
+                  </h3>
+                  <p className="mt-1 text-xs text-ivory-dim">
+                    {selected.region ? `${selected.region} · ` : ""}
+                    {selected.address || "Pilgrimage Destination"}
+                  </p>
+                </div>
+              </div>
+
+              {/* Provenance & Quality Badge Panel */}
+              {selectedQuality && (
+                <div className="mt-4 rounded-2xl border border-line/60 bg-white/[0.02] p-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-medium text-ivory">Geographic Coordinates</span>
+                    <span
+                      className={cn(
+                        "rounded-full px-2 py-0.5 text-[10px] font-semibold border",
+                        selectedQuality.badgeVariant === "gold"
+                          ? "border-gold/40 bg-gold/15 text-gold-bright"
+                          : selectedQuality.badgeVariant === "emerald"
+                            ? "border-emerald-500/40 bg-emerald-500/15 text-emerald-300"
+                            : "border-amber-500/40 bg-amber-500/15 text-amber-300"
+                      )}
+                    >
+                      {selectedQuality.accuracyLabel}
+                    </span>
+                  </div>
+                  <p className="mt-1 text-[11px] text-ivory-dim leading-relaxed">
+                    {selectedQuality.accuracyDescription}
+                  </p>
+                  <p className="mt-1.5 font-mono text-[10px] text-gold-dim">
+                    {selected.latitude.toFixed(5)}°N, {selected.longitude.toFixed(5)}°E
+                  </p>
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="mt-4 flex flex-wrap items-center gap-2">
+                {selected.verified ? (
+                  <Link
+                    href={selected.verified.href}
+                    className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-gold px-4 py-2.5 text-xs font-semibold text-obsidian shadow-md shadow-gold/20 transition-all hover:bg-gold-bright"
+                  >
+                    <ShieldCheck className="h-4 w-4" />
+                    Open Verified Profile
+                  </Link>
+                ) : (
+                  <a
+                    href={`https://www.google.com/maps/dir/?api=1&destination=${selected.latitude},${selected.longitude}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-gold px-4 py-2.5 text-xs font-semibold text-obsidian shadow-md shadow-gold/20 transition-all hover:bg-gold-bright"
+                  >
+                    <Car className="h-4 w-4" />
+                    Navigate via Maps
+                  </a>
+                )}
+
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selected.name)}+${selected.latitude},${selected.longitude}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-1.5 rounded-xl border border-line px-3.5 py-2.5 text-xs font-medium text-ivory-dim transition-colors hover:border-gold hover:text-ivory"
+                >
+                  <ExternalLink className="h-3.5 w-3.5" />
+                  Google Maps
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       )}
-    </div>
-  );
-}
-
-function ModeChip({ loading, mode, stale }: { loading: boolean; mode: DiscoveryResult["mode"] | null; stale: boolean }) {
-  const { t } = useApp();
-  if (loading) return <span className="glass flex items-center gap-2 rounded-xl border border-line px-3 py-2 text-[11px] text-ivory-dim">…</span>;
-  const label =
-    mode === "live" ? t("discover_live") : mode === "cache" ? t("discover_cache") : mode === "degraded" ? (stale ? t("discover_stale") : t("discover_degraded")) : "";
-  return <span className="glass rounded-xl border border-line px-3 py-2 text-[10.5px] font-medium uppercase tracking-[0.14em] text-gold-dim">{label}</span>;
-}
-
-function Photo({ place }: { place: DiscoveredPlace }) {
-  const photo = place.photos?.[0];
-  if (!photo) return null;
-  return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src={`/api/places/photo?name=${encodeURIComponent(photo.name)}&h=360`}
-      alt={place.name}
-      loading="lazy"
-      className="h-36 w-full rounded-xl object-cover"
-    />
-  );
-}
-
-function DetailCard({ place, onClose }: { place: DiscoveredPlace; onClose: () => void }) {
-  const { t } = useApp();
-  const safetyUrl = place.googlePlaceId
-    ? `${place.mapsUrl || `https://www.google.com/maps/place/?q=place_id:${place.googlePlaceId}`}`
-    : place.mapsUrl;
-  return (
-    <div className="pointer-events-auto w-full overflow-hidden rounded-2xl border border-line bg-obsidian-3/97 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.9)]">
-      <div className="relative">
-        <Photo place={place} />
-        <button
-          onClick={onClose}
-          aria-label="Close"
-          className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-obsidian/70 text-ivory backdrop-blur transition-colors hover:bg-obsidian"
-        >
-          <X className="h-4 w-4" />
-        </button>
-      </div>
-      <div className="p-4">
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <h3 className="font-display text-[17px] font-medium leading-snug text-ivory">{place.name}</h3>
-            <p className="mt-0.5 text-[12px] text-ivory-dim">
-              {place.region ? `${place.region} · ` : ""}
-              {place.distanceKm ? `${place.distanceKm.toFixed(1)} km` : place.address}
-            </p>
-          </div>
-          <span
-            className={cn(
-              "shrink-0 rounded-full px-2.5 py-1 text-[10.5px] font-medium",
-              place.openNow === true ? "bg-emerald-400/15 text-emerald-300" : place.openNow === false ? "bg-red-400/15 text-red-300" : "bg-white/[0.05] text-ivory-dim"
-            )}
-          >
-            {openNowLabel(place)}
-          </span>
-        </div>
-
-        <div className="mt-3 flex items-center justify-between gap-2 border-t border-line pt-3">
-          <div className="flex flex-wrap gap-1.5">
-            <span className="rounded-full border border-line px-2 py-0.5 text-[10.5px] text-ivory-dim">
-              {certaintyLabel(place.certainty)}
-            </span>
-            <span
-              className={cn(
-                "rounded-full border px-2 py-0.5 text-[10.5px]",
-                place.source === "verified"
-                  ? "border-gold/25 bg-gold/10 text-gold-bright"
-                  : place.source === "cached"
-                    ? "border-line text-ivory-dim/70"
-                    : "border-saffron/25 text-orange-300"
-              )}
-            >
-              {place.source === "verified" ? t("discover_verified") : place.source === "cached" ? t("discover_cache") : t("discover_live")}
-            </span>
-          </div>
-        </div>
-
-        <div className="mt-3 flex items-center gap-2">
-          {place.verified ? (
-            <Link
-              href={place.verified.href}
-              className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-gold/15 px-4 py-2.5 text-[13px] font-medium text-gold-bright transition-colors hover:bg-gold/25"
-            >
-              <ShieldCheck className="h-4 w-4" />
-              Open verified profile
-            </Link>
-          ) : (
-            <Link
-              href={safetyUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-line px-4 py-2.5 text-[13px] font-medium text-ivory-dim transition-colors hover:text-ivory"
-            >
-              <ExternalLink className="h-4 w-4" />
-              {t("map_open_in_maps")}
-            </Link>
-          )}
-        </div>
-        <GoogleAttribution className="mt-2 text-[10.5px] text-ivory-dim/50" />
-      </div>
     </div>
   );
 }
