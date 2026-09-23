@@ -18,7 +18,6 @@ import { getState, nearbyFor, templeUrl, TEMPLES, templesByState } from "@/lib/r
 import { resolveTemple } from "@/lib/db/directory";
 import { VERIFY_LABEL } from "@/lib/format";
 import { Container, Breadcrumbs, Chip, VerifyBadge, SectionHeading } from "@/components/ui";
-import { DevyatraArt } from "@/components/devyatra-art";
 import { SaveButton } from "@/components/save-button";
 import { LiveStatus, PlanCta } from "@/components/temple/live";
 import { LiveTempleIntelligence } from "@/components/temple/live-intelligence";
@@ -40,6 +39,9 @@ import { VisitLogisticsPanel } from "@/components/temple/visit-logistics-panel";
 import { SafetyModeModal } from "@/components/temple/safety-mode-modal";
 import { WhatChangedCard } from "@/components/temple/what-changed-card";
 import { buildMasterDestinationIntelligence } from "@/lib/intelligence/context-engine";
+import { CinematicImage } from "@/components/ui/cinematic-image";
+import { getTempleImage } from "@/lib/images/registry";
+import { TempleArchitecture3D } from "@/components/3d/temple-architecture-3d";
 import { cn } from "@/lib/cn";
 
 export const dynamicParams = true;
@@ -143,9 +145,16 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
       <section className="relative overflow-hidden pt-28">
         <SacredAmbient />
         <div className="absolute inset-0 -z-10">
-          <DevyatraArt seed={temple.slug} variant="hero" className="h-full w-full" />
-          <div className="absolute inset-0 bg-gradient-to-b from-obsidian/50 via-transparent to-obsidian" />
-          <div className="absolute inset-0 bg-gradient-to-r from-obsidian/80 via-transparent to-transparent" />
+          <CinematicImage
+            record={getTempleImage(temple.slug)}
+            artSeed={temple.slug}
+            alt={temple.name}
+            aspectRatio="16/9"
+            priority
+            className="h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-obsidian/75 via-obsidian/50 to-obsidian" />
+          <div className="absolute inset-0 bg-gradient-to-r from-obsidian/90 via-obsidian/60 to-transparent" />
         </div>
 
         <Container className="pb-14 pt-6">
@@ -298,6 +307,19 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
                   </li>
                 ))}
               </ol>
+            </section>
+
+            {/* Architecture & Sacred Geometry */}
+            <section id="architecture" className="space-y-6">
+              <SectionHeading
+                eyebrow="Sacred Geometry & Form"
+                title={`${temple.architecture ? `${temple.architecture} Architecture` : "Sacred Temple Architecture"}`}
+                sub="Explore the sanctum anatomy, concentric courtyards, and metaphysical axes of this ancient sanctuary."
+              />
+              <TempleArchitecture3D
+                title={`${temple.name} — Spatial Form`}
+                subtitle={`Architectural layout grounded in canonical ${temple.architecture || "Vedic"} sacred design principles.`}
+              />
             </section>
 
             {/* Heritage Perspectives & Personas */}

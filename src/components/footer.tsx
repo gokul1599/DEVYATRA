@@ -55,9 +55,13 @@ export function Footer() {
   }, []);
 
   return (
-    <footer className="relative mt-24 border-t border-line bg-obsidian-2/60">
+    <footer className="relative mt-24 border-t border-stone-800/80 bg-[#0C0907]/90 overflow-hidden">
+      {/* Sacred Horizon Backlight & Silhouette */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-[#C8A24B]/10 to-transparent" />
+      <div className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 w-3/4 max-w-4xl h-20 bg-radial from-[#C8A24B]/20 via-transparent to-transparent blur-2xl" />
+
       {/* trust strip */}
-      <div className="border-b border-line">
+      <div className="relative border-b border-stone-800/60">
         <Container className="flex flex-col items-center gap-4 py-7 sm:flex-row sm:justify-between">
           <div className="flex items-center gap-2.5 text-ivory">
             <ShieldCheck className="h-5 w-5 text-gold" />

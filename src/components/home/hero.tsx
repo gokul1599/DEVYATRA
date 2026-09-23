@@ -8,6 +8,7 @@ import { SearchBar } from "@/components/search-bar";
 import { DevyatraArt } from "@/components/devyatra-art";
 
 import { SacredAmbient } from "@/components/sacred-ambient";
+import { SacredHeroScene } from "@/components/3d/sacred-hero-scene";
 
 const QUICK = [
   { label: "తిరుపతి (Tirupati)", href: "/temples/andhra-pradesh/sri-venkateswara-temple" },
@@ -91,11 +92,13 @@ export function Hero() {
   return (
     <section className="relative flex min-h-[92svh] flex-col overflow-hidden">
       {/* cinematic backdrop + restrained 3D sacred geometry ambient */}
-      <div className="absolute inset-0" aria-hidden>
-        <DevyatraArt seed="bharat-darshan-hero" variant="hero" className="h-full w-full opacity-60" />
+      <div className="absolute inset-0 overflow-hidden" aria-hidden>
+        <DevyatraArt seed="bharat-darshan-hero" variant="hero" className="h-full w-full opacity-60 object-cover" />
+        <SacredHeroScene className="absolute inset-0 pointer-events-none" />
         <SacredAmbient />
-        <div className="absolute inset-0 bg-gradient-to-b from-obsidian/40 via-transparent to-obsidian" />
-        <div className="absolute inset-0 bg-gradient-to-r from-obsidian/80 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-radial from-transparent via-[#0A0705]/60 to-[#0A0705]/95" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0A0705]/40 via-transparent to-[#0A0705]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0A0705]/85 via-transparent to-transparent" />
       </div>
 
       <div className="relative z-10 mx-auto flex w-full max-w-[1200px] flex-1 flex-col justify-center px-5 pb-16 pt-36 sm:px-8">

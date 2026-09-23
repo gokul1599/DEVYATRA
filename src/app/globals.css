@@ -111,6 +111,30 @@ body {
   outline: none;
 }
 
+@utility gold-glow {
+  box-shadow: 0 0 35px -8px rgba(200, 162, 75, 0.28);
+}
+
+@utility saffron-glow {
+  box-shadow: 0 0 35px -8px rgba(217, 130, 43, 0.26);
+}
+
+@utility maroon-glow {
+  box-shadow: 0 0 35px -8px rgba(110, 31, 43, 0.32);
+}
+
+@utility forest-glow {
+  box-shadow: 0 0 35px -8px rgba(28, 56, 41, 0.32);
+}
+
+@utility card-cinematic {
+  transition: transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1), border-color 0.4s ease, box-shadow 0.4s ease;
+  &:hover {
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.6);
+  }
+}
+
 /* Grain overlay for cinematic texture */
 .grain::after {
   content: "";

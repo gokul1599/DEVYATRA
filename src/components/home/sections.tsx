@@ -30,6 +30,10 @@ import { SectionHeading, Container } from "@/components/ui";
 import { TempleCard } from "@/components/temple-card";
 import { Stagger, StaggerItem } from "@/components/motion";
 import { festivalDate, fmtDate } from "@/lib/format";
+import { SectionShell } from "@/components/ui/section-shell";
+import { TempleArchitecture3D } from "@/components/3d/temple-architecture-3d";
+import { REGIONAL_LANDSCAPES } from "@/lib/images/registry";
+import { CinematicImage } from "@/components/ui/cinematic-image";
 
 /* -------------------------------------------------------------------------- */
 /* Explore India                                                              */
@@ -48,20 +52,54 @@ export async function ExploreIndia() {
         .sort((a, b) => b.count - a.count || a.s.name.localeCompare(b.s.name));
 
   return (
-    <section id="explore-india" className="relative py-20 md:py-28">
+    <SectionShell sectionId="explore" id="explore-india" className="py-20 md:py-28">
       <Container wide>
         <div className="flex flex-wrap items-end justify-between gap-4">
           <SectionHeading
             eyebrow="Explore India"
-            title="From state to district to temple"
-            sub="Journey through India's sacred geography — every temple anchored to its official administrative home."
+            title="From region to state to sacred sanctum"
+            sub="Journey across India's geographic zones and sacred landscapes — anchored to official administrative geography."
           />
           <Link
             href="/explore"
-            className="mb-10 inline-flex items-center gap-1.5 rounded-full border border-ivory/12 px-4 py-2 text-[13px] text-ivory-dim transition-colors hover:border-gold/40 hover:text-gold-bright md:mb-14"
+            className="mb-10 inline-flex items-center gap-1.5 rounded-full border border-ivory/12 px-4 py-2 text-[13px] text-ivory-dim transition-colors hover:border-[#D9822B]/60 hover:text-[#F2ECE1] md:mb-14"
           >
             Explore all states <ArrowRight className="h-3.5 w-3.5" />
           </Link>
+        </div>
+
+        {/* Regional Visual Gateways */}
+        <div className="mb-12 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
+          {REGIONAL_LANDSCAPES.map((reg) => (
+            <Link
+              key={reg.regionId}
+              href={`/explore?region=${reg.regionId}`}
+              className="group relative flex flex-col justify-end overflow-hidden rounded-2xl border border-stone-800/80 bg-stone-900/60 p-4 min-h-[170px] transition-all duration-300 hover:border-[#C8A24B]/50 hover:-translate-y-1 hover:shadow-lg"
+            >
+              <div className="absolute inset-0">
+                <CinematicImage
+                  record={reg.image}
+                  artSeed={`reg-${reg.regionId}`}
+                  alt={reg.name}
+                  aspectRatio="4/3"
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0C0907]/95 via-[#0C0907]/50 to-transparent" />
+              </div>
+
+              <div className="relative z-10">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-[#E4BE72]">
+                  {reg.keyStates.slice(0, 3).join(" • ")}
+                </span>
+                <p className="font-serif text-sm font-medium text-stone-100 mt-0.5 group-hover:text-[#E4BE72] transition-colors">
+                  {reg.name.split("&")[0].trim()}
+                </p>
+                <p className="text-[11px] text-stone-400 line-clamp-1 mt-0.5">
+                  {reg.shortSummary}
+                </p>
+              </div>
+            </Link>
+          ))}
         </div>
 
         <Stagger className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
@@ -69,9 +107,9 @@ export async function ExploreIndia() {
             <StaggerItem key={s.code}>
               <Link
                 href={`/explore/${s.slug}`}
-                className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-line bg-obsidian-2 p-4 transition-all duration-300 hover:border-gold/30 hover:bg-obsidian-3"
+                className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-stone-800/80 bg-stone-950/60 p-4 backdrop-blur-sm transition-all duration-300 hover:border-[#C8A24B]/40 hover:bg-stone-900/70"
               >
-                <div className="pointer-events-none absolute -right-6 -top-6 h-20 w-20 rounded-full bg-gold/10 blur-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                <div className="pointer-events-none absolute -right-6 -top-6 h-20 w-20 rounded-full bg-[#C8A24B]/10 blur-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                 <div className="flex items-center justify-between">
                   <span className="font-display text-xl font-semibold text-ivory transition-colors group-hover:text-gold-bright">
                     {s.name.slice(0, 14)}
@@ -92,7 +130,7 @@ export async function ExploreIndia() {
           ))}
         </Stagger>
       </Container>
-    </section>
+    </SectionShell>
   );
 }
 
@@ -136,6 +174,76 @@ export function Categories() {
   );
 }
 
+export function ArchitectureShowcase() {
+  return (
+    <SectionShell sectionId="architecture" id="architecture" className="py-20 md:py-28">
+      <Container wide>
+        <div className="flex flex-wrap items-end justify-between gap-4 mb-10">
+          <SectionHeading
+            eyebrow="Architectural Heritage"
+            title="India in Many Sacred Forms"
+            sub="From soaring Chola Gopurams in the South to curvilinear Nagara Shikharas in the North — explore the sacred geometry of Indian temple anatomy."
+          />
+          <Link
+            href="/temples?view=architecture"
+            className="mb-10 inline-flex items-center gap-1.5 rounded-full border border-stone-800 px-4 py-2 text-[13px] text-stone-300 transition-colors hover:border-[#8E2800]/50 hover:text-[#E4BE72] md:mb-14"
+          >
+            Explore architectural styles <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+
+        {/* 3D Interactive Architecture Explorer */}
+        <TempleArchitecture3D />
+
+        {/* Architectural Traditions Strip */}
+        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[
+            {
+              name: "Dravidian Tradition",
+              region: "South India (Tamil Nadu, Karnataka, AP, Kerala)",
+              features: "Pyramidal Vimanas, monumental Gopurams, pillared Mandapas",
+              example: "Brihadeeswarar & Meenakshi Amman",
+            },
+            {
+              name: "Nagara Tradition",
+              region: "North & Central India (UP, Odisha, Gujarat, MP)",
+              features: "Curvilinear Shikhara, square Garbhagriha, Amalaka crown",
+              example: "Kashi Vishwanath & Khajuraho",
+            },
+            {
+              name: "Vesara Tradition",
+              region: "Deccan (Karnataka & Maharashtra)",
+              features: "Hybrid fusion of Nagara spire and Dravidian mandapa geometry",
+              example: "Hoysaleswara & Badami Cave Temples",
+            },
+            {
+              name: "Kalinga & Himalayan",
+              region: "Odisha Coast & Garhwal / Kumaon Peaks",
+              features: "Deula rekha towers, stone sanctums amidst snow-clad peaks",
+              example: "Jagannath Puri & Kedarnath",
+            },
+          ].map((style) => (
+            <div
+              key={style.name}
+              className="rounded-xl border border-stone-800/80 bg-stone-900/60 p-4 backdrop-blur-sm"
+            >
+              <span className="text-[10px] font-mono uppercase tracking-widest text-[#E4BE72]">
+                {style.name}
+              </span>
+              <p className="text-xs text-stone-300 font-medium mt-1">
+                {style.features}
+              </p>
+              <p className="text-[11px] text-stone-400 mt-2">
+                <span className="text-stone-300 font-mono">Benchmark:</span> {style.example}
+              </p>
+            </div>
+          ))}
+        </div>
+      </Container>
+    </SectionShell>
+  );
+}
+
 /* -------------------------------------------------------------------------- */
 /* Famous temples                                                             */
 /* -------------------------------------------------------------------------- */
@@ -156,7 +264,7 @@ export function Famous() {
   })).filter((x) => x.temple);
 
   return (
-    <section id="famous" className="py-20 md:py-28">
+    <SectionShell sectionId="famous" id="famous" className="py-20 md:py-28">
       <Container wide>
         <SectionHeading
           eyebrow="Famous & historic"
@@ -175,7 +283,7 @@ export function Famous() {
           )}
         </div>
       </Container>
-    </section>
+    </SectionShell>
   );
 }
 
@@ -197,7 +305,7 @@ export function FestivalStrip() {
     .slice(0, 10);
 
   return (
-    <section id="festivals" className="py-6 md:py-10">
+    <SectionShell sectionId="festivals" id="festivals" className="py-12 md:py-20">
       <Container wide>
         <div className="flex flex-wrap items-end justify-between gap-4">
           <SectionHeading
@@ -207,7 +315,7 @@ export function FestivalStrip() {
           />
           <Link
             href="/festivals"
-            className="mb-10 inline-flex items-center gap-1.5 rounded-full border border-ivory/12 px-4 py-2 text-[13px] text-ivory-dim transition-colors hover:border-gold/40 hover:text-gold-bright md:mb-14"
+            className="mb-10 inline-flex items-center gap-1.5 rounded-full border border-ivory/12 px-4 py-2 text-[13px] text-ivory-dim transition-colors hover:border-[#D9822B]/60 hover:text-gold-bright md:mb-14"
           >
             Full festival calendar <ArrowRight className="h-3.5 w-3.5" />
           </Link>
@@ -221,7 +329,7 @@ export function FestivalStrip() {
               <Link
                 key={key}
                 href={`${templeUrl(f.temple)}#festivals`}
-                className="group relative w-60 shrink-0 snap-start overflow-hidden rounded-2xl border border-line bg-obsidian-2 px-5 py-4 transition-all duration-300 hover:border-gold/30"
+                className="group relative w-64 shrink-0 snap-start overflow-hidden rounded-2xl border border-stone-800/80 bg-stone-900/70 backdrop-blur-sm px-5 py-4 transition-all duration-300 hover:border-[#D9822B]/50 hover:bg-stone-900/90 shadow-md"
               >
                 <p className="font-display text-2xl font-semibold gold-text">
                   {fmtDate(f.date)}
@@ -238,7 +346,7 @@ export function FestivalStrip() {
           })}
         </div>
       </Container>
-    </section>
+    </SectionShell>
   );
 }
 
@@ -248,7 +356,7 @@ export function FestivalStrip() {
 
 export function PlanBand() {
   return (
-    <section className="py-20 md:py-28">
+    <SectionShell sectionId="journey" id="plan-band" className="py-20 md:py-28">
       <Container wide>
         <div className="relative overflow-hidden rounded-[2rem] border border-gold/20 bg-surface-warm p-8 md:p-14">
           <div className="pointer-events-none absolute -right-16 -top-16 h-72 w-72 rounded-full bg-gold/12 blur-3xl" />
@@ -306,7 +414,7 @@ export function PlanBand() {
           </div>
         </div>
       </Container>
-    </section>
+    </SectionShell>
   );
 }
 
@@ -419,7 +527,7 @@ export function TrustSection() {
     },
   ];
   return (
-    <section id="trust" className="py-20 md:py-28">
+    <SectionShell sectionId="trust" id="trust" className="py-20 md:py-28">
       <Container>
         <SectionHeading
           eyebrow="Radically honest"
@@ -430,7 +538,7 @@ export function TrustSection() {
         <Stagger className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {items.map((it) => (
             <StaggerItem key={it.t}>
-              <div className="h-full rounded-2xl border border-line bg-obsidian-2 p-6">
+              <div className="h-full rounded-2xl border border-stone-800/80 bg-stone-900/60 p-6 backdrop-blur-sm">
                 <it.icon className="h-6 w-6 text-gold" />
                 <p className="mt-4 font-display text-lg text-ivory">{it.t}</p>
                 <p className="mt-2 text-[13px] leading-relaxed text-ivory-dim">{it.d}</p>
@@ -447,7 +555,7 @@ export function TrustSection() {
           </Link>
         </div>
       </Container>
-    </section>
+    </SectionShell>
   );
 }
 

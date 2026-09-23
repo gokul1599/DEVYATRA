@@ -4,10 +4,11 @@ import { Temple, VerificationStatus } from "@/lib/types";
 import { DirectoryTemple } from "@/lib/db/directory";
 import { getState } from "@/lib/registry";
 import { VerifyBadge, Chip } from "@/components/ui";
-import { DevyatraArt } from "@/components/devyatra-art";
 import { SaveButton } from "@/components/save-button";
 import { Lift } from "@/components/motion";
 import { cn } from "@/lib/cn";
+import { CinematicImage } from "@/components/ui/cinematic-image";
+import { getTempleImage } from "@/lib/images/registry";
 
 const BADGE_ICON: Record<string, { icon: typeof Flame; cls: string }> = {
   "Major Pilgrimage": { icon: Flame, cls: "text-terracotta" },
@@ -75,10 +76,15 @@ export function TempleCard({
           className
         )}
       >
-        <div className={cn("relative overflow-hidden", featured ? "aspect-[16/9]" : "aspect-[4/3]")}>
-          <div className="absolute inset-0 transition-transform duration-[1.2s] ease-out group-hover:scale-[1.06]">
-            <DevyatraArt seed={`${temple.name}-${index}`} />
-          </div>
+        <div className="relative overflow-hidden">
+          <CinematicImage
+            record={getTempleImage(temple.slug)}
+            artSeed={`${temple.name}-${index}`}
+            alt={temple.name}
+            aspectRatio={featured ? "16/9" : "4/3"}
+            priority={index < 2}
+            className="w-full"
+          />
 
           <div className="absolute left-3 top-3 flex flex-col items-start gap-1.5 z-10">
             <VerifyBadge verification={verification} compact />

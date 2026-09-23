@@ -16,6 +16,8 @@ import { getStates } from "@/lib/registry";
 import { Container, Breadcrumbs } from "@/components/ui";
 import { DevyatraArt } from "@/components/devyatra-art";
 import { Stagger, StaggerItem } from "@/components/motion";
+import { CinematicImage } from "@/components/ui/cinematic-image";
+import { REGIONAL_LANDSCAPES } from "@/lib/images/registry";
 
 export const dynamic = "force-dynamic";
 
@@ -438,45 +440,70 @@ export default async function ExplorePage() {
             </p>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {SACRED_REGIONS.map((region) => (
-              <div
-                key={region.id}
-                className="flex flex-col justify-between rounded-2xl border border-line bg-obsidian-2 p-6 transition-all duration-300 hover:border-gold/40 hover:bg-obsidian-1"
-              >
-                <div>
-                  <div className="flex items-center justify-between">
-                    <span className="rounded-full border border-gold/30 bg-gold/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-gold-bright">
-                      {region.badge}
-                    </span>
-                  </div>
-                  <h3 className="mt-3 font-display text-xl font-medium text-ivory">
-                    {region.name}
-                  </h3>
-                  <p className="mt-2 text-xs leading-relaxed text-ivory-dim">
-                    {region.subtitle}
-                  </p>
-                  <p className="mt-3 text-[11.5px] text-gold-dim">
-                    <span className="font-semibold text-ivory-dim">Highlights:</span> {region.highlight}
-                  </p>
-                </div>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {SACRED_REGIONS.map((region) => {
+              const landscape = REGIONAL_LANDSCAPES.find((r) => r.regionId === region.id);
+              return (
+                <div
+                  key={region.id}
+                  className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-stone-800/80 bg-stone-950/70 transition-all duration-300 hover:border-[#C8A24B]/50 hover:bg-stone-900/60 shadow-lg"
+                >
+                  {landscape && (
+                    <div className="relative aspect-[16/9] w-full overflow-hidden border-b border-stone-800/60">
+                      <CinematicImage
+                        record={landscape.image}
+                        artSeed={`explore-${region.id}`}
+                        alt={region.name}
+                        aspectRatio="16/9"
+                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/30 to-transparent" />
+                      <div className="absolute top-3 left-3">
+                        <span className="rounded-full border border-gold/30 bg-black/60 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-gold-bright backdrop-blur-md">
+                          {region.badge}
+                        </span>
+                      </div>
+                    </div>
+                  )}
 
-                <div className="mt-5 border-t border-white/[0.05] pt-4">
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-ivory-dim">States & UTs:</span>
-                  <div className="mt-2 flex flex-wrap gap-1.5">
-                    {region.statesList.map((st) => (
-                      <Link
-                        key={st.slug}
-                        href={`/explore/${st.slug}`}
-                        className="rounded-lg border border-white/[0.08] bg-obsidian-3 px-2 py-1 text-[11px] text-ivory transition-colors hover:border-gold/40 hover:text-gold-bright"
-                      >
-                        {st.name}
-                      </Link>
-                    ))}
+                  <div className="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                      {!landscape && (
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="rounded-full border border-gold/30 bg-gold/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-gold-bright">
+                            {region.badge}
+                          </span>
+                        </div>
+                      )}
+                      <h3 className="font-display text-xl font-medium text-ivory group-hover:text-gold-bright transition-colors">
+                        {region.name}
+                      </h3>
+                      <p className="mt-2 text-xs leading-relaxed text-ivory-dim">
+                        {region.subtitle}
+                      </p>
+                      <p className="mt-3 text-[11.5px] text-gold-dim">
+                        <span className="font-semibold text-ivory-dim">Highlights:</span> {region.highlight}
+                      </p>
+                    </div>
+
+                    <div className="mt-5 border-t border-white/[0.05] pt-4">
+                      <span className="text-[11px] font-semibold uppercase tracking-wider text-ivory-dim">States & UTs:</span>
+                      <div className="mt-2 flex flex-wrap gap-1.5">
+                        {region.statesList.map((st) => (
+                          <Link
+                            key={st.slug}
+                            href={`/explore/${st.slug}`}
+                            className="rounded-lg border border-white/[0.08] bg-obsidian-3 px-2 py-1 text-[11px] text-ivory transition-colors hover:border-gold/40 hover:text-gold-bright"
+                          >
+                            {st.name}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </Container>
       </section>
