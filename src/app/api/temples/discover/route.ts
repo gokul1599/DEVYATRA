@@ -12,7 +12,14 @@ const schema = z.object({
   lat: z.coerce.number().min(-90).max(90).optional(),
   lng: z.coerce.number().min(-180).max(180).optional(),
   radius: z.coerce.number().min(0.5).max(100).optional(),
-  limit: z.coerce.number().int().min(1).max(MAX_DISCOVERED_ITEMS).optional(),
+  limit: z
+    .coerce
+    .number()
+    .int()
+    .min(1)
+    .max(120)
+    .optional()
+    .transform((v) => (v ? Math.min(v, MAX_DISCOVERED_ITEMS) : undefined)),
   forceLive: z
     .string()
     .transform((v) => v === "1" || v === "true")

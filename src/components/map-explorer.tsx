@@ -81,11 +81,6 @@ export function MapExplorer() {
   const [stale, setStale] = useState(false);
   const [failed, setFailed] = useState(false);
   const [mapError, setMapError] = useState<string | null>(null);
-  const [fallbackActive, setFallbackActive] = useState(false);
-  const fallbackActiveRef = useRef(fallbackActive);
-  useEffect(() => {
-    fallbackActiveRef.current = fallbackActive;
-  }, [fallbackActive]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [filterCategory, setFilterCategory] = useState<
     "all" | "verified" | "open" | "heritage" | "nature" | "food_stay"
@@ -98,7 +93,7 @@ export function MapExplorer() {
   const [acOpen, setAcOpen] = useState(false);
   const [acIdx, setAcIdx] = useState(-1);
 
-  const filteredItems = items.filter((p) => {
+  const filteredItems = (Array.isArray(items) ? items : []).filter((p) => {
     // Zero centroid fallback guarantee
     if ((p as unknown as { isCentroidFallback?: boolean }).isCentroidFallback) return false;
     if (filterCategory === "verified") return p.verified || p.source === "verified";
@@ -146,7 +141,7 @@ export function MapExplorer() {
     filteredItemsRef.current = filteredItems;
   }, [filteredItems]);
 
-  const selected = items.find((i) => i.id === selectedId) ?? null;
+  const selected = (Array.isArray(items) ? items : []).find((i) => i.id === selectedId) ?? null;
 
   // Selected place quality assessment
   const selectedQuality: LocationQualityAssessment | null = selected
@@ -179,22 +174,33 @@ export function MapExplorer() {
       setShowAreaSearchPill(false);
       try {
         const res = await fetch(
-          `/api/temples/discover?lat=${lat.toFixed(4)}&lng=${lng.toFixed(4)}&radius=${Math.round(radiusKm)}&limit=80&forceLive=1`
+          `/api/temples/discover?lat=${lat.toFixed(4)}&lng=${lng.toFixed(4)}&radius=${Math.round(radiusKm)}&limit=60&forceLive=1`
         );
+        if (!res.ok) {
+          setFailed(true);
+          return;
+        }
         const data = (await res.json()) as DiscoveryResult;
-        setItems(data.items);
-        setMode(data.mode);
-        setStale(data.stale);
+        if (data && Array.isArray(data.items)) {
+          setItems(data.items);
+          setMode(data.mode);
+          setStale(Boolean(data.stale));
+        } else {
+          setItems([]);
+        }
 
         if (panToCenter && mapRef.current) {
-          const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          const prefersReducedMotion =
+            typeof window !== "undefined" &&
+            window.matchMedia("(prefers-reduced-motion: reduce)").matches;
           if (prefersReducedMotion) {
             mapRef.current.jumpTo({ center: [lng, lat], zoom: 12.5 });
           } else {
             mapRef.current.flyTo({ center: [lng, lat], zoom: 12.5, essential: true });
           }
         }
-      } catch {
+      } catch (err) {
+        console.warn("[MapExplorer] fetchArea error:", err);
         setFailed(true);
         setItems([]);
       } finally {
@@ -288,113 +294,122 @@ export function MapExplorer() {
       mapRef.current = map;
 
       map.on("error", (e) => {
-        console.warn("[MapExplorer] Map tile or style error:", e);
-        if (!fallbackActiveRef.current && mapStyleKey !== "satellite") {
-          setFallbackActive(true);
-          fallbackActiveRef.current = true;
-          try {
-            map.setStyle(MAP_STYLES.satellite as unknown as maplibregl.StyleSpecification);
-          } catch {
-            setMapError("Interactive map could not load tiles on this network");
-          }
-        }
+        console.warn("[MapExplorer] Map tile or style warning:", e);
       });
 
-      map.addControl(new maplibregl.NavigationControl({ showCompass: true, visualizePitch: true }), "top-right");
+      try {
+        map.addControl(new maplibregl.NavigationControl({ showCompass: true, visualizePitch: true }), "top-right");
+      } catch (ctrlErr) {
+        console.warn("[MapExplorer] NavigationControl error:", ctrlErr);
+      }
 
       map.on("load", () => {
         if (isCancelled) return;
         setMapError(null);
         fetchViewportTemples(map);
 
-        // Add clustered GeoJSON source
-        map.addSource("destinations", {
-          type: "geojson",
-          data: discoveredPlacesToGeoJSON(filteredItemsRef.current),
-          cluster: true,
-          clusterRadius: 45,
-          clusterMaxZoom: 14,
-        });
+        try {
+          // Add clustered GeoJSON source
+          if (!map.getSource("destinations")) {
+            map.addSource("destinations", {
+              type: "geojson",
+              data: discoveredPlacesToGeoJSON(filteredItemsRef.current),
+              cluster: true,
+              clusterRadius: 45,
+              clusterMaxZoom: 14,
+            });
+          }
 
-        // 1. Cluster Circles Layer
-        map.addLayer({
-          id: "clusters",
-          type: "circle",
-          source: "destinations",
-          filter: ["has", "point_count"],
-          paint: {
-            "circle-color": [
-              "step",
-              ["get", "point_count"],
-              "#c8a24b", // Gold for < 10
-              10,
-              "#d9822b", // Saffron for 10-30
-              30,
-              "#ff8c42", // Vivid Saffron for 30+
-            ],
-            "circle-radius": [
-              "step",
-              ["get", "point_count"],
-              18,
-              10,
-              24,
-              30,
-              30,
-            ],
-            "circle-stroke-width": 2.5,
-            "circle-stroke-color": "#ffffff",
-            "circle-opacity": 0.92,
-          },
-        });
+          // 1. Cluster Circles Layer
+          if (!map.getLayer("clusters")) {
+            map.addLayer({
+              id: "clusters",
+              type: "circle",
+              source: "destinations",
+              filter: ["has", "point_count"],
+              paint: {
+                "circle-color": [
+                  "step",
+                  ["get", "point_count"],
+                  "#c8a24b", // Gold for < 10
+                  10,
+                  "#d9822b", // Saffron for 10-30
+                  30,
+                  "#ff8c42", // Vivid Saffron for 30+
+                ],
+                "circle-radius": [
+                  "step",
+                  ["get", "point_count"],
+                  18,
+                  10,
+                  24,
+                  30,
+                  30,
+                ],
+                "circle-stroke-width": 2.5,
+                "circle-stroke-color": "#ffffff",
+                "circle-opacity": 0.92,
+              },
+            });
+          }
 
-        // 2. Cluster Count Text Layer
-        map.addLayer({
-          id: "cluster-count",
-          type: "symbol",
-          source: "destinations",
-          filter: ["has", "point_count"],
-          layout: {
-            "text-field": "{point_count_abbreviated}",
-            "text-size": 12,
-            "text-allow-overlap": true,
-            "text-ignore-placement": true,
-          },
-          paint: {
-            "text-color": "#0d0b09",
-          },
-        });
+          // 2. Cluster Count Text Layer
+          if (!map.getLayer("cluster-count")) {
+            map.addLayer({
+              id: "cluster-count",
+              type: "symbol",
+              source: "destinations",
+              filter: ["has", "point_count"],
+              layout: {
+                "text-field": "{point_count_abbreviated}",
+                "text-size": 12,
+                "text-allow-overlap": true,
+                "text-ignore-placement": true,
+              },
+              paint: {
+                "text-color": "#0d0b09",
+              },
+            });
+          }
 
-        // 3. Unclustered Single Point Halo (Outer Glow)
-        map.addLayer({
-          id: "unclustered-halo",
-          type: "circle",
-          source: "destinations",
-          filter: ["!", ["has", "point_count"]],
-          paint: {
-            "circle-color": "rgba(228, 190, 114, 0.25)",
-            "circle-radius": 14,
-            "circle-stroke-width": 0,
-          },
-        });
+          // 3. Unclustered Single Point Halo (Outer Glow)
+          if (!map.getLayer("unclustered-halo")) {
+            map.addLayer({
+              id: "unclustered-halo",
+              type: "circle",
+              source: "destinations",
+              filter: ["!", ["has", "point_count"]],
+              paint: {
+                "circle-color": "rgba(228, 190, 114, 0.25)",
+                "circle-radius": 14,
+                "circle-stroke-width": 0,
+              },
+            });
+          }
 
-        // 4. Unclustered Single Point Inner Pin
-        map.addLayer({
-          id: "unclustered-point",
-          type: "circle",
-          source: "destinations",
-          filter: ["!", ["has", "point_count"]],
-          paint: {
-            "circle-color": [
-              "case",
-              ["get", "isVerified"],
-              "#e4be72", // Gold for verified
-              "#ff8c42", // Saffron for live/other
-            ],
-            "circle-radius": 7,
-            "circle-stroke-width": 2,
-            "circle-stroke-color": "#ffffff",
-          },
-        });
+          // 4. Unclustered Single Point Inner Pin
+          if (!map.getLayer("unclustered-point")) {
+            map.addLayer({
+              id: "unclustered-point",
+              type: "circle",
+              source: "destinations",
+              filter: ["!", ["has", "point_count"]],
+              paint: {
+                "circle-color": [
+                  "case",
+                  ["get", "isVerified"],
+                  "#e4be72", // Gold for verified
+                  "#ff8c42", // Saffron for live/other
+                ],
+                "circle-radius": 7,
+                "circle-stroke-width": 2,
+                "circle-stroke-color": "#ffffff",
+              },
+            });
+          }
+        } catch (layerErr) {
+          console.warn("[MapExplorer] Layer initialization error:", layerErr);
+        }
 
         // Cluster Click -> Smooth Expansion
         map.on("click", "clusters", async (e: maplibregl.MapLayerMouseEvent) => {
@@ -574,17 +589,23 @@ export function MapExplorer() {
     setLoading(true);
     try {
       const res = await fetch(`/api/temples/discover?q=${encodeURIComponent(sug.text)}&limit=50&forceLive=1`);
+      if (!res.ok) {
+        setFailed(true);
+        return;
+      }
       const data = (await res.json()) as DiscoveryResult;
-      setItems(data.items);
-      setMode(data.mode);
-      setStale(data.stale);
-      if (data.items[0] && mapRef.current) {
-        mapRef.current.flyTo({
-          center: [data.items[0].longitude, data.items[0].latitude],
-          zoom: 13,
-          essential: true,
-        });
-        setSelectedId(data.items[0].id);
+      if (data && Array.isArray(data.items)) {
+        setItems(data.items);
+        setMode(data.mode);
+        setStale(Boolean(data.stale));
+        if (data.items[0] && mapRef.current) {
+          mapRef.current.flyTo({
+            center: [data.items[0].longitude, data.items[0].latitude],
+            zoom: 13,
+            essential: true,
+          });
+          setSelectedId(data.items[0].id);
+        }
       }
     } catch {
       setFailed(true);

@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
-import { MapExplorer } from "@/components/map-explorer";
+import { MapClientShell } from "@/components/map-client-shell";
 
 export const metadata: Metadata = {
-  title: "Temple Map",
+  title: "Temple Map · Devyatra",
   description: "Discover temples across India with live place data and verified temple profiles.",
 };
 
-export default async function MapPage() {
+export default function MapPage() {
   return (
     <main className="relative pt-16 lg:pt-[72px]">
-      <MapExplorer />
+      <MapClientShell />
     </main>
   );
 }
