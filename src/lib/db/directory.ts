@@ -2,6 +2,7 @@ import { getPrisma } from "./client";
 import { Prisma } from "@/generated/prisma/client";
 import { Temple, VerificationStatus, SourceRef, SourceType, TempleBadge } from "@/lib/types";
 import { getTemple as getStaticTemple } from "@/lib/registry";
+import { getAdminIntelligenceSummary, TempleIntelligenceHealthSummary } from "@/lib/intelligence/admin";
 
 export type DirectoryStatus = "offline" | "online";
 
@@ -797,6 +798,7 @@ export interface AdminDashboardData {
     status: string;
     submittedAt: Date;
   }>;
+  intelligence?: TempleIntelligenceHealthSummary;
 }
 
 export async function getAdminDashboardData(): Promise<AdminDashboardData> {
@@ -822,6 +824,7 @@ export async function getAdminDashboardData(): Promise<AdminDashboardData> {
       recentAudits: [],
       verificationQueue: [],
       userSubmissions: [],
+      intelligence: getAdminIntelligenceSummary(),
     };
   }
 
@@ -964,5 +967,6 @@ export async function getAdminDashboardData(): Promise<AdminDashboardData> {
       bookingsCount: t._count.bookings,
     })),
     userSubmissions: rawSubmissions,
+    intelligence: getAdminIntelligenceSummary(),
   };
 }

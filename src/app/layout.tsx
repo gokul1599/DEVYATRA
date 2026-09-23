@@ -16,9 +16,9 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://devyatra.dev"),
+  metadataBase: new URL("https://templeora.vercel.app"),
   title: {
-    default: "Devyatra — Discover India's Temples",
+    default: "Devyatra / Templeora — Discover India's Temples",
     template: "%s · Devyatra",
   },
   description:

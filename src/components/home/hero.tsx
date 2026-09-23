@@ -80,7 +80,7 @@ export function Hero() {
         >
           <p className="mb-5 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-bright">
             <Sparkles className="h-3.5 w-3.5 text-gold" />
-            1,655 Verified Sanctuaries · 36 States & UTs · Guided by AI
+            2,084 Verified Sanctuaries · 36 States & UTs · Guided by AI
           </p>
 
           <h1 className="max-w-4xl font-display text-[2.8rem] font-medium leading-[1.05] tracking-tight text-ivory sm:text-6xl md:text-7xl">
@@ -130,9 +130,9 @@ export function Hero() {
         className="relative z-10 border-t border-white/[0.07] bg-obsidian/50 backdrop-blur"
       >
         <div className="mx-auto flex w-full max-w-[1200px] items-center justify-between gap-4 px-5 py-4 sm:px-8">
-            <Stat value="1,655" label="Temples" />
+            <Stat value="2,084" label="Temples" />
             <Stat value="36" label="States & UTs" />
-            <Stat value="383" label="Districts" />
+            <Stat value="714" label="Districts" />
             <Stat value="100%" label="Source-tagged" className="hidden sm:flex" />
           <div className="hidden items-center gap-2 text-[12px] text-ivory-dim md:flex">
             <MapPin className="h-3.5 w-3.5 text-gold" />

@@ -21,6 +21,7 @@ import { Container, Breadcrumbs, Chip, VerifyBadge, SectionHeading } from "@/com
 import { DevyatraArt } from "@/components/devyatra-art";
 import { SaveButton } from "@/components/save-button";
 import { LiveStatus, PlanCta } from "@/components/temple/live";
+import { LiveTempleIntelligence } from "@/components/temple/live-intelligence";
 import { AiPanel } from "@/components/temple/ai-panel";
 import { TempleCard } from "@/components/temple-card";
 import { Reveal } from "@/components/motion";
@@ -91,6 +92,9 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
     "@type": "HinduTemple",
     name: temple.name,
     alternateName: temple.aliases,
+    description: temple.description.slice(0, 300),
+    url: templeUrl(temple),
+    deity: temple.mainDeity,
     locatedIn: {
       "@type": "Place",
       address: {
@@ -101,6 +105,7 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
       },
     },
     geo: { "@type": "GeoCoordinates", latitude: temple.latitude, longitude: temple.longitude },
+    ...(temple.booking.bookingUrl ? { sameAs: [temple.booking.bookingUrl] } : {}),
   };
 
   const canBook =
@@ -179,6 +184,7 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
       <div className="sticky top-16 z-40 border-y border-line bg-obsidian/80 backdrop-blur-md">
         <Container className="flex gap-5 overflow-x-auto py-2.5 text-[12.5px]">
           {[
+            ["#intelligence", "Live Intelligence"],
             ["#overview", "Overview"],
             ["#timings", "Timings"],
             ["#booking", "Booking"],
@@ -196,6 +202,11 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
       <Container className="pt-12">
         <div className="grid gap-12 lg:grid-cols-[1.6fr_1fr]">
           <div className="min-w-0 space-y-16">
+            {/* Live Intelligence Section */}
+            <section id="intelligence">
+              <LiveTempleIntelligence temple={temple} />
+            </section>
+
             {/* Overview */}
             <section id="overview">
               <p className="text-[15.5px] leading-relaxed text-ivory/90">{temple.description}</p>

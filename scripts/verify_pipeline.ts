@@ -77,12 +77,12 @@ async function runPipelineVerification() {
   if (tnRes.total !== 183) throw new Error(`Expected 183 for TN, got ${tnRes.total}`);
 
   const mhRes = await getPaginatedTemples({ state: "MH", limit: 50 });
-  console.log(`   - Maharashtra (MH): total = ${mhRes.total} (Expected: 168)`);
-  if (mhRes.total !== 168) throw new Error(`Expected 168 for MH, got ${mhRes.total}`);
+  console.log(`   - Maharashtra (MH): total = ${mhRes.total} (Expected: 178)`);
+  if (mhRes.total !== 178) throw new Error(`Expected 178 for MH, got ${mhRes.total}`);
 
   const kaRes = await getPaginatedTemples({ state: "KA", limit: 50 });
-  console.log(`   - Karnataka (KA): total = ${kaRes.total} (Expected: 167)`);
-  if (kaRes.total !== 167) throw new Error(`Expected 167 for KA, got ${kaRes.total}`);
+  console.log(`   - Karnataka (KA): total = ${kaRes.total} (Expected: 176)`);
+  if (kaRes.total !== 176) throw new Error(`Expected 176 for KA, got ${kaRes.total}`);
   console.log(`   ✅ State filters match exact database distributions.`);
 
   // 7. Search Filter

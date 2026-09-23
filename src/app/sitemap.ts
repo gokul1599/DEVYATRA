@@ -1,5 +1,7 @@
 import type { MetadataRoute } from "next";
 import { TEMPLES, getState } from "@/lib/registry";
+import { SACRED_COLLECTIONS } from "@/lib/discovery/collections";
+import { SACRED_CIRCUITS } from "@/lib/ai/circuits";
 
 export const dynamic = "force-static";
 
@@ -19,6 +21,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
+  const collections = SACRED_COLLECTIONS.map((c) => ({
+    url: `${base}/collections/${c.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
+
+  const circuits = SACRED_CIRCUITS.map((c) => ({
+    url: `${base}/plan?circuit=${c.id}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
+
   const templePages = TEMPLES.map((t) => ({
     url: `${base}/temples/${getState(t.stateCode)?.slug ?? ""}/${t.slug}`,
     lastModified: now,
@@ -26,7 +42,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.9,
   }));
 
-  return [...staticRoutes, ...explore, ...templePages];
+  return [...staticRoutes, ...explore, ...collections, ...circuits, ...templePages];
 }
 
 function getStatesForSitemap(): string[] {

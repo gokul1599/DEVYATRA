@@ -46,6 +46,7 @@ const STATUS_STYLE: Record<ReportRow["status"], string> = {
 
 export type AdminTab =
   | "overview"
+  | "intelligence"
   | "coverage"
   | "workbench"
   | "duplicates"
@@ -195,6 +196,7 @@ export function AdminConsole({
       <div className="flex flex-wrap gap-2 border-b border-line pb-4">
         {[
           { id: "overview", label: "Overview", icon: Layers },
+          { id: "intelligence", label: "Live Intelligence", icon: Sparkles },
           { id: "coverage", label: "National Coverage Matrix", icon: Landmark },
           { id: "workbench", label: "Verification Workbench", icon: FileCheck2 },
           { id: "duplicates", label: "Duplicate Review", icon: Copy },
@@ -303,6 +305,134 @@ export function AdminConsole({
                 ))}
               </div>
             </div>
+          </motion.div>
+        )}
+
+        {activeTab === "intelligence" && data.intelligence && (
+          <motion.div
+            key="intelligence"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            className="space-y-6"
+          >
+            {/* Panchang Today */}
+            <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-gold/30 bg-gold/5 p-5">
+              <div className="flex items-center gap-3">
+                <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gold/15 text-gold-bright">
+                  <Sparkles className="h-5 w-5" />
+                </span>
+                <div>
+                  <p className="font-display text-base font-medium text-ivory">
+                    Today&apos;s Panchang: {data.intelligence.panchangToday.tithi} ({data.intelligence.panchangToday.masa} Masa)
+                  </p>
+                  <p className="text-xs text-ivory-dim">
+                    Nakshatra: {data.intelligence.panchangToday.nakshatra} · Samvat {data.intelligence.panchangToday.samvat}
+                  </p>
+                </div>
+              </div>
+              <span className="rounded-xl border border-gold/30 bg-gold/10 px-3.5 py-1.5 text-xs font-semibold text-gold-bright">
+                {data.intelligence.panchangToday.auspiciousRitualNote}
+              </span>
+            </div>
+
+            {/* Timings Health Grid */}
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="rounded-2xl border border-line bg-obsidian-2 p-5">
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-ivory-dim">Timings Coverage</span>
+                <p className="mt-2 font-display text-3xl font-medium text-ivory">
+                  {data.intelligence.timingsCoverage.completenessPercentage}%
+                </p>
+                <p className="mt-1 text-xs text-ivory-dim">
+                  {data.intelligence.timingsCoverage.verifiedTimingsCount} / {data.intelligence.totalTemples} verified schedules
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-line bg-obsidian-2 p-5">
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-emerald-400">Live Active Darshan</span>
+                <p className="mt-2 font-display text-3xl font-medium text-emerald-400">
+                  {data.intelligence.timingsCoverage.openNowCount}
+                </p>
+                <p className="mt-1 text-xs text-ivory-dim">
+                  {data.intelligence.timingsCoverage.closingSoonCount} closing soon · {data.intelligence.timingsCoverage.afternoonBreakCount} in break
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-line bg-obsidian-2 p-5">
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-sky-400">Official Portals</span>
+                <p className="mt-2 font-display text-3xl font-medium text-sky-400">
+                  {data.intelligence.bookingsHealth.officialPortalsCount}
+                </p>
+                <p className="mt-1 text-xs text-ivory-dim">
+                  {data.intelligence.bookingsHealth.onlineMandatoryCount} online mandatory · {data.intelligence.bookingsHealth.specialDarshanAvailableCount} special passes
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-line bg-obsidian-2 p-5">
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-gold">Provenance Score</span>
+                <p className="mt-2 font-display text-3xl font-medium text-gold-bright">
+                  {data.intelligence.freshnessHealth.averageFreshnessScore}/100
+                </p>
+                <p className="mt-1 text-xs text-amber-400">
+                  {data.intelligence.freshnessHealth.staleRecordsCount} records &gt;90d unverified
+                </p>
+              </div>
+            </div>
+
+            {/* Provenance Tier Distribution */}
+            <div className="rounded-2xl border border-line bg-obsidian-2 p-6">
+              <h3 className="font-display text-lg text-ivory">Provenance Authority Hierarchy</h3>
+              <p className="mt-0.5 text-xs text-ivory-dim">Statutory distribution across national database</p>
+              <div className="mt-4 grid gap-3 sm:grid-cols-4">
+                <div className="rounded-xl border border-white/[0.05] bg-obsidian-3 p-4">
+                  <span className="text-xs font-semibold text-emerald-400">Tier A (Statutory Trusts)</span>
+                  <p className="mt-2 font-mono text-2xl font-bold text-ivory">{data.intelligence.freshnessHealth.tierACount}</p>
+                  <p className="text-[11px] text-ivory-dim">Devaswom, Shrine Boards, HR&CE, LGD</p>
+                </div>
+                <div className="rounded-xl border border-white/[0.05] bg-obsidian-3 p-4">
+                  <span className="text-xs font-semibold text-sky-400">Tier B (State Tourism / ASI)</span>
+                  <p className="mt-2 font-mono text-2xl font-bold text-ivory">{data.intelligence.freshnessHealth.tierBCount}</p>
+                  <p className="text-[11px] text-ivory-dim">State Tourism Depts, Archaeological Survey</p>
+                </div>
+                <div className="rounded-xl border border-white/[0.05] bg-obsidian-3 p-4">
+                  <span className="text-xs font-semibold text-amber-400">Tier C (Cadastral Survey)</span>
+                  <p className="mt-2 font-mono text-2xl font-bold text-ivory">{data.intelligence.freshnessHealth.tierCCount}</p>
+                  <p className="text-[11px] text-ivory-dim">District Gazetteers & Census records</p>
+                </div>
+                <div className="rounded-xl border border-white/[0.05] bg-obsidian-3 p-4">
+                  <span className="text-xs font-semibold text-zinc-400">Tier D (Community / Web)</span>
+                  <p className="mt-2 font-mono text-2xl font-bold text-ivory">{data.intelligence.freshnessHealth.tierDCount}</p>
+                  <p className="text-[11px] text-ivory-dim">Pending field audit & re-verification</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Stale Records Requiring Re-Verification */}
+            {data.intelligence.staleAlertsSample.length > 0 && (
+              <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-6">
+                <div className="flex items-center gap-2 text-amber-300">
+                  <AlertTriangle className="h-5 w-5" />
+                  <h3 className="font-display text-base font-medium">Stale Data Alerts (&gt;90 Days Without Field Re-Verification)</h3>
+                </div>
+                <p className="mt-1 text-xs text-amber-200/80">
+                  These records have not received a statutory gazette update or physical audit in over 90 days.
+                </p>
+                <div className="mt-4 divide-y divide-white/[0.05]">
+                  {data.intelligence.staleAlertsSample.map((s) => (
+                    <div key={s.id} className="flex items-center justify-between py-2.5 text-xs">
+                      <div>
+                        <span className="font-semibold text-ivory">{s.name}</span>
+                        <span className="ml-2 text-ivory-dim">({s.district}, {s.stateCode})</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="text-amber-400 font-mono">{s.daysSinceVerification} days ago</span>
+                        <span className="rounded-md bg-white/[0.05] px-2 py-0.5 text-ivory-dim">{s.sourceOrg}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </motion.div>
         )}
 

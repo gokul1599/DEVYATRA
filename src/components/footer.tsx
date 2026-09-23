@@ -34,7 +34,7 @@ const cols = [
 
 export function Footer() {
   const sStats = {
-    temples: "1,655",
+    temples: "2,084",
     states: "36",
   };
   return (

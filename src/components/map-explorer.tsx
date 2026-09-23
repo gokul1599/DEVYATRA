@@ -549,6 +549,7 @@ export function MapExplorer() {
               </button>
               <button
                 onClick={resetView}
+                aria-label={t("map_reset")}
                 className="glass flex h-9 items-center gap-1.5 rounded-xl border border-line px-3 text-[12px] text-ivory-dim transition-colors hover:text-ivory"
               >
                 <Compass className="h-3.5 w-3.5" />

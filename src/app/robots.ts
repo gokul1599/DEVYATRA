@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/admin", "/api/"],
     },
-    sitemap: "https://devyatra.dev/sitemap.xml",
+    sitemap: "https://templeora.vercel.app/sitemap.xml",
   };
 }

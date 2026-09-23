@@ -5,6 +5,7 @@ import { getFestivalAll, templeUrl } from "@/lib/registry";
 import { Container, SectionHeading } from "@/components/ui";
 import { DevyatraArt } from "@/components/devyatra-art";
 import { festivalDate, fmtDate } from "@/lib/format";
+import { getTodayPanchang } from "@/lib/intelligence";
 import { cn } from "@/lib/cn";
 
 export const metadata: Metadata = {
@@ -29,6 +30,8 @@ export default async function FestivalsPage() {
   }, {});
   const sortedMonths = Object.keys(grouped).map(Number).sort();
 
+  const panchang = getTodayPanchang(now);
+
   return (
     <>
       <section className="relative overflow-hidden pb-6 pt-32">
@@ -41,6 +44,26 @@ export default async function FestivalsPage() {
             title="Days the temples come alive"
             sub={`Nominal yearly dates for ${all.length} celebrations across the atlas. Lunar-calendar festivals shift each year — always follow the temple's announced date.`}
           />
+
+          <div className="mt-8 flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-line bg-obsidian-2/90 p-5 backdrop-blur-md">
+            <div className="flex items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gold/15 text-gold-bright">
+                <Sparkles className="h-5 w-5" />
+              </span>
+              <div>
+                <p className="font-display text-base font-medium text-ivory">
+                  Today&apos;s Hindu Panchang: {panchang.tithi}
+                </p>
+                <p className="text-xs text-ivory-dim">
+                  {panchang.masa} Masa · Nakshatra: {panchang.nakshatra} · Samvat {panchang.samvat}
+                </p>
+              </div>
+            </div>
+
+            <span className="rounded-xl border border-gold/30 bg-gold/10 px-3.5 py-1.5 text-xs font-semibold text-gold-bright">
+              {panchang.auspiciousRitualNote}
+            </span>
+          </div>
         </Container>
       </section>
 

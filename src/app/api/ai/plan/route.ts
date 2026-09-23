@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { buildPlan, type PlanRequest } from "@/lib/ai/engine";
+import { evaluateItineraryFeasibility } from "@/lib/ai/guard";
 import { getTemple } from "@/lib/registry";
 import { resolveTemple } from "@/lib/db/directory";
 import type { Temple } from "@/lib/types";
@@ -91,9 +92,18 @@ export async function POST(req: NextRequest) {
   };
 
   const plan = buildPlan(reqPlan, resolvedTemples);
+  const feasibility = evaluateItineraryFeasibility({
+    temples: resolvedTemples,
+    totalDays: reqPlan.days || 1,
+    travelMode: reqPlan.travel === "bike" ? "car" : reqPlan.travel,
+    hasElderly: companions.includes("elderly"),
+    hasChildren: companions.includes("children"),
+  });
+
   return NextResponse.json({
     success: true,
     plan,
+    feasibility,
     ...plan, // Backward-compatible top-level properties
   });
 }

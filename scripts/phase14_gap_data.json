@@ -1,0 +1,1929 @@
+{
+  "totalOfficialDistricts": 917,
+  "representedDistrictsCount": 556,
+  "nationalCoveragePct": 60.63249727371864,
+  "target70": 642,
+  "neededFor70": 86,
+  "target75": 688,
+  "neededFor75": 132,
+  "stateStats": [
+    {
+      "state": "Uttar Pradesh",
+      "code": "UP",
+      "totalDistricts": 82,
+      "representedDistricts": 27,
+      "unrepresentedDistricts": 55,
+      "coveragePct": 32.926829268292686,
+      "templeCount": 84,
+      "verifiedCount": 0,
+      "sourceCount": 84,
+      "unrepresentedList": [
+        {
+          "name": "Muzaffarnagar",
+          "slug": "muzaffarnagar"
+        },
+        {
+          "name": "Shamli",
+          "slug": "shamli"
+        },
+        {
+          "name": "Bijnor",
+          "slug": "bijnor"
+        },
+        {
+          "name": "Moradabad",
+          "slug": "moradabad"
+        },
+        {
+          "name": "Sambhal",
+          "slug": "sambhal"
+        },
+        {
+          "name": "Rampur",
+          "slug": "rampur"
+        },
+        {
+          "name": "Jyotiba Phule Nagar",
+          "slug": "jyotiba-phule-nagar"
+        },
+        {
+          "name": "Hapur",
+          "slug": "hapur"
+        },
+        {
+          "name": "Ghaziabad",
+          "slug": "ghaziabad"
+        },
+        {
+          "name": "Gautam Buddha Nagar",
+          "slug": "gautam-buddha-nagar"
+        },
+        {
+          "name": "Baghpat",
+          "slug": "baghpat"
+        },
+        {
+          "name": "Meerut",
+          "slug": "meerut"
+        },
+        {
+          "name": "Bareilly",
+          "slug": "bareilly"
+        },
+        {
+          "name": "Pilibhit",
+          "slug": "pilibhit"
+        },
+        {
+          "name": "Budaun",
+          "slug": "budaun"
+        },
+        {
+          "name": "Shahjahanpur",
+          "slug": "shahjahanpur"
+        },
+        {
+          "name": "Lakhimpur Kheri",
+          "slug": "lakhimpur-kheri"
+        },
+        {
+          "name": "Hardoi",
+          "slug": "hardoi"
+        },
+        {
+          "name": "Bahraich",
+          "slug": "bahraich"
+        },
+        {
+          "name": "Shravasti",
+          "slug": "shravasti"
+        },
+        {
+          "name": "Gonda",
+          "slug": "gonda"
+        },
+        {
+          "name": "Siddharth Nagar",
+          "slug": "siddharth-nagar"
+        },
+        {
+          "name": "Basti",
+          "slug": "basti"
+        },
+        {
+          "name": "Sant Kabir Nagar",
+          "slug": "sant-kabir-nagar"
+        },
+        {
+          "name": "Maharajganj",
+          "slug": "maharajganj"
+        },
+        {
+          "name": "Kushinagar",
+          "slug": "kushinagar"
+        },
+        {
+          "name": "Deoria",
+          "slug": "deoria"
+        },
+        {
+          "name": "Azamgarh",
+          "slug": "azamgarh"
+        },
+        {
+          "name": "Mau",
+          "slug": "mau"
+        },
+        {
+          "name": "Ballia",
+          "slug": "ballia"
+        },
+        {
+          "name": "Ghazipur",
+          "slug": "ghazipur"
+        },
+        {
+          "name": "Chandauli",
+          "slug": "chandauli"
+        },
+        {
+          "name": "Sant Ravidas Nagar",
+          "slug": "sant-ravidas-nagar"
+        },
+        {
+          "name": "Jaunpur",
+          "slug": "jaunpur"
+        },
+        {
+          "name": "Sonbhadra",
+          "slug": "sonbhadra"
+        },
+        {
+          "name": "Fatehpur",
+          "slug": "fatehpur"
+        },
+        {
+          "name": "Pratapgarh",
+          "slug": "pratapgarh"
+        },
+        {
+          "name": "Amethi",
+          "slug": "amethi"
+        },
+        {
+          "name": "Sultanpur",
+          "slug": "sultanpur"
+        },
+        {
+          "name": "Bara Banki",
+          "slug": "bara-banki"
+        },
+        {
+          "name": "Unnao",
+          "slug": "unnao"
+        },
+        {
+          "name": "Rae Bareli",
+          "slug": "rae-bareli"
+        },
+        {
+          "name": "Kanpur Dehat",
+          "slug": "kanpur-dehat"
+        },
+        {
+          "name": "Etawah",
+          "slug": "etawah"
+        },
+        {
+          "name": "Auraiya",
+          "slug": "auraiya"
+        },
+        {
+          "name": "Jalaun",
+          "slug": "jalaun"
+        },
+        {
+          "name": "Hamirpur",
+          "slug": "hamirpur"
+        },
+        {
+          "name": "Mahoba",
+          "slug": "mahoba"
+        },
+        {
+          "name": "Firozabad",
+          "slug": "firozabad"
+        },
+        {
+          "name": "Mainpuri",
+          "slug": "mainpuri"
+        },
+        {
+          "name": "Kannauj",
+          "slug": "kannauj"
+        },
+        {
+          "name": "Farrukhabad",
+          "slug": "farrukhabad"
+        },
+        {
+          "name": "Kasganj",
+          "slug": "kasganj"
+        },
+        {
+          "name": "Mahamaya Nagar",
+          "slug": "mahamaya-nagar"
+        },
+        {
+          "name": "Agra",
+          "slug": "agra"
+        }
+      ]
+    },
+    {
+      "state": "Madhya Pradesh",
+      "code": "MP",
+      "totalDistricts": 55,
+      "representedDistricts": 19,
+      "unrepresentedDistricts": 36,
+      "coveragePct": 34.54545454545455,
+      "templeCount": 72,
+      "verifiedCount": 0,
+      "sourceCount": 72,
+      "unrepresentedList": [
+        {
+          "name": "Sheopur",
+          "slug": "sheopur"
+        },
+        {
+          "name": "Morena",
+          "slug": "morena"
+        },
+        {
+          "name": "Bhind",
+          "slug": "bhind"
+        },
+        {
+          "name": "Shivpuri",
+          "slug": "shivpuri"
+        },
+        {
+          "name": "Guna",
+          "slug": "guna"
+        },
+        {
+          "name": "Ashoknagar",
+          "slug": "ashoknagar"
+        },
+        {
+          "name": "Sagar",
+          "slug": "sagar"
+        },
+        {
+          "name": "Tikamgarh",
+          "slug": "tikamgarh"
+        },
+        {
+          "name": "Panna",
+          "slug": "panna"
+        },
+        {
+          "name": "Damoh",
+          "slug": "damoh"
+        },
+        {
+          "name": "Niwar",
+          "slug": "niwar"
+        },
+        {
+          "name": "Singrauli",
+          "slug": "singrauli"
+        },
+        {
+          "name": "Sidhi",
+          "slug": "sidhi"
+        },
+        {
+          "name": "Shahdol",
+          "slug": "shahdol"
+        },
+        {
+          "name": "Umaria",
+          "slug": "umaria"
+        },
+        {
+          "name": "Dindori",
+          "slug": "dindori"
+        },
+        {
+          "name": "Katni",
+          "slug": "katni"
+        },
+        {
+          "name": "Narsinghpur",
+          "slug": "narsinghpur"
+        },
+        {
+          "name": "Mandla",
+          "slug": "mandla"
+        },
+        {
+          "name": "Seoni",
+          "slug": "seoni"
+        },
+        {
+          "name": "Balaghat",
+          "slug": "balaghat"
+        },
+        {
+          "name": "Chhindwara",
+          "slug": "chhindwara"
+        },
+        {
+          "name": "Betul",
+          "slug": "betul"
+        },
+        {
+          "name": "Harda",
+          "slug": "harda"
+        },
+        {
+          "name": "Hoshangabad",
+          "slug": "hoshangabad"
+        },
+        {
+          "name": "Raisen",
+          "slug": "raisen"
+        },
+        {
+          "name": "Sehore",
+          "slug": "sehore"
+        },
+        {
+          "name": "Rajgarh",
+          "slug": "rajgarh"
+        },
+        {
+          "name": "Agar Malwa",
+          "slug": "agar-malwa"
+        },
+        {
+          "name": "Shajapur",
+          "slug": "shajapur"
+        },
+        {
+          "name": "Ratlam",
+          "slug": "ratlam"
+        },
+        {
+          "name": "Jhabua",
+          "slug": "jhabua"
+        },
+        {
+          "name": "Alirajpur",
+          "slug": "alirajpur"
+        },
+        {
+          "name": "Burhanpur",
+          "slug": "burhanpur"
+        },
+        {
+          "name": "Khargone",
+          "slug": "khargone"
+        },
+        {
+          "name": "Barwani",
+          "slug": "barwani"
+        }
+      ]
+    },
+    {
+      "state": "Arunachal Pradesh",
+      "code": "AR",
+      "totalDistricts": 25,
+      "representedDistricts": 2,
+      "unrepresentedDistricts": 23,
+      "coveragePct": 8,
+      "templeCount": 3,
+      "verifiedCount": 0,
+      "sourceCount": 3,
+      "unrepresentedList": [
+        {
+          "name": "Tawang",
+          "slug": "tawang"
+        },
+        {
+          "name": "West Kameng",
+          "slug": "west-kameng"
+        },
+        {
+          "name": "East Kameng",
+          "slug": "east-kameng"
+        },
+        {
+          "name": "Papum Pare",
+          "slug": "papum-pare"
+        },
+        {
+          "name": "Kra Daadi",
+          "slug": "kra-daadi"
+        },
+        {
+          "name": "Kurung Kumey",
+          "slug": "kurung-kumey"
+        },
+        {
+          "name": "Lower Subansiri",
+          "slug": "lower-subansiri"
+        },
+        {
+          "name": "Upper Subansiri",
+          "slug": "upper-subansiri"
+        },
+        {
+          "name": "West Siang",
+          "slug": "west-siang"
+        },
+        {
+          "name": "East Siang",
+          "slug": "east-siang"
+        },
+        {
+          "name": "Siang",
+          "slug": "siang"
+        },
+        {
+          "name": "Upper Siang",
+          "slug": "upper-siang"
+        },
+        {
+          "name": "Lower Dibang Valley",
+          "slug": "lower-dibang-valley"
+        },
+        {
+          "name": "Dibang Valley",
+          "slug": "dibang-valley"
+        },
+        {
+          "name": "Anjaw",
+          "slug": "anjaw"
+        },
+        {
+          "name": "Namsai",
+          "slug": "namsai"
+        },
+        {
+          "name": "Changlang",
+          "slug": "changlang"
+        },
+        {
+          "name": "Tirap",
+          "slug": "tirap"
+        },
+        {
+          "name": "Longding",
+          "slug": "longding"
+        },
+        {
+          "name": "Kamle",
+          "slug": "kamle"
+        },
+        {
+          "name": "Pakke Kessang",
+          "slug": "pakke-kessang"
+        },
+        {
+          "name": "Lepa Rada",
+          "slug": "lepa-rada"
+        },
+        {
+          "name": "Shi Yomi",
+          "slug": "shi-yomi"
+        }
+      ]
+    },
+    {
+      "state": "Assam",
+      "code": "AS",
+      "totalDistricts": 38,
+      "representedDistricts": 15,
+      "unrepresentedDistricts": 23,
+      "coveragePct": 39.473684210526315,
+      "templeCount": 54,
+      "verifiedCount": 0,
+      "sourceCount": 54,
+      "unrepresentedList": [
+        {
+          "name": "Dibrugarh",
+          "slug": "dibrugarh"
+        },
+        {
+          "name": "Jorhat",
+          "slug": "jorhat"
+        },
+        {
+          "name": "Lakhimpur",
+          "slug": "lakhimpur"
+        },
+        {
+          "name": "Dhemaji",
+          "slug": "dhemaji"
+        },
+        {
+          "name": "Sonitpur",
+          "slug": "sonitpur"
+        },
+        {
+          "name": "Biswanath",
+          "slug": "biswanath"
+        },
+        {
+          "name": "Charaideo",
+          "slug": "charaideo"
+        },
+        {
+          "name": "Golaghat",
+          "slug": "golaghat"
+        },
+        {
+          "name": "Karbi Anglong",
+          "slug": "karbi-anglong"
+        },
+        {
+          "name": "West Karbi Anglong",
+          "slug": "west-karbi-anglong"
+        },
+        {
+          "name": "Dima Hasao",
+          "slug": "dima-hasao"
+        },
+        {
+          "name": "Hojai",
+          "slug": "hojai"
+        },
+        {
+          "name": "Morigaon",
+          "slug": "morigaon"
+        },
+        {
+          "name": "Nalbari",
+          "slug": "nalbari"
+        },
+        {
+          "name": "Baksa",
+          "slug": "baksa"
+        },
+        {
+          "name": "Udalguri",
+          "slug": "udalguri"
+        },
+        {
+          "name": "Darrang",
+          "slug": "darrang"
+        },
+        {
+          "name": "Bongaigaon",
+          "slug": "bongaigaon"
+        },
+        {
+          "name": "Chirang",
+          "slug": "chirang"
+        },
+        {
+          "name": "Kokrajhar",
+          "slug": "kokrajhar"
+        },
+        {
+          "name": "South Salmara Mankachar",
+          "slug": "south-salmara-mankachar"
+        },
+        {
+          "name": "Karimganj",
+          "slug": "karimganj"
+        },
+        {
+          "name": "Hailakandi",
+          "slug": "hailakandi"
+        }
+      ]
+    },
+    {
+      "state": "Bihar",
+      "code": "BR",
+      "totalDistricts": 44,
+      "representedDistricts": 22,
+      "unrepresentedDistricts": 22,
+      "coveragePct": 50,
+      "templeCount": 51,
+      "verifiedCount": 0,
+      "sourceCount": 51,
+      "unrepresentedList": [
+        {
+          "name": "Pashchim Champaran",
+          "slug": "pashchim-champaran"
+        },
+        {
+          "name": "Purba Champaran",
+          "slug": "purba-champaran"
+        },
+        {
+          "name": "Sheohar",
+          "slug": "sheohar"
+        },
+        {
+          "name": "Supaul",
+          "slug": "supaul"
+        },
+        {
+          "name": "Araria",
+          "slug": "araria"
+        },
+        {
+          "name": "Kishanganj",
+          "slug": "kishanganj"
+        },
+        {
+          "name": "Purnia",
+          "slug": "purnia"
+        },
+        {
+          "name": "Katihar",
+          "slug": "katihar"
+        },
+        {
+          "name": "Madhepura",
+          "slug": "madhepura"
+        },
+        {
+          "name": "Saharsa",
+          "slug": "saharsa"
+        },
+        {
+          "name": "Muzaffarpur",
+          "slug": "muzaffarpur"
+        },
+        {
+          "name": "Siwan",
+          "slug": "siwan"
+        },
+        {
+          "name": "Saran",
+          "slug": "saran"
+        },
+        {
+          "name": "Samastipur",
+          "slug": "samastipur"
+        },
+        {
+          "name": "Khagaria",
+          "slug": "khagaria"
+        },
+        {
+          "name": "Jamui",
+          "slug": "jamui"
+        },
+        {
+          "name": "Sheikhpura",
+          "slug": "sheikhpura"
+        },
+        {
+          "name": "Bhojpur",
+          "slug": "bhojpur"
+        },
+        {
+          "name": "Aurangabad",
+          "slug": "aurangabad"
+        },
+        {
+          "name": "Nawada",
+          "slug": "nawada"
+        },
+        {
+          "name": "Jehanabad",
+          "slug": "jehanabad"
+        },
+        {
+          "name": "Arwal",
+          "slug": "arwal"
+        }
+      ]
+    },
+    {
+      "state": "Karnataka",
+      "code": "KA",
+      "totalDistricts": 46,
+      "representedDistricts": 30,
+      "unrepresentedDistricts": 16,
+      "coveragePct": 65.21739130434783,
+      "templeCount": 167,
+      "verifiedCount": 0,
+      "sourceCount": 167,
+      "unrepresentedList": [
+        {
+          "name": "Vijayapura",
+          "slug": "vijayapura"
+        },
+        {
+          "name": "Bidar",
+          "slug": "bidar"
+        },
+        {
+          "name": "Kalaburagi",
+          "slug": "kalaburagi"
+        },
+        {
+          "name": "Yadgiri",
+          "slug": "yadgiri"
+        },
+        {
+          "name": "Raichur",
+          "slug": "raichur"
+        },
+        {
+          "name": "Koppala",
+          "slug": "koppala"
+        },
+        {
+          "name": "Haveri",
+          "slug": "haveri"
+        },
+        {
+          "name": "Davanagere",
+          "slug": "davanagere"
+        },
+        {
+          "name": "Shivamogga",
+          "slug": "shivamogga"
+        },
+        {
+          "name": "Kodagu",
+          "slug": "kodagu"
+        },
+        {
+          "name": "Ramanagara",
+          "slug": "ramanagara"
+        },
+        {
+          "name": "Bengaluru Urban",
+          "slug": "bengaluru-urban"
+        },
+        {
+          "name": "Bengaluru Rural",
+          "slug": "bengaluru-rural"
+        },
+        {
+          "name": "Chikballapura",
+          "slug": "chikballapura"
+        },
+        {
+          "name": "Chamarajanagara",
+          "slug": "chamarajanagara"
+        },
+        {
+          "name": "Kolar Gold Fields",
+          "slug": "kolar-gold-fields"
+        }
+      ]
+    },
+    {
+      "state": "Maharashtra",
+      "code": "MH",
+      "totalDistricts": 46,
+      "representedDistricts": 31,
+      "unrepresentedDistricts": 15,
+      "coveragePct": 67.3913043478261,
+      "templeCount": 168,
+      "verifiedCount": 0,
+      "sourceCount": 168,
+      "unrepresentedList": [
+        {
+          "name": "Mumbai Suburban",
+          "slug": "mumbai-suburban"
+        },
+        {
+          "name": "Thane",
+          "slug": "thane"
+        },
+        {
+          "name": "Palghar",
+          "slug": "palghar"
+        },
+        {
+          "name": "Sindhudurg",
+          "slug": "sindhudurg"
+        },
+        {
+          "name": "Nandurbar",
+          "slug": "nandurbar"
+        },
+        {
+          "name": "Ahmednagar",
+          "slug": "ahmednagar"
+        },
+        {
+          "name": "Satara",
+          "slug": "satara"
+        },
+        {
+          "name": "Sangli",
+          "slug": "sangli"
+        },
+        {
+          "name": "Aurangabad",
+          "slug": "aurangabad"
+        },
+        {
+          "name": "Jalna",
+          "slug": "jalna"
+        },
+        {
+          "name": "Parbhani",
+          "slug": "parbhani"
+        },
+        {
+          "name": "Latur",
+          "slug": "latur"
+        },
+        {
+          "name": "Amravati",
+          "slug": "amravati"
+        },
+        {
+          "name": "Washim",
+          "slug": "washim"
+        },
+        {
+          "name": "Wardha",
+          "slug": "wardha"
+        }
+      ]
+    },
+    {
+      "state": "Nagaland",
+      "code": "NL",
+      "totalDistricts": 16,
+      "representedDistricts": 1,
+      "unrepresentedDistricts": 15,
+      "coveragePct": 6.25,
+      "templeCount": 1,
+      "verifiedCount": 0,
+      "sourceCount": 1,
+      "unrepresentedList": [
+        {
+          "name": "Noklak",
+          "slug": "noklak"
+        },
+        {
+          "name": "Tuensang",
+          "slug": "tuensang"
+        },
+        {
+          "name": "Mon",
+          "slug": "mon"
+        },
+        {
+          "name": "Longleng",
+          "slug": "longleng"
+        },
+        {
+          "name": "Kiphire",
+          "slug": "kiphire"
+        },
+        {
+          "name": "Phek",
+          "slug": "phek"
+        },
+        {
+          "name": "Zunheboto",
+          "slug": "zunheboto"
+        },
+        {
+          "name": "Wokha",
+          "slug": "wokha"
+        },
+        {
+          "name": "Mokokchung",
+          "slug": "mokokchung"
+        },
+        {
+          "name": "Peren",
+          "slug": "peren"
+        },
+        {
+          "name": "Kohima",
+          "slug": "kohima"
+        },
+        {
+          "name": "Chümoukedima",
+          "slug": "ch-moukedima"
+        },
+        {
+          "name": "Niuland",
+          "slug": "niuland"
+        },
+        {
+          "name": "Tseminyü",
+          "slug": "tseminy"
+        },
+        {
+          "name": "Shamator",
+          "slug": "shamator"
+        }
+      ]
+    },
+    {
+      "state": "Punjab",
+      "code": "PB",
+      "totalDistricts": 27,
+      "representedDistricts": 12,
+      "unrepresentedDistricts": 15,
+      "coveragePct": 44.44444444444444,
+      "templeCount": 16,
+      "verifiedCount": 0,
+      "sourceCount": 16,
+      "unrepresentedList": [
+        {
+          "name": "Pathankot",
+          "slug": "pathankot"
+        },
+        {
+          "name": "Tarn Taran",
+          "slug": "tarn-taran"
+        },
+        {
+          "name": "SBS Nagar",
+          "slug": "sbs-nagar"
+        },
+        {
+          "name": "Rupnagar",
+          "slug": "rupnagar"
+        },
+        {
+          "name": "SAS Nagar",
+          "slug": "sas-nagar"
+        },
+        {
+          "name": "Ludhiana",
+          "slug": "ludhiana"
+        },
+        {
+          "name": "Fatehgarh Sahib",
+          "slug": "fatehgarh-sahib"
+        },
+        {
+          "name": "Moga",
+          "slug": "moga"
+        },
+        {
+          "name": "Fazilka",
+          "slug": "fazilka"
+        },
+        {
+          "name": "Ferozepur",
+          "slug": "ferozepur"
+        },
+        {
+          "name": "Faridkot",
+          "slug": "faridkot"
+        },
+        {
+          "name": "Sri Muktsar Sahib",
+          "slug": "sri-muktsar-sahib"
+        },
+        {
+          "name": "Mansa",
+          "slug": "mansa"
+        },
+        {
+          "name": "Sangrur",
+          "slug": "sangrur"
+        },
+        {
+          "name": "Barnala",
+          "slug": "barnala"
+        }
+      ]
+    },
+    {
+      "state": "Manipur",
+      "code": "MN",
+      "totalDistricts": 19,
+      "representedDistricts": 5,
+      "unrepresentedDistricts": 14,
+      "coveragePct": 26.31578947368421,
+      "templeCount": 6,
+      "verifiedCount": 0,
+      "sourceCount": 6,
+      "unrepresentedList": [
+        {
+          "name": "Tengnoupal",
+          "slug": "tengnoupal"
+        },
+        {
+          "name": "Chandel",
+          "slug": "chandel"
+        },
+        {
+          "name": "Churachandpur",
+          "slug": "churachandpur"
+        },
+        {
+          "name": "Thoubal",
+          "slug": "thoubal"
+        },
+        {
+          "name": "Imphal West",
+          "slug": "imphal-west"
+        },
+        {
+          "name": "Kangpokpi",
+          "slug": "kangpokpi"
+        },
+        {
+          "name": "Senapati",
+          "slug": "senapati"
+        },
+        {
+          "name": "Ukhrul",
+          "slug": "ukhrul"
+        },
+        {
+          "name": "Kamjong",
+          "slug": "kamjong"
+        },
+        {
+          "name": "Pherzawl",
+          "slug": "pherzawl"
+        },
+        {
+          "name": "Noney",
+          "slug": "noney"
+        },
+        {
+          "name": "Jiribam",
+          "slug": "jiribam"
+        },
+        {
+          "name": "Kakching",
+          "slug": "kakching"
+        },
+        {
+          "name": "Tamenglong",
+          "slug": "tamenglong"
+        }
+      ]
+    },
+    {
+      "state": "Odisha",
+      "code": "OD",
+      "totalDistricts": 35,
+      "representedDistricts": 22,
+      "unrepresentedDistricts": 13,
+      "coveragePct": 62.857142857142854,
+      "templeCount": 108,
+      "verifiedCount": 0,
+      "sourceCount": 108,
+      "unrepresentedList": [
+        {
+          "name": "Jharsuguda",
+          "slug": "jharsuguda"
+        },
+        {
+          "name": "Deogarh",
+          "slug": "deogarh"
+        },
+        {
+          "name": "Mayurbhanj",
+          "slug": "mayurbhanj"
+        },
+        {
+          "name": "Boudh",
+          "slug": "boudh"
+        },
+        {
+          "name": "Subarnapur",
+          "slug": "subarnapur"
+        },
+        {
+          "name": "Kendrapara",
+          "slug": "kendrapara"
+        },
+        {
+          "name": "Rayagada",
+          "slug": "rayagada"
+        },
+        {
+          "name": "Nabarangpur",
+          "slug": "nabarangpur"
+        },
+        {
+          "name": "Kalahandi",
+          "slug": "kalahandi"
+        },
+        {
+          "name": "Nuapada",
+          "slug": "nuapada"
+        },
+        {
+          "name": "Malkangiri",
+          "slug": "malkangiri"
+        },
+        {
+          "name": "Nayagarh",
+          "slug": "nayagarh"
+        },
+        {
+          "name": "Kandhamal",
+          "slug": "kandhamal"
+        }
+      ]
+    },
+    {
+      "state": "Tamil Nadu",
+      "code": "TN",
+      "totalDistricts": 46,
+      "representedDistricts": 34,
+      "unrepresentedDistricts": 12,
+      "coveragePct": 73.91304347826086,
+      "templeCount": 183,
+      "verifiedCount": 0,
+      "sourceCount": 183,
+      "unrepresentedList": [
+        {
+          "name": "Tiruvallur",
+          "slug": "tiruvallur"
+        },
+        {
+          "name": "Tirupathur",
+          "slug": "tirupathur"
+        },
+        {
+          "name": "Thiruvannamalai",
+          "slug": "thiruvannamalai"
+        },
+        {
+          "name": "Villupuram",
+          "slug": "villupuram"
+        },
+        {
+          "name": "Krishnagiri",
+          "slug": "krishnagiri"
+        },
+        {
+          "name": "Namakkal",
+          "slug": "namakkal"
+        },
+        {
+          "name": "Tiruppur",
+          "slug": "tiruppur"
+        },
+        {
+          "name": "The Nilgiris",
+          "slug": "the-nilgiris"
+        },
+        {
+          "name": "Perambalur",
+          "slug": "perambalur"
+        },
+        {
+          "name": "Ariyalur",
+          "slug": "ariyalur"
+        },
+        {
+          "name": "Thiruvarur",
+          "slug": "thiruvarur"
+        },
+        {
+          "name": "Pudukkottai",
+          "slug": "pudukkottai"
+        }
+      ]
+    },
+    {
+      "state": "Gujarat",
+      "code": "GJ",
+      "totalDistricts": 40,
+      "representedDistricts": 29,
+      "unrepresentedDistricts": 11,
+      "coveragePct": 72.5,
+      "templeCount": 94,
+      "verifiedCount": 0,
+      "sourceCount": 94,
+      "unrepresentedList": [
+        {
+          "name": "Banaskantha",
+          "slug": "banaskantha"
+        },
+        {
+          "name": "Aravalli",
+          "slug": "aravalli"
+        },
+        {
+          "name": "Mahisagar",
+          "slug": "mahisagar"
+        },
+        {
+          "name": "Chhota Udepur",
+          "slug": "chhota-udepur"
+        },
+        {
+          "name": "Bharuch",
+          "slug": "bharuch"
+        },
+        {
+          "name": "Surat",
+          "slug": "surat"
+        },
+        {
+          "name": "Tapi",
+          "slug": "tapi"
+        },
+        {
+          "name": "Dang",
+          "slug": "dang"
+        },
+        {
+          "name": "Navsari",
+          "slug": "navsari"
+        },
+        {
+          "name": "Valsad",
+          "slug": "valsad"
+        },
+        {
+          "name": "Rajkot",
+          "slug": "rajkot"
+        }
+      ]
+    },
+    {
+      "state": "Haryana",
+      "code": "HR",
+      "totalDistricts": 31,
+      "representedDistricts": 20,
+      "unrepresentedDistricts": 11,
+      "coveragePct": 64.51612903225806,
+      "templeCount": 37,
+      "verifiedCount": 0,
+      "sourceCount": 37,
+      "unrepresentedList": [
+        {
+          "name": "Panipat",
+          "slug": "panipat"
+        },
+        {
+          "name": "Sonipat",
+          "slug": "sonipat"
+        },
+        {
+          "name": "Jind",
+          "slug": "jind"
+        },
+        {
+          "name": "Fatehabad",
+          "slug": "fatehabad"
+        },
+        {
+          "name": "Sirsa",
+          "slug": "sirsa"
+        },
+        {
+          "name": "Charkhi Dadri",
+          "slug": "charkhi-dadri"
+        },
+        {
+          "name": "Rohtak",
+          "slug": "rohtak"
+        },
+        {
+          "name": "Mahendragarh",
+          "slug": "mahendragarh"
+        },
+        {
+          "name": "Rewari",
+          "slug": "rewari"
+        },
+        {
+          "name": "Palwal",
+          "slug": "palwal"
+        },
+        {
+          "name": "Nuh",
+          "slug": "nuh"
+        }
+      ]
+    },
+    {
+      "state": "Rajasthan",
+      "code": "RJ",
+      "totalDistricts": 41,
+      "representedDistricts": 30,
+      "unrepresentedDistricts": 11,
+      "coveragePct": 73.17073170731707,
+      "templeCount": 122,
+      "verifiedCount": 0,
+      "sourceCount": 122,
+      "unrepresentedList": [
+        {
+          "name": "Ganganagar",
+          "slug": "ganganagar"
+        },
+        {
+          "name": "Jhunjhunu",
+          "slug": "jhunjhunu"
+        },
+        {
+          "name": "Alwar",
+          "slug": "alwar"
+        },
+        {
+          "name": "Bharatpur",
+          "slug": "bharatpur"
+        },
+        {
+          "name": "Karauli",
+          "slug": "karauli"
+        },
+        {
+          "name": "Nagaur",
+          "slug": "nagaur"
+        },
+        {
+          "name": "Chittorgarh",
+          "slug": "chittorgarh"
+        },
+        {
+          "name": "Bundi",
+          "slug": "bundi"
+        },
+        {
+          "name": "Jhalawar",
+          "slug": "jhalawar"
+        },
+        {
+          "name": "Pratapgarh",
+          "slug": "pratapgarh"
+        },
+        {
+          "name": "Jalore",
+          "slug": "jalore"
+        }
+      ]
+    },
+    {
+      "state": "Meghalaya",
+      "code": "ML",
+      "totalDistricts": 12,
+      "representedDistricts": 2,
+      "unrepresentedDistricts": 10,
+      "coveragePct": 16.666666666666664,
+      "templeCount": 2,
+      "verifiedCount": 0,
+      "sourceCount": 2,
+      "unrepresentedList": [
+        {
+          "name": "West Garo Hills",
+          "slug": "west-garo-hills"
+        },
+        {
+          "name": "South Garo Hills",
+          "slug": "south-garo-hills"
+        },
+        {
+          "name": "East Garo Hills",
+          "slug": "east-garo-hills"
+        },
+        {
+          "name": "North Garo Hills",
+          "slug": "north-garo-hills"
+        },
+        {
+          "name": "South West Garo Hills",
+          "slug": "south-west-garo-hills"
+        },
+        {
+          "name": "West Khasi Hills",
+          "slug": "west-khasi-hills"
+        },
+        {
+          "name": "East Khasi Hills",
+          "slug": "east-khasi-hills"
+        },
+        {
+          "name": "Ri Bhoi",
+          "slug": "ri-bhoi"
+        },
+        {
+          "name": "South West Khasi Hills",
+          "slug": "south-west-khasi-hills"
+        },
+        {
+          "name": "Eastern West Khasi Hills",
+          "slug": "eastern-west-khasi-hills"
+        }
+      ]
+    },
+    {
+      "state": "Mizoram",
+      "code": "MZ",
+      "totalDistricts": 11,
+      "representedDistricts": 1,
+      "unrepresentedDistricts": 10,
+      "coveragePct": 9.090909090909092,
+      "templeCount": 1,
+      "verifiedCount": 0,
+      "sourceCount": 1,
+      "unrepresentedList": [
+        {
+          "name": "Mamit",
+          "slug": "mamit"
+        },
+        {
+          "name": "Kolasib",
+          "slug": "kolasib"
+        },
+        {
+          "name": "Champhai",
+          "slug": "champhai"
+        },
+        {
+          "name": "Saitual",
+          "slug": "saitual"
+        },
+        {
+          "name": "Serchhip",
+          "slug": "serchhip"
+        },
+        {
+          "name": "Lunglei",
+          "slug": "lunglei"
+        },
+        {
+          "name": "Lawngtlai",
+          "slug": "lawngtlai"
+        },
+        {
+          "name": "Siaha",
+          "slug": "siaha"
+        },
+        {
+          "name": "Khawzawl",
+          "slug": "khawzawl"
+        },
+        {
+          "name": "Hnahthial",
+          "slug": "hnahthial"
+        }
+      ]
+    },
+    {
+      "state": "Andhra Pradesh",
+      "code": "AP",
+      "totalDistricts": 34,
+      "representedDistricts": 25,
+      "unrepresentedDistricts": 9,
+      "coveragePct": 73.52941176470588,
+      "templeCount": 82,
+      "verifiedCount": 0,
+      "sourceCount": 82,
+      "unrepresentedList": [
+        {
+          "name": "Parvathipuram Manyam",
+          "slug": "parvathipuram-manyam"
+        },
+        {
+          "name": "Vizianagaram",
+          "slug": "vizianagaram"
+        },
+        {
+          "name": "Alluri Sitharama Raju",
+          "slug": "alluri-sitharama-raju"
+        },
+        {
+          "name": "Anakapalli",
+          "slug": "anakapalli"
+        },
+        {
+          "name": "Dr. B.R. Ambedkar Konaseema",
+          "slug": "dr-b-r-ambedkar-konaseema"
+        },
+        {
+          "name": "West Godavari",
+          "slug": "west-godavari"
+        },
+        {
+          "name": "SPS Nellore",
+          "slug": "sps-nellore"
+        },
+        {
+          "name": "Chittoor",
+          "slug": "chittoor"
+        },
+        {
+          "name": "YSR Kadapa",
+          "slug": "ysr-kadapa"
+        }
+      ]
+    },
+    {
+      "state": "Delhi",
+      "code": "DL",
+      "totalDistricts": 16,
+      "representedDistricts": 7,
+      "unrepresentedDistricts": 9,
+      "coveragePct": 43.75,
+      "templeCount": 14,
+      "verifiedCount": 0,
+      "sourceCount": 14,
+      "unrepresentedList": [
+        {
+          "name": "Central Delhi",
+          "slug": "central-delhi"
+        },
+        {
+          "name": "North Delhi",
+          "slug": "north-delhi"
+        },
+        {
+          "name": "North East Delhi",
+          "slug": "north-east-delhi"
+        },
+        {
+          "name": "West Delhi",
+          "slug": "west-delhi"
+        },
+        {
+          "name": "South Delhi",
+          "slug": "south-delhi"
+        },
+        {
+          "name": "South West Delhi",
+          "slug": "south-west-delhi"
+        },
+        {
+          "name": "Shahdara",
+          "slug": "shahdara"
+        },
+        {
+          "name": "North West Delhi",
+          "slug": "north-west-delhi"
+        },
+        {
+          "name": "South East Delhi",
+          "slug": "south-east-delhi"
+        }
+      ]
+    },
+    {
+      "state": "Tripura",
+      "code": "TR",
+      "totalDistricts": 11,
+      "representedDistricts": 5,
+      "unrepresentedDistricts": 6,
+      "coveragePct": 45.45454545454545,
+      "templeCount": 8,
+      "verifiedCount": 0,
+      "sourceCount": 8,
+      "unrepresentedList": [
+        {
+          "name": "West Tripura",
+          "slug": "west-tripura"
+        },
+        {
+          "name": "Sepahijala",
+          "slug": "sepahijala"
+        },
+        {
+          "name": "Khowai",
+          "slug": "khowai"
+        },
+        {
+          "name": "Dhalai",
+          "slug": "dhalai"
+        },
+        {
+          "name": "North Tripura",
+          "slug": "north-tripura"
+        },
+        {
+          "name": "South Tripura",
+          "slug": "south-tripura"
+        }
+      ]
+    },
+    {
+      "state": "West Bengal",
+      "code": "WB",
+      "totalDistricts": 31,
+      "representedDistricts": 25,
+      "unrepresentedDistricts": 6,
+      "coveragePct": 80.64516129032258,
+      "templeCount": 109,
+      "verifiedCount": 0,
+      "sourceCount": 109,
+      "unrepresentedList": [
+        {
+          "name": "Darjeeling",
+          "slug": "darjeeling"
+        },
+        {
+          "name": "Kalimpong",
+          "slug": "kalimpong"
+        },
+        {
+          "name": "Alipurduar",
+          "slug": "alipurduar"
+        },
+        {
+          "name": "Cooch Behar",
+          "slug": "cooch-behar"
+        },
+        {
+          "name": "Baharampur",
+          "slug": "baharampur"
+        },
+        {
+          "name": "Howrah",
+          "slug": "howrah"
+        }
+      ]
+    },
+    {
+      "state": "Sikkim",
+      "code": "SK",
+      "totalDistricts": 8,
+      "representedDistricts": 3,
+      "unrepresentedDistricts": 5,
+      "coveragePct": 37.5,
+      "templeCount": 4,
+      "verifiedCount": 0,
+      "sourceCount": 4,
+      "unrepresentedList": [
+        {
+          "name": "Mangan",
+          "slug": "mangan"
+        },
+        {
+          "name": "Namchi",
+          "slug": "namchi"
+        },
+        {
+          "name": "Gyalshing",
+          "slug": "gyalshing"
+        },
+        {
+          "name": "Soreng",
+          "slug": "soreng"
+        },
+        {
+          "name": "Pakyong",
+          "slug": "pakyong"
+        }
+      ]
+    },
+    {
+      "state": "Dadra & Nagar Haveli and Daman & Diu",
+      "code": "DN",
+      "totalDistricts": 3,
+      "representedDistricts": 0,
+      "unrepresentedDistricts": 3,
+      "coveragePct": 0,
+      "templeCount": 0,
+      "verifiedCount": 0,
+      "sourceCount": 0,
+      "unrepresentedList": [
+        {
+          "name": "Dadra and Nagar Haveli",
+          "slug": "dadra-and-nagar-haveli"
+        },
+        {
+          "name": "Daman",
+          "slug": "daman"
+        },
+        {
+          "name": "Diu",
+          "slug": "diu"
+        }
+      ]
+    },
+    {
+      "state": "Andaman and Nicobar Islands",
+      "code": "AN",
+      "totalDistricts": 4,
+      "representedDistricts": 2,
+      "unrepresentedDistricts": 2,
+      "coveragePct": 50,
+      "templeCount": 2,
+      "verifiedCount": 0,
+      "sourceCount": 2,
+      "unrepresentedList": [
+        {
+          "name": "Nicobar",
+          "slug": "nicobar"
+        },
+        {
+          "name": "North & Middle Andaman",
+          "slug": "north-and-middle-andaman"
+        }
+      ]
+    },
+    {
+      "state": "Jammu and Kashmir",
+      "code": "JK",
+      "totalDistricts": 24,
+      "representedDistricts": 22,
+      "unrepresentedDistricts": 2,
+      "coveragePct": 91.66666666666666,
+      "templeCount": 48,
+      "verifiedCount": 0,
+      "sourceCount": 48,
+      "unrepresentedList": [
+        {
+          "name": "Pulwama",
+          "slug": "pulwama"
+        },
+        {
+          "name": "Samba",
+          "slug": "samba"
+        }
+      ]
+    },
+    {
+      "state": "Puducherry",
+      "code": "PY",
+      "totalDistricts": 7,
+      "representedDistricts": 5,
+      "unrepresentedDistricts": 2,
+      "coveragePct": 71.42857142857143,
+      "templeCount": 15,
+      "verifiedCount": 0,
+      "sourceCount": 15,
+      "unrepresentedList": [
+        {
+          "name": "Mahe",
+          "slug": "mahe"
+        },
+        {
+          "name": "Yanam",
+          "slug": "yanam"
+        }
+      ]
+    },
+    {
+      "state": "Uttarakhand",
+      "code": "UK",
+      "totalDistricts": 17,
+      "representedDistricts": 15,
+      "unrepresentedDistricts": 2,
+      "coveragePct": 88.23529411764706,
+      "templeCount": 57,
+      "verifiedCount": 0,
+      "sourceCount": 57,
+      "unrepresentedList": [
+        {
+          "name": "Bageshwar",
+          "slug": "bageshwar"
+        },
+        {
+          "name": "Champawat",
+          "slug": "champawat"
+        }
+      ]
+    },
+    {
+      "state": "Chhattisgarh",
+      "code": "CG",
+      "totalDistricts": 36,
+      "representedDistricts": 35,
+      "unrepresentedDistricts": 1,
+      "coveragePct": 97.22222222222221,
+      "templeCount": 50,
+      "verifiedCount": 0,
+      "sourceCount": 50,
+      "unrepresentedList": [
+        {
+          "name": "Gariaband",
+          "slug": "gariaband"
+        }
+      ]
+    },
+    {
+      "state": "Kerala",
+      "code": "KL",
+      "totalDistricts": 21,
+      "representedDistricts": 20,
+      "unrepresentedDistricts": 1,
+      "coveragePct": 95.23809523809523,
+      "templeCount": 156,
+      "verifiedCount": 0,
+      "sourceCount": 156,
+      "unrepresentedList": [
+        {
+          "name": "Idukki",
+          "slug": "idukki"
+        }
+      ]
+    },
+    {
+      "state": "Telangana",
+      "code": "TS",
+      "totalDistricts": 38,
+      "representedDistricts": 37,
+      "unrepresentedDistricts": 1,
+      "coveragePct": 97.36842105263158,
+      "templeCount": 76,
+      "verifiedCount": 0,
+      "sourceCount": 76,
+      "unrepresentedList": [
+        {
+          "name": "Rangareddy",
+          "slug": "rangareddy"
+        }
+      ]
+    },
+    {
+      "state": "Chandigarh",
+      "code": "CH",
+      "totalDistricts": 1,
+      "representedDistricts": 1,
+      "unrepresentedDistricts": 0,
+      "coveragePct": 100,
+      "templeCount": 1,
+      "verifiedCount": 0,
+      "sourceCount": 1,
+      "unrepresentedList": []
+    },
+    {
+      "state": "Dadra and Nagar Haveli and Daman and Diu",
+      "code": "DH",
+      "totalDistricts": 1,
+      "representedDistricts": 1,
+      "unrepresentedDistricts": 0,
+      "coveragePct": 100,
+      "templeCount": 1,
+      "verifiedCount": 0,
+      "sourceCount": 1,
+      "unrepresentedList": []
+    },
+    {
+      "state": "Goa",
+      "code": "GA",
+      "totalDistricts": 5,
+      "representedDistricts": 5,
+      "unrepresentedDistricts": 0,
+      "coveragePct": 100,
+      "templeCount": 28,
+      "verifiedCount": 0,
+      "sourceCount": 28,
+      "unrepresentedList": []
+    },
+    {
+      "state": "Himachal Pradesh",
+      "code": "HP",
+      "totalDistricts": 12,
+      "representedDistricts": 12,
+      "unrepresentedDistricts": 0,
+      "coveragePct": 100,
+      "templeCount": 59,
+      "verifiedCount": 0,
+      "sourceCount": 59,
+      "unrepresentedList": []
+    },
+    {
+      "state": "Jharkhand",
+      "code": "JH",
+      "totalDistricts": 31,
+      "representedDistricts": 31,
+      "unrepresentedDistricts": 0,
+      "coveragePct": 100,
+      "templeCount": 42,
+      "verifiedCount": 0,
+      "sourceCount": 42,
+      "unrepresentedList": []
+    },
+    {
+      "state": "Ladakh",
+      "code": "LA",
+      "totalDistricts": 2,
+      "representedDistricts": 2,
+      "unrepresentedDistricts": 0,
+      "coveragePct": 100,
+      "templeCount": 4,
+      "verifiedCount": 0,
+      "sourceCount": 4,
+      "unrepresentedList": []
+    },
+    {
+      "state": "Lakshadweep",
+      "code": "LD",
+      "totalDistricts": 1,
+      "representedDistricts": 1,
+      "unrepresentedDistricts": 0,
+      "coveragePct": 100,
+      "templeCount": 1,
+      "verifiedCount": 0,
+      "sourceCount": 1,
+      "unrepresentedList": []
+    }
+  ]
+}

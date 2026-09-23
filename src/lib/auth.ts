@@ -6,6 +6,24 @@ import path from "path";
 const DATA_DIR = path.join(process.cwd(), ".data");
 const USERS_FILE = path.join(DATA_DIR, "users.json");
 
+export interface UserPreferences {
+  preferredLanguage: string;
+  deities: string[];
+  traditions: string[];
+  travelStyle: "solo" | "family" | "elderly" | "friends";
+  accessibilityNeeds: boolean;
+  budgetTier: "budget" | "mid" | "premium";
+}
+
+export const DEFAULT_PREFERENCES: UserPreferences = {
+  preferredLanguage: "en",
+  deities: [],
+  traditions: [],
+  travelStyle: "family",
+  accessibilityNeeds: false,
+  budgetTier: "mid",
+};
+
 export interface UserRecord {
   id: string;
   name: string;
@@ -13,6 +31,8 @@ export interface UserRecord {
   role: "user" | "admin";
   created: string;
   passwordHash?: string;
+  preferences?: UserPreferences;
+  followedTemples?: string[];
 }
 
 function ensureStore() {
@@ -66,7 +86,32 @@ export const publicUser = (u: UserRecord) => ({
   email: u.email,
   role: u.role,
   created: u.created,
+  preferences: u.preferences || DEFAULT_PREFERENCES,
+  followedTemples: u.followedTemples || [],
 });
+
+export function updateUserPreferences(userId: string, prefs: Partial<UserPreferences>): UserPreferences {
+  const users = readUsers();
+  const user = users.find((u) => u.id === userId);
+  if (!user) throw new Error("USER_NOT_FOUND");
+  user.preferences = {
+    ...(user.preferences || DEFAULT_PREFERENCES),
+    ...prefs,
+  };
+  writeUsers(users);
+  return user.preferences;
+}
+
+export function toggleFollowTemple(userId: string, slug: string): string[] {
+  const users = readUsers();
+  const user = users.find((u) => u.id === userId);
+  if (!user) throw new Error("USER_NOT_FOUND");
+  const current = user.followedTemples || [];
+  const next = current.includes(slug) ? current.filter((s) => s !== slug) : [...current, slug];
+  user.followedTemples = next;
+  writeUsers(users);
+  return next;
+}
 
 export function createUser(name: string, email: string, password: string): UserRecord {
   const users = readUsers();

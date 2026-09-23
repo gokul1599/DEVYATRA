@@ -21,6 +21,9 @@ import {
   ChevronDown,
   Compass,
   Calendar,
+  Printer,
+  ShieldCheck,
+  Bookmark,
 } from "lucide-react";
 import type { PlanResult } from "@/lib/ai/engine";
 import { cn } from "@/lib/cn";
@@ -40,6 +43,55 @@ interface LiteTemple {
 }
 
 const CURATED_CIRCUITS = [
+  {
+    id: "central-jyotirlinga",
+    name: "Central Jyotirlinga (Mahakal & Omkareshwar)",
+    state: "MP",
+    days: 2 as const,
+    templeKeywords: ["Mahakaleshwar", "Omkareshwar"],
+  },
+  {
+    id: "pancha-bhoota",
+    name: "Pancha Bhoota Sthalams (5 Elements)",
+    state: "TN",
+    days: 3 as const,
+    templeKeywords: ["Ekambareswarar", "Jambukeswarar", "Annamalaiyar", "Srikalahasti", "Nataraja"],
+  },
+  {
+    id: "western-jyotirlinga",
+    name: "Western Jyotirlinga (Somnath & Dwarka)",
+    state: "GJ",
+    days: 3 as const,
+    templeKeywords: ["Somnath", "Dwarkadhish"],
+  },
+  {
+    id: "chota-char-dham",
+    name: "Chota Char Dham (Kedarnath & Badrinath)",
+    state: "UK",
+    days: 3 as const,
+    templeKeywords: ["Kedarnath", "Badrinath"],
+  },
+  {
+    id: "ashta-vinayaka",
+    name: "Ashta Vinayaka Circuit (Maharashtra)",
+    state: "MH",
+    days: 3 as const,
+    templeKeywords: ["Siddhivinayak", "Ganesh", "Ganpati"],
+  },
+  {
+    id: "divya-desam-chola",
+    name: "Divya Desam Circuit (Srirangam)",
+    state: "TN",
+    days: 3 as const,
+    templeKeywords: ["Ranganathaswamy", "Sarangapani"],
+  },
+  {
+    id: "eastern-shakti",
+    name: "Eastern Shakti Peethas (Kamakhya & Kalighat)",
+    state: "AS",
+    days: 3 as const,
+    templeKeywords: ["Kamakhya", "Kalighat", "Tarapith"],
+  },
   {
     id: "jh-jyotirlinga",
     name: "Baidyanath-Basukinath Jyotirlinga (JH)",
@@ -114,6 +166,7 @@ export default function PlanStudio() {
   const [result, setResult] = useState<PlanResult | null>(null);
   const [error, setError] = useState("");
   const [copyFeedback, setCopyFeedback] = useState(false);
+  const [saveFeedback, setSaveFeedback] = useState<string | null>(null);
 
   // Fetch full live catalog of 1,926 temples from Neon PostgreSQL
   useEffect(() => {
@@ -256,6 +309,37 @@ export default function PlanStudio() {
     setTimeout(() => setCopyFeedback(false), 2500);
   };
 
+  const saveToMyJourneys = async () => {
+    if (!result) return;
+    try {
+      const resp = await fetch("/api/journeys", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: selectedTemples.length > 0 ? `${selectedTemples[0].name} Pilgrimage` : "Sacred Pilgrimage",
+          templeSlugs: selectedTemples.map((t) => t.slug),
+          templeNames: selectedTemples.map((t) => t.name),
+          startDate: new Date().toISOString().split("T")[0],
+          totalDays: days,
+          travelMode: travel,
+          budget,
+          itineraryBrief: result?.summary ?? null,
+        }),
+      });
+      const data = await resp.json();
+      if (resp.ok) {
+        setSaveFeedback("Saved!");
+        setTimeout(() => setSaveFeedback(null), 3000);
+      } else {
+        setSaveFeedback(data.error || "Sign in to save");
+        setTimeout(() => setSaveFeedback(null), 3500);
+      }
+    } catch {
+      setSaveFeedback("Error saving");
+      setTimeout(() => setSaveFeedback(null), 3000);
+    }
+  };
+
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_1.4fr]">
       {/* ── Configuration Form ── */}
@@ -263,16 +347,16 @@ export default function PlanStudio() {
         <div>
           <p className="font-display text-xl font-medium text-ivory">Design Your Pilgrimage Circuit</p>
           <p className="mt-1 text-xs text-ivory-dim">
-            Select 1 to 5 temples across India (1,926 shrines in 556 districts). The AI sequences travel legs, darshan pacing, and meal breaks.
+            Select 1 to 5 temples across India (2,084 shrines in 714 districts · 77.8% national coverage). The AI sequences travel legs, darshan pacing, and meal breaks.
           </p>
         </div>
 
-        {/* Curated Sacred Circuits (Phase 13 Highlights) */}
+        {/* Curated Sacred Circuits */}
         <div>
           <label className="mb-2 flex items-center justify-between text-[11px] font-semibold uppercase tracking-wider text-ivory-dim">
             <span className="flex items-center gap-1.5 text-gold-bright">
               <Compass className="h-3.5 w-3.5" />
-              <span>Iconic Sacred Circuits (60%+ National Atlas)</span>
+              <span>National Sacred Pilgrimage Circuits</span>
             </span>
             <span className="text-[10px] text-ivory-dim/60">One-click preset</span>
           </label>
@@ -337,6 +421,7 @@ export default function PlanStudio() {
                 </div>
                 <button
                   onClick={() => removeTemple(t.slug)}
+                  aria-label={`Remove ${t.name}`}
                   className="rounded-lg p-1 text-ivory-dim/60 hover:bg-white/[0.08] hover:text-red-400"
                 >
                   <X className="h-4 w-4" />
@@ -453,6 +538,7 @@ export default function PlanStudio() {
               max={10}
               value={people}
               onChange={(e) => setPeople(Number(e.target.value))}
+              aria-label="Number of pilgrims"
               className="w-full accent-saffron"
             />
           </div>
@@ -669,6 +755,29 @@ export default function PlanStudio() {
                     </>
                   )}
                 </button>
+                <button
+                  onClick={() => window.print()}
+                  className="inline-flex items-center gap-1 rounded-lg border border-white/[0.08] bg-white/[0.04] px-2.5 py-1.5 text-xs text-ivory-dim hover:text-ivory"
+                >
+                  <Printer className="h-3.5 w-3.5" />
+                  <span>Print</span>
+                </button>
+                <button
+                  onClick={saveToMyJourneys}
+                  className="inline-flex items-center gap-1 rounded-lg border border-gold/40 bg-gold/15 px-2.5 py-1.5 text-xs font-medium text-gold-bright hover:bg-gold/25"
+                >
+                  {saveFeedback ? (
+                    <>
+                      <Check className="h-3.5 w-3.5 text-emerald-400" />
+                      <span className="text-emerald-300">{saveFeedback}</span>
+                    </>
+                  ) : (
+                    <>
+                      <Bookmark className="h-3.5 w-3.5" />
+                      <span>Save Journey</span>
+                    </>
+                  )}
+                </button>
               </div>
             </div>
 
@@ -749,6 +858,32 @@ export default function PlanStudio() {
                 </ul>
               </div>
             )}
+
+            {/* Offline Sacred Checklist */}
+            <div className="rounded-2xl border border-line bg-obsidian-3 p-5">
+              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gold">
+                <ShieldCheck className="h-4 w-4 text-emerald-400" />
+                <span>Offline Sacred Pilgrimage Checklist</span>
+              </div>
+              <div className="mt-3 grid gap-3 sm:grid-cols-2 text-xs">
+                <div className="space-y-1">
+                  <p className="font-semibold text-ivory">Mandatory Dress Code</p>
+                  <p className="text-ivory-dim">Men: Traditional Dhoti/Kurta. Women: Saree/Salwar with Dupatta. No shorts or sleeveless clothes.</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="font-semibold text-ivory">Identity & Verification</p>
+                  <p className="text-ivory-dim">Carry original Govt Photo ID (Aadhaar/Passport) and printed online slot receipts.</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="font-semibold text-ivory">Sanctum Security</p>
+                  <p className="text-ivory-dim">Mobiles, cameras, and leather items must be deposited at official cloakrooms before entry.</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="font-semibold text-ivory">Prasad & Annadhanam</p>
+                  <p className="text-ivory-dim">Collect prasadam exclusively from authorized Devasthanam counters with receipt tokens.</p>
+                </div>
+              </div>
+            </div>
           </div>
         ) : null}
       </div>
