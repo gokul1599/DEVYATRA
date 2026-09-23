@@ -6,8 +6,12 @@ export function googleMapsApiKey(): string {
   return process.env.GOOGLE_MAPS_API_KEY ?? "";
 }
 
+export function googleMapsFallbackApiKey(): string {
+  return process.env.GOOGLE_MAPS_FALLBACK_API_KEY ?? "";
+}
+
 export function googleEnabled(): boolean {
-  return googleMapsApiKey().length > 0;
+  return (googleMapsApiKey().length > 0) || (googleMapsFallbackApiKey().length > 0);
 }
 
 export const GOOGLE_HTTP_TIMEOUT_MS = Number(process.env.GOOGLE_HTTP_TIMEOUT_MS ?? 8000);

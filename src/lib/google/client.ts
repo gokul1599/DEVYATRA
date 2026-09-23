@@ -1,5 +1,5 @@
 import "server-only";
-import { googleMapsApiKey, GOOGLE_HTTP_TIMEOUT_MS, PLACES_BASE, FIELD_MASKS } from "./config";
+import { googleMapsApiKey, googleMapsFallbackApiKey, GOOGLE_HTTP_TIMEOUT_MS, PLACES_BASE, FIELD_MASKS } from "./config";
 import {
   autocompleteResponseSchema,
   placeDetailsResponseSchema,
@@ -52,28 +52,49 @@ interface RequestInitExt extends RequestInit {
 }
 
 async function placesFetch(path: string, init: RequestInitExt = {}): Promise<Response> {
-  const key = googleMapsApiKey();
-  if (!key) throw new GoogleApiError("no-key", "GOOGLE_MAPS_API_KEY is not configured");
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), init.timeoutMs ?? GOOGLE_HTTP_TIMEOUT_MS);
-  try {
-    return await fetch(`${PLACES_BASE}${path}`, {
-      ...init,
-      signal: controller.signal,
-      headers: {
-        "Content-Type": "application/json",
-        "X-Goog-Api-Key": key,
-        ...(init.headers ?? {}),
-      },
-    });
-  } catch (err) {
-    if (err instanceof Error && err.name === "AbortError") {
-      throw new GoogleApiError("network", "Google Places request timed out");
+  const primaryKey = googleMapsApiKey();
+  const fallbackKey = googleMapsFallbackApiKey();
+  if (!primaryKey && !fallbackKey) throw new GoogleApiError("no-key", "GOOGLE_MAPS_API_KEY is not configured");
+
+  async function executeFetch(key: string): Promise<Response> {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), init.timeoutMs ?? GOOGLE_HTTP_TIMEOUT_MS);
+    try {
+      return await fetch(`${PLACES_BASE}${path}`, {
+        ...init,
+        signal: controller.signal,
+        headers: {
+          "Content-Type": "application/json",
+          "X-Goog-Api-Key": key,
+          ...(init.headers ?? {}),
+        },
+      });
+    } catch (err) {
+      if (err instanceof Error && err.name === "AbortError") {
+        throw new GoogleApiError("network", "Google Places request timed out");
+      }
+      throw new GoogleApiError("network", err instanceof Error ? err.message : "Network error calling Google Places");
+    } finally {
+      clearTimeout(timer);
     }
-    throw new GoogleApiError("network", err instanceof Error ? err.message : "Network error calling Google Places");
-  } finally {
-    clearTimeout(timer);
   }
+
+  const activeKey = primaryKey || fallbackKey;
+  const res = await executeFetch(activeKey);
+
+  // If primary key gets 403 (e.g. SERVICE_DISABLED / PERMISSION_DENIED) and fallback is available, seamless failover
+  if (!res.ok && res.status === 403 && fallbackKey && activeKey !== fallbackKey) {
+    try {
+      const fallbackRes = await executeFetch(fallbackKey);
+      if (fallbackRes.ok) {
+        return fallbackRes;
+      }
+    } catch {
+      // return original res
+    }
+  }
+
+  return res;
 }
 
 async function parseJson<T>(res: Response, schema: { safeParse: (v: unknown) => { success: boolean; data?: T; error?: unknown } }): Promise<T> {
@@ -185,7 +206,7 @@ export interface PhotoArgs {
 }
 
 export async function photoUrl(args: PhotoArgs): Promise<string> {
-  const key = googleMapsApiKey();
+  const key = googleMapsApiKey() || googleMapsFallbackApiKey();
   if (!key) throw new GoogleApiError("no-key", "GOOGLE_MAPS_API_KEY is not configured");
   const maxHeightPx = args.maxHeightPx ?? 900;
   return `${PLACES_BASE}${args.name.replace(/^\/+/, "")}/media?key=${key}&maxHeightPx=${maxHeightPx}`;

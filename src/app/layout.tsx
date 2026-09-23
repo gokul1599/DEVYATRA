@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Fraunces } from "next/font/google";
 import "./globals.css";
 import { AppShell } from "@/components/shell";
+import { GoogleMapsScript } from "@/components/google-maps-script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -57,6 +58,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${geistSans.variable} ${fraunces.variable} dark`}>
       <body className="min-h-screen bg-obsidian text-ivory">
+        <GoogleMapsScript />
         <AppShell>{children}</AppShell>
       </body>
     </html>
