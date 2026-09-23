@@ -18,12 +18,14 @@ import {
   FileCheck2,
   Activity,
   Layers,
+  Compass,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/cn";
 import { FeedPanel } from "@/components/feed-panel";
 import { DiscoverConsole } from "@/components/discover-console";
 import { AdminCoverageTab } from "@/components/admin-coverage-tab";
+import { AdminAttractionsTab } from "@/components/admin-attractions-tab";
 import type { AdminDashboardData } from "@/lib/db/directory";
 
 interface ReportRow {
@@ -47,6 +49,7 @@ const STATUS_STYLE: Record<ReportRow["status"], string> = {
 export type AdminTab =
   | "overview"
   | "intelligence"
+  | "attractions"
   | "coverage"
   | "workbench"
   | "duplicates"
@@ -197,6 +200,7 @@ export function AdminConsole({
         {[
           { id: "overview", label: "Overview", icon: Layers },
           { id: "intelligence", label: "Live Intelligence", icon: Sparkles },
+          { id: "attractions", label: "Nearby Famous Places", icon: Compass },
           { id: "coverage", label: "National Coverage Matrix", icon: Landmark },
           { id: "workbench", label: "Verification Workbench", icon: FileCheck2 },
           { id: "duplicates", label: "Duplicate Review", icon: Copy },
@@ -433,6 +437,17 @@ export function AdminConsole({
                 </div>
               </div>
             )}
+          </motion.div>
+        )}
+
+        {activeTab === "attractions" && (
+          <motion.div
+            key="attractions"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+          >
+            <AdminAttractionsTab />
           </motion.div>
         )}
 

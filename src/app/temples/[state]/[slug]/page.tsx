@@ -27,6 +27,8 @@ import { TempleCard } from "@/components/temple-card";
 import { Reveal } from "@/components/motion";
 import { SacredAmbient } from "@/components/sacred-ambient";
 import { GsapCinematicHero } from "@/components/gsap-cinematic";
+import { NearbyPlaceEngine } from "@/lib/nearby/engine";
+import { ExploreAround } from "@/components/temple/explore-around";
 import { cn } from "@/lib/cn";
 
 export const dynamicParams = true;
@@ -80,6 +82,12 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
     };
 
   const stateTemples = templesByState(st.code).filter((t2) => t2.slug !== slug).slice(0, 4);
+  const nearbyPlacesResult = await NearbyPlaceEngine.getNearbyForTemple(
+    temple.id,
+    temple.latitude,
+    temple.longitude,
+    temple.locationKind
+  );
   const nearby = nearbyFor(temple.id);
   const byKind = nearby.reduce<Record<string, typeof nearby>>((acc, n) => {
     acc[n.kind] ??= [];
@@ -371,6 +379,18 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
             </div>
           </aside>
         </div>
+
+        {/* ---------- Explore Around This Temple (Normalized Heritage & Famous Places) ---------- */}
+        <ExploreAround
+          templeId={temple.id}
+          templeSlug={temple.slug}
+          templeName={temple.name}
+          templeLat={temple.latitude}
+          templeLng={temple.longitude}
+          location={temple.location}
+          attractions={nearbyPlacesResult.attractions}
+          radiusConfig={nearbyPlacesResult.radiusConfig}
+        />
 
         {/* ---------- Nearby ---------- */}
         <section id="nearby" className="mt-16">

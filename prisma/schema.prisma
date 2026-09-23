@@ -209,6 +209,7 @@ model Temple {
   timeline               TimelineItem[]
   whyFamous              WhyFamous[]
   nearby                 NearbyPlace[]
+  famousPlaces           TempleNearbyPlace[]
   savedBy                Saved[]
   translations           TempleTranslation[]
   sources                TempleSource[]
@@ -349,6 +350,66 @@ model NearbyPlace {
   recommendation String?
   priceHint      String?
   cuisine        String?
+}
+
+// ─── Normalized Nearby Attractions Architecture (Phase V2.2) ──────────────
+
+model FamousPlace {
+  id                 String    @id @default(cuid())
+  name               String
+  nativeName         String?
+  slug               String    @unique
+  category           String    // "HERITAGE" | "PILGRIMAGE" | "NATURE" | "CULTURE" | "LOCAL_EXPERIENCES"
+  subcategory        String?
+  description        String
+  latitude           Float
+  longitude          Float
+  address            String?
+  city               String?
+  district           String?
+  state              String?
+  country            String    @default("India")
+  sourceType         String?   // "official" | "asi" | "unesco" | "tourism" | "trusted"
+  sourceUrl          String?
+  sourceRecordId     String?
+  googlePlaceId      String?
+  verificationStatus String    @default("VERIFIED_SOURCE")
+  verifiedAt         DateTime?
+  lastCheckedAt      DateTime? @default(now())
+  imageReference     String?
+  officialUrl        String?
+
+  templeLinks        TempleNearbyPlace[]
+
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@index([category])
+  @@index([latitude, longitude])
+  @@index([district])
+  @@index([state])
+  @@map("nearby_places")
+}
+
+model TempleNearbyPlace {
+  id                    String      @id @default(cuid())
+  templeId              String
+  temple                Temple      @relation(fields: [templeId], references: [id], onDelete: Cascade)
+  nearbyPlaceId         String
+  nearbyPlace           FamousPlace @relation(fields: [nearbyPlaceId], references: [id], onDelete: Cascade)
+  distanceKm            Float
+  estimatedDriveMinutes Int?
+  estimatedWalkMinutes  Int?
+  relationshipType      String?     @default("NEARBY")
+  priority              Int         @default(1)
+  verifiedAt            DateTime?
+
+  createdAt             DateTime    @default(now())
+
+  @@unique([templeId, nearbyPlaceId])
+  @@index([templeId])
+  @@index([nearbyPlaceId])
+  @@map("temple_nearby_places")
 }
 
 // ─── Import jobs & audit (spec §90–91) ─────────────────────────────────────
