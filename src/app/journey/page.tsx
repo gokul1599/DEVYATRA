@@ -25,6 +25,8 @@ import type { SavedJourney } from "@/lib/journeys";
 import type { TempleAlert } from "@/lib/intelligence/alerts";
 import type { ScoredTemple } from "@/lib/discovery/personalized";
 import type { UserPreferences } from "@/lib/auth";
+import { OfflinePackModal } from "@/components/journey/offline-pack-modal";
+import { buildOfflineJourneyPack, type OfflineDestinationItem } from "@/lib/intelligence/offline-pack";
 
 interface LiteTemple {
   id: string;
@@ -34,6 +36,8 @@ interface LiteTemple {
   district: string;
   location: string;
   deity: string;
+  latitude?: number;
+  longitude?: number;
   href: string;
 }
 
@@ -530,53 +534,90 @@ export default function JourneyPage() {
               </div>
             ) : (
               <div className="grid gap-4 sm:grid-cols-2">
-                {journeys.map((j) => (
-                  <div
-                    key={j.id}
-                    className="flex flex-col justify-between rounded-2xl border border-gold/20 bg-obsidian-2 p-6 transition-all hover:border-gold/40"
-                  >
-                    <div>
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <p className="font-display text-lg font-medium text-ivory">{j.title}</p>
-                          <p className="mt-1 text-xs text-ivory-dim">
-                            Starting {new Date(j.startDate).toLocaleDateString("en-IN", { dateStyle: "medium" })} · {j.totalDays} Days · Mode: {j.travelMode}
-                          </p>
-                        </div>
-                        <button
-                          onClick={() => deleteJourney(j.id)}
-                          title="Delete Journey"
-                          className="rounded-lg p-2 text-ivory-dim hover:bg-red-500/10 hover:text-red-300"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      </div>
+                {journeys.map((j) => {
+                  const destinations: OfflineDestinationItem[] = j.templeSlugs.map((slug, idx) => {
+                    const t = temples.find((item) => item.slug === slug);
+                    return {
+                      id: t?.id || slug,
+                      slug,
+                      name: t?.name || j.templeNames[idx] || slug,
+                      deity: t?.deity || null,
+                      latitude: t?.latitude ?? 20.0,
+                      longitude: t?.longitude ?? 78.0,
+                      formattedAddress: t ? `${t.location}, ${t.district}, ${t.stateCode}, India` : "India",
+                      openingHoursSummary: "Morning: 06:00 - 12:30 | Evening: 16:30 - 21:00 (Standard)",
+                      rulesSummary: {
+                        footwear: "Footwear must be deposited at designated temple counters before inner compound entry.",
+                        dressCode: "Traditional / modest Indian attire required for sanctum entry.",
+                        electronics: "Keep mobile devices silenced or deposited in lockers.",
+                        photography: "Strictly prohibited inside the sanctum sanctorum.",
+                      },
+                      emergencyContacts: {
+                        nationalEmergency: "112",
+                        police: "100",
+                        ambulance: "108",
+                      },
+                      offlineNotes: "Snapshot preserved for offline navigation. Verify local Panchang timings upon arrival.",
+                    };
+                  });
 
-                      <div className="mt-4 flex flex-wrap gap-1.5">
-                        {j.templeNames.map((n, idx) => (
-                          <span
-                            key={idx}
-                            className="rounded-md border border-white/[0.08] bg-white/[0.04] px-2 py-0.5 text-[11px] text-ivory/80"
+                  const offlinePack = buildOfflineJourneyPack({
+                    journeyId: j.id,
+                    title: j.title,
+                    destinations,
+                  });
+
+                  return (
+                    <div
+                      key={j.id}
+                      className="flex flex-col justify-between rounded-2xl border border-gold/20 bg-obsidian-2 p-6 transition-all hover:border-gold/40"
+                    >
+                      <div>
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <p className="font-display text-lg font-medium text-ivory">{j.title}</p>
+                            <p className="mt-1 text-xs text-ivory-dim">
+                              Starting {new Date(j.startDate).toLocaleDateString("en-IN", { dateStyle: "medium" })} · {j.totalDays} Days · Mode: {j.travelMode}
+                            </p>
+                          </div>
+                          <button
+                            onClick={() => deleteJourney(j.id)}
+                            title="Delete Journey"
+                            className="rounded-lg p-2 text-ivory-dim hover:bg-red-500/10 hover:text-red-300"
                           >
-                            {n}
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+
+                        <div className="mt-4 flex flex-wrap gap-1.5">
+                          {j.templeNames.map((n, idx) => (
+                            <span
+                              key={idx}
+                              className="rounded-md border border-white/[0.08] bg-white/[0.04] px-2 py-0.5 text-[11px] text-ivory/80"
+                            >
+                              {n}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.06] pt-4">
+                        <div className="flex items-center gap-2">
+                          <span className="rounded-full border border-gold/30 bg-gold/10 px-2.5 py-0.5 text-xs text-gold-bright">
+                            {j.budget.toUpperCase()} Tier
                           </span>
-                        ))}
+                          <OfflinePackModal pack={offlinePack} />
+                        </div>
+                        <Link
+                          href={`/plan?circuit=${j.circuitId || ""}`}
+                          className="text-xs font-medium text-gold hover:underline"
+                        >
+                          Re-open Itinerary in Plan Studio →
+                        </Link>
                       </div>
                     </div>
-
-                    <div className="mt-6 flex items-center justify-between border-t border-white/[0.06] pt-4">
-                      <span className="rounded-full border border-gold/30 bg-gold/10 px-2.5 py-0.5 text-xs text-gold-bright">
-                        {j.budget.toUpperCase()} Tier
-                      </span>
-                      <Link
-                        href={`/plan?circuit=${j.circuitId || ""}`}
-                        className="text-xs font-medium text-gold hover:underline"
-                      >
-                        Re-open Itinerary in Plan Studio →
-                      </Link>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>

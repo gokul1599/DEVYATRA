@@ -35,6 +35,11 @@ import { SeniorEase } from "@/components/temple/senior-ease";
 import { FamilyComfort } from "@/components/temple/family-comfort";
 import { P1PersonaExplorer } from "@/components/temple/p1-personas";
 import { TempleExtendedDiscovery } from "@/components/temple/temple-extended-discovery";
+import { AccessPointsCard } from "@/components/temple/access-points-card";
+import { VisitLogisticsPanel } from "@/components/temple/visit-logistics-panel";
+import { SafetyModeModal } from "@/components/temple/safety-mode-modal";
+import { WhatChangedCard } from "@/components/temple/what-changed-card";
+import { buildMasterDestinationIntelligence } from "@/lib/intelligence/context-engine";
 import { cn } from "@/lib/cn";
 
 export const dynamicParams = true;
@@ -74,6 +79,7 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
   const { state: stateSlug, slug } = await params;
   const temple = await resolveTemple(slug);
   if (!temple) notFound();
+  const masterIntelligence = await buildMasterDestinationIntelligence(temple.id);
 
   const st =
     getState(stateSlug) ||
@@ -189,6 +195,7 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
               <LiveStatus temple={temple} />
               <PlanCta slug={temple.slug} />
               <SaveButton slug={temple.slug} className="h-10 w-10 rounded-full" />
+              {masterIntelligence && <SafetyModeModal safety={masterIntelligence.emergencySafety} />}
             </div>
           </GsapCinematicHero>
         </Container>
@@ -200,15 +207,17 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
           {[
             ["#command-center", "Command Center"],
             ["#intelligence", "Live Intelligence"],
+            ["#access-points", "Access Points"],
+            ["#logistics", "Logistics & Rules"],
             ["#overview", "Overview"],
             ["#history", "History"],
-            ["#perspectives", "Perspectives"],
             ["#accessibility", "Accessibility & Families"],
             ["#timings", "Timings"],
             ["#booking", "Booking"],
+            ["#what-changed", "What Changed & Sources"],
             ["#festivals", "Festivals"],
+            ["#extend-your-yatra", "Extend Yatra (300 km)"],
             ["#explore-around", "Explore Around"],
-            ["#nearby", "Nearby"],
             ["#ask-ai", "Ask AI"],
           ].map(([href, label]) => (
             <a key={href} href={href} className="shrink-0 whitespace-nowrap text-ivory-dim transition-colors hover:text-gold-bright">
@@ -230,6 +239,26 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
             <section id="intelligence">
               <LiveTempleIntelligence temple={temple} />
             </section>
+
+            {/* Exact Access Points */}
+            {masterIntelligence && (
+              <section id="access-points">
+                <AccessPointsCard
+                  templeName={temple.name}
+                  accessPoints={masterIntelligence.accessPoints}
+                />
+              </section>
+            )}
+
+            {/* Visit Logistics & Courtyard Protocol */}
+            {masterIntelligence && (
+              <section id="logistics">
+                <VisitLogisticsPanel
+                  logistics={masterIntelligence.visitLogistics}
+                  templeName={temple.name}
+                />
+              </section>
+            )}
 
             {/* Overview */}
             <section id="overview">
@@ -388,6 +417,16 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
                 </div>
               </div>
             </section>
+
+            {/* What Changed & Source Ledger */}
+            {masterIntelligence && (
+              <section id="what-changed">
+                <WhatChangedCard
+                  recentChanges={masterIntelligence.recentChanges}
+                  sourceLedger={masterIntelligence.sourceLedger}
+                />
+              </section>
+            )}
 
             {/* Meta strip */}
             <div className="rounded-3xl border border-line bg-obsidian-2 p-6">

@@ -36,6 +36,8 @@ export async function GET(req: Request) {
           nameLocal: true,
           stateCode: true,
           mainDeity: true,
+          latitude: true,
+          longitude: true,
           district: { select: { name: true } },
           locality: { select: { name: true } },
           state: { select: { name: true, slug: true } },
@@ -56,6 +58,8 @@ export async function GET(req: Request) {
             district: t.district?.name || "",
             location: t.locality?.name || t.district?.name || t.state?.name || "",
             deity: t.mainDeity || "Sacred Deity",
+            latitude: t.latitude,
+            longitude: t.longitude,
             href: `/temples/${t.state?.slug || t.stateCode.toLowerCase()}/${t.slug}`,
           }))
         );
@@ -77,6 +81,8 @@ export async function GET(req: Request) {
       district: t.district,
       location: t.location,
       deity: t.mainDeity,
+      latitude: t.latitude,
+      longitude: t.longitude,
       href: `/temples/${getState(t.stateCode)?.slug ?? ""}/${t.slug}`,
     }))
   );
