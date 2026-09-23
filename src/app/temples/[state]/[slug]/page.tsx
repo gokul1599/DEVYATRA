@@ -17,7 +17,7 @@ import {
 import { getState, nearbyFor, templeUrl, TEMPLES, templesByState } from "@/lib/registry";
 import { resolveTemple } from "@/lib/db/directory";
 import { VERIFY_LABEL } from "@/lib/format";
-import { Container, Breadcrumbs, Chip, VerifyBadge, SectionHeading } from "@/components/ui";
+import { Container, Breadcrumbs, Chip, SectionHeading } from "@/components/ui";
 import { SaveButton } from "@/components/save-button";
 import { LiveStatus, PlanCta } from "@/components/temple/live";
 import { LiveTempleIntelligence } from "@/components/temple/live-intelligence";
@@ -183,14 +183,21 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
           />
 
           <GsapCinematicHero className="max-w-3xl">
-            <div className="mb-4 flex flex-wrap items-center gap-2">
-              <VerifyBadge verification={temple.booking.verification} />
-              {temple.badges.map((b) => (
-                <Chip key={b} tone={b === "UNESCO World Heritage" || b === "Historic" ? "gold" : "default"}>
-                  {b}
-                </Chip>
-              ))}
-              <Chip tone="gold">Surveyed Coordinates</Chip>
+            <div className="mb-4 flex flex-wrap items-center gap-3">
+              <span className="flex items-center gap-1.5 rounded-full bg-black/60 px-3.5 py-1 text-xs font-mono uppercase tracking-wider text-stone-200 border border-stone-800 backdrop-blur-md">
+                <ShieldCheck className="h-3.5 w-3.5 text-[#C8A24B]" />
+                <span>{VERIFY_LABEL[temple.booking.verification.status]}</span>
+              </span>
+              {temple.badges.includes("UNESCO World Heritage") && (
+                <span className="rounded-full bg-[#C8A24B]/15 px-3 py-1 font-mono text-xs uppercase tracking-wider text-[#E4BE72] border border-[#C8A24B]/30">
+                  UNESCO World Heritage
+                </span>
+              )}
+              {temple.badges.includes("Historic") && !temple.badges.includes("UNESCO World Heritage") && (
+                <span className="rounded-full bg-stone-900/60 px-3 py-1 font-mono text-xs uppercase tracking-wider text-stone-300 border border-stone-800">
+                  Historic Monument
+                </span>
+              )}
             </div>
 
             <h1 className="font-display text-4xl font-medium leading-[1.05] text-ivory sm:text-6xl">
@@ -286,33 +293,28 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
 
             {/* History */}
             <section id="history" className="scroll-mt-28">
-              <SectionHeading eyebrow="History" title="Through the centuries" />
-              <ol className="relative space-y-6 border-l border-line pl-6">
+              <SectionHeading eyebrow="Chronicles" title="Through the Centuries" />
+              <div className="relative mt-8 border-l border-stone-800/80 pl-6 sm:pl-8 space-y-10">
                 {temple.history.map((h, i) => (
-                  <li key={i} className="relative">
-                    <span className="absolute -left-[31px] top-1 flex h-3 w-3 items-center justify-center rounded-full border border-gold/40 bg-obsidian" />
-                    <p className="flex flex-wrap items-center gap-2">
+                  <div key={i} className="relative group">
+                    <span className="absolute -left-[31px] sm:-left-[39px] top-1.5 flex h-3.5 w-3.5 items-center justify-center rounded-full border border-[#C8A24B]/60 bg-[#0C0907]" />
+                    <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-4">
                       {h.year && (
-                        <span className="rounded-md bg-gold/12 px-2 py-0.5 font-display text-[12.5px] font-semibold text-gold-bright">
+                        <span className="font-serif text-2xl font-normal text-[#C8A24B] shrink-0">
                           {h.year}
                         </span>
                       )}
-                      <span className="font-medium text-ivory">{h.title}</span>
-                    </p>
-                    <p className="mt-1.5 text-[13.5px] leading-relaxed text-ivory-dim">{h.body}</p>
-                  </li>
+                      <h4 className="font-serif text-lg font-medium text-[#F2ECE1]">{h.title}</h4>
+                    </div>
+                    <p className="mt-2 text-sm leading-relaxed text-stone-300 max-w-2xl">{h.body}</p>
+                  </div>
                 ))}
-              </ol>
+              </div>
             </section>
 
             {/* Architecture & Visual Heritage */}
             <section id="architecture" className="space-y-8 scroll-mt-28">
               <TempleArchitectureHeritage temple={temple} />
-              <TempleMediaGallery
-                templeSlug={temple.slug}
-                templeName={temple.name}
-                architectureStyle={temple.architecture ?? temple.type}
-              />
             </section>
 
             {/* Heritage Perspectives & Personas */}
