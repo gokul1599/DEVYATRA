@@ -48,6 +48,14 @@ export const FIELD_MASKS = {
       "userRatingCount",
       "plusCode",
     ].join(","),
+  /** Autocomplete predictions */
+  autocomplete:
+    [
+      "suggestions.placePrediction.placeId",
+      "suggestions.placePrediction.text",
+      "suggestions.placePrediction.structuredFormat",
+      "suggestions.placePrediction.types",
+    ].join(","),
 } as const;
 
 export { PLACES_BASE };

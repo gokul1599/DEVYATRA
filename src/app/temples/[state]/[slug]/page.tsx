@@ -40,7 +40,7 @@ import { SafetyModeModal } from "@/components/temple/safety-mode-modal";
 import { WhatChangedCard } from "@/components/temple/what-changed-card";
 import { buildMasterDestinationIntelligence } from "@/lib/intelligence/context-engine";
 import { CinematicImage } from "@/components/ui/cinematic-image";
-import { getTempleImage } from "@/lib/images/registry";
+import { resolvePrimaryTempleMedia } from "@/lib/images/resolver";
 import { TempleArchitectureHeritage } from "@/components/temple/temple-architecture-heritage";
 import { TempleScrollGuard } from "@/components/temple/temple-scroll-guard";
 import { TempleTopBar } from "@/components/temple/temple-top-bar";
@@ -140,6 +140,8 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
       temple.booking.verification.status === "GOVERNMENT_SOURCE" ||
       temple.booking.verification.status === "TRUSTED_SOURCE");
 
+  const heroMedia = resolvePrimaryTempleMedia(temple);
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structData) }} />
@@ -156,11 +158,12 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
         <SacredAmbient />
         <div className="absolute inset-0 -z-10">
           <CinematicImage
-            record={getTempleImage(temple.slug)}
+            media={heroMedia}
             artSeed={temple.slug}
             alt={temple.name}
             aspectRatio="16/9"
             priority
+            showCreditBadge={heroMedia.hasFactualPhoto}
             className="h-full w-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-obsidian/75 via-obsidian/50 to-obsidian" />
@@ -303,8 +306,13 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
             </section>
 
             {/* Architecture & Visual Heritage */}
-            <section id="architecture" className="space-y-6 scroll-mt-28">
+            <section id="architecture" className="space-y-8 scroll-mt-28">
               <TempleArchitectureHeritage temple={temple} />
+              <TempleMediaGallery
+                templeSlug={temple.slug}
+                templeName={temple.name}
+                architectureStyle={temple.architecture ?? temple.type}
+              />
             </section>
 
             {/* Heritage Perspectives & Personas */}

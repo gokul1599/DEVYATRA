@@ -8,7 +8,7 @@ import { SaveButton } from "@/components/save-button";
 import { Lift } from "@/components/motion";
 import { cn } from "@/lib/cn";
 import { CinematicImage } from "@/components/ui/cinematic-image";
-import { getTempleImage } from "@/lib/images/registry";
+import { resolvePrimaryTempleMedia } from "@/lib/images/resolver";
 
 const BADGE_ICON: Record<string, { icon: typeof Flame; cls: string }> = {
   "Major Pilgrimage": { icon: Flame, cls: "text-terracotta" },
@@ -66,6 +66,7 @@ export function TempleCard({
       : "Sacred Shrine";
 
   const archOrType = temple.architecture || ("templeType" in temple ? temple.templeType : undefined) || ("type" in temple ? temple.type : undefined);
+  const resolvedMedia = resolvePrimaryTempleMedia(temple);
 
   return (
     <Lift>
@@ -78,11 +79,12 @@ export function TempleCard({
       >
         <div className="relative overflow-hidden">
           <CinematicImage
-            record={getTempleImage(temple.slug)}
+            media={resolvedMedia}
             artSeed={`${temple.name}-${index}`}
             alt={temple.name}
             aspectRatio={featured ? "16/9" : "4/3"}
             priority={index < 2}
+            showCreditBadge={resolvedMedia.hasFactualPhoto}
             className="w-full"
           />
 

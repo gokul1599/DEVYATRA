@@ -26,7 +26,7 @@ import {
   INDIA_BOUNDS,
   type LocationQualityAssessment,
 } from "@/lib/map/location-quality";
-import { discoveredPlacesToGeoJSON } from "@/lib/map/geojson";
+import { discoveredPlacesToGeoJSON, type DestinationGeoJSONFeature } from "@/lib/map/geojson";
 import * as maplibregl from "maplibre-gl";
 
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -80,6 +80,12 @@ export function MapExplorer() {
   const [mode, setMode] = useState<DiscoveryResult["mode"] | null>(null);
   const [stale, setStale] = useState(false);
   const [failed, setFailed] = useState(false);
+  const [mapError, setMapError] = useState<string | null>(null);
+  const [fallbackActive, setFallbackActive] = useState(false);
+  const fallbackActiveRef = useRef(fallbackActive);
+  useEffect(() => {
+    fallbackActiveRef.current = fallbackActive;
+  }, [fallbackActive]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [filterCategory, setFilterCategory] = useState<
     "all" | "verified" | "open" | "heritage" | "nature" | "food_stay"
@@ -198,6 +204,39 @@ export function MapExplorer() {
     []
   );
 
+  // Viewport-driven full database discovery across India
+  const fetchViewportTemples = useCallback(async (map: maplibregl.Map) => {
+    try {
+      const bounds = map.getBounds();
+      const bboxStr = `${bounds.getWest().toFixed(4)},${bounds.getSouth().toFixed(4)},${bounds.getEast().toFixed(4)},${bounds.getNorth().toFixed(4)}`;
+      const res = await fetch(`/api/map/viewport?bbox=${bboxStr}&limit=120`);
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data.features && Array.isArray(data.features)) {
+        const newPlaces: DiscoveredPlace[] = data.features.map((f: DestinationGeoJSONFeature) => ({
+          id: f.properties.id,
+          name: f.properties.name,
+          category: f.properties.category,
+          latitude: f.geometry.coordinates[1],
+          longitude: f.geometry.coordinates[0],
+          address: f.properties.address || `${f.properties.city || ""}, ${f.properties.state || ""}`.trim(),
+          region: f.properties.state || f.properties.district,
+          verified: f.properties.isVerified ? { href: f.properties.href || `/temples/india/${f.properties.slug || ""}` } : undefined,
+          source: f.properties.sourceType || "database",
+          googlePlaceId: f.properties.googlePlaceId || undefined,
+        }));
+        setItems((prev) => {
+          const mapById = new Map<string, DiscoveredPlace>();
+          for (const item of prev) mapById.set(item.id, item);
+          for (const item of newPlaces) mapById.set(item.id, item);
+          return Array.from(mapById.values());
+        });
+      }
+    } catch {
+      // Ignore background viewport update failure
+    }
+  }, []);
+
   // Initial fetch on mount
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -222,27 +261,51 @@ export function MapExplorer() {
       const styleDef =
         mapStyleKey === "satellite" ? MAP_STYLES.satellite : MAP_STYLES[mapStyleKey];
 
-      const map = new maplibregl.Map({
-        container: mapContainerRef.current,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        style: styleDef as any,
-        center: [DEFAULT_ANCHOR.lng, DEFAULT_ANCHOR.lat],
-        zoom: 11.5,
-        minZoom: 3.5,
-        maxZoom: 18.5,
-        maxBounds: [
-          [INDIA_BOUNDS.minLng - 10, INDIA_BOUNDS.minLat - 5],
-          [INDIA_BOUNDS.maxLng + 10, INDIA_BOUNDS.maxLat + 5],
-        ],
-        attributionControl: false,
-      });
+      let map: maplibregl.Map;
+      try {
+        map = new maplibregl.Map({
+          container: mapContainerRef.current,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          style: styleDef as any,
+          center: [DEFAULT_ANCHOR.lng, DEFAULT_ANCHOR.lat],
+          zoom: 11.5,
+          minZoom: 3.5,
+          maxZoom: 18.5,
+          maxBounds: [
+            [INDIA_BOUNDS.minLng - 10, INDIA_BOUNDS.minLat - 5],
+            [INDIA_BOUNDS.maxLng + 10, INDIA_BOUNDS.maxLat + 5],
+          ],
+          attributionControl: false,
+        });
+      } catch (err) {
+        console.error("[MapExplorer] WebGL initialization failed:", err);
+        setTimeout(() => {
+          setMapError("WebGL initialization failed on this device");
+        }, 0);
+        return;
+      }
 
       mapRef.current = map;
+
+      map.on("error", (e) => {
+        console.warn("[MapExplorer] Map tile or style error:", e);
+        if (!fallbackActiveRef.current && mapStyleKey !== "satellite") {
+          setFallbackActive(true);
+          fallbackActiveRef.current = true;
+          try {
+            map.setStyle(MAP_STYLES.satellite as unknown as maplibregl.StyleSpecification);
+          } catch {
+            setMapError("Interactive map could not load tiles on this network");
+          }
+        }
+      });
 
       map.addControl(new maplibregl.NavigationControl({ showCompass: true, visualizePitch: true }), "top-right");
 
       map.on("load", () => {
         if (isCancelled) return;
+        setMapError(null);
+        fetchViewportTemples(map);
 
         // Add clustered GeoJSON source
         map.addSource("destinations", {
@@ -379,9 +442,10 @@ export function MapExplorer() {
           map.getCanvas().style.cursor = "";
         });
 
-        // Detect user pan -> show "Search This Area" button
+        // Detect user pan -> show "Search This Area" button and query viewport
         map.on("moveend", () => {
           setShowAreaSearchPill(true);
+          fetchViewportTemples(map);
         });
       });
     }
@@ -395,7 +459,7 @@ export function MapExplorer() {
         mapRef.current = null;
       }
     };
-  }, [mapStyleKey]);
+  }, [mapStyleKey, fetchViewportTemples]);
 
   // Search Area Trigger
   const handleSearchThisArea = () => {
@@ -681,6 +745,36 @@ export function MapExplorer() {
         )}
       >
         <div ref={mapContainerRef} className="h-full w-full" tabIndex={0} aria-label="Interactive Geographic Map" />
+
+        {/* Dignified Map Error Fallback UI */}
+        {mapError && (
+          <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-obsidian-2/95 p-6 text-center backdrop-blur-md">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gold/15 text-gold-bright mb-4 border border-gold/30">
+              <MapIcon className="h-7 w-7" />
+            </div>
+            <h3 className="font-display text-xl font-medium text-ivory">Interactive Map Offline</h3>
+            <p className="mt-2 max-w-sm text-xs leading-relaxed text-ivory-dim">
+              Vector map tiles are unreachable on this network connection. You can retry with satellite imagery or browse all verified temples in list view.
+            </p>
+            <div className="mt-5 flex items-center gap-3">
+              <button
+                onClick={() => {
+                  setMapError(null);
+                  setMapStyleKey("satellite");
+                }}
+                className="rounded-xl bg-gold px-4 py-2 text-xs font-semibold text-obsidian shadow-md hover:bg-gold-bright transition-colors"
+              >
+                Retry with Satellite
+              </button>
+              <button
+                onClick={() => setActiveTab("list")}
+                className="rounded-xl border border-line bg-obsidian-3 px-4 py-2 text-xs font-medium text-ivory hover:border-gold transition-colors"
+              >
+                Open List View ({filteredItems.length})
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Floating Bottom Navigation & Controls */}
         <div className="pointer-events-none absolute bottom-4 right-4 z-10 flex flex-col gap-2">

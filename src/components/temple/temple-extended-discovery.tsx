@@ -23,6 +23,8 @@ import {
   type TravelStyle,
 } from "@/lib/destinations/extended-types";
 import { cn } from "@/lib/cn";
+import { CinematicImage } from "@/components/ui/cinematic-image";
+import { getTempleImage } from "@/lib/images/registry";
 
 interface TempleExtendedDiscoveryProps {
   templeId: string;
@@ -322,21 +324,45 @@ export function TempleExtendedDiscovery({
               const isSaved = savedIds.has(item.id);
               const band = DISTANCE_BANDS[item.distanceBand];
 
+              const imgRecord = item.imageReference
+                ? {
+                    id: `ext-${item.id}`,
+                    src: item.imageReference,
+                    alt: item.name,
+                    category: "LANDMARK" as const,
+                    rights: "OFFICIAL_PROVENANCE" as const,
+                    credit: "Verified Destination Archive",
+                    focalPoint: "center" as const,
+                  }
+                : getTempleImage(item.slug);
+
               return (
                 <div
                   key={item.id}
-                  className="flex flex-col justify-between rounded-2xl border border-line bg-obsidian-2 p-5 transition hover:border-gold/40 hover:bg-obsidian-3"
+                  className="flex flex-col justify-between overflow-hidden rounded-2xl border border-line bg-obsidian-2 transition hover:border-gold/40 hover:bg-obsidian-3"
                 >
-                  <div>
-                    {/* Top Badges */}
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <span className="rounded-md bg-gold/10 px-2 py-0.5 text-[10.5px] font-semibold text-gold-bright">
-                        {band.label}
-                      </span>
-                      <span className="text-[11px] font-medium text-ivory-dim">
-                        {item.significanceLabel}
-                      </span>
-                    </div>
+                  <div className="relative overflow-hidden">
+                    <CinematicImage
+                      image={imgRecord}
+                      artSeed={`${item.slug || item.name}`}
+                      alt={item.name}
+                      aspectRatio="16/9"
+                      showCreditBadge={Boolean(imgRecord?.src)}
+                      className="w-full"
+                    />
+                  </div>
+
+                  <div className="p-5 flex-1 flex flex-col justify-between">
+                    <div>
+                      {/* Top Badges */}
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <span className="rounded-md bg-gold/10 px-2 py-0.5 text-[10.5px] font-semibold text-gold-bright">
+                          {band.label}
+                        </span>
+                        <span className="text-[11px] font-medium text-ivory-dim">
+                          {item.significanceLabel}
+                        </span>
+                      </div>
 
                     {/* Title & Native Name */}
                     <h3 className="mt-2.5 font-display text-[17px] font-medium leading-snug text-ivory">
@@ -430,11 +456,12 @@ export function TempleExtendedDiscovery({
                     </div>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
 
       {/* Footer Corridor Action Banner */}
       <div className="mt-8 flex flex-col items-center justify-between gap-4 rounded-2xl border border-line/80 bg-obsidian-3 p-5 sm:flex-row">

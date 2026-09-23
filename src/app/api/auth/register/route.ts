@@ -24,10 +24,19 @@ export async function POST(req: NextRequest) {
   } catch (e) {
     if (e instanceof Error && e.message === "EMAIL_EXISTS")
       return NextResponse.json({ error: "An account with this email already exists" }, { status: 409 });
+    if (e instanceof Error && e.message === "DATABASE_UNAVAILABLE")
+      return NextResponse.json({ error: "Authentication service temporarily unavailable. Please retry in a moment." }, { status: 503 });
     throw e;
   }
 
-  const sessionToken = await createSession(user.id);
+  let sessionToken: string;
+  try {
+    sessionToken = await createSession(user.id);
+  } catch (e) {
+    if (e instanceof Error && e.message === "DATABASE_UNAVAILABLE")
+      return NextResponse.json({ error: "Session service temporarily unavailable. Please retry in a moment." }, { status: 503 });
+    throw e;
+  }
   const res = NextResponse.json({ user: publicUser(user) }, { status: 201 });
   res.cookies.set(SESSION_COOKIE, sessionToken, {
     httpOnly: true,

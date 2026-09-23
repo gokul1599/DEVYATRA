@@ -80,7 +80,7 @@ export async function GET(req: NextRequest) {
           googlePlaceId: true,
           dataConfidence: true,
           district: { select: { name: true } },
-          state: { select: { name: true } },
+          state: { select: { name: true, slug: true } },
         },
         take: limit,
       });
@@ -101,6 +101,8 @@ export async function GET(req: NextRequest) {
         if (quality.accuracy === "EXACT") exactCount++;
         else if (quality.accuracy === "SITE_CENTER") siteCenterCount++;
         else approximateCount++;
+
+        const stateSlug = t.state?.slug || "india";
 
         features.push({
           type: "Feature",
@@ -135,7 +137,7 @@ export async function GET(req: NextRequest) {
             openNow: null,
             distanceKm: null,
             googlePlaceId: t.googlePlaceId,
-            href: `/temple/${t.slug}`,
+            href: `/temples/${stateSlug}/${t.slug}`,
             imageReference: null,
           },
         });

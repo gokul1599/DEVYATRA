@@ -30,6 +30,7 @@ import {
   estimateVisitDuration,
   formatGroundedDistance,
 } from "./extended-types";
+import { getTempleImage } from "@/lib/images/registry";
 
 export {
   DISTANCE_BANDS,
@@ -113,6 +114,17 @@ export async function getExtendedDiscoveryAround(
         images: true,
         district: { select: { name: true } },
         state: { select: { name: true, slug: true } },
+        media: {
+          where: {
+            OR: [
+              { isApproved: true },
+              { verificationStatus: "VERIFIED" },
+              { verificationStatus: "AUTO_APPROVED" },
+            ],
+          },
+          take: 1,
+          select: { publicUrl: true },
+        },
       },
       take: 250,
     });
@@ -171,7 +183,7 @@ export async function getExtendedDiscoveryAround(
         verificationStatus: t.verificationStatus || "VERIFIED_SOURCE",
         isCentroidFallback: false,
         editorialHighlight: `${sigLabel} · ${durLabel}`,
-        imageReference: t.images?.[0] || null,
+        imageReference: t.media?.[0]?.publicUrl || getTempleImage(t.slug)?.src || t.images?.[0] || null,
         navLinks: {
           googleMaps,
           appleMaps,

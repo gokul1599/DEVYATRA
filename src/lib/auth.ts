@@ -128,14 +128,18 @@ function mapPrismaUser(u: {
   };
 }
 
-/* ─── Database-backed Auth Operations with Resilient Fallback ─── */
+/* ─── Database-backed Auth Operations with Test-Only In-Memory Fallback ─── */
+
+function isTestEnv(): boolean {
+  return process.env.NODE_ENV === "test";
+}
 
 export async function createUser(name: string, email: string, password: string): Promise<UserRecord> {
   const norm = normalizeEmail(email);
   const passwordHash = createPasswordHash(password);
   const prisma = getPrisma();
 
-  if (prisma) {
+  if (prisma && !isTestEnv()) {
     try {
       const existing = await prisma.user.findFirst({
         where: {
@@ -161,11 +165,16 @@ export async function createUser(name: string, email: string, password: string):
       return mapPrismaUser(user);
     } catch (err: unknown) {
       if (err instanceof Error && err.message === "EMAIL_EXISTS") throw err;
-      // Network/offline fallback
+      console.error("[Auth] Database unavailable during user creation:", err);
+      throw new Error("DATABASE_UNAVAILABLE");
     }
   }
 
-  // Fallback branch
+  if (!isTestEnv()) {
+    throw new Error("DATABASE_UNAVAILABLE");
+  }
+
+  // Fallback branch strictly for unit tests
   for (const u of fallbackUsers.values()) {
     if (u.normalizedEmail === norm || normalizeEmail(u.email) === norm) {
       throw new Error("EMAIL_EXISTS");
@@ -192,7 +201,7 @@ export async function login(email: string, password: string): Promise<UserRecord
   const norm = normalizeEmail(email);
   const prisma = getPrisma();
 
-  if (prisma) {
+  if (prisma && !isTestEnv()) {
     try {
       const user = await prisma.user.findFirst({
         where: {
@@ -203,12 +212,17 @@ export async function login(email: string, password: string): Promise<UserRecord
         return mapPrismaUser(user);
       }
       return null;
-    } catch {
-      // Network/offline fallback
+    } catch (err) {
+      console.error("[Auth] Database unavailable during login:", err);
+      throw new Error("DATABASE_UNAVAILABLE");
     }
   }
 
-  // Fallback branch
+  if (!isTestEnv()) {
+    throw new Error("DATABASE_UNAVAILABLE");
+  }
+
+  // Fallback branch strictly for unit tests
   for (const u of fallbackUsers.values()) {
     if (u.normalizedEmail === norm || normalizeEmail(u.email) === norm) {
       if (u.passwordHash && verifyPassword(password, u.passwordHash)) {
@@ -225,7 +239,7 @@ export async function createSession(userId: string): Promise<string> {
   const expiresAt = new Date(Date.now() + LIFETIME_MS);
   const prisma = getPrisma();
 
-  if (prisma) {
+  if (prisma && !isTestEnv()) {
     try {
       await prisma.session.create({
         data: {
@@ -235,12 +249,17 @@ export async function createSession(userId: string): Promise<string> {
         },
       });
       return token;
-    } catch {
-      // Network/offline fallback
+    } catch (err) {
+      console.error("[Auth] Database unavailable during session creation:", err);
+      throw new Error("DATABASE_UNAVAILABLE");
     }
   }
 
-  // Fallback branch
+  if (!isTestEnv()) {
+    throw new Error("DATABASE_UNAVAILABLE");
+  }
+
+  // Fallback branch strictly for unit tests
   fallbackSessions.set(token, {
     token,
     userId,
@@ -251,26 +270,27 @@ export async function createSession(userId: string): Promise<string> {
 
 export async function destroySession(token: string): Promise<void> {
   const prisma = getPrisma();
-  if (prisma) {
+  if (prisma && !isTestEnv()) {
     try {
       await prisma.session.deleteMany({
         where: { token },
       });
       return;
-    } catch {
-      // Network/offline fallback
+    } catch (err) {
+      console.error("[Auth] Database error deleting session:", err);
     }
   }
 
-  // Fallback branch
-  fallbackSessions.delete(token);
+  if (isTestEnv()) {
+    fallbackSessions.delete(token);
+  }
 }
 
 export async function getUserByToken(token?: string | null): Promise<UserRecord | null> {
   if (!token) return null;
   const prisma = getPrisma();
 
-  if (prisma) {
+  if (prisma && !isTestEnv()) {
     try {
       const session = await prisma.session.findUnique({
         where: { token },
@@ -280,12 +300,17 @@ export async function getUserByToken(token?: string | null): Promise<UserRecord 
         return null;
       }
       return mapPrismaUser(session.user);
-    } catch {
-      // Network/offline fallback
+    } catch (err) {
+      console.error("[Auth] Database error verifying session:", err);
+      return null;
     }
   }
 
-  // Fallback branch
+  if (!isTestEnv()) {
+    return null;
+  }
+
+  // Fallback branch strictly for unit tests
   const session = fallbackSessions.get(token);
   if (!session || session.revokedAt || session.expiresAt.getTime() < Date.now()) {
     return null;
@@ -299,7 +324,7 @@ export async function updateUserPreferences(
 ): Promise<UserPreferences> {
   const prisma = getPrisma();
 
-  if (prisma) {
+  if (prisma && !isTestEnv()) {
     try {
       const user = await prisma.user.findUnique({ where: { id: userId } });
       if (!user) throw new Error("USER_NOT_FOUND");
@@ -319,11 +344,16 @@ export async function updateUserPreferences(
       return nextPrefs;
     } catch (err: unknown) {
       if (err instanceof Error && err.message === "USER_NOT_FOUND") throw err;
-      // Network/offline fallback
+      console.error("[Auth] Database unavailable updating preferences:", err);
+      throw new Error("DATABASE_UNAVAILABLE");
     }
   }
 
-  // Fallback branch
+  if (!isTestEnv()) {
+    throw new Error("DATABASE_UNAVAILABLE");
+  }
+
+  // Fallback branch strictly for unit tests
   const user = fallbackUsers.get(userId);
   if (!user) throw new Error("USER_NOT_FOUND");
   user.preferences = {
@@ -336,7 +366,7 @@ export async function updateUserPreferences(
 export async function toggleFollowTemple(userId: string, slug: string): Promise<string[]> {
   const prisma = getPrisma();
 
-  if (prisma) {
+  if (prisma && !isTestEnv()) {
     try {
       const user = await prisma.user.findUnique({ where: { id: userId } });
       if (!user) throw new Error("USER_NOT_FOUND");
@@ -349,11 +379,16 @@ export async function toggleFollowTemple(userId: string, slug: string): Promise<
       return next;
     } catch (err: unknown) {
       if (err instanceof Error && err.message === "USER_NOT_FOUND") throw err;
-      // Network/offline fallback
+      console.error("[Auth] Database unavailable toggling followed temple:", err);
+      throw new Error("DATABASE_UNAVAILABLE");
     }
   }
 
-  // Fallback branch
+  if (!isTestEnv()) {
+    throw new Error("DATABASE_UNAVAILABLE");
+  }
+
+  // Fallback branch strictly for unit tests
   const user = fallbackUsers.get(userId);
   if (!user) throw new Error("USER_NOT_FOUND");
   const current = user.followedTemples || [];

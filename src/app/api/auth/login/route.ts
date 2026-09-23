@@ -11,10 +11,21 @@ export async function POST(req: NextRequest) {
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
-  const user = await login(body.email ?? "", body.password ?? "");
-  if (!user) return NextResponse.json({ error: "Incorrect email or password" }, { status: 401 });
-
-  const sessionToken = await createSession(user.id);
+  let user;
+  let sessionToken: string;
+  try {
+    user = await login(body.email ?? "", body.password ?? "");
+    if (!user) return NextResponse.json({ error: "Incorrect email or password" }, { status: 401 });
+    sessionToken = await createSession(user.id);
+  } catch (e) {
+    if (e instanceof Error && e.message === "DATABASE_UNAVAILABLE") {
+      return NextResponse.json(
+        { error: "Authentication service temporarily unavailable. Please retry in a moment." },
+        { status: 503 }
+      );
+    }
+    throw e;
+  }
   const res = NextResponse.json({ user: publicUser(user) });
   res.cookies.set(SESSION_COOKIE, sessionToken, {
     httpOnly: true,

@@ -4,12 +4,14 @@ import { useState } from "react";
 import Image from "next/image";
 import { Info, Sparkles } from "lucide-react";
 import { type DestinationImage } from "@/lib/images/registry";
+import { type ResolvedTempleMedia } from "@/lib/images/resolver";
 import { DevyatraArt } from "@/components/devyatra-art";
 import { cn } from "@/lib/cn";
 
 interface CinematicImageProps {
   image?: DestinationImage | null;
   record?: DestinationImage | null;
+  media?: ResolvedTempleMedia | DestinationImage | null;
   fallbackSeed?: string;
   artSeed?: string;
   alt?: string;
@@ -40,6 +42,7 @@ const FOCAL_CLASSES = {
 export function CinematicImage({
   image,
   record,
+  media,
   fallbackSeed = "devyatra-shrine",
   artSeed,
   alt,
@@ -53,7 +56,7 @@ export function CinematicImage({
   const [hasError, setHasError] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
 
-  const effectiveImage = image ?? record ?? null;
+  const effectiveImage = media ?? image ?? record ?? null;
   const effectiveSeed = artSeed ?? fallbackSeed;
   const hasPhoto = Boolean(effectiveImage && effectiveImage.src && !hasError);
 
@@ -65,7 +68,7 @@ export function CinematicImage({
         className
       )}
     >
-      {hasPhoto && effectiveImage ? (
+      {hasPhoto && effectiveImage && effectiveImage.src ? (
         <>
           <Image
             src={effectiveImage.src}
@@ -114,7 +117,19 @@ export function CinematicImage({
                 >
                   <p className="font-medium text-gold-bright">{effectiveImage.caption || effectiveImage.alt}</p>
                   <p className="mt-1 text-[11px] text-ivory-dim">Source: {effectiveImage.credit}</p>
-                  <p className="mt-1 font-mono text-[10px] text-emerald-400">License: {effectiveImage.rights.replace(/_/g, " ")}</p>
+                  {effectiveImage.rights && (
+                    <p className="mt-1 font-mono text-[10px] text-emerald-400">License: {effectiveImage.rights.replace(/_/g, " ")}</p>
+                  )}
+                  {"authorUrl" in effectiveImage && effectiveImage.authorUrl && (
+                    <a
+                      href={effectiveImage.authorUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-1.5 block text-[10px] text-gold underline hover:text-gold-bright"
+                    >
+                      View Source / Contributor
+                    </a>
+                  )}
                 </div>
               )}
             </div>
@@ -124,9 +139,9 @@ export function CinematicImage({
         /* Fallback: High-craft DevyatraArt clearly labeled as artistic interpretation */
         <div className="relative h-full w-full">
           <DevyatraArt seed={effectiveSeed} className="h-full w-full object-cover" />
-          <div className="pointer-events-none absolute bottom-2 left-2 z-10 flex items-center gap-1 rounded-md bg-obsidian/70 px-2 py-0.5 text-[9.5px] text-ivory-dim/80 backdrop-blur-sm">
+          <div className="pointer-events-none absolute bottom-2 left-2 z-10 flex items-center gap-1 rounded-md bg-obsidian/85 px-2 py-0.5 text-[9.5px] text-ivory-dim/90 backdrop-blur-sm border border-white/5">
             <Sparkles className="h-2.5 w-2.5 text-gold-dim" />
-            <span>Artistic Representation</span>
+            <span>Verification in progress • Artistic Representation</span>
           </div>
         </div>
       )}

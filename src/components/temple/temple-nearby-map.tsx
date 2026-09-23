@@ -45,6 +45,28 @@ const CATEGORY_LABELS: Record<string, string> = {
 const TILE_STYLES = {
   dark: "https://tiles.openfreemap.org/styles/dark",
   liberty: "https://tiles.openfreemap.org/styles/liberty",
+  satellite: {
+    version: 8 as const,
+    sources: {
+      "esri-satellite": {
+        type: "raster" as const,
+        tiles: [
+          "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        ],
+        tileSize: 256,
+        attribution: "Esri, Maxar, Earthstar Geographics",
+      },
+    },
+    layers: [
+      {
+        id: "esri-satellite-layer",
+        type: "raster" as const,
+        source: "esri-satellite",
+        minzoom: 0,
+        maxzoom: 19,
+      },
+    ],
+  },
 };
 
 export function TempleNearbyMap({
@@ -62,7 +84,9 @@ export function TempleNearbyMap({
   const templeMarkerRef = useRef<maplibregl.Marker | null>(null);
 
   const [mapLoaded, setMapLoaded] = useState(false);
-  const [mapStyle, setMapStyle] = useState<"dark" | "liberty">("dark");
+  const [mapStyle, setMapStyle] = useState<"dark" | "liberty" | "satellite">("dark");
+  const [mapError, setMapError] = useState<string | null>(null);
+  const [fallbackActive, setFallbackActive] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>("ALL");
   const [selectedIdOverride, setSelectedIdOverride] = useState<string | null>(null);
   const [viewDistance, setViewDistance] = useState<number>(radiusConfig.maxRadiusKm);
@@ -86,14 +110,38 @@ export function TempleNearbyMap({
   useEffect(() => {
     if (!mapContainerRef.current) return;
 
-    const map = new maplibregl.Map({
-      container: mapContainerRef.current,
-      style: TILE_STYLES[mapStyle],
-      center: [templeLng, templeLat],
-      zoom: 12.5,
-      pitch: 30,
-      bearing: 0,
-      attributionControl: false,
+    let map: maplibregl.Map;
+    try {
+      const styleDef =
+        mapStyle === "satellite" ? TILE_STYLES.satellite : TILE_STYLES[mapStyle];
+
+      map = new maplibregl.Map({
+        container: mapContainerRef.current,
+        style: styleDef as unknown as maplibregl.StyleSpecification,
+        center: [templeLng, templeLat],
+        zoom: 12.5,
+        pitch: 30,
+        bearing: 0,
+        attributionControl: false,
+      });
+    } catch (err) {
+      console.error("[TempleNearbyMap] WebGL initialization failed:", err);
+      setTimeout(() => {
+        setMapError("WebGL initialization failed on this device");
+      }, 0);
+      return;
+    }
+
+    map.on("error", (e) => {
+      console.warn("[TempleNearbyMap] Map tile error:", e);
+      if (!fallbackActive && mapStyle !== "satellite") {
+        setFallbackActive(true);
+        try {
+          map.setStyle(TILE_STYLES.satellite as unknown as maplibregl.StyleSpecification);
+        } catch {
+          setMapError("Map tiles could not be loaded on this network");
+        }
+      }
     });
 
     map.addControl(
@@ -103,6 +151,7 @@ export function TempleNearbyMap({
 
     map.on("load", () => {
       setMapLoaded(true);
+      setMapError(null);
     });
 
     mapRef.current = map;
@@ -115,7 +164,7 @@ export function TempleNearbyMap({
       mapRef.current = null;
       setMapLoaded(false);
     };
-  }, [mapStyle, templeLat, templeLng]);
+  }, [mapStyle, templeLat, templeLng, fallbackActive]);
 
   // Update Markers
   useEffect(() => {
@@ -276,6 +325,28 @@ export function TempleNearbyMap({
       {/* Real Map Canvas Container */}
       <div className="relative h-[480px] w-full bg-obsidian">
         <div ref={mapContainerRef} className="h-full w-full" />
+
+        {/* Dignified Fallback UI */}
+        {mapError && (
+          <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-obsidian-2/95 p-6 text-center backdrop-blur-md">
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-gold/15 text-gold-bright mb-3 border border-gold/30">
+              <Compass className="h-6 w-6" />
+            </div>
+            <h4 className="font-display text-lg font-medium text-ivory">Surroundings Map Offline</h4>
+            <p className="mt-1 max-w-xs text-xs leading-relaxed text-ivory-dim">
+              Map tiles are currently unreachable on this connection. You can retry with satellite tiles or browse the list of attractions below.
+            </p>
+            <button
+              onClick={() => {
+                setMapError(null);
+                setMapStyle("satellite");
+              }}
+              className="mt-4 rounded-xl bg-gold px-4 py-2 text-xs font-semibold text-obsidian shadow-md hover:bg-gold-bright transition-colors"
+            >
+              Retry with Satellite Tiles
+            </button>
+          </div>
+        )}
 
         {/* Map Float Controls */}
         <div className="absolute right-4 top-4 z-20 flex flex-col gap-1.5 rounded-xl border border-line/80 bg-obsidian-2/90 p-1.5 backdrop-blur-md shadow-xl">

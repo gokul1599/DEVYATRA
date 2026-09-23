@@ -214,6 +214,7 @@ model Temple {
   translations           TempleTranslation[]
   sources                TempleSource[]
   auditResults           AuditResult[]
+  media                  TempleMedia[]
 
   @@index([stateCode])
   @@index([districtId])
@@ -584,4 +585,41 @@ model UserSubmission {
 
   @@index([status])
   @@index([stateName, districtName])
+}
+
+// ─── Temple Media & Image Engine Architecture (spec §Issue A) ────────────────
+
+model TempleMedia {
+  id                  String    @id @default(cuid())
+  templeId            String
+  temple              Temple    @relation(fields: [templeId], references: [id], onDelete: Cascade)
+  kind                String    @default("PRIMARY") // PRIMARY | GALLERY | ARCHITECTURE | FESTIVAL | ENTRANCE
+  sourceType          String    @default("GOOGLE_PLACES") // GOOGLE_PLACES | OFFICIAL | GOVERNMENT | ASI | CC | PUBLIC_DOMAIN
+  sourceName          String?
+  sourceUrl           String?
+  googlePlaceId       String?
+  googleMapsUrl       String?
+  publicUrl           String?
+  altText             String?
+  caption             String?
+  authorName          String?
+  authorUrl           String?
+  authorAvatarUrl     String?
+  licenseType         String?
+  attributionRequired Boolean   @default(false)
+  attributionHtml     String?
+  isPrimary           Boolean   @default(false)
+  isApproved          Boolean   @default(false)
+  isFactual           Boolean   @default(true)
+  verificationStatus  String    @default("PENDING") // PENDING | AUTO_APPROVED | VERIFIED | REJECTED | MANUAL_REVIEW
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  verifiedAt          DateTime?
+  expiresAt           DateTime?
+
+  @@index([templeId])
+  @@index([isPrimary])
+  @@index([isApproved])
+  @@index([sourceType])
+  @@index([googlePlaceId])
 }

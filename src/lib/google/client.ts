@@ -173,7 +173,7 @@ export async function autocompleteSuggest(args: AutocompleteArgs): Promise<Autoc
   if (args.region) body.regionCode = args.region;
   const res = await placesFetch("places:autocomplete", {
     method: "POST",
-    headers: { "X-Goog-FieldMask": "*" },
+    headers: { "X-Goog-FieldMask": FIELD_MASKS.autocomplete },
     body: JSON.stringify(body),
   });
   return parseJson(res, autocompleteResponseSchema);
