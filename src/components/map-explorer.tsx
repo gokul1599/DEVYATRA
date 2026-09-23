@@ -81,7 +81,9 @@ export function MapExplorer() {
   const [stale, setStale] = useState(false);
   const [failed, setFailed] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [filterCategory, setFilterCategory] = useState<"all" | "verified" | "open">("all");
+  const [filterCategory, setFilterCategory] = useState<
+    "all" | "verified" | "open" | "heritage" | "nature" | "food_stay"
+  >("all");
   const [showAreaSearchPill, setShowAreaSearchPill] = useState(false);
 
   // Autocomplete state
@@ -95,6 +97,41 @@ export function MapExplorer() {
     if ((p as unknown as { isCentroidFallback?: boolean }).isCentroidFallback) return false;
     if (filterCategory === "verified") return p.verified || p.source === "verified";
     if (filterCategory === "open") return p.openNow === true;
+    if (filterCategory === "heritage") {
+      const txt = `${p.name} ${p.address || ""}`.toLowerCase();
+      return (
+        p.certainty === "religious_site" ||
+        txt.includes("fort") ||
+        txt.includes("palace") ||
+        txt.includes("heritage") ||
+        txt.includes("asi") ||
+        txt.includes("monument") ||
+        txt.includes("cave")
+      );
+    }
+    if (filterCategory === "nature") {
+      const txt = `${p.name} ${p.address || ""}`.toLowerCase();
+      return (
+        txt.includes("lake") ||
+        txt.includes("river") ||
+        txt.includes("ghat") ||
+        txt.includes("sangam") ||
+        txt.includes("hill") ||
+        txt.includes("waterfall") ||
+        txt.includes("kund")
+      );
+    }
+    if (filterCategory === "food_stay") {
+      const txt = `${p.name} ${p.address || ""}`.toLowerCase();
+      return (
+        txt.includes("ashram") ||
+        txt.includes("bhojanalaya") ||
+        txt.includes("dharamshala") ||
+        txt.includes("bhavan") ||
+        txt.includes("annakshetra") ||
+        txt.includes("matha")
+      );
+    }
     return true;
   });
 
@@ -577,20 +614,29 @@ export function MapExplorer() {
         </div>
 
         {/* Quick Filters Pill Bar */}
-        <div className="pointer-events-auto mx-auto flex w-full max-w-xl items-center justify-between gap-2 overflow-x-auto py-0.5">
-          <div className="flex items-center gap-1.5">
-            {(["all", "verified", "open"] as const).map((cat) => (
+        <div className="pointer-events-auto mx-auto flex w-full max-w-2xl items-center justify-between gap-2 overflow-x-auto py-0.5">
+          <div className="flex items-center gap-1.5 shrink-0">
+            {(
+              [
+                { id: "all", label: "All Shrines" },
+                { id: "verified", label: "Verified Atlas" },
+                { id: "open", label: "Open Now" },
+                { id: "heritage", label: "ASI & Heritage" },
+                { id: "nature", label: "Nature & Sangam" },
+                { id: "food_stay", label: "Bhojanalaya & Stay" },
+              ] as const
+            ).map((cat) => (
               <button
-                key={cat}
-                onClick={() => setFilterCategory(cat)}
+                key={cat.id}
+                onClick={() => setFilterCategory(cat.id)}
                 className={cn(
-                  "rounded-full px-3 py-1 text-[11px] font-medium transition-all shadow-md",
-                  filterCategory === cat
+                  "whitespace-nowrap rounded-full px-3 py-1 text-[11px] font-medium transition-all shadow-md",
+                  filterCategory === cat.id
                     ? "bg-gold text-obsidian font-semibold shadow-gold/20"
                     : "glass border border-line text-ivory-dim hover:text-ivory"
                 )}
               >
-                {cat === "all" ? "All Shrines" : cat === "verified" ? "Verified Atlas" : "Open Now"}
+                {cat.label}
               </button>
             ))}
           </div>

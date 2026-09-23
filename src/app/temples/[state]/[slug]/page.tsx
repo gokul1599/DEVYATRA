@@ -34,6 +34,7 @@ import { TempleDayView } from "@/components/temple/temple-day-view";
 import { SeniorEase } from "@/components/temple/senior-ease";
 import { FamilyComfort } from "@/components/temple/family-comfort";
 import { P1PersonaExplorer } from "@/components/temple/p1-personas";
+import { TempleExtendedDiscovery } from "@/components/temple/temple-extended-discovery";
 import { cn } from "@/lib/cn";
 
 export const dynamicParams = true;
@@ -421,6 +422,17 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
             location={temple.location}
             attractions={nearbyPlacesResult.attractions}
             radiusConfig={nearbyPlacesResult.radiusConfig}
+          />
+        </section>
+
+        {/* ---------- Extend Your Yatra (300 km Regional Sacred Atlas) ---------- */}
+        <section id="extend-your-yatra" className="mt-16">
+          <TempleExtendedDiscovery
+            templeId={temple.id}
+            templeName={temple.name}
+            templeLat={temple.latitude}
+            templeLng={temple.longitude}
+            locationName={`${temple.location}, ${temple.district}`}
           />
         </section>
 

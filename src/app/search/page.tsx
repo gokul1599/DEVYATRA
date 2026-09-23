@@ -1,9 +1,10 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
-import { Landmark, MapPin, Sparkles, CalendarDays, Compass, ArrowRight } from "lucide-react";
+import { Landmark, MapPin, Sparkles, CalendarDays, Compass, ArrowRight, Map as MapIcon, Navigation } from "lucide-react";
 import { search } from "@/lib/search";
 import { resolvePilgrimageIntent } from "@/lib/search/intent";
+import { parseGeoSearchQuery } from "@/lib/search/geo-parser";
 import { getState } from "@/lib/registry";
 import { Container } from "@/components/ui";
 import { SearchBar } from "@/components/search-bar";
@@ -17,6 +18,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
   const query = q?.trim() ?? "";
   const res = query ? search(query, 12) : null;
   const intent = query ? resolvePilgrimageIntent(query) : null;
+  const geoIntent = query ? parseGeoSearchQuery(query) : null;
 
   return (
     <>
@@ -57,6 +59,46 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
                   <span>{intent.suggestedActionLabel || "Plan with AI"}</span>
                   <ArrowRight className="h-4 w-4" />
                 </Link>
+              </div>
+            </div>
+          )}
+
+          {geoIntent?.hasGeoIntent && (
+            <div className="mb-8 rounded-3xl border border-emerald-500/30 bg-gradient-to-r from-emerald-950/30 via-obsidian-2 to-obsidian-2 p-6 shadow-xl">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-emerald-400">
+                    <Navigation className="h-4 w-4" />
+                    <span>Regional Spatial Atlas Intent</span>
+                  </div>
+                  <p className="font-display text-lg font-medium text-ivory">
+                    {geoIntent.summary}
+                  </p>
+                  <p className="text-xs text-ivory-dim">
+                    Genuine sovereign boundaries · {geoIntent.radiusKm} km radius ({geoIntent.distanceBand.replace("BAND_", "").replace("_", "–")} km band)
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  {geoIntent.mapHref && (
+                    <Link
+                      href={geoIntent.mapHref}
+                      className="inline-flex items-center gap-2 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-5 py-2.5 text-xs font-semibold text-emerald-400 transition-colors hover:bg-emerald-500/20"
+                    >
+                      <MapIcon className="h-4 w-4" />
+                      <span>Open on Map Explorer</span>
+                    </Link>
+                  )}
+                  {geoIntent.anchorCoordinates && (
+                    <Link
+                      href={`/plan?origin=${encodeURIComponent(geoIntent.anchorName || "")}&radius=${geoIntent.radiusKm}`}
+                      className="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-5 py-2.5 text-xs font-semibold text-obsidian shadow-sm transition-transform hover:scale-[1.02] active:scale-[0.98]"
+                    >
+                      <span>Plan Yatra</span>
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  )}
+                </div>
               </div>
             </div>
           )}
