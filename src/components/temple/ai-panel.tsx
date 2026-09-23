@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Sparkles, Send, Bot, User, AlertTriangle, CheckCircle2, Clock, Wallet, CalendarDays } from "lucide-react";
 import type { PlanResult } from "@/lib/ai/engine";
+import { useApp } from "@/components/providers";
 import { cn } from "@/lib/cn";
 
 const CHIP_SUGGESTIONS = [
@@ -20,12 +21,14 @@ interface AskBody {
 export function AiPanel({
   templeId,
   templeName,
-  lang,
+  lang: initialLang,
 }: {
   templeId: string;
   templeName: string;
-  lang: string;
+  lang?: string;
 }) {
+  const { lang: appLang } = useApp();
+  const lang = initialLang || appLang || "en";
   const [tab, setTab] = useState<"ask" | "plan">("ask");
   return (
     <div className="overflow-hidden rounded-3xl border border-gold/20 bg-surface-warm">

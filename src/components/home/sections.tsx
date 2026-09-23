@@ -286,7 +286,7 @@ export function PlanBand() {
 
             <div className="space-y-3">
               {[
-                { n: "01", t: "Pick your temple", d: "Search 1,655 shrines across India.", icon: Landmark },
+                { n: "01", t: "Pick your temple", d: "Search verified shrines across all 36 States & UTs.", icon: Landmark },
                 { n: "02", t: "Set your window", d: "Start time, hours, budget, pace & interests.", icon: ScrollText },
                 { n: "03", t: "Get your day", d: "A time-ordered itinerary with reasons and sources.", icon: BadgeCheck },
               ].map((s) => (

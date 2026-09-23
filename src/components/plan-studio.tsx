@@ -148,8 +148,9 @@ export default function PlanStudio() {
   const [stateFilter, setStateFilter] = useState("all");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  // Pilgrimage options
-  const [days, setDays] = useState<1 | 2 | 3>(1);
+  // Pilgrimage options (Route Lab supporting 1 to 7+ days)
+  const [days, setDays] = useState<1 | 2 | 3 | 5 | 7>(1);
+  const [originLocation, setOriginLocation] = useState("");
   const [people, setPeople] = useState(2);
   const [budget, setBudget] = useState<"budget" | "moderate" | "premium">("moderate");
   const [pace, setPace] = useState<"leisurely" | "standard" | "fast">("standard");
@@ -375,16 +376,32 @@ export default function PlanStudio() {
           </div>
         </div>
 
+        {/* Starting Point (Route Lab) */}
+        <div>
+          <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wider text-ivory-dim">
+            <Compass className="mr-1 inline h-3.5 w-3.5" /> Starting Point / Origin
+          </label>
+          <input
+            type="text"
+            placeholder="e.g. Current location, Bengaluru Airport, Chennai Central..."
+            value={originLocation}
+            onChange={(e) => setOriginLocation(e.target.value)}
+            className="w-full rounded-xl border border-line bg-obsidian-3 px-3.5 py-2.5 text-xs text-ivory placeholder:text-ivory-dim/50 focus:border-gold/50 focus:outline-none"
+          />
+        </div>
+
         {/* Pilgrimage Duration (Days) */}
         <div>
           <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wider text-ivory-dim">
             <Calendar className="mr-1 inline h-3.5 w-3.5" /> Pilgrimage Duration
           </label>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-5 gap-1.5">
             {[
-              { d: 1 as const, label: "1 Day Circuit" },
-              { d: 2 as const, label: "2 Days Yatra" },
-              { d: 3 as const, label: "3 Days Pilgrimage" },
+              { d: 1 as const, label: "1 Day" },
+              { d: 2 as const, label: "2 Days" },
+              { d: 3 as const, label: "3 Days" },
+              { d: 5 as const, label: "5 Days" },
+              { d: 7 as const, label: "7 Days" },
             ].map((opt) => (
               <SegBtn
                 key={opt.d}
@@ -732,9 +749,9 @@ export default function PlanStudio() {
                   <Clock className="h-3.5 w-3.5" />
                   <span>{result.duration}</span>
                 </span>
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-300">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-xs font-medium text-gold-bright">
                   <Wallet className="h-3.5 w-3.5" />
-                  <span>Free Darshan Entry</span>
+                  <span>{result.estimatedCost || (budget === "budget" ? "General Queue Darshan" : "Darshan & Special Entry Options")}</span>
                 </span>
               </div>
 
@@ -867,20 +884,20 @@ export default function PlanStudio() {
               </div>
               <div className="mt-3 grid gap-3 sm:grid-cols-2 text-xs">
                 <div className="space-y-1">
-                  <p className="font-semibold text-ivory">Mandatory Dress Code</p>
-                  <p className="text-ivory-dim">Men: Traditional Dhoti/Kurta. Women: Saree/Salwar with Dupatta. No shorts or sleeveless clothes.</p>
+                  <p className="font-semibold text-ivory">Dress Code & Etiquette</p>
+                  <p className="text-ivory-dim">Rules vary by shrine tradition. Traditional modest attire recommended; verify specific temple requirements prior to darshan.</p>
                 </div>
                 <div className="space-y-1">
                   <p className="font-semibold text-ivory">Identity & Verification</p>
-                  <p className="text-ivory-dim">Carry original Govt Photo ID (Aadhaar/Passport) and printed online slot receipts.</p>
+                  <p className="text-ivory-dim">Carrying government photo identification is advised for booked special darshan or quota counters.</p>
                 </div>
                 <div className="space-y-1">
-                  <p className="font-semibold text-ivory">Sanctum Security</p>
-                  <p className="text-ivory-dim">Mobiles, cameras, and leather items must be deposited at official cloakrooms before entry.</p>
+                  <p className="font-semibold text-ivory">Electronics & Items</p>
+                  <p className="text-ivory-dim">Electronics and leather rules vary by temple authority. Official cloakroom availability should be verified upon arrival.</p>
                 </div>
                 <div className="space-y-1">
-                  <p className="font-semibold text-ivory">Prasad & Annadhanam</p>
-                  <p className="text-ivory-dim">Collect prasadam exclusively from authorized Devasthanam counters with receipt tokens.</p>
+                  <p className="font-semibold text-ivory">Prasadam & Dining</p>
+                  <p className="text-ivory-dim">Prasadam distribution schedules and annadhanam facilities depend on individual devasthanam trusts.</p>
                 </div>
               </div>
             </div>

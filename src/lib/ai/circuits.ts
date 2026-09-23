@@ -53,7 +53,7 @@ export const SACRED_CIRCUITS: SacredCircuit[] = [
     templeNames: ["Shree Somnath Jyotirlinga (Veraval)", "Shri Dwarkadhish Jagat Mandir (Dwarka)"],
     terrain: "coastal",
     auspiciousMonths: ["October to March", "Janmashtami", "Maha Shivaratri"],
-    dressCodeAdvice: "Modest traditional attire. Leather goods, mobile phones, and cameras strictly prohibited inside sanctum.",
+    dressCodeAdvice: "Modest traditional attire recommended. Check individual shrine cloakroom rules for phones and bags.",
   },
   {
     id: "pancha-bhoota-sthalams",

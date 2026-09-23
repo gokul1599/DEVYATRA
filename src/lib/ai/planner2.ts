@@ -421,24 +421,24 @@ export function generateSacredJourney(req: MultiDayPlanRequest): SacredTripBrief
     guardianAdvisories,
     offlineChecklist: {
       dressCode: [
-        "Men: Traditional Dhoti, Kurta, or Veshti without shirts in Southern/Western sanctums.",
-        "Women: Saree, Half-Saree, or Salwar Kameez with Dupatta.",
-        "Prohibited: Shorts, western skirts, sleeveless garments, and torn jeans.",
+        "Modest traditional attire is widely recommended (Dhoti/Kurta for men, Saree/Salwar for women where required).",
+        "Dress codes vary by shrine; verify individual temple devasthanam requirements prior to entry.",
+        "Some ancient sanctums require upper garments to be removed for men; check local signboards.",
       ],
       documentation: [
-        "Government Photo ID (Original Aadhaar Card or Passport) mandatory for verification and Special Entry.",
-        "Printed or downloaded digital copies of online darshan booking receipts (TTD / Kashi / Vaishno Devi).",
-        "Medical certificates if opting for senior citizen or accessibility doli/wheelchair concessions.",
+        "Government Photo ID (Aadhaar, Voter ID, or Passport) recommended for special darshan, suvidha counters, or quota booking.",
+        "Printed or downloaded digital copies of online darshan booking receipts where advance booking is active.",
+        "Accessibility or medical documentation if requesting wheelchair assistance, priority queue, or battery vehicle access.",
       ],
       sanctumRules: [
-        "Mobile phones, smartwatches, cameras, and leather items (belts, wallets) must be deposited in cloakrooms.",
-        "Maintain total silence in the inner sanctum corridor; no photography allowed inside.",
-        "Follow circumambulation (Pradakshina) in a clockwise direction only.",
+        "Mobile phones, photography, and personal electronics regulations vary by temple; deposit at authorized cloakrooms when required.",
+        "Maintain sanctity and silence in inner corridors; follow circumambulation (Pradakshina) in a clockwise direction.",
+        "Leather items may be restricted at select traditional shrines; follow devasthanam staff advisories.",
       ],
       prasadGuide: [
-        "Collect official prasadam tokens only at authorized Devasthanam counters.",
-        "Verify sanctum holy water (Theertham) and vibhuti/kumkuma at priest distribution stalls.",
-        "Free Annaprasadam is served daily at major shrine dining halls (typically 11:30 AM – 3:30 PM).",
+        "Collect prasadam tokens exclusively from authorized Devasthanam counters with official receipts.",
+        "Verify sanctum holy water (Theertham) and prasadam distribution timing at inner temple stalls.",
+        "Annadanam (community dining) hours depend on individual temple trust operations; verify locally upon arrival.",
       ],
     },
   };
@@ -503,7 +503,7 @@ export async function generateDayAroundTemple(
     reason: "Arrival, footwear deposit, and electronic device handover at official devasthanam counter.",
     source: "Devyatra Trust Operational Guidelines",
     day: 1,
-    dressCodeNotice: "Traditional attire mandatory. Leather items strictly barred.",
+    dressCodeNotice: "Traditional modest attire recommended; verify temple-specific devasthanam guidelines.",
   });
 
   stops.push({

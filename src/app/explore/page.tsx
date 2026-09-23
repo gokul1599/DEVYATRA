@@ -377,7 +377,7 @@ export default async function ExplorePage() {
               <p className="mt-1 font-display text-2xl font-medium text-emerald-400 sm:text-3xl">
                 {coverage?.statesWithTemples ?? 36} / {coverage?.states ?? 36}
               </p>
-              <p className="text-[11.5px] text-emerald-300/80">100% Pan-India Atlas</p>
+              <p className="text-[11.5px] text-emerald-300/80">National temple atlas · coverage expanding continuously</p>
             </div>
 
             <div className="rounded-2xl border border-line bg-obsidian-2/80 p-4 backdrop-blur-sm">
@@ -628,7 +628,7 @@ export default async function ExplorePage() {
           {/* ── Transparent Atlas Integrity Notice ── */}
           <div className="mt-12 rounded-2xl border border-line/70 bg-obsidian-2/50 p-6 text-center backdrop-blur-sm">
             <p className="text-xs leading-relaxed text-ivory-dim sm:text-sm">
-              <span className="font-semibold text-gold-bright">Authoritative Sacred Atlas:</span> Devyatra indexes shrines exclusively from authoritative temple administrations, state endowment departments, the Archaeological Survey of India (ASI), and state tourism boards. We maintain a strict zero-centroid fallback policy with 100% verified geospatial coordinates.
+              <span className="font-semibold text-gold-bright">Authoritative Sacred Atlas:</span> Devyatra indexes shrines exclusively from authoritative temple administrations, state endowment departments, the Archaeological Survey of India (ASI), and state tourism boards. We maintain a strict zero-centroid fallback policy with verified surveyed geospatial coordinates.
             </p>
           </div>
         </Container>

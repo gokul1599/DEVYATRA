@@ -15,15 +15,21 @@ export type DestinationCategory =
   | "HERITAGE"
   | "PILGRIMAGE"
   | "NATURE"
+  | "VIEWPOINT"
+  | "MUSEUM"
+  | "MARKET"
   | "CULTURE"
   | "FOOD"
   | "STAY"
   | "PARKING"
   | "TRANSPORT"
+  | "FUEL"
+  | "EV_CHARGING"
   | "HOSPITAL"
   | "PHARMACY"
   | "POLICE"
   | "ESSENTIALS"
+  | "PHOTO_SPOT"
   | "LOCAL_EXPERIENCE";
 
 export type ProvenanceTier =
@@ -118,7 +124,14 @@ export function getCategoryBadgeTheme(category: DestinationCategory): {
     case "HERITAGE":
       return { label: "Heritage Landmark", tone: "terracotta" };
     case "NATURE":
-      return { label: "Nature & Landscape", tone: "emerald" };
+    case "VIEWPOINT":
+      return { label: "Nature & Viewpoint", tone: "emerald" };
+    case "MUSEUM":
+      return { label: "Museum & History", tone: "terracotta" };
+    case "MARKET":
+      return { label: "Local Bazaars", tone: "purple" };
+    case "PHOTO_SPOT":
+      return { label: "Scenic & Photography", tone: "purple" };
     case "CULTURE":
     case "LOCAL_EXPERIENCE":
       return { label: "Culture & Arts", tone: "purple" };
@@ -133,6 +146,8 @@ export function getCategoryBadgeTheme(category: DestinationCategory): {
       return { label: "Essential Facility", tone: "default" };
     case "PARKING":
     case "TRANSPORT":
+    case "FUEL":
+    case "EV_CHARGING":
       return { label: "Travel & Parking", tone: "default" };
     default:
       return { label: "Destination", tone: "default" };

@@ -31,7 +31,7 @@ export async function generateMetadata({
   const name = dbState?.name || staticState?.name || "State";
   return {
     title: `${name} — Temples & Sacred Geography | Devyatra`,
-    description: `Discover verified temples, district maps, and pilgrimage routes across ${name}. 100% surveyed coordinates anchored to official boundaries.`,
+    description: `Discover verified temples, district maps, and pilgrimage routes across ${name}. Verified surveyed coordinates anchored to official boundaries.`,
   };
 }
 

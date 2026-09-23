@@ -30,6 +30,10 @@ import { GsapCinematicHero } from "@/components/gsap-cinematic";
 import { NearbyPlaceEngine } from "@/lib/nearby/engine";
 import { ExploreAround } from "@/components/temple/explore-around";
 import { VisitCommandCenter } from "@/components/temple/visit-command-center";
+import { TempleDayView } from "@/components/temple/temple-day-view";
+import { SeniorEase } from "@/components/temple/senior-ease";
+import { FamilyComfort } from "@/components/temple/family-comfort";
+import { P1PersonaExplorer } from "@/components/temple/p1-personas";
 import { cn } from "@/lib/cn";
 
 export const dynamicParams = true;
@@ -193,11 +197,16 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
       <div className="sticky top-16 z-40 border-y border-line bg-obsidian/80 backdrop-blur-md">
         <Container className="flex gap-5 overflow-x-auto py-2.5 text-[12.5px]">
           {[
+            ["#command-center", "Command Center"],
             ["#intelligence", "Live Intelligence"],
             ["#overview", "Overview"],
+            ["#history", "History"],
+            ["#perspectives", "Perspectives"],
+            ["#accessibility", "Accessibility & Families"],
             ["#timings", "Timings"],
             ["#booking", "Booking"],
             ["#festivals", "Festivals"],
+            ["#explore-around", "Explore Around"],
             ["#nearby", "Nearby"],
             ["#ask-ai", "Ask AI"],
           ].map(([href, label]) => (
@@ -208,7 +217,12 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
         </Container>
       </div>
 
-      <Container className="pt-12">
+      <Container className="pt-10">
+        {/* Destination Command Center */}
+        <section id="command-center" className="mb-12">
+          <TempleDayView temple={temple} />
+        </section>
+
         <div className="grid gap-12 lg:grid-cols-[1.6fr_1fr]">
           <div className="min-w-0 space-y-16">
             {/* Live Intelligence Section */}
@@ -254,6 +268,18 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
                   </li>
                 ))}
               </ol>
+            </section>
+
+            {/* Heritage Perspectives & Personas */}
+            <section id="perspectives">
+              <P1PersonaExplorer temple={temple} />
+            </section>
+
+            {/* Accessibility & Family Comfort */}
+            <section id="accessibility" className="space-y-6">
+              <SectionHeading eyebrow="Comfort & Accessibility" title="Senior ease & family readiness" />
+              <SeniorEase temple={temple} />
+              <FamilyComfort temple={temple} />
             </section>
 
             {/* Festivals */}
@@ -385,16 +411,18 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
         </div>
 
         {/* ---------- Explore Around This Temple (Normalized Heritage & Famous Places) ---------- */}
-        <ExploreAround
-          templeId={temple.id}
-          templeSlug={temple.slug}
-          templeName={temple.name}
-          templeLat={temple.latitude}
-          templeLng={temple.longitude}
-          location={temple.location}
-          attractions={nearbyPlacesResult.attractions}
-          radiusConfig={nearbyPlacesResult.radiusConfig}
-        />
+        <section id="explore-around" className="mt-16">
+          <ExploreAround
+            templeId={temple.id}
+            templeSlug={temple.slug}
+            templeName={temple.name}
+            templeLat={temple.latitude}
+            templeLng={temple.longitude}
+            location={temple.location}
+            attractions={nearbyPlacesResult.attractions}
+            radiusConfig={nearbyPlacesResult.radiusConfig}
+          />
+        </section>
 
         {/* ---------- Nearby ---------- */}
         <section id="nearby" className="mt-16">

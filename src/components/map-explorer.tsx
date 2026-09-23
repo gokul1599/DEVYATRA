@@ -94,6 +94,13 @@ export function MapExplorer() {
   const [failed, setFailed] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hoverId, setHoverId] = useState<string | null>(null);
+  const [filterCategory, setFilterCategory] = useState<"all" | "verified" | "open">("all");
+
+  const filteredItems = items.filter((p) => {
+    if (filterCategory === "verified") return p.verified || p.source === "verified";
+    if (filterCategory === "open") return p.openNow === true;
+    return true;
+  });
 
   const [q, setQ] = useState("");
   const [ac, setAc] = useState<Suggestion[]>([]);
@@ -593,8 +600,26 @@ export function MapExplorer() {
             {mode === "live" ? t("discover_live") : mode === "cache" ? t("discover_cache") : mode === "degraded" ? t("discover_degraded") : ""}
           </p>
           <p className="text-[11.5px] text-ivory-dim">
-            {loading ? "…" : `${items.length} temple${items.length === 1 ? "" : "s"}`}
+            {loading ? "…" : `${filteredItems.length} shrine${filteredItems.length === 1 ? "" : "s"}`}
           </p>
+        </div>
+
+        {/* Layer Filters */}
+        <div className="flex items-center gap-1.5 border-b border-line px-3 py-2 bg-obsidian-3/40 overflow-x-auto text-[11px]">
+          {(["all", "verified", "open"] as const).map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setFilterCategory(cat)}
+              className={cn(
+                "rounded-full px-2.5 py-0.5 font-medium transition-colors shrink-0",
+                filterCategory === cat
+                  ? "bg-gold text-obsidian font-semibold"
+                  : "bg-white/[0.04] text-ivory-dim hover:text-ivory hover:bg-white/[0.08]"
+              )}
+            >
+              {cat === "all" ? "All Shrines" : cat === "verified" ? "Verified Atlas" : "Open Now"}
+            </button>
+          ))}
         </div>
 
         <div className="flex-1 space-y-2 overflow-y-auto p-3">
@@ -605,13 +630,13 @@ export function MapExplorer() {
               ))}
             </div>
           )}
-          {!loading && items.length === 0 && (
+          {!loading && filteredItems.length === 0 && (
             <p className="rounded-2xl border border-dashed border-line px-4 py-10 text-center text-[12.5px] text-ivory-dim">
               {t("map_empty")}
             </p>
           )}
           {!loading &&
-            [...items]
+            [...filteredItems]
               .sort((a, b) => (a.distanceKm ?? 0) - (b.distanceKm ?? 0))
               .slice(0, 60)
               .map((p) => (

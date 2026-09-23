@@ -138,8 +138,8 @@ export function VisitCommandCenter({ temple }: VisitCommandCenterProps) {
                 <Shirt className="h-3.5 w-3.5 text-gold" /> Dress Code & Sanctum Etiquette
               </p>
               <p className="mt-1 leading-relaxed">
-                Traditional conservative attire recommended (dhoti/kurta for men, saree/salwar for women).
-                Leather items, belts, and footwear must be deposited at designated shoe counters before entry.
+                Traditional conservative attire recommended (dhoti/kurta for men, saree/salwar for women where mandated).
+                Footwear must be deposited at designated counters outside the temple; verify individual shrine leather and cloakroom guidelines.
               </p>
             </div>
 

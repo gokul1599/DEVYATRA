@@ -1,8 +1,9 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
-import { Landmark, MapPin, Sparkles, CalendarDays } from "lucide-react";
+import { Landmark, MapPin, Sparkles, CalendarDays, Compass, ArrowRight } from "lucide-react";
 import { search } from "@/lib/search";
+import { resolvePilgrimageIntent } from "@/lib/search/intent";
 import { getState } from "@/lib/registry";
 import { Container } from "@/components/ui";
 import { SearchBar } from "@/components/search-bar";
@@ -15,6 +16,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
   const { q } = await searchParams;
   const query = q?.trim() ?? "";
   const res = query ? search(query, 12) : null;
+  const intent = query ? resolvePilgrimageIntent(query) : null;
 
   return (
     <>
@@ -32,6 +34,33 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
 
       <section className="pt-10">
         <Container>
+          {intent?.hasIntent && (
+            <div className="mb-8 rounded-3xl border border-gold/40 bg-gradient-to-r from-gold/10 via-obsidian-2 to-obsidian-2 p-6 shadow-xl">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gold-bright">
+                    <Compass className="h-4 w-4" />
+                    <span>Pilgrimage Intent Detected</span>
+                  </div>
+                  <p className="font-display text-lg font-medium text-ivory">
+                    {intent.explanation}
+                  </p>
+                  <p className="text-xs text-ivory-dim">
+                    Route Lab can automatically generate a time-sequenced pilgrimage itinerary matching this query.
+                  </p>
+                </div>
+
+                <Link
+                  href={intent.planStudioHref || `/plan`}
+                  className="inline-flex items-center gap-2 rounded-full bg-gold px-5 py-2.5 text-xs font-semibold text-obsidian shadow-sm transition-transform hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  <span>{intent.suggestedActionLabel || "Plan with AI"}</span>
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            </div>
+          )}
+
           {!query ? (
             <p className="rounded-2xl border border-dashed border-line px-6 py-14 text-center text-sm text-ivory-dim">
               Search by temple, deity, city, district, festival or state — try “Tirumala”, “Shiva”, “Ayodhya” or “Jyotirlinga”.

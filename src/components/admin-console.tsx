@@ -653,7 +653,7 @@ export function AdminConsole({
               <div>
                 <p className="font-display text-lg text-ivory">Coordinate Accuracy & Survey Status</p>
                 <p className="text-[12px] text-ivory-dim">
-                  All 1,655 temples currently possess surveyed coordinates. Zero centroid fallbacks remain.
+                  All indexed temples currently possess surveyed coordinates. Zero centroid fallbacks remain.
                 </p>
               </div>
               <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-[11.5px] font-medium text-emerald-300">

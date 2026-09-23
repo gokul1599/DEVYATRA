@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
 
     const andConditions: Prisma.TempleWhereInput[] = [];
 
-    // By default, include all 1,655 indexed records. Only exclude if excludeCentroid=true
+    // By default, include all indexed records. Only exclude if excludeCentroid=true
     if (excludeCentroid) {
       andConditions.push({ isCentroidFallback: false });
     }
