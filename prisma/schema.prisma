@@ -447,12 +447,32 @@ model ImportLog {
 // ─── Accounts & community (existing, DB-backed) ─────────────────────────────
 
 model User {
-  id       String @id
-  name     String
-  email    String @unique
-  role     String @default("user")
-  password String
-  created  String
+  id              String    @id @default(cuid())
+  name            String
+  email           String    @unique
+  normalizedEmail String?   @unique
+  role            String    @default("user")
+  password        String
+  preferences     String?   // JSON string of UserPreferences
+  followedTemples String[]  @default([])
+  created         String
+  sessions        Session[]
+
+  @@index([email])
+  @@index([normalizedEmail])
+}
+
+model Session {
+  id        String    @id @default(cuid())
+  token     String    @unique
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+  revokedAt DateTime?
+
+  @@index([userId])
+  @@index([token])
 }
 
 model Saved {

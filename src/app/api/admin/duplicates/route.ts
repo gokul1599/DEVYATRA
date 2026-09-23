@@ -11,7 +11,7 @@ const DUPLICATES_FILE = path.join(process.cwd(), "data", "audit", "detected_dupl
 
 export async function GET() {
   const store = await cookies();
-  const user = getUserByToken(store.get(SESSION_COOKIE)?.value);
+  const user = await getUserByToken(store.get(SESSION_COOKIE)?.value);
   if (!user || user.role !== "admin") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -31,7 +31,7 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const store = await cookies();
-  const user = getUserByToken(store.get(SESSION_COOKIE)?.value);
+  const user = await getUserByToken(store.get(SESSION_COOKIE)?.value);
   if (!user || user.role !== "admin") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }

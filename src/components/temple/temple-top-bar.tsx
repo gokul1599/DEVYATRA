@@ -25,7 +25,7 @@ const TEMPLE_SECTIONS: NavSection[] = [
   { id: "intelligence", label: "Live Intel" },
   { id: "access-points", label: "Access & Gates" },
   { id: "logistics", label: "Logistics" },
-  { id: "spatial-form", label: "3D Spatial Form" },
+  { id: "architecture", label: "Architecture" },
   { id: "gallery", label: "Media Gallery" },
   { id: "overview", label: "Overview" },
   { id: "nearby-map", label: "Surroundings Map" },

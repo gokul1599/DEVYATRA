@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
   const store = await cookies();
-  const user = getUserByToken(store.get(SESSION_COOKIE)?.value);
+  const user = await getUserByToken(store.get(SESSION_COOKIE)?.value);
 
   const { searchParams } = new URL(req.url);
   const deityParam = searchParams.get("deity");

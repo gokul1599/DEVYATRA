@@ -31,7 +31,7 @@ import { TempleCard } from "@/components/temple-card";
 import { Stagger, StaggerItem } from "@/components/motion";
 import { festivalDate, fmtDate } from "@/lib/format";
 import { SectionShell } from "@/components/ui/section-shell";
-import { TempleArchitecture3D } from "@/components/3d/temple-architecture-3d";
+import { SacredArchitectureShowcase } from "@/components/home/sacred-architecture-showcase";
 import { REGIONAL_LANDSCAPES } from "@/lib/images/registry";
 import { CinematicImage } from "@/components/ui/cinematic-image";
 
@@ -192,8 +192,8 @@ export function ArchitectureShowcase() {
           </Link>
         </div>
 
-        {/* 3D Interactive Architecture Explorer */}
-        <TempleArchitecture3D />
+        {/* Architecture & Visual Heritage Explorer */}
+        <SacredArchitectureShowcase />
 
         {/* Architectural Traditions Strip */}
         <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

@@ -41,7 +41,7 @@ import { WhatChangedCard } from "@/components/temple/what-changed-card";
 import { buildMasterDestinationIntelligence } from "@/lib/intelligence/context-engine";
 import { CinematicImage } from "@/components/ui/cinematic-image";
 import { getTempleImage } from "@/lib/images/registry";
-import { TempleArchitecture3D } from "@/components/3d/temple-architecture-3d";
+import { TempleArchitectureHeritage } from "@/components/temple/temple-architecture-heritage";
 import { TempleScrollGuard } from "@/components/temple/temple-scroll-guard";
 import { TempleTopBar } from "@/components/temple/temple-top-bar";
 import { TempleMediaGallery } from "@/components/temple/temple-media-gallery";
@@ -302,18 +302,9 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
               </ol>
             </section>
 
-            {/* Architecture & Sacred Geometry */}
-            <section id="spatial-form" className="space-y-6 scroll-mt-28">
-              <SectionHeading
-                eyebrow="Sacred Geometry & Form"
-                title={`${temple.architecture ? `${temple.architecture} Architecture` : "Sacred Temple Architecture"}`}
-                sub="Explore the sanctum anatomy, concentric courtyards, and metaphysical axes of this ancient sanctuary."
-              />
-              <TempleArchitecture3D
-                title={`${temple.name} — Spatial Form`}
-                subtitle={`Architectural layout grounded in canonical ${temple.architecture || "Vedic"} sacred design principles.`}
-                templeArchitecture={temple.architecture}
-              />
+            {/* Architecture & Visual Heritage */}
+            <section id="architecture" className="space-y-6 scroll-mt-28">
+              <TempleArchitectureHeritage temple={temple} />
             </section>
 
             {/* Heritage Perspectives & Personas */}

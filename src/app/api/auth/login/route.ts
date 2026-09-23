@@ -11,11 +11,12 @@ export async function POST(req: NextRequest) {
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
-  const user = login(body.email ?? "", body.password ?? "");
+  const user = await login(body.email ?? "", body.password ?? "");
   if (!user) return NextResponse.json({ error: "Incorrect email or password" }, { status: 401 });
 
+  const sessionToken = await createSession(user.id);
   const res = NextResponse.json({ user: publicUser(user) });
-  res.cookies.set(SESSION_COOKIE, createSession(user.id), {
+  res.cookies.set(SESSION_COOKIE, sessionToken, {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",

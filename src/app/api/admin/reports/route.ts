@@ -12,7 +12,7 @@ const VALID = ["open", "confirmed", "resolved", "rejected"];
 
 export async function PATCH(req: NextRequest) {
   const store = await cookies();
-  const user = getUserByToken(store.get(SESSION_COOKIE)?.value);
+  const user = await getUserByToken(store.get(SESSION_COOKIE)?.value);
   if (!user || user.role !== "admin") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   let body: { id?: string; status?: string };

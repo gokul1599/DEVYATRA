@@ -13,7 +13,7 @@ export const metadata: Metadata = { title: "Admin Operations Command Center" };
 
 export default async function AdminPage() {
   const store = await cookies();
-  const user = getUserByToken(store.get(SESSION_COOKIE)?.value);
+  const user = await getUserByToken(store.get(SESSION_COOKIE)?.value);
   if (!user || user.role !== "admin") redirect("/login");
 
   const [reports, dashboardData] = await Promise.all([

@@ -18,7 +18,7 @@ const schema = z.object({
 
 export async function GET(req: NextRequest) {
   const store = await cookies();
-  const user = getUserByToken(store.get(SESSION_COOKIE)?.value);
+  const user = await getUserByToken(store.get(SESSION_COOKIE)?.value);
   if (!user || user.role !== "admin") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const parsed = schema.safeParse(Object.fromEntries(req.nextUrl.searchParams));

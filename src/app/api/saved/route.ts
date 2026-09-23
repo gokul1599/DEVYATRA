@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   const store = await cookies();
-  const user = getUserByToken(store.get(SESSION_COOKIE)?.value);
+  const user = await getUserByToken(store.get(SESSION_COOKIE)?.value);
   if (!user) {
     return NextResponse.json({ saved: [], savedItems: [], synced: false });
   }
@@ -26,7 +26,7 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const store = await cookies();
-  const user = getUserByToken(store.get(SESSION_COOKIE)?.value);
+  const user = await getUserByToken(store.get(SESSION_COOKIE)?.value);
   if (!user) return NextResponse.json({ error: "Sign in to sync saved items" }, { status: 401 });
 
   let body: {

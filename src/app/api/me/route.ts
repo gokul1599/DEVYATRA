@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   const store = await cookies();
-  const user = getUserByToken(store.get(SESSION_COOKIE)?.value);
+  const user = await getUserByToken(store.get(SESSION_COOKIE)?.value);
   if (!user) {
     return NextResponse.json({ user: null, alerts: [] });
   }
@@ -24,7 +24,7 @@ export async function GET() {
 
 export async function PATCH(req: NextRequest) {
   const store = await cookies();
-  const user = getUserByToken(store.get(SESSION_COOKIE)?.value);
+  const user = await getUserByToken(store.get(SESSION_COOKIE)?.value);
   if (!user) {
     return NextResponse.json({ error: "Unauthorized. Please sign in." }, { status: 401 });
   }
@@ -33,14 +33,14 @@ export async function PATCH(req: NextRequest) {
     const body = await req.json();
 
     if (body.preferences) {
-      updateUserPreferences(user.id, body.preferences);
+      await updateUserPreferences(user.id, body.preferences);
     }
 
     if (body.toggleFollow && typeof body.toggleFollow === "string") {
-      toggleFollowTemple(user.id, body.toggleFollow);
+      await toggleFollowTemple(user.id, body.toggleFollow);
     }
 
-    const updatedUser = getUserByToken(store.get(SESSION_COOKIE)?.value);
+    const updatedUser = await getUserByToken(store.get(SESSION_COOKIE)?.value);
     const pub = updatedUser ? publicUser(updatedUser) : null;
     const alerts = pub ? getFollowedTempleAlerts(pub.followedTemples) : [];
 

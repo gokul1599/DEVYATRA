@@ -152,7 +152,7 @@ export function ExploreAround({
   };
 
   return (
-    <section id="explore-around" data-temple-id={templeId} className="mt-16 scroll-mt-20">
+    <div data-temple-id={templeId} className="space-y-6">
       {/* Section Header */}
       <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
         <div>
@@ -463,6 +463,6 @@ export function ExploreAround({
           </div>
         </div>
       )}
-    </section>
+    </div>
   );
 }
