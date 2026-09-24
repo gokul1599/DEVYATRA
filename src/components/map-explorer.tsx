@@ -27,20 +27,9 @@ import {
   isWithinIndiaBounds,
   type LocationQualityAssessment,
 } from "@/lib/map/location-quality";
-import { discoveredPlacesToGeoJSON, type DestinationGeoJSONFeature } from "@/lib/map/geojson";
-import { MAP_STYLES } from "@/lib/map/data-engine";
-import * as maplibregl from "maplibre-gl";
-
-import "maplibre-gl/dist/maplibre-gl.css";
-
-type RuntimeMapStyle = "dark" | "liberty" | "satellite" | "carto";
-
-const FALLBACK_CHAIN: Record<RuntimeMapStyle, RuntimeMapStyle | null> = {
-  dark: "satellite",
-  liberty: "satellite",
-  satellite: "carto",
-  carto: null,
-};
+import { type DestinationGeoJSONFeature } from "@/lib/map/geojson";
+import { loadGoogleMaps } from "@/lib/map/google-loader";
+import { MarkerClusterer, type Cluster } from "@googlemaps/markerclusterer";
 
 interface Suggestion {
   type: "place" | "query";
@@ -51,32 +40,33 @@ interface Suggestion {
 export function MapExplorer() {
   const { t } = useApp();
   const mapContainerRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<maplibregl.Map | null>(null);
-  const userMarkerRef = useRef<maplibregl.Marker | null>(null);
+  const googleMapRef = useRef<google.maps.Map | null>(null);
+  const clustererRef = useRef<MarkerClusterer | null>(null);
+  const markersMapRef = useRef<Map<string, google.maps.marker.AdvancedMarkerElement>>(new Map());
+  const userMarkerRef = useRef<google.maps.marker.AdvancedMarkerElement | null>(null);
 
   const [activeTab, setActiveTab] = useState<"map" | "list">("map");
-  const [mapStyleKey, setMapStyleKey] = useState<RuntimeMapStyle>("dark");
   const [items, setItems] = useState<DiscoveredPlace[]>([]);
   const [loading, setLoading] = useState(true);
+  const [mapReady, setMapReady] = useState(false);
   const [mode, setMode] = useState<DiscoveryResult["mode"] | null>(null);
   const [stale, setStale] = useState(false);
   const [failed, setFailed] = useState(false);
 
-  // Error States & Control Refs
+  // Distinct Map vs Data Error states
   const [mapError, setMapError] = useState<string | null>(null);
   const [dataError, setDataError] = useState<string | null>(null);
-
-  const fallbackLockRef = useRef(false);
-  const mapRenderableRef = useRef(false);
-  const mapTimeoutRef = useRef<number | null>(null);
-  const viewportAbortRef = useRef<AbortController | null>(null);
-  const viewportTimerRef = useRef<number | null>(null);
+  const [mapRetryCount, setMapRetryCount] = useState(0);
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [filterCategory, setFilterCategory] = useState<
     "all" | "verified" | "open" | "heritage" | "nature" | "food_stay"
   >("all");
   const [showAreaSearchPill, setShowAreaSearchPill] = useState(false);
+
+  const viewportAbortRef = useRef<AbortController | null>(null);
+  const viewportTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const resizeObserverRef = useRef<ResizeObserver | null>(null);
 
   // Autocomplete state
   const [q, setQ] = useState("");
@@ -145,22 +135,6 @@ export function MapExplorer() {
       })
     : null;
 
-  // Sync GeoJSON features to MapLibre source
-  const updateMapSource = useCallback((placesList: DiscoveredPlace[]) => {
-    const map = mapRef.current;
-    if (!map || !map.isStyleLoaded()) return;
-
-    const source = map.getSource("destinations") as maplibregl.GeoJSONSource | undefined;
-    if (!source) return;
-
-    const geojson = discoveredPlacesToGeoJSON(placesList);
-    source.setData(geojson);
-  }, []);
-
-  useEffect(() => {
-    updateMapSource(filteredItems);
-  }, [filteredItems, updateMapSource]);
-
   // Fetch discoveries for area (Search This Area or specific target)
   const fetchArea = useCallback(
     async (lat: number, lng: number, radiusKm: number, panToCenter = false) => {
@@ -186,15 +160,9 @@ export function MapExplorer() {
           setItems([]);
         }
 
-        if (panToCenter && mapRef.current) {
-          const prefersReducedMotion =
-            typeof window !== "undefined" &&
-            window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-          if (prefersReducedMotion) {
-            mapRef.current.jumpTo({ center: [lng, lat], zoom: 12.5 });
-          } else {
-            mapRef.current.flyTo({ center: [lng, lat], zoom: 12.5, essential: true });
-          }
+        if (panToCenter && googleMapRef.current) {
+          googleMapRef.current.panTo({ lat, lng });
+          googleMapRef.current.setZoom(13);
         }
       } catch (err) {
         console.warn("[MapExplorer] fetchArea error:", err);
@@ -208,615 +176,322 @@ export function MapExplorer() {
   );
 
   // Viewport Data Engine
-  const fetchViewportTemples = useCallback(
-    async (map: maplibregl.Map) => {
-      viewportAbortRef.current?.abort();
+  const fetchViewportTemples = useCallback(async (map: google.maps.Map) => {
+    viewportAbortRef.current?.abort();
 
-      const controller = new AbortController();
-      viewportAbortRef.current = controller;
-
-      try {
-        const bounds = map.getBounds();
-
-        const bbox = [
-          bounds.getWest().toFixed(4),
-          bounds.getSouth().toFixed(4),
-          bounds.getEast().toFixed(4),
-          bounds.getNorth().toFixed(4),
-        ].join(",");
-
-        const response = await fetch(
-          `/api/map/viewport?bbox=${bbox}&limit=120`,
-          {
-            signal: controller.signal,
-            cache: "no-store",
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error(
-            `Viewport request failed with ${response.status}`
-          );
-        }
-
-        const data = await response.json();
-
-        if (!Array.isArray(data.features)) {
-          throw new Error("Viewport response contains no GeoJSON features");
-        }
-
-        const newPlaces: DiscoveredPlace[] = data.features
-          .filter(
-            (feature: DestinationGeoJSONFeature) =>
-              Number.isFinite(feature.geometry.coordinates[0]) &&
-              Number.isFinite(feature.geometry.coordinates[1])
-          )
-          .map((feature: DestinationGeoJSONFeature) => ({
-            id: feature.properties.id,
-            name: feature.properties.name,
-            category: feature.properties.category,
-            latitude: feature.geometry.coordinates[1],
-            longitude: feature.geometry.coordinates[0],
-            address:
-              feature.properties.address ||
-              `${feature.properties.city || ""}, ${
-                feature.properties.state || ""
-              }`.trim(),
-            region:
-              feature.properties.state ||
-              feature.properties.district ||
-              "India",
-            verified: feature.properties.isVerified
-              ? {
-                  href:
-                    feature.properties.href ||
-                    `/temples/india/${
-                      feature.properties.slug || ""
-                    }`,
-                }
-              : undefined,
-            source:
-              feature.properties.sourceType === "verified"
-                ? "verified"
-                : "cached",
-            googlePlaceId:
-              feature.properties.googlePlaceId || undefined,
-            types: [],
-            openNow: feature.properties.openNow ?? null,
-            mapsUrl:
-              feature.properties.googlePlaceId
-                ? `https://www.google.com/maps/place/?q=place_id:${feature.properties.googlePlaceId}`
-                : `https://www.google.com/maps/search/?api=1&query=${feature.geometry.coordinates[1]},${feature.geometry.coordinates[0]}`,
-            certainty: "temple",
-          }));
-
-        setItems((previous) => {
-          const byId = new Map<string, DiscoveredPlace>();
-
-          for (const item of previous) {
-            byId.set(item.id, item);
-          }
-
-          for (const item of newPlaces) {
-            byId.set(item.id, item);
-          }
-
-          return Array.from(byId.values());
-        });
-
-        setDataError(null);
-      } catch (error) {
-        if (
-          error instanceof DOMException &&
-          error.name === "AbortError"
-        ) {
-          return;
-        }
-
-        console.error(
-          "[MapExplorer] viewport data error:",
-          error
-        );
-
-        setDataError(
-          "Destination data is temporarily unavailable. The map remains available."
-        );
-      }
-    },
-    []
-  );
-
-  // MapLibre Initialization & Lifecycle
-  useEffect(() => {
-    const container = mapContainerRef.current;
-
-    if (!container) {
-      return;
-    }
-
-    let cancelled = false;
-    let map: maplibregl.Map | null = null;
-
-    mapRenderableRef.current = false;
-    fallbackLockRef.current = false;
-
-    const styleDefinition =
-      mapStyleKey === "dark"
-        ? MAP_STYLES.primaryVector
-        : mapStyleKey === "liberty"
-          ? MAP_STYLES.primaryLiberty
-          : mapStyleKey === "satellite"
-            ? MAP_STYLES.esriSatellite
-            : MAP_STYLES.cartoDark;
-
-    const installDestinationLayers = () => {
-      if (!map || !map.isStyleLoaded()) {
-        return;
-      }
-
-      try {
-        if (!map.getSource("destinations")) {
-          map.addSource("destinations", {
-            type: "geojson",
-            data: discoveredPlacesToGeoJSON(
-              filteredItemsRef.current
-            ),
-            cluster: true,
-            clusterRadius: 45,
-            clusterMaxZoom: 14,
-          });
-        }
-
-        if (!map.getLayer("clusters")) {
-          map.addLayer({
-            id: "clusters",
-            type: "circle",
-            source: "destinations",
-            filter: ["has", "point_count"],
-            paint: {
-              "circle-color": [
-                "step",
-                ["get", "point_count"],
-                "#c8a24b",
-                10,
-                "#d9822b",
-                30,
-                "#ff8c42",
-              ],
-              "circle-radius": [
-                "step",
-                ["get", "point_count"],
-                18,
-                10,
-                24,
-                30,
-                30,
-              ],
-              "circle-stroke-width": 2,
-              "circle-stroke-color": "#ffffff",
-              "circle-opacity": 0.92,
-            },
-          });
-        }
-
-        if (!map.getLayer("cluster-count")) {
-          map.addLayer({
-            id: "cluster-count",
-            type: "symbol",
-            source: "destinations",
-            filter: ["has", "point_count"],
-            layout: {
-              "text-field": "{point_count_abbreviated}",
-              "text-size": 12,
-              "text-allow-overlap": true,
-              "text-ignore-placement": true,
-            },
-            paint: {
-              "text-color": "#0d0b09",
-            },
-          });
-        }
-
-        if (!map.getLayer("unclustered-halo")) {
-          map.addLayer({
-            id: "unclustered-halo",
-            type: "circle",
-            source: "destinations",
-            filter: ["!", ["has", "point_count"]],
-            paint: {
-              "circle-color": "rgba(228,190,114,0.25)",
-              "circle-radius": 14,
-              "circle-stroke-width": 0,
-            },
-          });
-        }
-
-        if (!map.getLayer("unclustered-point")) {
-          map.addLayer({
-            id: "unclustered-point",
-            type: "circle",
-            source: "destinations",
-            filter: ["!", ["has", "point_count"]],
-            paint: {
-              "circle-color": [
-                "case",
-                ["get", "isVerified"],
-                "#e4be72",
-                "#ff8c42",
-              ],
-              "circle-radius": 7,
-              "circle-stroke-width": 2,
-              "circle-stroke-color": "#ffffff",
-            },
-          });
-        }
-      } catch (error) {
-        console.error(
-          "[MapExplorer] destination layer installation failed:",
-          error
-        );
-
-        setMapError(
-          "The map loaded, but destination layers could not be initialized."
-        );
-      }
-    };
-
-    const moveEnd = () => {
-      if (!map) {
-        return;
-      }
-
-      setShowAreaSearchPill(true);
-
-      if (viewportTimerRef.current !== null) {
-        window.clearTimeout(viewportTimerRef.current);
-      }
-
-      viewportTimerRef.current = window.setTimeout(() => {
-        if (!map || cancelled) {
-          return;
-        }
-
-        void fetchViewportTemples(map);
-      }, 1000);
-    };
-
-    const scheduleFallback = (reason: string) => {
-      if (
-        cancelled ||
-        fallbackLockRef.current ||
-        mapRenderableRef.current
-      ) {
-        return;
-      }
-
-      const nextStyle = FALLBACK_CHAIN[mapStyleKey];
-
-      console.warn(
-        `[MapExplorer] Map startup failure: ${reason}`
-      );
-
-      if (!nextStyle) {
-        setMapError(
-          "All interactive map sources are currently unavailable. List view is still available."
-        );
-        return;
-      }
-
-      fallbackLockRef.current = true;
-
-      setMapError(
-        "Map source unavailable. Switching to a backup map source…"
-      );
-
-      window.setTimeout(() => {
-        if (cancelled) {
-          return;
-        }
-
-        setMapStyleKey(nextStyle);
-      }, 100);
-    };
+    const controller = new AbortController();
+    viewportAbortRef.current = controller;
 
     try {
-      map = new maplibregl.Map({
-        container,
-        // MapLibre accepts either a URL or an inline StyleSpecification.
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        style: styleDefinition as any,
+      const bounds = map.getBounds();
+      if (!bounds) return;
 
-        center: [
-          DEFAULT_MAP_CENTER.lng,
-          DEFAULT_MAP_CENTER.lat,
-        ],
+      const sw = bounds.getSouthWest();
+      const ne = bounds.getNorthEast();
 
-        zoom: DEFAULT_MAP_CENTER.zoom,
+      const bbox = [
+        sw.lng().toFixed(4),
+        sw.lat().toFixed(4),
+        ne.lng().toFixed(4),
+        ne.lat().toFixed(4),
+      ].join(",");
 
-        minZoom: 3.5,
-        maxZoom: 18.5,
-
-        maxBounds: [
-          [
-            INDIA_BOUNDS.minLng - 10,
-            INDIA_BOUNDS.minLat - 5,
-          ],
-          [
-            INDIA_BOUNDS.maxLng + 10,
-            INDIA_BOUNDS.maxLat + 5,
-          ],
-        ],
-
-        attributionControl: { compact: true },
-
-        dragRotate: false,
-        pitchWithRotate: false,
+      const response = await fetch(`/api/map/viewport?bbox=${bbox}&limit=120`, {
+        signal: controller.signal,
+        cache: "no-store",
       });
+
+      if (!response.ok) {
+        throw new Error(`Viewport request failed with ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (!Array.isArray(data.features)) {
+        throw new Error("Viewport response contains no GeoJSON features");
+      }
+
+      const newPlaces: DiscoveredPlace[] = data.features
+        .filter(
+          (feature: DestinationGeoJSONFeature) =>
+            Number.isFinite(feature.geometry.coordinates[0]) &&
+            Number.isFinite(feature.geometry.coordinates[1])
+        )
+        .map((feature: DestinationGeoJSONFeature) => ({
+          id: feature.properties.id,
+          name: feature.properties.name,
+          category: feature.properties.category,
+          latitude: feature.geometry.coordinates[1],
+          longitude: feature.geometry.coordinates[0],
+          address:
+            feature.properties.address ||
+            `${feature.properties.city || ""}, ${feature.properties.state || ""}`.trim(),
+          region:
+            feature.properties.state || feature.properties.district || "India",
+          verified: feature.properties.isVerified
+            ? {
+                href:
+                  feature.properties.href ||
+                  `/temples/india/${feature.properties.slug || ""}`,
+              }
+            : undefined,
+          source:
+            feature.properties.sourceType === "verified" ? "verified" : "cached",
+          googlePlaceId: feature.properties.googlePlaceId || undefined,
+          types: [],
+          openNow: feature.properties.openNow ?? null,
+          mapsUrl: feature.properties.googlePlaceId
+            ? `https://www.google.com/maps/place/?q=place_id:${feature.properties.googlePlaceId}`
+            : `https://www.google.com/maps/search/?api=1&query=${feature.geometry.coordinates[1]},${feature.geometry.coordinates[0]}`,
+          certainty: "temple",
+        }));
+
+      setItems((previous) => {
+        const byId = new Map<string, DiscoveredPlace>();
+        for (const item of previous) {
+          byId.set(item.id, item);
+        }
+        for (const item of newPlaces) {
+          byId.set(item.id, item);
+        }
+        return Array.from(byId.values());
+      });
+
+      setDataError(null);
     } catch (error) {
-      console.error(
-        "[MapExplorer] Map constructor failed:",
-        error
+      if (error instanceof DOMException && error.name === "AbortError") {
+        return;
+      }
+      console.error("[MapExplorer] viewport data error:", error);
+      setDataError(
+        "Destination data is temporarily unavailable. The map remains available."
+      );
+    }
+  }, []);
+
+  // Update Markers and Clusters when filtered items change
+  useEffect(() => {
+    const map = googleMapRef.current;
+    const clusterer = clustererRef.current;
+    if (!map || !clusterer || !window.google?.maps?.marker?.AdvancedMarkerElement) return;
+
+    const places = filteredItems;
+    const existingMarkers = markersMapRef.current;
+    const currentPlaceIds = new Set(places.map((p) => p.id));
+
+    // Remove markers that are no longer in filtered list
+    existingMarkers.forEach((marker, id) => {
+      if (!currentPlaceIds.has(id)) {
+        clusterer.removeMarker(marker);
+        marker.map = null;
+        existingMarkers.delete(id);
+      }
+    });
+
+    const newMarkersToAdd: google.maps.marker.AdvancedMarkerElement[] = [];
+
+    for (const place of places) {
+      if (existingMarkers.has(place.id)) continue;
+
+      const isExact = Boolean(
+        place.verified ||
+          (place.googlePlaceId && place.googlePlaceId.startsWith("ChIJ"))
       );
 
-      setTimeout(() => {
-        setMapError(
-          "Interactive map could not be initialized on this device."
-        );
-      }, 0);
+      // Create Custom DOM Element for AdvancedMarkerElement
+      const pinElement = document.createElement("div");
+      pinElement.className =
+        "temple-advanced-marker select-none cursor-pointer transition-transform duration-200 hover:scale-115 active:scale-95";
+      pinElement.setAttribute("role", "button");
+      pinElement.setAttribute("tabindex", "0");
+      pinElement.setAttribute("aria-label", `${place.name} sanctuary marker`);
 
-      return;
+      pinElement.innerHTML = `
+        <div style="
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          background: ${
+            isExact
+              ? "linear-gradient(135deg, #E4BE72 0%, #C8A24B 100%)"
+              : "linear-gradient(135deg, #FF8C42 0%, #D9822B 100%)"
+          };
+          border: 2px solid ${isExact ? "#FFFFFF" : "#FFF3E0"};
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45), 0 0 10px rgba(200, 162, 75, 0.4);
+          font-size: 15px;
+          color: #0D0B09;
+        ">
+          🛕
+        </div>
+      `;
+
+      const marker = new google.maps.marker.AdvancedMarkerElement({
+        map: null, // added to clusterer instead
+        position: { lat: place.latitude, lng: place.longitude },
+        title: place.name,
+        content: pinElement,
+      });
+
+      marker.addListener("click", () => {
+        setSelectedId(place.id);
+        if (googleMapRef.current) {
+          googleMapRef.current.panTo({ lat: place.latitude, lng: place.longitude });
+        }
+      });
+
+      existingMarkers.set(place.id, marker);
+      newMarkersToAdd.push(marker);
     }
 
-    mapRef.current = map;
+    if (newMarkersToAdd.length > 0) {
+      clusterer.addMarkers(newMarkersToAdd);
+    }
+  }, [filteredItems]);
 
-    map.on("error", (event) => {
-      console.warn(
-        "[MapExplorer] MapLibre runtime error:",
-        event
-      );
+  // Google Maps Initialization & Lifecycle
+  useEffect(() => {
+    const container = mapContainerRef.current;
+    const markersMap = markersMapRef.current;
+    if (!container) return;
 
-      if (!mapRenderableRef.current) {
-        scheduleFallback("style/tile initialization failure");
-      }
-    });
+    let cancelled = false;
 
-    map.on("load", () => {
-      if (cancelled || !map) {
-        return;
-      }
+    setLoading(true);
+    setMapError(null);
 
-      installDestinationLayers();
+    loadGoogleMaps()
+      .then((googleMaps) => {
+        if (cancelled || !container) return;
 
-      void fetchViewportTemples(map);
+        try {
+          const mapId = process.env.NEXT_PUBLIC_GOOGLE_MAP_ID || "DEMO_MAP_ID";
 
-      setMapError(null);
-      setLoading(false);
-
-      try {
-        map.addControl(
-          new maplibregl.NavigationControl({
-            showCompass: true,
-            visualizePitch: false,
-          }),
-          "top-right"
-        );
-      } catch (error) {
-        console.warn(
-          "[MapExplorer] Navigation control failed:",
-          error
-        );
-      }
-
-      map.on(
-        "click",
-        "clusters",
-        async (event) => {
-          if (!map) {
-            return;
-          }
-
-          const features = map.queryRenderedFeatures(
-            event.point,
-            {
-              layers: ["clusters"],
-            }
-          );
-
-          if (!features.length) {
-            return;
-          }
-
-          const clusterId =
-            features[0].properties?.cluster_id;
-
-          if (
-            typeof clusterId !== "number"
-          ) {
-            return;
-          }
-
-          const source = map.getSource(
-            "destinations"
-          ) as maplibregl.GeoJSONSource | undefined;
-
-          if (!source) {
-            return;
-          }
-
-          try {
-            const zoom =
-              await source.getClusterExpansionZoom(
-                clusterId
-              );
-
-            const geometry = features[0]
-              .geometry as {
-              type: "Point";
-              coordinates: [number, number];
-            };
-
-            map.easeTo({
-              center: geometry.coordinates,
-              zoom: Math.min(zoom + 0.5, 17),
-            });
-          } catch (error) {
-            console.error(
-              "[MapExplorer] Cluster expansion failed:",
-              error
-            );
-          }
-        }
-      );
-
-      map.on(
-        "click",
-        "unclustered-point",
-        (event) => {
-          if (!map || !event.features?.length) {
-            return;
-          }
-
-          const feature = event.features[0];
-
-          const id =
-            feature.properties?.id;
-
-          if (!id) {
-            return;
-          }
-
-          setSelectedId(String(id));
-
-          const geometry = feature.geometry as {
-            type: "Point";
-            coordinates: [number, number];
-          };
-
-          map.easeTo({
-            center: geometry.coordinates,
-            offset: [0, 50],
+          const map = new googleMaps.Map(container, {
+            center: { lat: DEFAULT_MAP_CENTER.lat, lng: DEFAULT_MAP_CENTER.lng },
+            zoom: DEFAULT_MAP_CENTER.zoom,
+            mapId,
+            mapTypeId: googleMaps.MapTypeId.ROADMAP,
+            // Native Google Controls
+            zoomControl: true,
+            mapTypeControl: true,
+            mapTypeControlOptions: {
+              style: googleMaps.MapTypeControlStyle.HORIZONTAL_BAR,
+              position: googleMaps.ControlPosition.TOP_RIGHT,
+              mapTypeIds: [
+                googleMaps.MapTypeId.ROADMAP,
+                googleMaps.MapTypeId.SATELLITE,
+                googleMaps.MapTypeId.HYBRID,
+                googleMaps.MapTypeId.TERRAIN,
+              ],
+            },
+            fullscreenControl: true,
+            fullscreenControlOptions: {
+              position: googleMaps.ControlPosition.RIGHT_TOP,
+            },
+            streetViewControl: true,
+            streetViewControlOptions: {
+              position: googleMaps.ControlPosition.RIGHT_BOTTOM,
+            },
+            scaleControl: true,
+            restriction: {
+              latLngBounds: {
+                north: INDIA_BOUNDS.maxLat + 8,
+                south: INDIA_BOUNDS.minLat - 5,
+                west: INDIA_BOUNDS.minLng - 10,
+                east: INDIA_BOUNDS.maxLng + 10,
+              },
+              strictBounds: false,
+            },
           });
-        }
-      );
 
-      map.on(
-        "mouseenter",
-        "clusters",
-        () => {
-          if (map) {
-            map.getCanvas().style.cursor =
-              "pointer";
-          }
-        }
-      );
+          googleMapRef.current = map;
 
-      map.on(
-        "mouseleave",
-        "clusters",
-        () => {
-          if (map) {
-            map.getCanvas().style.cursor =
-              "";
-          }
-        }
-      );
+          // Initialize MarkerClusterer with custom gold styling for AdvancedMarkerElement
+          const clusterer = new MarkerClusterer({
+            map,
+            markers: [],
+            renderer: {
+              render({ count, position }: Cluster, _stats, targetMap) {
+                const clusterEl = document.createElement("div");
+                clusterEl.className = "select-none cursor-pointer transition-transform hover:scale-110";
+                clusterEl.innerHTML = `
+                  <div style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: ${count > 99 ? "44px" : "38px"};
+                    height: ${count > 99 ? "44px" : "38px"};
+                    border-radius: 50%;
+                    background: radial-gradient(circle, rgba(200, 162, 75, 0.95) 0%, rgba(13, 11, 9, 0.92) 100%);
+                    border: 2px solid #C8A24B;
+                    box-shadow: 0 0 14px rgba(200, 162, 75, 0.45), 0 4px 12px rgba(0, 0, 0, 0.6);
+                    color: #FFFFFF;
+                    font-family: var(--font-geist-sans), sans-serif;
+                    font-weight: 700;
+                    font-size: ${count > 99 ? "11px" : "12px"};
+                  ">
+                    ${count}
+                  </div>
+                `;
+                return new googleMaps.marker.AdvancedMarkerElement({
+                  map: targetMap,
+                  position,
+                  content: clusterEl,
+                  zIndex: 1000 + count,
+                });
+              },
+            },
+          });
 
-      map.on(
-        "mouseenter",
-        "unclustered-point",
-        () => {
-          if (map) {
-            map.getCanvas().style.cursor =
-              "pointer";
-          }
-        }
-      );
+          clustererRef.current = clusterer;
 
-      map.on(
-        "mouseleave",
-        "unclustered-point",
-        () => {
-          if (map) {
-            map.getCanvas().style.cursor =
-              "";
-          }
-        }
-      );
+          // Debounced Idle listener for Viewport Data fetching
+          map.addListener("idle", () => {
+            if (cancelled) return;
+            setMapReady(true);
+            setShowAreaSearchPill(true);
 
-      map.on("moveend", moveEnd);
-    });
-
-    /*
-     * A style replacement removes custom sources/layers.
-     * Reinstall them after every successful style load.
-     */
-    map.on("style.load", () => {
-      if (cancelled || !map) {
-        return;
-      }
-
-      installDestinationLayers();
-    });
-
-    /*
-     * `idle` is used as the successful-render signal.
-     * Once this happens we stop automatic startup fallback.
-     */
-    const markRenderable = () => {
-      if (cancelled) {
-        return;
-      }
-
-      mapRenderableRef.current = true;
-      fallbackLockRef.current = false;
-
-      if (mapTimeoutRef.current !== null) {
-        window.clearTimeout(mapTimeoutRef.current);
-        mapTimeoutRef.current = null;
-      }
-
-      setMapError(null);
-    };
-
-    map.once("idle", markRenderable);
-
-    /*
-     * Protect against a style that never reaches a usable state.
-     */
-    mapTimeoutRef.current = window.setTimeout(() => {
-      if (!mapRenderableRef.current) {
-        scheduleFallback(
-          "initial map rendering timed out"
-        );
-      }
-    }, 12000);
-
-    /*
-     * Keep MapLibre dimensions synchronized with the actual DOM.
-     */
-    const resizeObserver =
-      typeof ResizeObserver !== "undefined"
-        ? new ResizeObserver(() => {
-            if (!map || cancelled) {
-              return;
+            if (viewportTimerRef.current !== null) {
+              clearTimeout(viewportTimerRef.current);
             }
 
-            map.resize();
-          })
-        : null;
+            viewportTimerRef.current = setTimeout(() => {
+              if (!cancelled && googleMapRef.current) {
+                void fetchViewportTemples(googleMapRef.current);
+              }
+            }, 850);
+          });
 
-    resizeObserver?.observe(container);
+          // Initial load triggers initial national viewport query
+          void fetchViewportTemples(map);
+          setLoading(false);
 
-    /*
-     * Initial resize after dynamic import/layout.
-     */
-    requestAnimationFrame(() => {
-      if (!map || cancelled) {
-        return;
-      }
-
-      map.resize();
-    });
+          // ResizeObserver for dynamic layout / orientation changes
+          if (typeof ResizeObserver !== "undefined") {
+            const ro = new ResizeObserver(() => {
+              if (googleMapRef.current && !cancelled) {
+                google.maps.event.trigger(googleMapRef.current, "resize");
+              }
+            });
+            ro.observe(container);
+            resizeObserverRef.current = ro;
+          }
+        } catch (initErr) {
+          console.error("[MapExplorer] Google Maps initialization error:", initErr);
+          setMapError("Google Maps is temporarily unavailable on this device.");
+          setLoading(false);
+        }
+      })
+      .catch((loadErr) => {
+        console.error("[MapExplorer] Google Maps script load error:", loadErr);
+        if (!cancelled) {
+          setMapError("Google Maps is temporarily unavailable.");
+          setLoading(false);
+        }
+      });
 
     return () => {
       cancelled = true;
@@ -825,63 +500,65 @@ export function MapExplorer() {
       viewportAbortRef.current = null;
 
       if (viewportTimerRef.current !== null) {
-        window.clearTimeout(viewportTimerRef.current);
+        clearTimeout(viewportTimerRef.current);
         viewportTimerRef.current = null;
       }
 
-      if (mapTimeoutRef.current !== null) {
-        window.clearTimeout(mapTimeoutRef.current);
-        mapTimeoutRef.current = null;
+      if (resizeObserverRef.current) {
+        resizeObserverRef.current.disconnect();
+        resizeObserverRef.current = null;
       }
 
-      resizeObserver?.disconnect();
-
-      if (map) {
-        try {
-          map.remove();
-        } catch (error) {
-          console.warn(
-            "[MapExplorer] Map cleanup warning:",
-            error
-          );
-        }
+      if (clustererRef.current) {
+        clustererRef.current.clearMarkers();
+        clustererRef.current = null;
       }
 
-      mapRef.current = null;
-      mapRenderableRef.current = false;
+      markersMap.forEach((marker) => {
+        marker.map = null;
+      });
+      markersMap.clear();
+
+      if (userMarkerRef.current) {
+        userMarkerRef.current.map = null;
+        userMarkerRef.current = null;
+      }
+
+      googleMapRef.current = null;
+      setMapReady(false);
     };
-  }, [mapStyleKey, fetchViewportTemples]);
+  }, [mapRetryCount, fetchViewportTemples]);
 
   // Search Area Trigger
   const handleSearchThisArea = () => {
-    const map = mapRef.current;
+    const map = googleMapRef.current;
     if (!map) return;
     const center = map.getCenter();
     const bounds = map.getBounds();
+    if (!center || !bounds) return;
+
+    const ne = bounds.getNorthEast();
+    const sw = bounds.getSouthWest();
     const radius = Math.min(
       Math.max(
         Math.round(
-          bounds.getNorthEast().distanceTo(bounds.getSouthWest()) / 2000
+          Math.hypot(ne.lat() - sw.lat(), ne.lng() - sw.lng()) * 55
         ),
         5
       ),
       60
     );
+
     setSelectedId(null);
-    fetchArea(center.lat, center.lng, radius);
+    fetchArea(center.lat(), center.lng(), radius);
   };
 
   // Reset to Sovereign India View
   const resetToIndia = () => {
-    const map = mapRef.current;
+    const map = googleMapRef.current;
     if (!map) return;
-    map.fitBounds(
-      [
-        [INDIA_BOUNDS.minLng, INDIA_BOUNDS.minLat],
-        [INDIA_BOUNDS.maxLng, INDIA_BOUNDS.maxLat],
-      ],
-      { padding: 40, essential: true }
-    );
+    map.panTo({ lat: DEFAULT_MAP_CENTER.lat, lng: DEFAULT_MAP_CENTER.lng });
+    map.setZoom(DEFAULT_MAP_CENTER.zoom);
   };
 
   // Locate User via Browser Geolocation
@@ -892,28 +569,32 @@ export function MapExplorer() {
     }
 
     navigator.geolocation.getCurrentPosition(
-      async (pos) => {
+      (pos) => {
         const { latitude, longitude } = pos.coords;
         if (!isWithinIndiaBounds(latitude, longitude)) {
           alert("Your detected location is outside India bounds. Displaying national pilgrimage atlas.");
           return;
         }
 
-        // Add user marker
-        const map = mapRef.current;
-        if (map) {
+        const map = googleMapRef.current;
+        if (map && window.google?.maps?.marker?.AdvancedMarkerElement) {
           if (userMarkerRef.current) {
-            userMarkerRef.current.remove();
+            userMarkerRef.current.map = null;
           }
 
-          const el = document.createElement("div");
-          el.className = "h-4 w-4 rounded-full bg-blue-500 border-2 border-white shadow-[0_0_12px_rgba(59,130,246,0.9)] animate-pulse";
+          const userEl = document.createElement("div");
+          userEl.className =
+            "h-4 w-4 rounded-full bg-blue-500 border-2 border-white shadow-[0_0_12px_rgba(59,130,246,0.9)] animate-pulse";
 
-          userMarkerRef.current = new maplibregl.Marker({ element: el })
-            .setLngLat([longitude, latitude])
-            .addTo(map);
+          userMarkerRef.current = new google.maps.marker.AdvancedMarkerElement({
+            map,
+            position: { lat: latitude, lng: longitude },
+            title: "Your Location",
+            content: userEl,
+          });
 
-          map.flyTo({ center: [longitude, latitude], zoom: 13, essential: true });
+          map.panTo({ lat: latitude, lng: longitude });
+          map.setZoom(13);
         }
 
         fetchArea(latitude, longitude, 20);
@@ -935,7 +616,9 @@ export function MapExplorer() {
         return;
       }
       try {
-        const r = await fetch(`/api/places/autocomplete?q=${encodeURIComponent(trimmed)}&_t=${Date.now()}`);
+        const r = await fetch(
+          `/api/places/autocomplete?q=${encodeURIComponent(trimmed)}&_t=${Date.now()}`
+        );
         const data = (await r.json()) as { suggestions?: Suggestion[] };
         setAc(data.suggestions ?? []);
         setAcOpen(true);
@@ -951,8 +634,12 @@ export function MapExplorer() {
     setQ(sug.text);
     if (sug.placeId) {
       try {
-        const r = await fetch(`/api/places/details?placeId=${encodeURIComponent(sug.placeId)}`);
-        const data = (await r.json()) as { place?: { latitude: number; longitude: number } | null };
+        const r = await fetch(
+          `/api/places/details?placeId=${encodeURIComponent(sug.placeId)}`
+        );
+        const data = (await r.json()) as {
+          place?: { latitude: number; longitude: number } | null;
+        };
         if (data.place) {
           fetchArea(data.place.latitude, data.place.longitude, 18, true);
           return;
@@ -964,7 +651,9 @@ export function MapExplorer() {
 
     setLoading(true);
     try {
-      const res = await fetch(`/api/temples/discover?q=${encodeURIComponent(sug.text)}&limit=50&forceLive=1`);
+      const res = await fetch(
+        `/api/temples/discover?q=${encodeURIComponent(sug.text)}&limit=50&forceLive=1`
+      );
       if (!res.ok) {
         setFailed(true);
         return;
@@ -974,12 +663,12 @@ export function MapExplorer() {
         setItems(data.items);
         setMode(data.mode);
         setStale(Boolean(data.stale));
-        if (data.items[0] && mapRef.current) {
-          mapRef.current.flyTo({
-            center: [data.items[0].longitude, data.items[0].latitude],
-            zoom: 13,
-            essential: true,
+        if (data.items[0] && googleMapRef.current) {
+          googleMapRef.current.panTo({
+            lat: data.items[0].latitude,
+            lng: data.items[0].longitude,
           });
+          googleMapRef.current.setZoom(13);
           setSelectedId(data.items[0].id);
         }
       }
@@ -1036,7 +725,12 @@ export function MapExplorer() {
                       acIdx === i ? "bg-gold/15 text-ivory" : "text-ivory-dim hover:bg-white/[0.05]"
                     )}
                   >
-                    <LocateFixed className={cn("h-3.5 w-3.5 shrink-0", acIdx === i ? "text-gold-bright" : "text-gold-dim")} />
+                    <LocateFixed
+                      className={cn(
+                        "h-3.5 w-3.5 shrink-0",
+                        acIdx === i ? "text-gold-bright" : "text-gold-dim"
+                      )}
+                    />
                     <span className="truncate">{s.text}</span>
                   </button>
                 ))}
@@ -1051,7 +745,9 @@ export function MapExplorer() {
               aria-label="Interactive Map View"
               className={cn(
                 "flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium transition-colors",
-                activeTab === "map" ? "bg-gold text-obsidian font-semibold shadow" : "text-ivory-dim hover:text-ivory"
+                activeTab === "map"
+                  ? "bg-gold text-obsidian font-semibold shadow"
+                  : "text-ivory-dim hover:text-ivory"
               )}
             >
               <MapIcon className="h-3.5 w-3.5" />
@@ -1062,7 +758,9 @@ export function MapExplorer() {
               aria-label="List View"
               className={cn(
                 "flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium transition-colors",
-                activeTab === "list" ? "bg-gold text-obsidian font-semibold shadow" : "text-ivory-dim hover:text-ivory"
+                activeTab === "list"
+                  ? "bg-gold text-obsidian font-semibold shadow"
+                  : "text-ivory-dim hover:text-ivory"
               )}
             >
               <List className="h-3.5 w-3.5" />
@@ -1101,24 +799,6 @@ export function MapExplorer() {
               </button>
             ))}
           </div>
-
-          {/* Map Style Switcher (Dark / Roads / Satellite) */}
-          <div className="glass flex items-center rounded-xl border border-line p-0.5 shadow-md">
-            {(["dark", "liberty", "satellite"] as const).map((style) => (
-              <button
-                key={style}
-                onClick={() => setMapStyleKey(style)}
-                className={cn(
-                  "rounded-lg px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider transition-colors",
-                  (mapStyleKey === style || (mapStyleKey === "carto" && style === "dark"))
-                    ? "bg-white/15 text-gold-bright"
-                    : "text-ivory-dim/70 hover:text-ivory"
-                )}
-              >
-                {style === "dark" ? "Dark" : style === "liberty" ? "Roads" : "Satellite"}
-              </button>
-            ))}
-          </div>
         </div>
       </div>
 
@@ -1147,39 +827,39 @@ export function MapExplorer() {
           ref={mapContainerRef}
           className="h-full min-h-0 w-full"
           tabIndex={0}
-          aria-label="Interactive Geographic Map"
+          aria-label="Google Maps Geographic View"
         />
 
-        {/* Dignified Map Error Fallback UI */}
+        {/* Loading Overlay */}
+        {!mapReady && !mapError && (
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-obsidian/80 backdrop-blur-sm pointer-events-none">
+            <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl border border-gold/30 bg-obsidian-3/90 text-gold shadow-2xl animate-pulse">
+              <Compass className="h-7 w-7 animate-spin duration-3000" />
+            </div>
+            <p className="mt-3 font-serif text-sm font-medium text-ivory">
+              Initializing Google Maps Atlas…
+            </p>
+          </div>
+        )}
+
+        {/* Offline / Failure Mode UI */}
         {mapError && (
           <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-obsidian-2/95 p-6 text-center backdrop-blur-md">
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gold/15 text-gold-bright mb-4 border border-gold/30">
               <MapIcon className="h-7 w-7" />
             </div>
-            <h3 className="font-display text-xl font-medium text-ivory">Interactive Map Offline</h3>
+            <h3 className="font-display text-xl font-medium text-ivory">
+              Google Maps is temporarily unavailable
+            </h3>
             <p className="mt-2 max-w-sm text-xs leading-relaxed text-ivory-dim">
-              Vector and raster map tiles are unreachable on this network or device. You can retry map initialization or browse all verified sanctuaries in list view.
+              The Google Maps JavaScript API could not be reached. You can retry map initialization or browse all verified sanctuaries in list view.
             </p>
             <div className="mt-5 flex items-center gap-3">
               <button
-                onClick={() => {
-                  fallbackLockRef.current = false;
-                  mapRenderableRef.current = false;
-                  setMapError(null);
-
-                  setMapStyleKey(
-                    mapStyleKey === "carto"
-                      ? "dark"
-                      : mapStyleKey === "dark"
-                        ? "satellite"
-                        : mapStyleKey === "satellite"
-                          ? "carto"
-                          : "satellite"
-                  );
-                }}
+                onClick={() => setMapRetryCount((c) => c + 1)}
                 className="rounded-xl bg-gold px-4 py-2 text-xs font-semibold text-obsidian shadow-md hover:bg-gold-bright transition-colors"
               >
-                Retry Map
+                Retry
               </button>
               <button
                 onClick={() => setActiveTab("list")}
@@ -1191,8 +871,8 @@ export function MapExplorer() {
           </div>
         )}
 
-        {/* Floating Bottom Navigation & Controls */}
-        <div className="pointer-events-none absolute bottom-4 right-4 z-10 flex flex-col gap-2">
+        {/* Floating Custom TEMPLEORA Action Buttons */}
+        <div className="pointer-events-none absolute bottom-5 left-5 z-10 flex flex-col gap-2">
           <button
             onClick={locateUser}
             aria-label="Locate me"
@@ -1209,7 +889,7 @@ export function MapExplorer() {
           </button>
         </div>
 
-        {/* Separate data-error indicator: keeps map visible! */}
+        {/* Data degradation notification: keeps Google map visible! */}
         {dataError && !mapError && (
           <div className="pointer-events-none absolute inset-x-0 bottom-4 z-20 flex justify-center px-4">
             <div className="pointer-events-auto rounded-full border border-amber-500/30 bg-obsidian-3/95 px-4 py-2 text-[11px] text-amber-200 shadow-2xl backdrop-blur-xl">
@@ -1223,13 +903,15 @@ export function MapExplorer() {
           <div className="pointer-events-none absolute inset-x-0 bottom-6 z-10 flex justify-center px-4">
             <div className="pointer-events-auto flex max-w-md items-center gap-2 rounded-2xl border border-amber-500/30 bg-obsidian-3/95 px-4 py-2.5 text-xs text-ivory shadow-2xl backdrop-blur-md">
               <WifiOff className="h-4 w-4 shrink-0 text-amber-400" />
-              <span>{t("discover_degraded")}. {t("discover_stale")}</span>
+              <span>
+                {t("discover_degraded")}. {t("discover_stale")}
+              </span>
             </div>
           </div>
         )}
       </div>
 
-      {/* Results List / Side Rail */}
+      {/* Results List / Side Rail (25-35% on Desktop) */}
       <aside
         className={cn(
           "flex flex-col border-line bg-obsidian-2/95 backdrop-blur-xl lg:w-[380px] lg:border-l",
@@ -1241,10 +923,16 @@ export function MapExplorer() {
         <div className="flex items-center justify-between border-b border-line px-4 py-3">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gold-dim">
-              {mode === "live" ? t("discover_live") : mode === "cache" ? t("discover_cache") : "Sacred Destinations"}
+              {mode === "live"
+                ? t("discover_live")
+                : mode === "cache"
+                  ? t("discover_cache")
+                  : "Sacred Destinations"}
             </p>
             <p className="text-xs text-ivory-dim">
-              {loading ? "Searching geography…" : `${filteredItems.length} verified pilgrimage places`}
+              {loading
+                ? "Searching geography…"
+                : `${filteredItems.length} verified pilgrimage places`}
             </p>
           </div>
           <GoogleAttribution className="text-[10px] text-ivory-dim/50" />
@@ -1283,7 +971,11 @@ export function MapExplorer() {
               const quality = assessLocationQuality({
                 latitude: p.latitude,
                 longitude: p.longitude,
-                verificationStatus: p.verified ? "VERIFIED_OFFICIAL" : p.source === "verified" ? "VERIFIED_OFFICIAL" : "VERIFIED_SOURCE",
+                verificationStatus: p.verified
+                  ? "VERIFIED_OFFICIAL"
+                  : p.source === "verified"
+                    ? "VERIFIED_OFFICIAL"
+                    : "VERIFIED_SOURCE",
                 sourceType: p.source,
                 googlePlaceId: p.googlePlaceId,
               });
@@ -1293,12 +985,12 @@ export function MapExplorer() {
                   key={p.id}
                   onClick={() => {
                     setSelectedId(p.id);
-                    if (mapRef.current) {
-                      mapRef.current.flyTo({
-                        center: [p.longitude, p.latitude],
-                        zoom: 14.5,
-                        essential: true,
+                    if (googleMapRef.current) {
+                      googleMapRef.current.panTo({
+                        lat: p.latitude,
+                        lng: p.longitude,
                       });
+                      googleMapRef.current.setZoom(14);
                     }
                   }}
                   className={cn(
@@ -1309,11 +1001,17 @@ export function MapExplorer() {
                   )}
                 >
                   <span className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-white/[0.04] text-lg">
-                    {p.verified ? <ShieldCheck className="h-5 w-5 text-gold-bright" /> : "🛕"}
+                    {p.verified ? (
+                      <ShieldCheck className="h-5 w-5 text-gold-bright" />
+                    ) : (
+                      "🛕"
+                    )}
                   </span>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5">
-                      <span className="truncate text-sm font-medium text-ivory">{p.name}</span>
+                      <span className="truncate text-sm font-medium text-ivory">
+                        {p.name}
+                      </span>
                       {p.openNow !== null && (
                         <span
                           className={cn(
@@ -1326,7 +1024,9 @@ export function MapExplorer() {
                     </div>
                     <p className="mt-0.5 truncate text-xs text-ivory-dim">
                       {p.region ? `${p.region} · ` : ""}
-                      {p.distanceKm ? `${p.distanceKm.toFixed(1)} km away` : p.address || "India"}
+                      {p.distanceKm
+                        ? `${p.distanceKm.toFixed(1)} km away`
+                        : p.address || "India"}
                     </p>
                     <div className="mt-2 flex flex-wrap items-center gap-1.5">
                       {/* Location Quality Badge */}
@@ -1370,7 +1070,11 @@ export function MapExplorer() {
 
               <div className="flex items-start gap-3.5 pr-8">
                 <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gold/15 text-2xl text-gold-bright">
-                  {selected.verified ? <ShieldCheck className="h-7 w-7 text-gold-bright" /> : "🛕"}
+                  {selected.verified ? (
+                    <ShieldCheck className="h-7 w-7 text-gold-bright" />
+                  ) : (
+                    "🛕"
+                  )}
                 </span>
                 <div className="min-w-0">
                   <h3 className="font-display text-lg font-medium leading-tight text-ivory">
@@ -1387,7 +1091,9 @@ export function MapExplorer() {
               {selectedQuality && (
                 <div className="mt-4 rounded-2xl border border-line/60 bg-white/[0.02] p-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-medium text-ivory">Geographic Coordinates</span>
+                    <span className="text-[11px] font-medium text-ivory">
+                      Geographic Coordinates
+                    </span>
                     <span
                       className={cn(
                         "rounded-full px-2 py-0.5 text-[10px] font-semibold border",
@@ -1433,7 +1139,9 @@ export function MapExplorer() {
                 )}
 
                 <a
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selected.name)}+${selected.latitude},${selected.longitude}`}
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                    selected.name
+                  )}+${selected.latitude},${selected.longitude}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-1.5 rounded-xl border border-line px-3.5 py-2.5 text-xs font-medium text-ivory-dim transition-colors hover:border-gold hover:text-ivory"
