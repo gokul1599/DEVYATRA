@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { MapClientShell } from "@/components/map-client-shell";
 
 export const metadata: Metadata = {
-  title: "Temple Map · Devyatra",
-  description: "Discover temples across India with live place data and verified temple profiles.",
+  title: "Sacred Atlas Map · Templeora",
+  description: "Explore India's sacred geography with live geodetic data, multi-tier cartography, and verified sanctuary profiles.",
 };
 
 export default function MapPage() {

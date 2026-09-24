@@ -106,8 +106,8 @@ export function Footer() {
       <div className="border-t border-line">
         <Container className="flex flex-col items-center gap-2 py-6 text-center md:flex-row md:justify-between md:text-left">
           <p className="text-[12px] text-ivory-dim/70">
-            © {new Date().getFullYear()} Devyatra. A concept demo — timings & booking data carry
-            live verification status, but always confirm with official sources before visiting.
+            © {new Date().getFullYear()} Templeora. India&apos;s Sacred Atlas — verified sanctuary intelligence,
+            archival epigraphy, and pilgrimage logistics. Always confirm with official shrine boards prior to darshan.
           </p>
           <a
             href="/verify"

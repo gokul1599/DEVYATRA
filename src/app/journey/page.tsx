@@ -245,10 +245,10 @@ export default function JourneyPage() {
         <Container>
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-gold">Pilgrim Sanctuary</p>
-              <h1 className="font-display text-4xl font-medium text-ivory sm:text-5xl">My Sacred Journey</h1>
-              <p className="mt-3 max-w-xl text-[13.5px] leading-relaxed text-ivory-dim">
-                Your personal sanctuary for saved temples, multi-day sacred itineraries, Panchang-derived holy alerts, and customized pilgrimage preferences.
+              <p className="mb-2 text-[11px] font-mono font-semibold uppercase tracking-[0.28em] text-[#C8A24B]">Pilgrim Sanctuary · My Yatra</p>
+              <h1 className="font-serif text-4xl font-medium text-[#F2ECE1] sm:text-5xl">My Yatra Journal</h1>
+              <p className="mt-3 max-w-xl text-[13.5px] leading-relaxed text-stone-300">
+                Your personal sanctuary for saved temples, curated pilgrimage corridors, Panchang-derived holy alerts, and personalized travel preferences.
               </p>
             </div>
 

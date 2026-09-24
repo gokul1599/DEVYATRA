@@ -263,7 +263,7 @@ export function Logo({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
   const s = size === "lg" ? "h-10" : size === "sm" ? "h-7" : "h-8";
   const txt = size === "lg" ? "text-2xl" : "text-lg";
   return (
-    <Link href="/" className="flex items-center gap-2.5" aria-label="Devyatra home">
+    <Link href="/" className="flex items-center gap-2.5" aria-label="Templeora home">
       <svg viewBox="0 0 40 40" className={cn(s, "w-auto")} aria-hidden>
         <defs>
           <linearGradient id="logo-g" x1="0" y1="0" x2="1" y2="1">
@@ -281,8 +281,8 @@ export function Logo({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
         <path d="M17 24h6v8h-6z" fill="#14110d" />
         <circle cx="20" cy="25.5" r="1.1" fill="#e4be72" />
       </svg>
-      <span className={cn("font-display font-semibold tracking-tight gold-text", txt)}>
-        Devyatra
+      <span className={cn("font-display font-semibold tracking-wide gold-text uppercase", txt)}>
+        Templeora
       </span>
     </Link>
   );

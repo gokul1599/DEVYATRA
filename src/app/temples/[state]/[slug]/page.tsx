@@ -43,8 +43,10 @@ import { CinematicImage } from "@/components/ui/cinematic-image";
 import { resolvePrimaryTempleMedia } from "@/lib/images/resolver";
 import { TempleArchitectureHeritage } from "@/components/temple/temple-architecture-heritage";
 import { TempleScrollGuard } from "@/components/temple/temple-scroll-guard";
-import { TempleTopBar } from "@/components/temple/temple-top-bar";
 import { TempleMediaGallery } from "@/components/temple/temple-media-gallery";
+import { TempleTopBar } from "@/components/temple/temple-top-bar";
+import { TempleDna } from "@/components/temple/temple-dna";
+import { SourceTransparencyDrawer } from "@/components/temple/source-transparency-drawer";
 import { cn } from "@/lib/cn";
 
 export const dynamicParams = true;
@@ -231,6 +233,11 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
       </section>
 
       <Container className="pt-10">
+        {/* Temple DNA Identity Matrix */}
+        <section id="temple-dna" className="mb-12 scroll-mt-28">
+          <TempleDna temple={temple} stateName={st.name} />
+        </section>
+
         {/* Destination Command Center */}
         <section id="command-center" className="mb-12 scroll-mt-28">
           <TempleDayView temple={temple} />
@@ -555,6 +562,11 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
             </div>
           </section>
         )}
+
+        {/* Source Transparency & Archival Provenance */}
+        <section id="source-transparency" className="mt-16 scroll-mt-28">
+          <SourceTransparencyDrawer temple={temple} />
+        </section>
 
         <div id="report" className="mt-16 rounded-3xl border border-dashed border-terracotta/30 bg-terracotta/[0.04] p-8 text-center">
           <p className="font-display text-lg text-ivory">Spot something wrong?</p>
