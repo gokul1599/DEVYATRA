@@ -222,7 +222,8 @@ export function MapExplorer() {
         source: "temples",
         filter: ["has", "point_count"],
         layout: {
-          "text-field": "{point_count_abbreviated}",
+          "text-field": ["get", "point_count_abbreviated"],
+          "text-font": ["Noto Sans Bold"],
           "text-size": 12,
           "text-allow-overlap": true,
           "text-ignore-placement": true,
@@ -274,6 +275,7 @@ export function MapExplorer() {
         minzoom: 11,
         layout: {
           "text-field": ["get", "name"],
+          "text-font": ["Noto Sans Regular"],
           "text-size": 11,
           "text-offset": [0, 1.3],
           "text-anchor": "top",
@@ -478,12 +480,31 @@ export function MapExplorer() {
       "bottom-right"
     );
 
-    map.on("load", () => {
-      if (cancelled) return;
+    let isReadyTriggered = false;
+    const triggerMapReady = () => {
+      if (cancelled || isReadyTriggered) return;
+      isReadyTriggered = true;
       setMapReady(true);
       setupLayers(map, activeGeoJsonRef.current);
       void fetchViewportTemples(map);
-    });
+      requestAnimationFrame(() => {
+        map.resize();
+      });
+    };
+
+    if (map.isStyleLoaded()) {
+      triggerMapReady();
+    } else {
+      map.once("load", triggerMapReady);
+      map.once("style.load", triggerMapReady);
+    }
+
+    // Safety fallback: ensure map opens without getting stuck behind loading screen
+    const safetyTimer = setTimeout(() => {
+      if (!cancelled && !isReadyTriggered) {
+        triggerMapReady();
+      }
+    }, 800);
 
     map.on("rotate", () => {
       if (!cancelled) {
@@ -519,6 +540,7 @@ export function MapExplorer() {
 
     return () => {
       cancelled = true;
+      clearTimeout(safetyTimer);
       ro.disconnect();
       if (viewportTimerRef.current !== null) {
         clearTimeout(viewportTimerRef.current);
@@ -942,14 +964,14 @@ export function MapExplorer() {
       {/* Main Map Viewport (Desktop 72% / Mobile 100%) */}
       <div
         className={cn(
-          "relative flex-1 w-full h-full min-h-0 min-w-0",
+          "relative flex-1 w-full h-full min-h-0 min-w-0 overflow-hidden",
           activeTab === "list" && "hidden lg:block"
         )}
       >
         {/* MapLibre Canvas Container */}
         <div
           ref={mapContainerRef}
-          className="w-full h-full"
+          className="absolute inset-0 h-full w-full"
           role="region"
           aria-label="TEMPLEORA Sacred Atlas Open Map"
         />
