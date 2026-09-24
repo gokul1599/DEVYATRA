@@ -131,25 +131,18 @@ export function Hero() {
         ref={heroRef}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        className="relative flex min-h-[94svh] md:min-h-screen flex-col justify-between overflow-hidden bg-[#0A0806] pt-24 pb-4 select-none"
+        className="relative isolate flex min-h-[94svh] md:min-h-screen flex-col justify-between overflow-hidden bg-[#0A0806] pt-24 pb-4"
       >
         {/* ========================================================================= */}
         {/* 1. CINEMATIC FULL-BLEED SACRED BACKDROP                                   */}
         {/* ========================================================================= */}
         <div
           ref={backdropRef}
-          className="pointer-events-none absolute inset-0 -z-10 overflow-hidden will-change-transform"
+          className="pointer-events-none absolute inset-0 z-0 overflow-hidden will-change-transform"
           aria-hidden="true"
         >
           {/* Main Full-Bleed Temple Photograph (Supplied Official Visual) */}
-          <motion.div
-            initial={{ opacity: 0, scale: 1.06, filter: "blur(8px)" }}
-            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-            transition={{
-              duration: 1.6,
-              delay: 0.4,
-              ease: [0.16, 1, 0.3, 1],
-            }}
+          <div
             style={{
               transform: `translate3d(${bgTranslateX}px, ${bgTranslateY}px, 0)`,
               transition: "transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)",
@@ -162,16 +155,16 @@ export function Hero() {
               fill
               priority
               sizes="100vw"
-              className="object-cover object-[72%_center] sm:object-[68%_center] lg:object-[62%_center] brightness-[0.88] contrast-[1.04]"
+              className="object-cover object-[72%_center] sm:object-[68%_center] lg:object-[62%_center] brightness-[0.92] contrast-[1.04]"
             />
-          </motion.div>
+          </div>
 
           {/* Layered Sunset Light Flare & Temple Prominence (0.9s - 1.8s) */}
           <motion.div
             ref={templeGlowRef}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1.4, delay: 0.9, ease: "easeOut" }}
+            transition={{ duration: 1.4, delay: 0.6, ease: "easeOut" }}
             style={{
               transform: `translate3d(${glowTranslateX}px, ${glowTranslateY}px, 0)`,
               transition: "transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)",
@@ -180,12 +173,14 @@ export function Hero() {
           />
 
           {/* Subtle Ambient Vignettes & Editorial Contrast Gradients (Never Opaque!) */}
-          {/* Left Editorial Scrim: Ensures crystal-clear typography without hiding the temple */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0A0806]/92 via-[#0A0806]/55 via-45% to-transparent" />
+          {/* Desktop Left Editorial Scrim: Preserves the temple & sunset on the right while giving text contrast */}
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-full lg:w-3/5 bg-gradient-to-r from-[#0A0806]/85 via-[#0A0806]/35 to-transparent hidden sm:block" />
+          {/* Mobile bottom-up gradient for text legibility */}
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0A0806]/95 via-[#0A0806]/40 via-55% to-transparent sm:hidden" />
           {/* Top subtle bar scrim for navigation clarity */}
-          <div className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-[#0A0806]/85 via-[#0A0806]/30 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#0A0806]/70 to-transparent" />
           {/* Bottom gentle gradient merging into chapter I */}
-          <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-[#0A0806] via-[#0A0806]/70 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[#0A0806] via-[#0A0806]/60 to-transparent" />
         </div>
 
         {/* ========================================================================= */}
