@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import {
   AlertTriangle,
@@ -45,6 +45,21 @@ const STATUS_STYLE: Record<ReportRow["status"], string> = {
   resolved: "border-emerald-500/30 bg-emerald-500/5 text-emerald-300/90",
   rejected: "border-red-500/30 bg-red-500/5 text-red-300/80",
 };
+
+interface DuplicateCandidatePair {
+  temple1: { id: string; name: string; state: string; district: string };
+  temple2: { id: string; name: string; state: string; district: string };
+  match?: {
+    classification?: string;
+    confidenceScore?: number;
+    nameSimilarity?: number;
+    distanceMeters?: number;
+    deityMatch?: boolean;
+    stateMatch?: boolean;
+    districtMatch?: boolean;
+    notes?: string[];
+  };
+}
 
 export type AdminTab =
   | "overview"
@@ -115,16 +130,91 @@ export function AdminConsole({
     }
   };
 
+  const [duplicatePairs, setDuplicatePairs] = useState<DuplicateCandidatePair[]>([]);
+  const [isLoadingDuplicates, setIsLoadingDuplicates] = useState(false);
+  const [processingDuplicate, setProcessingDuplicate] = useState<string | null>(null);
+
+  const fetchDuplicates = useCallback(async () => {
+    setIsLoadingDuplicates(true);
+    try {
+      const res = await fetch("/api/admin/duplicates");
+      if (res.ok) {
+        const data = await res.json();
+        setDuplicatePairs(data.candidatePairs || []);
+      }
+    } catch (err) {
+      console.error("Failed to load duplicates", err);
+    } finally {
+      setIsLoadingDuplicates(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    let ignore = false;
+    if (activeTab === "duplicates" && duplicatePairs.length === 0) {
+      fetch("/api/admin/duplicates")
+        .then((res) => (res.ok ? res.json() : { candidatePairs: [] }))
+        .then((data) => {
+          if (!ignore) {
+            setDuplicatePairs(data.candidatePairs || []);
+          }
+        })
+        .catch((err) => console.error("Failed to load duplicates", err));
+    }
+    return () => {
+      ignore = true;
+    };
+  }, [activeTab, duplicatePairs.length]);
+
+  const handleDuplicateAction = async (
+    temple1Id: string,
+    temple2Id: string,
+    action: "KEEP_SEPARATE" | "MARK_DUPLICATE" | "DISMISS"
+  ) => {
+    const pairKey = `${temple1Id}:${temple2Id}`;
+    setProcessingDuplicate(pairKey);
+    try {
+      const res = await fetch("/api/admin/duplicates", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          temple1Id,
+          temple2Id,
+          action,
+          notes: `Actioned by ${role} admin from operations console`,
+        }),
+      });
+      if (res.ok) {
+        setVerifyFeedback(`Recorded ${action} for ${temple1Id} & ${temple2Id}.`);
+        setDuplicatePairs((prev) =>
+          prev.filter((p) => !(p.temple1.id === temple1Id && p.temple2.id === temple2Id))
+        );
+        setTimeout(() => setVerifyFeedback(null), 4000);
+      } else {
+        setVerifyFeedback("Failed to update duplicate decision.");
+      }
+    } catch {
+      setVerifyFeedback("Network error updating duplicate record.");
+    } finally {
+      setProcessingDuplicate(null);
+    }
+  };
+
   const handleSubmissionAction = async (id: string, action: "APPROVE" | "REJECT") => {
     try {
-      await fetch("/api/admin/submissions", {
+      const res = await fetch("/api/admin/submissions", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, action }),
       });
-      window.location.reload();
+      if (res.ok) {
+        setVerifyFeedback(`Successfully ${action === "APPROVE" ? "approved" : "rejected"} submission.`);
+        setTimeout(() => window.location.reload(), 1500);
+      } else {
+        setVerifyFeedback("Failed to process submission.");
+      }
     } catch {
-      alert("Failed to process submission.");
+      setVerifyFeedback("Network error processing submission.");
     }
   };
 
@@ -587,56 +677,87 @@ export function AdminConsole({
                   </p>
                 </div>
                 <button
-                  onClick={() => alert("Scanned database. Candidates displayed below.")}
+                  onClick={() => fetchDuplicates()}
+                  disabled={isLoadingDuplicates}
                   className="flex items-center gap-1.5 rounded-xl border border-line px-3 py-1.5 text-[12px] text-ivory hover:bg-white/[0.05]"
                 >
-                  <RefreshCw className="h-3.5 w-3.5" /> Re-scan
+                  <RefreshCw className={cn("h-3.5 w-3.5", isLoadingDuplicates && "animate-spin")} />{" "}
+                  {isLoadingDuplicates ? "Loading..." : "Refresh"}
                 </button>
               </div>
 
-              <div className="mt-6 space-y-4">
-                <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-5">
-                  <div className="grid gap-6 md:grid-cols-2">
-                    <div className="space-y-2">
-                      <span className="rounded bg-amber-500/20 px-2 py-0.5 text-[10.5px] font-semibold text-amber-300">
-                        Record A
-                      </span>
-                      <p className="font-medium text-ivory">Jain Temple on Hillside close to Vishnu Temple</p>
-                      <p className="text-[11.5px] text-ivory-dim">ID: IN-KA-VIJ-000519 · Vijayanagara, KA</p>
-                      <p className="text-[11.5px] text-ivory-dim">Coords: 15.335, 76.462</p>
-                    </div>
-
-                    <div className="space-y-2">
-                      <span className="rounded bg-amber-500/20 px-2 py-0.5 text-[10.5px] font-semibold text-amber-300">
-                        Record B
-                      </span>
-                      <p className="font-medium text-ivory">Stone Aqueduct & Small Underground Shrine Chamber</p>
-                      <p className="text-[11.5px] text-ivory-dim">ID: IN-KA-VIJ-000508 · Vijayanagara, KA</p>
-                      <p className="text-[11.5px] text-ivory-dim">Coords: 15.335, 76.462 (Distance: 0m)</p>
-                    </div>
-                  </div>
-
-                  <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.05] pt-4">
-                    <span className="text-[12px] text-amber-300">
-                      Match: EXACT_COINCIDENT_COORDS (0m separation, shared monument cluster)
-                    </span>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => alert("Recorded as Separate Monuments in Audit Trail")}
-                        className="rounded-lg border border-line px-3 py-1.5 text-[11.5px] text-ivory hover:bg-white/[0.05]"
-                      >
-                        Keep Separate
-                      </button>
-                      <button
-                        onClick={() => alert("Flagged as Duplicate for Manual Merge in Audit Trail")}
-                        className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-1.5 text-[11.5px] text-red-300 hover:bg-red-500/20"
-                      >
-                        Mark Duplicate
-                      </button>
-                    </div>
-                  </div>
+              {isLoadingDuplicates ? (
+                <div className="py-12 text-center text-[13px] text-ivory-dim">
+                  Scanning detected duplicate candidates...
                 </div>
-              </div>
+              ) : duplicatePairs.length === 0 ? (
+                <div className="py-12 text-center text-[13px] text-emerald-400">
+                  ✓ Zero pending duplicate candidates. All records verified distinct or merged.
+                </div>
+              ) : (
+                <div className="mt-6 space-y-4">
+                  {duplicatePairs.map((pair, idx) => {
+                    const pairKey = `${pair.temple1.id}:${pair.temple2.id}`;
+                    const isProcessing = processingDuplicate === pairKey;
+                    return (
+                      <div key={pairKey || idx} className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-5">
+                        <div className="grid gap-6 md:grid-cols-2">
+                          <div className="space-y-1.5 rounded-lg border border-white/[0.05] bg-black/20 p-3">
+                            <span className="rounded bg-amber-500/20 px-2 py-0.5 text-[10.5px] font-semibold text-amber-300">
+                              Candidate 1
+                            </span>
+                            <p className="font-medium text-ivory">{pair.temple1.name}</p>
+                            <p className="font-mono text-[11px] text-ivory-dim">ID: {pair.temple1.id} · {pair.temple1.district}, {pair.temple1.state}</p>
+                          </div>
+
+                          <div className="space-y-1.5 rounded-lg border border-white/[0.05] bg-black/20 p-3">
+                            <span className="rounded bg-amber-500/20 px-2 py-0.5 text-[10.5px] font-semibold text-amber-300">
+                              Candidate 2
+                            </span>
+                            <p className="font-medium text-ivory">{pair.temple2.name}</p>
+                            <p className="font-mono text-[11px] text-ivory-dim">ID: {pair.temple2.id} · {pair.temple2.district}, {pair.temple2.state}</p>
+                          </div>
+                        </div>
+
+                        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.05] pt-4">
+                          <div className="text-[12px] text-amber-300">
+                            <span className="font-semibold">{pair.match?.classification || "POTENTIAL_DUPLICATE"}</span>
+                            {pair.match?.distanceMeters !== undefined && (
+                              <span className="ml-2 text-ivory-dim">· Proximity: {pair.match.distanceMeters}m</span>
+                            )}
+                            {pair.match?.nameSimilarity !== undefined && (
+                              <span className="ml-2 text-ivory-dim">· Name Score: {Math.round(pair.match.nameSimilarity * 100)}%</span>
+                            )}
+                          </div>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => handleDuplicateAction(pair.temple1.id, pair.temple2.id, "KEEP_SEPARATE")}
+                              disabled={isProcessing}
+                              className="rounded-lg border border-line px-3 py-1.5 text-[11.5px] text-ivory hover:bg-white/[0.05]"
+                            >
+                              Keep Separate
+                            </button>
+                            <button
+                              onClick={() => handleDuplicateAction(pair.temple1.id, pair.temple2.id, "MARK_DUPLICATE")}
+                              disabled={isProcessing}
+                              className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-1.5 text-[11.5px] text-red-300 hover:bg-red-500/20"
+                            >
+                              Mark Duplicate
+                            </button>
+                            <button
+                              onClick={() => handleDuplicateAction(pair.temple1.id, pair.temple2.id, "DISMISS")}
+                              disabled={isProcessing}
+                              className="rounded-lg border border-white/[0.1] px-2.5 py-1.5 text-[11.5px] text-ivory-dim hover:text-ivory"
+                            >
+                              Dismiss
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </motion.div>
         )}

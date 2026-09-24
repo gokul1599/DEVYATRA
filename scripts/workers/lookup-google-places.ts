@@ -18,7 +18,9 @@ import { haversineDistance, jaroWinkler } from "../../src/lib/importer/deduplica
 
 if (existsSync(".env.local")) process.loadEnvFile(".env.local");
 
-const apiKey = process.env.GOOGLE_MAPS_API_KEY || "";
+const primaryApiKey = process.env.GOOGLE_MAPS_API_KEY || "";
+const fallbackApiKey = process.env.GOOGLE_MAPS_FALLBACK_API_KEY || "";
+let activeApiKey = primaryApiKey || fallbackApiKey;
 const connectionString = process.env.DATABASE_URL;
 
 if (!connectionString) {
@@ -63,7 +65,7 @@ async function searchGooglePlaces(
   biasLat: number,
   biasLng: number
 ): Promise<GooglePlaceCandidate[]> {
-  if (!apiKey) {
+  if (!activeApiKey) {
     throw new Error("GOOGLE_MAPS_API_KEY is not configured.");
   }
 
@@ -86,7 +88,7 @@ async function searchGooglePlaces(
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-Goog-Api-Key": apiKey,
+          "X-Goog-Api-Key": activeApiKey,
           "X-Goog-FieldMask": FIELD_MASK,
         },
         body: JSON.stringify(payload),
@@ -96,6 +98,12 @@ async function searchGooglePlaces(
         const backoffMs = Math.pow(2, attempt) * 1000 + Math.random() * 500;
         console.warn(`[Google API] Rate limited (HTTP ${response.status}). Retrying in ${Math.round(backoffMs)}ms...`);
         await sleep(backoffMs);
+        continue;
+      }
+
+      if (response.status === 403 && fallbackApiKey && activeApiKey !== fallbackApiKey) {
+        console.warn("[Google API] Primary key 403 (SERVICE_DISABLED). Switching to verified fallback API key...");
+        activeApiKey = fallbackApiKey;
         continue;
       }
 
@@ -209,10 +217,10 @@ async function runGooglePlacesWorker() {
   console.log(`Settings:`);
   console.log(`  - Dry Run: ${isDryRun}`);
   console.log(`  - Batch Limit: ${limit}`);
-  console.log(`  - API Key Present: ${Boolean(apiKey)}`);
+  console.log(`  - API Key Present: ${Boolean(activeApiKey)}`);
   console.log(`  - Single ID filter: ${singleTempleId || "None (Queue)"}\n`);
 
-  if (!apiKey) {
+  if (!activeApiKey) {
     console.warn("⚠️ GOOGLE_MAPS_API_KEY is not set in environment or .env.local.");
     console.warn("The worker will audit and display pending records without making live HTTP calls.\n");
   }
@@ -256,7 +264,7 @@ async function runGooglePlacesWorker() {
     const temple = queue[i];
     console.log(`[${i + 1}/${queue.length}] ${temple.identifier} — ${temple.name} (${temple.district?.name}, ${temple.state?.name})`);
 
-    if (!apiKey) {
+    if (!activeApiKey) {
       console.log("  ℹ️ Skipped live search (API key not configured).");
       skippedCount++;
       continue;
