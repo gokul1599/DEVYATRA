@@ -23,6 +23,7 @@ async function smokeTest() {
         console.log(`  -> Map viewport features returned: ${json.features?.length ?? json.data?.length}`);
       } else if (ep.includes('/places/')) {
         console.log(`  -> Destination Page has 'Pilgrimage Bridge / Sacred Anchor': ${text.includes('Sacred Anchor') || text.includes('Pilgrimage Bridge')}`);
+        console.log(`  -> Destination Page has 'View on Sacred Map': ${text.includes('View on Sacred Map')}`);
       } else if (ep === 'https://templeora.vercel.app/') {
         console.log(`  -> Home has 'Begin Your Journey': ${text.includes('Begin Your Journey')}`);
         console.log(`  -> Home has 'Beyond the Temple': ${text.includes('Beyond the Temple')}`);
