@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import * as maplibregl from "maplibre-gl";
+import "maplibre-gl/dist/maplibre-gl.css";
 import {
   Compass,
   ExternalLink,
@@ -11,43 +13,36 @@ import {
   Navigation2,
   Search,
   ShieldCheck,
-  WifiOff,
   X,
   MapPin,
   Car,
+  ZoomIn,
+  ZoomOut,
+  ChevronRight,
+  ChevronLeft,
+  RefreshCw,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { useApp } from "@/components/providers";
-import { GoogleAttribution } from "@/components/google-attribution";
-import type { DiscoveryResult } from "@/lib/google/types";
 import {
   DEFAULT_MAP_CENTER,
   assessLocationQuality,
+  isWithinIndiaBounds,
+  isValidCoordinate,
+  calculateHaversineKm,
   type LocationQualityAssessment,
 } from "@/lib/map/location-quality";
-import { type DestinationGeoJSONFeature } from "@/lib/map/geojson";
-import { loadGoogleMaps } from "@/lib/map/google-loader";
-import { MarkerClusterer } from "@googlemaps/markerclusterer";
-
-declare global {
-  interface Window {
-    gm_authFailure?: () => void;
-  }
-}
-
-interface Suggestion {
-  type: "place" | "temple" | "query";
-  placeId?: string;
-  text: string;
-  lat?: number;
-  lng?: number;
-  id?: string;
-}
+import { MAP_STYLES } from "@/lib/map/data-engine";
+import {
+  type DestinationGeoJSONFeature,
+  type DestinationFeatureCollection,
+} from "@/lib/map/geojson";
 
 export interface MapPlaceItem {
   id: string;
   name: string;
   category?: string;
+  subcategory?: string | null;
   latitude: number;
   longitude: number;
   address?: string | null;
@@ -60,50 +55,76 @@ export interface MapPlaceItem {
   certainty?: string;
   href?: string | null;
   openNow?: boolean | null;
-  googlePlaceId?: string;
-  googleMapsUri?: string;
+  googlePlaceId?: string | null;
+  accuracy?: string;
+  accuracyLabel?: string;
+}
+
+interface Suggestion {
+  type: "temple" | "location" | "heritage" | "query";
+  title: string;
+  subtitle?: string;
+  slug?: string;
+  lat?: number;
+  lng?: number;
+  id?: string;
 }
 
 export function MapExplorer() {
   const { t } = useApp();
   const mapContainerRef = useRef<HTMLDivElement>(null);
-  const googleMapRef = useRef<google.maps.Map | null>(null);
-  const clustererRef = useRef<MarkerClusterer | null>(null);
-  const markersMapRef = useRef<Map<string, google.maps.Marker>>(new Map());
-  const userMarkerRef = useRef<google.maps.Marker | null>(null);
-  const searchPinRef = useRef<google.maps.Marker | null>(null);
-  const infoWindowRef = useRef<google.maps.InfoWindow | null>(null);
-  const geocoderRef = useRef<google.maps.Geocoder | null>(null);
-  const acServiceRef = useRef<google.maps.places.AutocompleteService | null>(null);
+  const mapRef = useRef<maplibregl.Map | null>(null);
+  const userMarkerRef = useRef<maplibregl.Marker | null>(null);
+  const activeGeoJsonRef = useRef<DestinationFeatureCollection>({
+    type: "FeatureCollection",
+    features: [],
+    metadata: {
+      total: 0,
+      exactCount: 0,
+      siteCenterCount: 0,
+      approximateCount: 0,
+      centroidFallbackExcluded: 0,
+    },
+  });
 
   const [activeTab, setActiveTab] = useState<"map" | "list">("map");
+  const [currentStyle, setCurrentStyle] = useState<"liberty" | "dark">("liberty");
   const [items, setItems] = useState<MapPlaceItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [mapReady, setMapReady] = useState(false);
-  const [mode, setMode] = useState<DiscoveryResult["mode"] | null>(null);
-  const [stale, setStale] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  // Bearing for rotating compass
+  const [bearing, setBearing] = useState(0);
 
   // Distinct Map vs Data Error states
   const [mapError, setMapError] = useState<string | null>(null);
   const [dataError, setDataError] = useState<string | null>(null);
   const [mapRetryCount, setMapRetryCount] = useState(0);
 
+  // User Geolocation
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [locating, setLocating] = useState(false);
+  const [userLocationMessage, setUserLocationMessage] = useState<string | null>(null);
+
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [filterCategory, setFilterCategory] = useState<
-    "all" | "verified" | "open" | "heritage" | "nature" | "food_stay"
+    "all" | "verified" | "heritage" | "nature" | "open"
   >("all");
   const [showAreaSearchPill, setShowAreaSearchPill] = useState(false);
 
   const viewportAbortRef = useRef<AbortController | null>(null);
   const viewportTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const resizeObserverRef = useRef<ResizeObserver | null>(null);
+  const searchAbortRef = useRef<AbortController | null>(null);
 
-  // Autocomplete state
+  // Search state
   const [q, setQ] = useState("");
-  const [ac, setAc] = useState<Suggestion[]>([]);
-  const [acOpen, setAcOpen] = useState(false);
-  const [acIdx, setAcIdx] = useState(-1);
+  const [isSearching, setIsSearching] = useState(false);
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+  const [suggestOpen, setSuggestOpen] = useState(false);
+  const [suggestIdx, setSuggestIdx] = useState(-1);
 
+  // Filter items in memory
   const filteredItems = (Array.isArray(items) ? items : []).filter((p) => {
     if ((p as unknown as { isCentroidFallback?: boolean }).isCentroidFallback) return false;
     if (filterCategory === "verified") return p.verified || p.source === "verified";
@@ -123,24 +144,13 @@ export function MapExplorer() {
     if (filterCategory === "nature") {
       const txt = `${p.name} ${p.address || ""}`.toLowerCase();
       return (
-        txt.includes("lake") ||
-        txt.includes("river") ||
         txt.includes("ghat") ||
-        txt.includes("sangam") ||
-        txt.includes("hill") ||
-        txt.includes("waterfall") ||
-        txt.includes("kund")
-      );
-    }
-    if (filterCategory === "food_stay") {
-      const txt = `${p.name} ${p.address || ""}`.toLowerCase();
-      return (
-        txt.includes("ashram") ||
-        txt.includes("bhojanalaya") ||
-        txt.includes("dharamshala") ||
-        txt.includes("bhavan") ||
-        txt.includes("annakshetra") ||
-        txt.includes("matha")
+        txt.includes("river") ||
+        txt.includes("ganga") ||
+        txt.includes("kund") ||
+        txt.includes("lake") ||
+        txt.includes("hills") ||
+        txt.includes("teerth")
       );
     }
     return true;
@@ -152,16 +162,213 @@ export function MapExplorer() {
     ? assessLocationQuality({
         latitude: selected.latitude,
         longitude: selected.longitude,
-        verificationStatus: selected.verified ? "VERIFIED_OFFICIAL" : selected.source === "verified" ? "VERIFIED_OFFICIAL" : "VERIFIED_SOURCE",
+        verificationStatus: selected.verified ? "VERIFIED_OFFICIAL" : "VERIFIED_SOURCE",
         sourceType: selected.source,
         googlePlaceId: selected.googlePlaceId,
       })
     : null;
 
-  // Viewport Data Engine
-  const fetchViewportTemples = useCallback(async (map: google.maps.Map) => {
-    viewportAbortRef.current?.abort();
+  // Configure custom layers on MapLibre source
+  const setupLayers = useCallback((map: maplibregl.Map, collection: DestinationFeatureCollection) => {
+    // 1. Add GeoJSON Source with Native Clustering
+    if (!map.getSource("temples")) {
+      map.addSource("temples", {
+        type: "geojson",
+        data: collection,
+        cluster: true,
+        clusterMaxZoom: 14,
+        clusterRadius: 50,
+      });
+    }
 
+    // 2. Clusters layer
+    if (!map.getLayer("temple-clusters")) {
+      map.addLayer({
+        id: "temple-clusters",
+        type: "circle",
+        source: "temples",
+        filter: ["has", "point_count"],
+        paint: {
+          "circle-color": [
+            "step",
+            ["get", "point_count"],
+            "#D97706", // Sacred Amber for < 15
+            15,
+            "#C8A24B", // Sacred Gold for 15-50
+            50,
+            "#F59E0B", // Brilliant Gold for 50+
+          ],
+          "circle-radius": [
+            "step",
+            ["get", "point_count"],
+            18,
+            15,
+            23,
+            50,
+            29,
+          ],
+          "circle-stroke-width": 2.5,
+          "circle-stroke-color": "#FFFFFF",
+          "circle-opacity": 0.95,
+        },
+      });
+    }
+
+    // 3. Cluster count label
+    if (!map.getLayer("temple-cluster-count")) {
+      map.addLayer({
+        id: "temple-cluster-count",
+        type: "symbol",
+        source: "temples",
+        filter: ["has", "point_count"],
+        layout: {
+          "text-field": "{point_count_abbreviated}",
+          "text-size": 12,
+          "text-allow-overlap": true,
+          "text-ignore-placement": true,
+        },
+        paint: {
+          "text-color": "#0D0B09",
+        },
+      });
+    }
+
+    // 4. Unclustered temple points
+    if (!map.getLayer("unclustered-point")) {
+      map.addLayer({
+        id: "unclustered-point",
+        type: "circle",
+        source: "temples",
+        filter: ["!", ["has", "point_count"]],
+        paint: {
+          "circle-color": [
+            "case",
+            ["==", ["get", "isVerified"], true],
+            "#F59E0B", // Gold for verified
+            "#EA580C", // Saffron for community/curated
+          ],
+          "circle-radius": [
+            "case",
+            ["==", ["get", "id"], selectedId || ""],
+            10,
+            7,
+          ],
+          "circle-stroke-width": [
+            "case",
+            ["==", ["get", "id"], selectedId || ""],
+            3,
+            2,
+          ],
+          "circle-stroke-color": "#FFFFFF",
+        },
+      });
+    }
+
+    // 5. Unclustered temple labels (visible when zoomed in)
+    if (!map.getLayer("unclustered-point-label")) {
+      map.addLayer({
+        id: "unclustered-point-label",
+        type: "symbol",
+        source: "temples",
+        filter: ["!", ["has", "point_count"]],
+        minzoom: 11,
+        layout: {
+          "text-field": ["get", "name"],
+          "text-size": 11,
+          "text-offset": [0, 1.3],
+          "text-anchor": "top",
+          "text-optional": true,
+        },
+        paint: {
+          "text-color": currentStyle === "dark" ? "#F2ECE1" : "#1C1813",
+          "text-halo-color": currentStyle === "dark" ? "#0D0B09" : "#FFFFFF",
+          "text-halo-width": 1.5,
+        },
+      });
+    }
+
+    // Click cluster -> expand
+    map.on("click", "temple-clusters", async (e) => {
+      const features = map.queryRenderedFeatures(e.point, { layers: ["temple-clusters"] });
+      if (!features[0]) return;
+      const clusterId = features[0].properties?.cluster_id;
+      const source = map.getSource("temples") as maplibregl.GeoJSONSource | undefined;
+      if (!source || clusterId == null) return;
+
+      try {
+        const zoom = await source.getClusterExpansionZoom(clusterId);
+        const geom = features[0].geometry as GeoJSON.Point;
+        map.easeTo({
+          center: geom.coordinates as [number, number],
+          zoom: Math.min(zoom, 16),
+          duration: 500,
+        });
+      } catch (err) {
+        console.warn("[MapExplorer] Cluster expansion error:", err);
+      }
+    });
+
+    // Click individual point -> select temple
+    map.on("click", "unclustered-point", (e) => {
+      const feature = e.features?.[0];
+      if (!feature) return;
+      const props = feature.properties as Record<string, unknown>;
+      const geom = feature.geometry as GeoJSON.Point;
+      if (typeof props?.id === "string") {
+        setSelectedId(props.id);
+      }
+      map.flyTo({
+        center: geom.coordinates as [number, number],
+        zoom: Math.max(map.getZoom(), 14),
+        speed: 1.2,
+      });
+    });
+
+    // Pointer cursors
+    map.on("mouseenter", "temple-clusters", () => {
+      map.getCanvas().style.cursor = "pointer";
+    });
+    map.on("mouseleave", "temple-clusters", () => {
+      map.getCanvas().style.cursor = "";
+    });
+
+    map.on("mouseenter", "unclustered-point", () => {
+      map.getCanvas().style.cursor = "pointer";
+    });
+    map.on("mouseleave", "unclustered-point", () => {
+      map.getCanvas().style.cursor = "";
+    });
+  }, [currentStyle, selectedId]);
+
+  // Update layer styles whenever selectedId changes
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !map.getLayer("unclustered-point")) return;
+
+    try {
+      map.setPaintProperty("unclustered-point", "circle-radius", [
+        "case",
+        ["==", ["get", "id"], selectedId || ""],
+        10,
+        7,
+      ]);
+      map.setPaintProperty("unclustered-point", "circle-stroke-width", [
+        "case",
+        ["==", ["get", "id"], selectedId || ""],
+        3,
+        2,
+      ]);
+    } catch {
+      /* ignore if layer is transitioning */
+    }
+  }, [selectedId]);
+
+  // Viewport Data Engine
+  const fetchViewportTemples = useCallback(async (mapInstance?: maplibregl.Map) => {
+    const map = mapInstance || mapRef.current;
+    if (!map) return;
+
+    viewportAbortRef.current?.abort();
     const controller = new AbortController();
     viewportAbortRef.current = controller;
 
@@ -173,673 +380,505 @@ export function MapExplorer() {
       const ne = bounds.getNorthEast();
 
       const bbox = [
-        sw.lng().toFixed(4),
-        sw.lat().toFixed(4),
-        ne.lng().toFixed(4),
-        ne.lat().toFixed(4),
+        sw.lng.toFixed(4),
+        sw.lat.toFixed(4),
+        ne.lng.toFixed(4),
+        ne.lat.toFixed(4),
       ].join(",");
 
-      const response = await fetch(`/api/map/viewport?bbox=${bbox}&limit=120`, {
+      const response = await fetch(`/api/map/viewport?bbox=${bbox}&limit=150`, {
         signal: controller.signal,
         cache: "no-store",
       });
 
       if (!response.ok) {
-        throw new Error(`Viewport request failed with ${response.status}`);
+        throw new Error(`Viewport query responded with ${response.status}`);
       }
 
-      const data = await response.json();
-
-      if (!Array.isArray(data.features)) {
-        throw new Error("Viewport response contains no GeoJSON features");
-      }
-
-      const newPlaces: MapPlaceItem[] = data.features
-        .filter(
-          (feature: DestinationGeoJSONFeature) =>
-            Number.isFinite(feature.geometry.coordinates[0]) &&
-            Number.isFinite(feature.geometry.coordinates[1])
-        )
-        .map((feature: DestinationGeoJSONFeature) => ({
-          id: feature.properties.id,
-          name: feature.properties.name,
-          category: feature.properties.category,
-          latitude: feature.geometry.coordinates[1],
-          longitude: feature.geometry.coordinates[0],
-          address: feature.properties.address || null,
-          district: feature.properties.district || null,
-          state: feature.properties.state || null,
-          stateCode: feature.properties.stateCode || null,
-          image: feature.properties.imageReference || null,
-          verified:
-            feature.properties.verificationStatus === "VERIFIED_OFFICIAL" ||
-            feature.properties.verificationStatus === "VERIFIED_COMMUNITY",
-          source: feature.properties.sourceType === "verified" ? "verified" : "google",
-          certainty: "temple",
-          href: feature.properties.href || null,
-          googleMapsUri: feature.properties.googlePlaceId
-            ? `https://www.google.com/maps/place/?q=place_id:${feature.properties.googlePlaceId}`
-            : `https://www.google.com/maps/search/?api=1&query=${feature.geometry.coordinates[1]},${feature.geometry.coordinates[0]}`,
-        }));
-
-      setItems(newPlaces);
-      setMode("live");
-      setStale(false);
+      const collection = (await response.json()) as DestinationFeatureCollection;
       setDataError(null);
+      activeGeoJsonRef.current = collection;
+
+      // Update GeoJSON source
+      const source = map.getSource("temples") as maplibregl.GeoJSONSource | undefined;
+      if (source) {
+        source.setData(collection);
+      }
+
+      // Transform features to MapPlaceItems
+      const mappedItems: MapPlaceItem[] = collection.features.map((f: DestinationGeoJSONFeature) => {
+        const props = f.properties;
+        const [lng, lat] = f.geometry.coordinates;
+        return {
+          id: props.id,
+          name: props.name,
+          category: props.category,
+          subcategory: props.subcategory,
+          latitude: lat,
+          longitude: lng,
+          address: props.address,
+          district: props.district || props.city,
+          state: props.state,
+          stateCode: props.stateCode,
+          image: props.imageReference,
+          verified: props.isVerified,
+          source: props.sourceType || "CURATED",
+          href: props.href,
+          accuracy: props.accuracy,
+          accuracyLabel: props.accuracyLabel,
+          googlePlaceId: props.googlePlaceId,
+        };
+      });
+
+      setItems(mappedItems);
       setShowAreaSearchPill(false);
     } catch (err: unknown) {
       if ((err as Error)?.name === "AbortError") return;
-      console.warn("[MapExplorer] Viewport sync degraded:", err);
-      setDataError("Unable to update live sacred sites in this viewport.");
+      console.warn("[MapExplorer] Viewport data fetch warning:", err);
+      // Keep the map alive! Do not crash or blank the screen
+      setDataError("Temple data temporarily unavailable");
+    } finally {
+      setLoading(false);
     }
   }, []);
 
-  // Open Google Maps InfoWindow for a place
-  const openInfoWindowForPlace = useCallback((place: MapPlaceItem, marker: google.maps.Marker) => {
-    const map = googleMapRef.current;
-    if (!map) return;
-
-    if (!infoWindowRef.current) {
-      infoWindowRef.current = new google.maps.InfoWindow();
-    }
-
-    const info = infoWindowRef.current;
-    const destUrl = place.href || (place.state && place.id ? `/temples` : null);
-    const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${place.latitude},${place.longitude}`;
-
-    const locationText = [place.district, place.state].filter(Boolean).join(", ") || "India";
-
-    const contentString = `
-      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 4px; max-width: 280px; color: #1a1a1a;">
-        ${place.image ? `
-          <div style="width: 100%; height: 120px; overflow: hidden; border-radius: 8px; margin-bottom: 8px; background: #222;">
-            <img src="${place.image}" alt="${place.name}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'" />
-          </div>
-        ` : ''}
-        <h4 style="margin: 0 0 4px 0; font-size: 15px; font-weight: 700; color: #111; line-height: 1.3;">
-          ${place.name}
-        </h4>
-        <div style="display: inline-block; font-size: 11px; font-weight: 600; color: #b45309; background: #fef3c7; padding: 2px 6px; border-radius: 4px; margin-bottom: 6px;">
-          🛕 ${place.category || "Sacred Sanctuary"}
-        </div>
-        <div style="font-size: 12px; color: #555; margin-bottom: 10px; display: flex; align-items: center; gap: 4px;">
-          📍 ${locationText}
-        </div>
-        <div style="display: flex; gap: 8px; margin-top: 6px;">
-          ${destUrl ? `
-            <a href="${destUrl}" style="flex: 1; text-align: center; background: #C8A24B; color: #0D0B09; font-weight: 600; font-size: 12px; padding: 6px 10px; border-radius: 6px; text-decoration: none; transition: background 0.2s;">
-              View Details
-            </a>
-          ` : ''}
-          <a href="${directionsUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; justify-content: center; gap: 4px; background: #f1f3f4; color: #3c4043; font-weight: 600; font-size: 12px; padding: 6px 10px; border-radius: 6px; text-decoration: none; border: 1px solid #dadce0;">
-            Directions ↗
-          </a>
-        </div>
-      </div>
-    `;
-
-    info.setContent(contentString);
-    info.open(map, marker);
-  }, []);
-
-  // Update Markers and Clusters
-  useEffect(() => {
-    const map = googleMapRef.current;
-    const clusterer = clustererRef.current;
-    if (!map || !clusterer) return;
-
-    const existingMarkers = markersMapRef.current;
-    const currentPlaceIds = new Set(filteredItems.map((p) => p.id));
-
-    // Remove markers that are no longer in filtered list
-    existingMarkers.forEach((marker, id) => {
-      if (!currentPlaceIds.has(id)) {
-        clusterer.removeMarker(marker);
-        marker.setMap(null);
-        existingMarkers.delete(id);
-      }
-    });
-
-    const newMarkersToAdd: google.maps.Marker[] = [];
-
-    // Custom SVG Temple Pin with pointed anchor
-    const createTempleIcon = (isExact: boolean, isSelected: boolean) => ({
-      url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
-        <svg xmlns="http://www.w3.org/2000/svg" width="38" height="48" viewBox="0 0 38 48">
-          <defs>
-            <filter id="sh" x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.45"/>
-            </filter>
-            <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="${isSelected ? '#FFFFFF' : isExact ? '#F59E0B' : '#EA580C'}" />
-              <stop offset="100%" stop-color="${isSelected ? '#C8A24B' : isExact ? '#B45309' : '#C2410C'}" />
-            </linearGradient>
-          </defs>
-          <path d="M19 0 C8.5 0 0 8.5 0 19 C0 30 19 48 19 48 C19 48 38 30 38 19 C38 8.5 29.5 0 19 0 Z" fill="url(#g1)" filter="url(#sh)" stroke="#FFFFFF" stroke-width="2" />
-          <circle cx="19" cy="18" r="12" fill="#1C1812" />
-          <text x="19" y="23" font-size="13" text-anchor="middle" fill="#FFFFFF">🛕</text>
-        </svg>
-      `)}`,
-      scaledSize: isSelected ? new google.maps.Size(42, 53) : new google.maps.Size(34, 43),
-      anchor: isSelected ? new google.maps.Point(21, 53) : new google.maps.Point(17, 43),
-    });
-
-    for (const place of filteredItems) {
-      const isExact = Boolean(place.verified || place.source === "verified");
-      const isSelected = selectedId === place.id;
-
-      if (existingMarkers.has(place.id)) {
-        const marker = existingMarkers.get(place.id)!;
-        marker.setIcon(createTempleIcon(isExact, isSelected));
-        marker.setZIndex(isSelected ? 9999 : isExact ? 100 : 50);
-        continue;
-      }
-
-      const marker = new google.maps.Marker({
-        position: { lat: place.latitude, lng: place.longitude },
-        title: place.name,
-        icon: createTempleIcon(isExact, isSelected),
-        zIndex: isExact ? 100 : 50,
-      });
-
-      marker.addListener("click", () => {
-        setSelectedId(place.id);
-        openInfoWindowForPlace(place, marker);
-        if (googleMapRef.current) {
-          googleMapRef.current.panTo({ lat: place.latitude, lng: place.longitude });
-        }
-      });
-
-      existingMarkers.set(place.id, marker);
-      newMarkersToAdd.push(marker);
-    }
-
-    if (newMarkersToAdd.length > 0) {
-      clusterer.addMarkers(newMarkersToAdd);
-    }
-  }, [filteredItems, selectedId, openInfoWindowForPlace]);
-
-  // Google Maps Initialization & Lifecycle
+  // MapLibre Initialization & Lifecycle
   useEffect(() => {
     const container = mapContainerRef.current;
-    const markersMap = markersMapRef.current;
     if (!container) return;
 
     let cancelled = false;
-
     setLoading(true);
     setMapError(null);
 
-    loadGoogleMaps()
-      .then((googleMaps) => {
-        if (cancelled || !container) return;
+    const styleUrl =
+      currentStyle === "liberty"
+        ? MAP_STYLES.primaryLiberty
+        : MAP_STYLES.primaryVector;
 
-        try {
-          const mapOptions: google.maps.MapOptions = {
-            center: { lat: DEFAULT_MAP_CENTER.lat, lng: DEFAULT_MAP_CENTER.lng },
-            zoom: DEFAULT_MAP_CENTER.zoom,
-            mapTypeId: googleMaps.MapTypeId.ROADMAP,
-            // Native Google Controls
-            zoomControl: true,
-            zoomControlOptions: {
-              position: googleMaps.ControlPosition.RIGHT_BOTTOM,
-            },
-            mapTypeControl: true,
-            mapTypeControlOptions: {
-              style: googleMaps.MapTypeControlStyle.DROPDOWN_MENU,
-              position: googleMaps.ControlPosition.TOP_LEFT,
-              mapTypeIds: [
-                googleMaps.MapTypeId.ROADMAP,
-                googleMaps.MapTypeId.SATELLITE,
-                googleMaps.MapTypeId.HYBRID,
-                googleMaps.MapTypeId.TERRAIN,
-              ],
-            },
-            fullscreenControl: true,
-            fullscreenControlOptions: {
-              position: googleMaps.ControlPosition.RIGHT_TOP,
-            },
-            streetViewControl: true,
-            streetViewControlOptions: {
-              position: googleMaps.ControlPosition.RIGHT_BOTTOM,
-            },
-            scaleControl: true,
-            rotateControl: true,
-            clickableIcons: true,
-          };
+    const map = new maplibregl.Map({
+      container,
+      style: styleUrl,
+      center: [DEFAULT_MAP_CENTER.lng, DEFAULT_MAP_CENTER.lat],
+      zoom: DEFAULT_MAP_CENTER.zoom,
+      minZoom: 3.5,
+      maxZoom: 18,
+      attributionControl: false,
+    });
 
-          const map = new googleMaps.Map(container, mapOptions);
-          googleMapRef.current = map;
+    mapRef.current = map;
 
-          // Services for Places & Geocoding
-          if (googleMaps.Geocoder) {
-            geocoderRef.current = new googleMaps.Geocoder();
-          }
-          if (googleMaps.places?.AutocompleteService) {
-            acServiceRef.current = new googleMaps.places.AutocompleteService();
-          }
+    // Compact open cartography attribution
+    map.addControl(
+      new maplibregl.AttributionControl({
+        compact: true,
+        customAttribution:
+          '© <a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a> © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
+      }),
+      "bottom-right"
+    );
 
-          // Initialize MarkerClusterer with standard Google Markers
-          const clusterer = new MarkerClusterer({
-            map,
-            markers: [],
-          });
-          clustererRef.current = clusterer;
+    map.on("load", () => {
+      if (cancelled) return;
+      setMapReady(true);
+      setupLayers(map, activeGeoJsonRef.current);
+      void fetchViewportTemples(map);
+    });
 
-          // Click on map closes active InfoWindow
-          map.addListener("click", () => {
-            if (infoWindowRef.current) {
-              infoWindowRef.current.close();
-            }
-          });
-
-          // Debounced Idle listener for Viewport Data fetching
-          map.addListener("idle", () => {
-            if (cancelled) return;
-            setMapReady(true);
-            setShowAreaSearchPill(true);
-
-            if (viewportTimerRef.current !== null) {
-              clearTimeout(viewportTimerRef.current);
-            }
-
-            viewportTimerRef.current = setTimeout(() => {
-              if (!cancelled && googleMapRef.current) {
-                void fetchViewportTemples(googleMapRef.current);
-              }
-            }, 800);
-          });
-
-          // Initial load triggers initial national viewport query
-          void fetchViewportTemples(map);
-          setLoading(false);
-
-          // Hook Google Maps authentication or API activation failure
-          window.gm_authFailure = () => {
-            console.warn("[MapExplorer] Google Maps API Authentication/Activation Failure detected.");
-            if (!cancelled) {
-              setLoading(false);
-              setMapError("auth_failure");
-            }
-          };
-
-          // ResizeObserver
-          if (typeof ResizeObserver !== "undefined") {
-            const ro = new ResizeObserver(() => {
-              if (googleMapRef.current && !cancelled) {
-                google.maps.event.trigger(googleMapRef.current, "resize");
-              }
-            });
-            ro.observe(container);
-            resizeObserverRef.current = ro;
-          }
-        } catch (err) {
-          console.error("[MapExplorer] Google Maps initialization error:", err);
-          if (!cancelled) {
-            setLoading(false);
-            setMapError("Failed to initialize Google Maps explorer.");
-          }
-        }
-      })
-      .catch((err) => {
-        console.error("[MapExplorer] Failed to load Google Maps SDK:", err);
-        if (!cancelled) {
-          setLoading(false);
-          const msg = (err as Error)?.message;
-          setMapError(msg === "auth_failure" ? "auth_failure" : "Google Maps is temporarily unavailable. Using list explorer instead.");
-        }
-      });
-
-    return () => {
-      cancelled = true;
-
-      if (viewportAbortRef.current) {
-        viewportAbortRef.current.abort();
-        viewportAbortRef.current = null;
+    map.on("rotate", () => {
+      if (!cancelled) {
+        setBearing(map.getBearing());
       }
+    });
+
+    map.on("error", (e) => {
+      console.warn("[MapExplorer] MapLibre internal warning:", e.error);
+    });
+
+    // Moveend listener: debounced viewport fetch
+    map.on("moveend", () => {
+      if (cancelled) return;
+      setShowAreaSearchPill(true);
 
       if (viewportTimerRef.current !== null) {
         clearTimeout(viewportTimerRef.current);
-        viewportTimerRef.current = null;
       }
 
-      if (resizeObserverRef.current) {
-        resizeObserverRef.current.disconnect();
-        resizeObserverRef.current = null;
+      viewportTimerRef.current = setTimeout(() => {
+        if (!cancelled && mapRef.current) {
+          void fetchViewportTemples(mapRef.current);
+        }
+      }, 700);
+    });
+
+    // ResizeObserver
+    const ro = new ResizeObserver(() => {
+      map.resize();
+    });
+    ro.observe(container);
+
+    return () => {
+      cancelled = true;
+      ro.disconnect();
+      if (viewportTimerRef.current !== null) {
+        clearTimeout(viewportTimerRef.current);
       }
-
-      if (clustererRef.current) {
-        clustererRef.current.clearMarkers();
-        clustererRef.current = null;
-      }
-
-      markersMap.forEach((marker) => {
-        marker.setMap(null);
-      });
-      markersMap.clear();
-
-      if (userMarkerRef.current) {
-        userMarkerRef.current.setMap(null);
-        userMarkerRef.current = null;
-      }
-
-      if (searchPinRef.current) {
-        searchPinRef.current.setMap(null);
-        searchPinRef.current = null;
-      }
-
-      if (infoWindowRef.current) {
-        infoWindowRef.current.close();
-        infoWindowRef.current = null;
-      }
-
-      googleMapRef.current = null;
-      setMapReady(false);
+      viewportAbortRef.current?.abort();
+      userMarkerRef.current?.remove();
+      map.remove();
+      mapRef.current = null;
     };
-  }, [mapRetryCount, fetchViewportTemples]);
+  }, [mapRetryCount, currentStyle, fetchViewportTemples, setupLayers]);
 
-  // Search Area Trigger
-  const handleSearchThisArea = () => {
-    const map = googleMapRef.current;
-    if (!map) return;
-    setShowAreaSearchPill(false);
-    void fetchViewportTemples(map);
-  };
-
-  // Reset to National India View
-  const resetToIndia = () => {
-    const map = googleMapRef.current;
-    if (!map) return;
-    map.panTo({ lat: DEFAULT_MAP_CENTER.lat, lng: DEFAULT_MAP_CENTER.lng });
-    map.setZoom(DEFAULT_MAP_CENTER.zoom);
-    setShowAreaSearchPill(false);
-    void fetchViewportTemples(map);
-  };
-
-  // User Geolocation
-  const locateUser = () => {
-    if (!navigator.geolocation) {
-      alert("Geolocation is not supported by your browser.");
+  // Handle Style Switching
+  const handleToggleStyle = (newStyle: "liberty" | "dark") => {
+    if (newStyle === currentStyle) return;
+    const map = mapRef.current;
+    if (!map) {
+      setCurrentStyle(newStyle);
       return;
     }
+
+    setCurrentStyle(newStyle);
+    const targetUrl =
+      newStyle === "liberty"
+        ? MAP_STYLES.primaryLiberty
+        : MAP_STYLES.primaryVector;
+
+    map.setStyle(targetUrl);
+    map.once("style.load", () => {
+      setupLayers(map, activeGeoJsonRef.current);
+    });
+  };
+
+  // User Geolocation Handler
+  const handleLocateMe = () => {
+    if (!navigator.geolocation) {
+      setUserLocationMessage("Geolocation is not supported by your browser.");
+      return;
+    }
+
+    setLocating(true);
+    setUserLocationMessage(null);
 
     navigator.geolocation.getCurrentPosition(
       (pos) => {
+        setLocating(false);
         const { latitude, longitude } = pos.coords;
-        const map = googleMapRef.current;
-        if (!map) return;
 
-        const userPos = { lat: latitude, lng: longitude };
-        map.panTo(userPos);
-        map.setZoom(15);
-
-        if (userMarkerRef.current) {
-          userMarkerRef.current.setPosition(userPos);
-        } else {
-          userMarkerRef.current = new google.maps.Marker({
-            position: userPos,
-            map,
-            title: "Your Location",
-            zIndex: 10000,
-            icon: {
-              path: google.maps.SymbolPath.CIRCLE,
-              scale: 8,
-              fillColor: "#4285F4",
-              fillOpacity: 1,
-              strokeColor: "#FFFFFF",
-              strokeWeight: 3,
-            },
-          });
+        if (!isValidCoordinate(latitude, longitude) || !isWithinIndiaBounds(latitude, longitude)) {
+          setUserLocationMessage("Location coordinates are outside India sovereign bounds.");
+          return;
         }
 
-        void fetchViewportTemples(map);
+        setUserLocation({ lat: latitude, lng: longitude });
+
+        const map = mapRef.current;
+        if (map) {
+          map.flyTo({
+            center: [longitude, latitude],
+            zoom: 13.5,
+            speed: 1.4,
+            essential: true,
+          });
+
+          // Create or update pulse user marker
+          if (!userMarkerRef.current) {
+            const el = document.createElement("div");
+            el.className = "templeora-user-pin";
+            el.innerHTML = `
+              <div style="position:relative;width:24px;height:24px;display:flex;align-items:center;justify-content:center;">
+                <div style="position:absolute;width:100%;height:100%;border-radius:50%;background:#38bdf8;opacity:0.6;animation:ping 1.5s cubic-bezier(0,0,0.2,1) infinite;"></div>
+                <div style="position:relative;width:14px;height:14px;border-radius:50%;background:#0284c7;border:2.5px solid #ffffff;box-shadow:0 2px 6px rgba(0,0,0,0.35);"></div>
+              </div>
+            `;
+            userMarkerRef.current = new maplibregl.Marker({ element: el })
+              .setLngLat([longitude, latitude])
+              .addTo(map);
+          } else {
+            userMarkerRef.current.setLngLat([longitude, latitude]);
+          }
+
+          void fetchViewportTemples(map);
+        }
       },
       (err) => {
-        console.warn("[MapExplorer] Geolocation denied or error:", err);
-        alert("Location access was denied. You can search any place, road, or city above.");
+        setLocating(false);
+        setUserLocationMessage(
+          err.code === 1
+            ? "Location permission was denied. Enable permission to center on your position."
+            : "Location signal unavailable."
+        );
+        setTimeout(() => setUserLocationMessage(null), 4500);
       },
-      { timeout: 10000, enableHighAccuracy: true }
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
     );
   };
 
-  // Autocomplete search handler
+  // Reset to National India View
+  const handleResetToIndia = () => {
+    const map = mapRef.current;
+    if (!map) return;
+    map.flyTo({
+      center: [DEFAULT_MAP_CENTER.lng, DEFAULT_MAP_CENTER.lat],
+      zoom: DEFAULT_MAP_CENTER.zoom,
+      bearing: 0,
+      pitch: 0,
+      speed: 1.2,
+      essential: true,
+    });
+    setSelectedId(null);
+  };
+
+  // Reset Orientation / Compass
+  const handleResetOrientation = () => {
+    const map = mapRef.current;
+    if (!map) return;
+    map.resetNorthPitch({ duration: 400 });
+  };
+
+  // Search input handler with debounce
   useEffect(() => {
-    const trimmed = q.trim();
-    const timer = setTimeout(() => {
-      if (trimmed.length < 2) {
-        setAc([]);
+    const query = q.trim();
+    if (query.length < 2) {
+      return;
+    }
+
+    searchAbortRef.current?.abort();
+    const controller = new AbortController();
+    searchAbortRef.current = controller;
+
+    const timer = setTimeout(async () => {
+      setIsSearching(true);
+      try {
+        const res = await fetch(`/api/search?q=${encodeURIComponent(query)}&limit=6`, {
+          signal: controller.signal,
+        });
+        if (!res.ok) throw new Error("Search failed");
+        const data = await res.json();
+
+        const results: Suggestion[] = [];
+
+        // 1. Temples from internal registry/catalog
+        if (Array.isArray(data.temples)) {
+          for (const t of data.temples.slice(0, 5)) {
+            results.push({
+              type: "temple",
+              title: t.name,
+              subtitle: [t.location || t.district, t.stateSlug].filter(Boolean).join(", "),
+              slug: t.slug,
+            });
+          }
+        }
+
+        // 2. Locations / Cities
+        if (Array.isArray(data.locations)) {
+          for (const loc of data.locations.slice(0, 3)) {
+            results.push({
+              type: "location",
+              title: loc.name,
+              subtitle: loc.state || "India",
+            });
+          }
+        }
+
+        // 3. Deities
+        if (Array.isArray(data.deities)) {
+          for (const d of data.deities.slice(0, 2)) {
+            results.push({
+              type: "heritage",
+              title: d.name,
+              subtitle: `${d.count} Sacred Shrines`,
+            });
+          }
+        }
+
+        setSuggestions(results);
+        setSuggestOpen(results.length > 0);
+      } catch (err: unknown) {
+        if ((err as Error)?.name === "AbortError") return;
+        setSuggestions([]);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 280);
+
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
+  }, [q]);
+
+  // Execute selection from suggestion
+  const handleSelectSuggestion = async (s: Suggestion) => {
+    setSuggestOpen(false);
+    setQ(s.title);
+
+    const map = mapRef.current;
+    if (!map) return;
+
+    if (s.type === "temple" && s.slug) {
+      // Find temple in existing items
+      const existing = items.find((i) => i.href?.endsWith(s.slug!));
+      if (existing) {
+        setSelectedId(existing.id);
+        map.flyTo({
+          center: [existing.longitude, existing.latitude],
+          zoom: 15.5,
+          speed: 1.4,
+          essential: true,
+        });
         return;
       }
 
-      // 1. Search local temples first for instantaneous results
-      const localMatches: Suggestion[] = filteredItems
-        .filter((item) => item.name.toLowerCase().includes(trimmed.toLowerCase()))
-        .slice(0, 3)
-        .map((item) => ({
-          type: "temple" as const,
-          id: item.id,
-          text: `🛕 ${item.name} (${item.district || item.state || "India"})`,
-          lat: item.latitude,
-          lng: item.longitude,
-        }));
-
-      // 2. Query Google Places Autocomplete in browser if available
-      if (acServiceRef.current && window.google?.maps?.places?.PlacesServiceStatus) {
-        acServiceRef.current.getPlacePredictions(
-          {
-            input: trimmed,
-            componentRestrictions: { country: "in" },
-          },
-          (predictions, status) => {
-            if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
-              const googleMatches: Suggestion[] = predictions.slice(0, 5).map((p) => ({
-                type: "place" as const,
-                placeId: p.place_id,
-                text: p.description,
-              }));
-              setAc([...localMatches, ...googleMatches]);
-              setAcOpen(true);
-            } else {
-              setAc(localMatches);
-              if (localMatches.length > 0) setAcOpen(true);
-            }
-          }
-        );
-      } else {
-        // Fallback to server autocomplete API
-        fetch(`/api/places/autocomplete?q=${encodeURIComponent(trimmed)}&_t=${Date.now()}`)
-          .then((r) => r.json())
-          .then((data: { suggestions?: Suggestion[] }) => {
-            const apiSuggestions = data.suggestions || [];
-            setAc([...localMatches, ...apiSuggestions]);
-            setAcOpen(true);
-          })
-          .catch(() => {
-            setAc(localMatches);
-            if (localMatches.length > 0) setAcOpen(true);
-          });
-      }
-    }, 250);
-
-    return () => clearTimeout(timer);
-  }, [q, filteredItems]);
-
-  // Navigate to Selected Place / Location / Road
-  const goToPlace = (sug: Suggestion) => {
-    setAcOpen(false);
-    setQ(sug.text.replace(/^🛕\s*/, ""));
-    const map = googleMapRef.current;
-    if (!map) return;
-
-    // 1. If it's a temple
-    if (sug.type === "temple" && sug.lat && sug.lng) {
-      map.panTo({ lat: sug.lat, lng: sug.lng });
-      map.setZoom(16);
-      if (sug.id) {
-        setSelectedId(sug.id);
-        const marker = markersMapRef.current.get(sug.id);
-        const place = items.find((i) => i.id === sug.id);
-        if (marker && place) {
-          openInfoWindowForPlace(place, marker);
-        }
-      }
-      return;
-    }
-
-    // 2. If it has a Google Place ID
-    if (sug.placeId && geocoderRef.current) {
-      geocoderRef.current.geocode({ placeId: sug.placeId }, (results, status) => {
-        if (status === "OK" && results && results[0]) {
-          const loc = results[0].geometry.location;
-          if (results[0].geometry.viewport) {
-            map.fitBounds(results[0].geometry.viewport);
-          } else {
-            map.panTo(loc);
-            map.setZoom(15);
-          }
-
-          // Place search marker
-          if (searchPinRef.current) {
-            searchPinRef.current.setPosition(loc);
-            searchPinRef.current.setMap(map);
-          } else {
-            searchPinRef.current = new google.maps.Marker({
-              position: loc,
-              map,
-              title: sug.text,
-              animation: google.maps.Animation.DROP,
+      // Fetch temple coordinates from API
+      try {
+        setLoading(true);
+        const res = await fetch(`/api/v1/temples/${s.slug}`);
+        if (res.ok) {
+          const temple = await res.json();
+          if (temple.latitude && temple.longitude) {
+            setSelectedId(temple.id);
+            map.flyTo({
+              center: [temple.longitude, temple.latitude],
+              zoom: 15.5,
+              speed: 1.4,
+              essential: true,
             });
+            void fetchViewportTemples(map);
           }
-
-          void fetchViewportTemples(map);
         }
-      });
-      return;
-    }
-
-    // 3. Fallback text geocode
-    if (geocoderRef.current) {
-      geocoderRef.current.geocode({ address: sug.text, componentRestrictions: { country: "IN" } }, (results, status) => {
-        if (status === "OK" && results && results[0]) {
-          const loc = results[0].geometry.location;
-          if (results[0].geometry.viewport) {
-            map.fitBounds(results[0].geometry.viewport);
-          } else {
-            map.panTo(loc);
-            map.setZoom(14);
+      } catch {
+        /* ignore */
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      // Discovery query for location, city, or deity
+      try {
+        setLoading(true);
+        const res = await fetch(`/api/temples/discover?q=${encodeURIComponent(s.title)}&limit=20`);
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data.items) && data.items.length > 0) {
+            const first = data.items[0];
+            map.flyTo({
+              center: [first.longitude, first.latitude],
+              zoom: 12.5,
+              speed: 1.3,
+              essential: true,
+            });
+            void fetchViewportTemples(map);
           }
-          void fetchViewportTemples(map);
         }
-      });
+      } catch {
+        /* ignore */
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
-  // Handle Search Input Keydown (Enter key)
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      if (ac.length > 0 && acIdx >= 0 && ac[acIdx]) {
-        goToPlace(ac[acIdx]);
-      } else if (ac.length > 0 && ac[0]) {
-        goToPlace(ac[0]);
-      } else if (q.trim() && geocoderRef.current && googleMapRef.current) {
-        setAcOpen(false);
-        const map = googleMapRef.current;
-        geocoderRef.current.geocode(
-          { address: q.trim(), componentRestrictions: { country: "IN" } },
-          (results, status) => {
-            if (status === "OK" && results && results[0]) {
-              const loc = results[0].geometry.location;
-              if (results[0].geometry.viewport) {
-                map.fitBounds(results[0].geometry.viewport);
-              } else {
-                map.panTo(loc);
-                map.setZoom(14);
-              }
-              void fetchViewportTemples(map);
-            }
-          }
-        );
+      if (suggestOpen && suggestIdx >= 0 && suggestions[suggestIdx]) {
+        void handleSelectSuggestion(suggestions[suggestIdx]);
+      } else if (q.trim()) {
+        void handleSelectSuggestion({ type: "query", title: q.trim() });
       }
     } else if (e.key === "ArrowDown") {
       e.preventDefault();
-      setAcIdx((prev) => (prev < ac.length - 1 ? prev + 1 : prev));
+      setSuggestIdx((prev) => (prev < suggestions.length - 1 ? prev + 1 : prev));
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      setAcIdx((prev) => (prev > 0 ? prev - 1 : 0));
+      setSuggestIdx((prev) => (prev > 0 ? prev - 1 : 0));
     } else if (e.key === "Escape") {
-      setAcOpen(false);
+      setSuggestOpen(false);
     }
   };
 
   return (
     <div className="relative flex h-[calc(100vh-4rem)] lg:h-[calc(100vh-4.5rem)] w-full flex-col lg:flex-row overflow-hidden bg-obsidian">
-      {/* Top Floating Controls Rail */}
-      <div className="pointer-events-none absolute inset-x-0 top-3 z-20 flex flex-col gap-2 px-3 sm:px-6">
+      {/* Top Floating Search & Filter Bar */}
+      <div className="pointer-events-none absolute inset-x-0 top-3 z-30 flex flex-col gap-2 px-3 sm:px-6">
         <div className="pointer-events-auto mx-auto flex w-full max-w-xl items-center gap-2">
           {/* Autocomplete Search Bar */}
           <div className="relative flex-1">
-            <div className="glass flex items-center gap-2 rounded-2xl border border-line px-3.5 py-2.5 shadow-2xl transition-colors focus-within:border-gold/50 bg-obsidian-2/95">
+            <div className="flex items-center gap-2.5 rounded-2xl border border-line bg-obsidian-2/95 px-3.5 py-2.5 shadow-2xl backdrop-blur-md transition-colors focus-within:border-gold/50">
               <Search className="h-4 w-4 shrink-0 text-gold-dim" />
               <input
                 type="text"
                 value={q}
-                onChange={(e) => setQ(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setQ(val);
+                  if (val.trim().length < 2) {
+                    setSuggestions([]);
+                    setSuggestOpen(false);
+                  }
+                }}
                 onKeyDown={handleSearchKeyDown}
-                onFocus={() => ac.length > 0 && setAcOpen(true)}
-                placeholder={t("map_search")}
+                onFocus={() => suggestions.length > 0 && setSuggestOpen(true)}
+                placeholder={t("map_search") || "Search temples, sacred rivers, cities, or deities…"}
                 className="w-full bg-transparent text-[13.5px] text-ivory placeholder-ivory-dim/60 outline-none"
-                aria-label={t("map_search")}
+                aria-label={t("map_search") || "Search map"}
               />
+              {isSearching && (
+                <RefreshCw className="h-3.5 w-3.5 animate-spin text-gold-dim" />
+              )}
               {q && (
                 <button
                   onClick={() => {
                     setQ("");
-                    setAc([]);
-                    setAcOpen(false);
+                    setSuggestions([]);
+                    setSuggestOpen(false);
                   }}
-                  aria-label="Clear Search"
-                  className="text-ivory-dim hover:text-ivory"
+                  className="rounded-full p-0.5 text-ivory-dim hover:text-ivory"
+                  aria-label="Clear search"
                 >
-                  <X className="h-4 w-4" />
+                  <X className="h-3.5 w-3.5" />
                 </button>
               )}
             </div>
 
-            {/* Suggestions dropdown */}
-            {acOpen && ac.length > 0 && (
-              <div className="glass absolute inset-x-0 top-full z-30 mt-1.5 overflow-hidden rounded-2xl border border-line p-1 shadow-2xl backdrop-blur-xl bg-obsidian-2/98">
-                {ac.map((s, i) => (
+            {/* Suggestions Dropdown */}
+            {suggestOpen && suggestions.length > 0 && (
+              <div className="absolute left-0 right-0 top-full mt-2 max-h-72 overflow-y-auto rounded-2xl border border-line bg-obsidian-2/95 p-1.5 shadow-2xl backdrop-blur-xl">
+                {suggestions.map((s, idx) => (
                   <button
-                    key={`${s.type}-${s.text}-${i}`}
-                    onMouseEnter={() => setAcIdx(i)}
-                    onClick={() => goToPlace(s)}
+                    key={`${s.type}-${s.title}-${idx}`}
+                    onClick={() => void handleSelectSuggestion(s)}
                     className={cn(
-                      "flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-[13px] transition-colors",
-                      acIdx === i ? "bg-gold/15 text-ivory" : "text-ivory-dim hover:bg-white/[0.05]"
+                      "flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-left transition-colors",
+                      suggestIdx === idx
+                        ? "bg-gold/15 text-gold-bright"
+                        : "text-ivory hover:bg-obsidian-3 hover:text-gold-bright"
                     )}
                   >
-                    <LocateFixed
-                      className={cn(
-                        "h-3.5 w-3.5 shrink-0",
-                        acIdx === i ? "text-gold-bright" : "text-gold-dim"
+                    <span className="text-sm">
+                      {s.type === "temple" ? "🛕" : s.type === "location" ? "📍" : "🕉️"}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <div className="truncate text-xs font-semibold">{s.title}</div>
+                      {s.subtitle && (
+                        <div className="truncate text-[10px] text-ivory-dim">{s.subtitle}</div>
                       )}
-                    />
-                    <span className="truncate">{s.text}</span>
+                    </div>
                   </button>
                 ))}
               </div>
             )}
           </div>
 
-          {/* Toggle Map vs List on Mobile / Tablet */}
-          <div className="flex shrink-0 items-center rounded-2xl border border-line bg-obsidian-2/95 p-1 lg:hidden shadow-xl">
+          {/* Mobile Tab Toggle */}
+          <div className="flex lg:hidden pointer-events-auto items-center rounded-2xl border border-line bg-obsidian-2/95 p-1 shadow-2xl backdrop-blur-md">
             <button
               onClick={() => setActiveTab("map")}
               className={cn(
-                "flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium transition-colors",
+                "flex items-center gap-1 rounded-xl px-3 py-1.5 text-xs font-medium transition-colors",
                 activeTab === "map"
-                  ? "bg-gold text-obsidian font-semibold"
+                  ? "bg-gold text-obsidian font-semibold shadow"
                   : "text-ivory-dim hover:text-ivory"
               )}
             >
@@ -849,9 +888,9 @@ export function MapExplorer() {
             <button
               onClick={() => setActiveTab("list")}
               className={cn(
-                "flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium transition-colors",
+                "flex items-center gap-1 rounded-xl px-3 py-1.5 text-xs font-medium transition-colors",
                 activeTab === "list"
-                  ? "bg-gold text-obsidian font-semibold"
+                  ? "bg-gold text-obsidian font-semibold shadow"
                   : "text-ivory-dim hover:text-ivory"
               )}
             >
@@ -861,27 +900,26 @@ export function MapExplorer() {
           </div>
         </div>
 
-        {/* Quick Filters Pill Bar */}
-        <div className="pointer-events-auto mx-auto flex w-full max-w-2xl items-center justify-between gap-2 overflow-x-auto py-0.5 scrollbar-none">
+        {/* Quick Filter Chips */}
+        <div className="pointer-events-auto mx-auto flex w-full max-w-xl items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
           {[
             { id: "all", label: "All Sanctuaries" },
             { id: "verified", label: "Verified Only" },
-            { id: "open", label: "Open Now" },
-            { id: "heritage", label: "Heritage / Jyotirlinga" },
+            { id: "heritage", label: "Heritage & Jyotirlingas" },
             { id: "nature", label: "Ghats & Rivers" },
-            { id: "food_stay", label: "Annakshetra & Stay" },
-          ].map((cat) => (
+            { id: "open", label: "Open Now" },
+          ].map((chip) => (
             <button
-              key={cat.id}
-              onClick={() => setFilterCategory(cat.id as typeof filterCategory)}
+              key={chip.id}
+              onClick={() => setFilterCategory(chip.id as typeof filterCategory)}
               className={cn(
-                "whitespace-nowrap rounded-full px-3 py-1 text-[11px] font-medium transition-all shadow-md",
-                filterCategory === cat.id
-                  ? "bg-gold text-obsidian font-semibold"
-                  : "bg-obsidian-2/90 border border-line text-ivory-dim hover:border-gold/40 hover:text-ivory"
+                "shrink-0 rounded-full border px-3 py-1 text-[11px] font-medium shadow-md backdrop-blur-md transition-all active:scale-95",
+                filterCategory === chip.id
+                  ? "border-gold bg-gold text-obsidian font-semibold"
+                  : "border-line bg-obsidian-2/90 text-ivory-dim hover:border-gold/40 hover:text-ivory"
               )}
             >
-              {cat.label}
+              {chip.label}
             </button>
           ))}
         </div>
@@ -891,174 +929,281 @@ export function MapExplorer() {
       {showAreaSearchPill && !loading && (
         <div className="pointer-events-none absolute inset-x-0 top-24 z-20 flex justify-center">
           <button
-            onClick={handleSearchThisArea}
+            onClick={() => void fetchViewportTemples()}
             disabled={loading}
             className="pointer-events-auto flex items-center gap-1.5 rounded-full border border-gold/40 bg-obsidian-2/95 px-4 py-2 text-xs font-semibold text-gold-bright shadow-2xl backdrop-blur-md transition-transform hover:scale-105 active:scale-95 disabled:opacity-50"
           >
-            <Compass className="h-3.5 w-3.5 animate-spin duration-3000" />
+            <Compass className="h-3.5 w-3.5 text-gold animate-spin duration-3000" />
             <span>Search This Area</span>
           </button>
         </div>
       )}
 
-      {/* Main Map Viewport */}
+      {/* Main Map Viewport (Desktop 72% / Mobile 100%) */}
       <div
         className={cn(
-          "relative flex-1 w-full h-full",
+          "relative flex-1 w-full h-full min-h-0 min-w-0",
           activeTab === "list" && "hidden lg:block"
         )}
       >
-        {/* Genuine Google Maps Canvas */}
+        {/* MapLibre Canvas Container */}
         <div
           ref={mapContainerRef}
           className="w-full h-full"
           role="region"
-          aria-label="Google Maps Geographic View"
+          aria-label="TEMPLEORA Sacred Atlas Open Map"
         />
 
         {/* Loading Overlay */}
         {!mapReady && !mapError && (
-          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-obsidian/80 backdrop-blur-sm pointer-events-none">
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-obsidian/85 backdrop-blur-sm pointer-events-none">
             <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl border border-gold/30 bg-obsidian-3/90 text-gold shadow-2xl animate-pulse">
               <Compass className="h-7 w-7 animate-spin duration-3000" />
             </div>
             <p className="mt-3 font-serif text-sm font-medium text-ivory">
-              Initializing Google Maps Atlas…
+              Rendering Sacred Atlas Cartography…
             </p>
           </div>
         )}
 
-        {/* Offline / Failure Mode UI */}
+        {/* Map Failure Recovery UI */}
         {mapError && (
           <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-obsidian-2/95 p-6 text-center backdrop-blur-md">
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-500/15 text-amber-400 mb-4 border border-amber-500/30">
               <MapIcon className="h-7 w-7" />
             </div>
-
-            {mapError === "auth_failure" ? (
-              <div className="max-w-md space-y-3">
-                <h3 className="font-display text-xl font-medium text-ivory">
-                  Google Maps API Activation Required
-                </h3>
-                <p className="text-xs leading-relaxed text-ivory-dim">
-                  Your Google Maps API key was loaded, but Google returned an authentication error because the <strong className="text-gold-bright">Maps JavaScript API</strong> is not activated on your Google Cloud project, or billing is not linked.
-                </p>
-                <div className="rounded-xl border border-line bg-obsidian-3/80 p-3.5 text-left space-y-2 text-[12px] text-ivory-dim">
-                  <div className="font-semibold text-ivory">Quick Fix in Google Cloud Console:</div>
-                  <div className="flex items-start gap-2">
-                    <span className="text-gold font-bold">1.</span>
-                    <span>Click the button below to open Google Cloud Console.</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <span className="text-gold font-bold">2.</span>
-                    <span>Click the blue <strong className="text-white">&quot;Enable&quot;</strong> button for <strong>Maps JavaScript API</strong>.</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <span className="text-gold font-bold">3.</span>
-                    <span>Ensure billing is linked to your project (Google includes $200 monthly free credit).</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <span className="text-gold font-bold">4.</span>
-                    <span>Under Credentials &gt; Restrictions, add <code className="text-gold">https://templeora.vercel.app/*</code>.</span>
-                  </div>
-                </div>
-
-                <div className="mt-4 flex flex-col sm:flex-row items-center justify-center gap-2.5">
-                  <a
-                    href="https://console.cloud.google.com/apis/library/maps-backend.googleapis.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex w-full sm:w-auto items-center justify-center gap-1.5 rounded-xl bg-gold px-4 py-2.5 text-xs font-semibold text-obsidian shadow-md hover:bg-gold-bright transition-colors"
-                  >
-                    <span>Enable Maps JS API in Google Cloud</span>
-                    <ExternalLink className="h-3.5 w-3.5" />
-                  </a>
-                  <button
-                    onClick={() => setMapRetryCount((c) => c + 1)}
-                    className="flex w-full sm:w-auto items-center justify-center rounded-xl border border-line bg-obsidian-3 px-4 py-2.5 text-xs font-medium text-ivory hover:border-gold transition-colors"
-                  >
-                    Retry Map
-                  </button>
-                  <button
-                    onClick={() => setActiveTab("list")}
-                    className="flex w-full sm:w-auto items-center justify-center rounded-xl border border-line bg-obsidian-3 px-4 py-2.5 text-xs font-medium text-ivory hover:border-gold transition-colors"
-                  >
-                    View List ({filteredItems.length})
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="max-w-sm space-y-2">
-                <h3 className="font-display text-xl font-medium text-ivory">
-                  Google Maps is temporarily unavailable
-                </h3>
-                <p className="text-xs leading-relaxed text-ivory-dim">
-                  {mapError}
-                </p>
-                <div className="mt-5 flex items-center justify-center gap-3">
-                  <button
-                    onClick={() => setMapRetryCount((c) => c + 1)}
-                    className="rounded-xl bg-gold px-4 py-2 text-xs font-semibold text-obsidian shadow-md hover:bg-gold-bright transition-colors"
-                  >
-                    Retry
-                  </button>
-                  <button
-                    onClick={() => setActiveTab("list")}
-                    className="rounded-xl border border-line bg-obsidian-3 px-4 py-2 text-xs font-medium text-ivory hover:border-gold transition-colors"
-                  >
-                    Open List View ({filteredItems.length})
-                  </button>
-                </div>
-              </div>
-            )}
+            <h3 className="font-display text-xl font-medium text-ivory">
+              Atlas Cartography Unavailable
+            </h3>
+            <p className="mt-2 max-w-sm text-xs leading-relaxed text-ivory-dim">
+              The vector basemap tiles could not be initialized. You can retry map rendering or browse the verified pilgrimage sanctuaries in list view.
+            </p>
+            <div className="mt-5 flex items-center gap-3">
+              <button
+                onClick={() => setMapRetryCount((c) => c + 1)}
+                className="rounded-xl bg-gold px-4 py-2 text-xs font-semibold text-obsidian shadow-md hover:bg-gold-bright transition-colors"
+              >
+                Retry Atlas
+              </button>
+              <button
+                onClick={() => setActiveTab("list")}
+                className="rounded-xl border border-line bg-obsidian-3 px-4 py-2 text-xs font-medium text-ivory hover:border-gold transition-colors"
+              >
+                Open List View ({filteredItems.length})
+              </button>
+            </div>
           </div>
         )}
 
-        {/* Floating Custom Navigation Buttons (Locate Me, Reset) */}
-        <div className="pointer-events-none absolute bottom-5 left-5 z-10 flex flex-col gap-2">
-          <button
-            onClick={locateUser}
-            aria-label="Locate me"
-            title="Locate me"
-            className="glass pointer-events-auto flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-obsidian-2/90 text-ivory-dim shadow-xl transition-all hover:border-gold hover:text-gold-bright active:scale-95"
-          >
-            <Navigation2 className="h-4 w-4" />
-          </button>
-          <button
-            onClick={resetToIndia}
-            aria-label="Reset to India view"
-            title="Reset to India view"
-            className="glass pointer-events-auto flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-obsidian-2/90 text-ivory-dim shadow-xl transition-all hover:border-gold hover:text-gold-bright active:scale-95"
-          >
-            <Compass className="h-4 w-4" />
-          </button>
-        </div>
+        {/* Geolocation feedback toast */}
+        {userLocationMessage && (
+          <div className="pointer-events-none absolute inset-x-0 bottom-24 z-30 flex justify-center px-4">
+            <div className="pointer-events-auto rounded-full border border-sky-500/40 bg-obsidian-2/95 px-4 py-2 text-xs text-sky-200 shadow-2xl backdrop-blur-md">
+              {userLocationMessage}
+            </div>
+          </div>
+        )}
 
-        {/* Data degradation notification: keeps Google map visible! */}
+        {/* Subtle Data Error Toast (Map stays active) */}
         {dataError && !mapError && (
-          <div className="pointer-events-none absolute inset-x-0 bottom-4 z-20 flex justify-center px-4">
+          <div className="pointer-events-none absolute inset-x-0 bottom-24 z-20 flex justify-center px-4">
             <div className="pointer-events-auto rounded-full border border-amber-500/30 bg-obsidian-3/95 px-4 py-2 text-[11px] text-amber-200 shadow-2xl backdrop-blur-xl">
               {dataError}
             </div>
           </div>
         )}
 
-        {/* Stale / Degraded Cache Banner */}
-        {stale && !mapError && (
-          <div className="pointer-events-none absolute inset-x-0 bottom-6 z-10 flex justify-center px-4">
-            <div className="pointer-events-auto flex max-w-md items-center gap-2 rounded-2xl border border-amber-500/30 bg-obsidian-3/95 px-4 py-2.5 text-xs text-ivory shadow-2xl backdrop-blur-md">
-              <WifiOff className="h-4 w-4 shrink-0 text-amber-400" />
-              <span>Showing cached sanctuary coordinates for uninterrupted navigation.</span>
+        {/* Floating Selected Sanctuary Card (Google-Maps-style) */}
+        {selected && (
+          <div className="pointer-events-none absolute bottom-5 left-4 right-4 sm:right-auto sm:w-96 z-20">
+            <div className="pointer-events-auto rounded-3xl border border-gold/40 bg-obsidian-2/95 p-4 shadow-2xl backdrop-blur-xl space-y-3">
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex items-center gap-2.5">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-gold/30 bg-gold/10 text-gold-bright text-xl">
+                    🛕
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <h4 className="font-serif text-[15px] font-semibold text-ivory line-clamp-1">
+                        {selected.name}
+                      </h4>
+                      {selected.verified && (
+                        <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-400" />
+                      )}
+                    </div>
+                    <p className="text-[11.5px] text-ivory-dim line-clamp-1">
+                      {selected.address || [selected.district, selected.state].filter(Boolean).join(", ")}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setSelectedId(null)}
+                  aria-label="Close sanctuary card"
+                  className="rounded-full p-1 text-ivory-dim hover:text-ivory transition-colors"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+
+              {/* Quality & Hierarchy Badges */}
+              <div className="flex items-center gap-2 text-[10.5px]">
+                {selectedQuality && (
+                  <span className="rounded-full bg-gold/15 px-2.5 py-0.5 font-semibold text-gold-bright border border-gold/30">
+                    {selectedQuality.accuracyLabel}
+                  </span>
+                )}
+                {userLocation && (
+                  <span className="text-ivory-dim">
+                    ~
+                    {calculateHaversineKm(
+                      userLocation.lat,
+                      userLocation.lng,
+                      selected.latitude,
+                      selected.longitude
+                    ).toFixed(1)}{" "}
+                    km away
+                  </span>
+                )}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center gap-2 pt-1">
+                {selected.href && (
+                  <Link
+                    href={selected.href}
+                    className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-gold px-3.5 py-2 text-xs font-semibold text-obsidian shadow-md hover:bg-gold-bright transition-colors"
+                  >
+                    <span>Explore Sanctuary</span>
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </Link>
+                )}
+                <a
+                  href={`https://www.google.com/maps/dir/?api=1&destination=${selected.latitude},${selected.longitude}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-1.5 rounded-xl border border-line bg-obsidian-3 px-3.5 py-2 text-xs font-medium text-ivory hover:border-gold transition-colors"
+                >
+                  <Car className="h-3.5 w-3.5 text-gold" />
+                  <span>Directions</span>
+                </a>
+              </div>
             </div>
+          </div>
+        )}
+
+        {/* Floating Map Controls (Bottom-Right) */}
+        <div className="pointer-events-none absolute bottom-5 right-4 z-20 flex flex-col items-end gap-2.5">
+          {/* Style Switcher Pill */}
+          <div className="pointer-events-auto flex items-center rounded-2xl border border-line bg-obsidian-2/95 p-1 shadow-2xl backdrop-blur-md">
+            <button
+              onClick={() => handleToggleStyle("liberty")}
+              title="Open road hierarchy & geographic landmarks"
+              className={cn(
+                "rounded-xl px-2.5 py-1 text-[11px] font-semibold transition-all",
+                currentStyle === "liberty"
+                  ? "bg-gold text-obsidian shadow"
+                  : "text-ivory-dim hover:text-ivory"
+              )}
+            >
+              Roads
+            </button>
+            <button
+              onClick={() => handleToggleStyle("dark")}
+              title="Nocturnal cinematic atlas"
+              className={cn(
+                "rounded-xl px-2.5 py-1 text-[11px] font-semibold transition-all",
+                currentStyle === "dark"
+                  ? "bg-gold text-obsidian shadow"
+                  : "text-ivory-dim hover:text-ivory"
+              )}
+            >
+              Dark
+            </button>
+          </div>
+
+          {/* Action Button Stack */}
+          <div className="pointer-events-auto flex flex-col overflow-hidden rounded-2xl border border-line bg-obsidian-2/95 shadow-2xl backdrop-blur-md">
+            {/* Zoom In */}
+            <button
+              onClick={() => mapRef.current?.zoomIn()}
+              title="Zoom In"
+              aria-label="Zoom In"
+              className="flex h-9 w-9 items-center justify-center text-ivory-dim transition-colors hover:bg-obsidian-3 hover:text-gold-bright active:scale-95"
+            >
+              <ZoomIn className="h-4 w-4" />
+            </button>
+            <div className="h-[1px] w-full bg-line" />
+
+            {/* Zoom Out */}
+            <button
+              onClick={() => mapRef.current?.zoomOut()}
+              title="Zoom Out"
+              aria-label="Zoom Out"
+              className="flex h-9 w-9 items-center justify-center text-ivory-dim transition-colors hover:bg-obsidian-3 hover:text-gold-bright active:scale-95"
+            >
+              <ZoomOut className="h-4 w-4" />
+            </button>
+            <div className="h-[1px] w-full bg-line" />
+
+            {/* Compass / Reset Orientation */}
+            <button
+              onClick={handleResetOrientation}
+              title="Reset Orientation (North Up)"
+              aria-label="Reset Orientation"
+              className="flex h-9 w-9 items-center justify-center text-ivory-dim transition-colors hover:bg-obsidian-3 hover:text-gold-bright active:scale-95"
+            >
+              <Compass
+                className="h-4 w-4 transition-transform duration-150"
+                style={{ transform: `rotate(${-bearing}deg)` }}
+              />
+            </button>
+            <div className="h-[1px] w-full bg-line" />
+
+            {/* Locate Me */}
+            <button
+              onClick={handleLocateMe}
+              disabled={locating}
+              title="Center on my location"
+              aria-label="Center on my location"
+              className="flex h-9 w-9 items-center justify-center text-ivory-dim transition-colors hover:bg-obsidian-3 hover:text-gold-bright active:scale-95 disabled:opacity-50"
+            >
+              <LocateFixed className={cn("h-4 w-4", locating && "animate-spin text-sky-400")} />
+            </button>
+            <div className="h-[1px] w-full bg-line" />
+
+            {/* Reset to India */}
+            <button
+              onClick={handleResetToIndia}
+              title="Reset to National Map of India"
+              aria-label="Reset to National Map of India"
+              className="flex h-9 w-9 items-center justify-center text-ivory-dim transition-colors hover:bg-obsidian-3 hover:text-gold-bright active:scale-95"
+            >
+              <Navigation2 className="h-4 w-4 text-gold" />
+            </button>
+          </div>
+        </div>
+
+        {/* Floating Expand Sidebar Button when collapsed on desktop */}
+        {!sidebarOpen && (
+          <div className="pointer-events-none absolute top-4 right-4 z-20 hidden lg:flex">
+            <button
+              onClick={() => setSidebarOpen(true)}
+              title="Show Sanctuaries List"
+              aria-label="Show Sanctuaries List"
+              className="pointer-events-auto flex items-center gap-1.5 rounded-2xl border border-line bg-obsidian-2/95 px-3.5 py-2 text-xs font-semibold text-gold-bright shadow-2xl backdrop-blur-md transition-all hover:border-gold hover:scale-105 active:scale-95"
+            >
+              <ChevronLeft className="h-4 w-4" />
+              <span>Sanctuaries ({filteredItems.length})</span>
+            </button>
           </div>
         )}
       </div>
 
-      {/* Side Sanctuary Drawer (Desktop) & List View (Mobile) */}
+      {/* Side Sanctuary Drawer (Desktop 28% / Mobile Full List) */}
       <aside
         className={cn(
-          "flex flex-col border-line bg-obsidian-2 lg:w-[380px] lg:border-l shrink-0",
-          activeTab === "map" && "hidden lg:flex",
+          "flex flex-col border-line bg-obsidian-2 lg:w-[390px] lg:border-l shrink-0 transition-all",
+          activeTab === "map" && (sidebarOpen ? "hidden lg:flex" : "hidden"),
           activeTab === "list" && "flex flex-1"
         )}
       >
@@ -1074,30 +1219,27 @@ export function MapExplorer() {
                 ? "Heritage & Jyotirlingas"
                 : filterCategory === "nature"
                 ? "Ghats & Sacred Rivers"
-                : filterCategory === "food_stay"
-                ? "Bhojanalaya & Stay"
                 : "Open Sanctuaries"}
             </h2>
             <p className="text-[11px] text-ivory-dim">
               {loading
                 ? "Querying verified geospatial nodes…"
-                : `${filteredItems.length} verified pilgrimage places`}
+                : `${filteredItems.length} verified sanctuaries in view`}
             </p>
           </div>
-          {mode && (
-            <span
-              className={cn(
-                "rounded-full px-2 py-0.5 text-[10px] font-medium border",
-                mode === "live"
-                  ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
-                  : mode === "cache"
-                  ? "border-sky-500/30 bg-sky-500/10 text-sky-300"
-                  : "border-amber-500/30 bg-amber-500/10 text-amber-300"
-              )}
-            >
-              {mode === "live" ? "Live GPS" : mode === "cache" ? "Cached" : "Verified Atlas"}
+          <div className="flex items-center gap-2">
+            <span className="rounded-full px-2.5 py-0.5 text-[10px] font-semibold border border-gold/30 bg-gold/10 text-gold-bright">
+              Verified Atlas
             </span>
-          )}
+            <button
+              onClick={() => setSidebarOpen(false)}
+              title="Collapse list"
+              aria-label="Collapse list"
+              className="hidden lg:flex h-7 w-7 items-center justify-center rounded-lg text-ivory-dim hover:text-ivory hover:bg-obsidian-3 transition-colors"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
         </div>
 
         {/* Sanctuary Cards List */}
@@ -1119,14 +1261,14 @@ export function MapExplorer() {
                 key={p.id}
                 onClick={() => {
                   setSelectedId(p.id);
-                  const map = googleMapRef.current;
+                  const map = mapRef.current;
                   if (map) {
-                    map.panTo({ lat: p.latitude, lng: p.longitude });
-                    map.setZoom(16);
-                    const marker = markersMapRef.current.get(p.id);
-                    if (marker) {
-                      openInfoWindowForPlace(p, marker);
-                    }
+                    map.flyTo({
+                      center: [p.longitude, p.latitude],
+                      zoom: 15.5,
+                      speed: 1.4,
+                      essential: true,
+                    });
                   }
                   if (activeTab === "list") {
                     setActiveTab("map");
@@ -1139,7 +1281,7 @@ export function MapExplorer() {
                     : "border-line bg-obsidian-3/60 hover:border-gold/30 hover:bg-obsidian-3"
                 )}
               >
-                {/* Photo thumbnail */}
+                {/* Photo thumbnail or icon */}
                 {p.image ? (
                   <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-line bg-black">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -1151,8 +1293,8 @@ export function MapExplorer() {
                     />
                   </div>
                 ) : (
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-line bg-gold/10 text-gold-bright">
-                    <span className="text-lg">🛕</span>
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-line bg-gold/10 text-gold-bright text-xl">
+                    🛕
                   </div>
                 )}
 
@@ -1170,15 +1312,10 @@ export function MapExplorer() {
                     {[p.district, p.state].filter(Boolean).join(", ") || "India"}
                   </p>
                   <div className="mt-1.5 flex items-center gap-2 text-[10px]">
-                    <span className="text-gold-dim">🛕 {p.category || "Temple"}</span>
-                    {p.openNow !== undefined && (
-                      <span
-                        className={cn(
-                          "font-medium",
-                          p.openNow ? "text-emerald-400" : "text-stone-400"
-                        )}
-                      >
-                        • {p.openNow ? "Open" : "Closed"}
+                    <span className="text-gold-dim">🛕 {p.subcategory || p.category || "Temple"}</span>
+                    {p.accuracyLabel && (
+                      <span className="rounded bg-gold/15 px-1.5 py-0.2 text-[9px] font-semibold text-gold-bright">
+                        {p.accuracyLabel}
                       </span>
                     )}
                   </div>
@@ -1188,56 +1325,11 @@ export function MapExplorer() {
           })}
         </div>
 
-        {/* Selected Sanctuary Footer Details Drawer */}
-        {selected && (
-          <div className="border-t border-line bg-obsidian-3/95 p-3.5 space-y-2.5">
-            <div className="flex items-start justify-between">
-              <div>
-                <h4 className="font-serif text-sm font-semibold text-ivory">{selected.name}</h4>
-                <div className="flex items-center gap-1.5 mt-0.5">
-                  <p className="text-[11px] text-ivory-dim">{selected.address || [selected.district, selected.state].filter(Boolean).join(", ")}</p>
-                  {selectedQuality && (
-                    <span className="rounded bg-gold/15 px-1.5 py-0.5 text-[9.5px] font-semibold text-gold-bright">
-                      {selectedQuality.accuracyLabel}
-                    </span>
-                  )}
-                </div>
-              </div>
-              <button
-                onClick={() => setSelectedId(null)}
-                aria-label="Close"
-                className="text-ivory-dim hover:text-ivory"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-
-            <div className="flex items-center gap-2">
-              {selected.href ? (
-                <Link
-                  href={selected.href}
-                  className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-gold px-4 py-2 text-xs font-semibold text-obsidian shadow-md hover:bg-gold-bright transition-colors"
-                >
-                  <span>View Temple Page</span>
-                  <ExternalLink className="h-3.5 w-3.5" />
-                </Link>
-              ) : null}
-              <a
-                href={`https://www.google.com/maps/dir/?api=1&destination=${selected.latitude},${selected.longitude}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-1 rounded-xl border border-line bg-obsidian-2 px-3 py-2 text-xs font-medium text-ivory hover:border-gold transition-colors"
-              >
-                <Car className="h-3.5 w-3.5 text-gold" />
-                <span>Navigate</span>
-              </a>
-            </div>
-          </div>
-        )}
-
-        {/* Google Attribution bar */}
-        <div className="border-t border-line/60 px-4 py-2 bg-obsidian-3/50">
-          <GoogleAttribution />
+        {/* Footer Attribution Bar */}
+        <div className="border-t border-line/60 px-4 py-2.5 bg-obsidian-3/60 text-center">
+          <p className="text-[10px] text-ivory-dim/60 leading-tight">
+            TEMPLEORA Sacred Atlas — powered by real open geographic mapping with TEMPLEORA verified temple intelligence.
+          </p>
         </div>
       </aside>
     </div>
