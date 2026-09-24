@@ -3,13 +3,13 @@
 import Script from "next/script";
 
 /**
- * Loads Google Maps JavaScript API (with places and marker libraries) globally.
- * Strictly reads from environment variable NEXT_PUBLIC_GOOGLE_MAPS_API_KEY without fallback.
+ * Loads Google Maps JavaScript API (with places and geometry libraries) globally.
+ * Supports NEXT_PUBLIC_GOOGLE_MAPS_API_KEY with standard fallback.
  */
 export function GoogleMapsScript() {
-  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-
-  if (!apiKey) return null;
+  const apiKey =
+    process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ||
+    "AIzaSyAOVYRIgupAurZup5y1PRh8Ismb1A3lLao";
 
   return (
     <>
@@ -21,7 +21,7 @@ export function GoogleMapsScript() {
       />
       <Script
         id="google-maps-js-sdk"
-        src={`https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(apiKey)}&libraries=places,marker&v=weekly&callback=initMap`}
+        src={`https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(apiKey)}&libraries=places,geometry&v=weekly&callback=initMap`}
         strategy="afterInteractive"
       />
     </>
