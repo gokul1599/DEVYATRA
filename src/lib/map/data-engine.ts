@@ -87,6 +87,22 @@ export const MAP_STYLES = {
   },
 };
 
+export type MapStyleKey = "dark" | "liberty" | "satellite" | "carto";
+
+export const MAP_STYLE_CONFIGS: Record<MapStyleKey, string | object> = {
+  dark: MAP_STYLES.primaryVector,
+  liberty: MAP_STYLES.primaryLiberty,
+  satellite: MAP_STYLES.esriSatellite,
+  carto: MAP_STYLES.cartoDark,
+};
+
+export const MAP_FALLBACK_CHAIN: Record<MapStyleKey, MapStyleKey | null> = {
+  dark: "satellite",
+  liberty: "satellite",
+  satellite: "carto",
+  carto: null,
+};
+
 export class MapDataEngine {
   /**
    * Filter and transform points into valid GeoJSON features, enforcing:
@@ -98,7 +114,7 @@ export class MapDataEngine {
     const features: DestinationGeoJSONFeature[] = [];
     let exactCount = 0;
     let siteCenterCount = 0;
-    const approximateCount = 0;
+    let approximateCount = 0;
     let centroidFallbackExcluded = 0;
 
     for (const p of points) {
@@ -111,9 +127,22 @@ export class MapDataEngine {
         continue;
       }
 
-      const isExact = Boolean(p.googlePlaceId && p.googlePlaceId.startsWith("ChIJ"));
-      if (isExact) exactCount++;
-      else siteCenterCount++;
+      const isExact = Boolean(
+        (p.googlePlaceId && p.googlePlaceId.startsWith("ChIJ")) ||
+        (p.verificationStatus && p.verificationStatus.toUpperCase().includes("VERIFIED_OFFICIAL"))
+      );
+      const isApprox = Boolean(
+        (p.verificationStatus && p.verificationStatus.toUpperCase().includes("APPROXIMATE")) ||
+        (p.sourceType && p.sourceType.toLowerCase().includes("community"))
+      );
+
+      if (isExact) {
+        exactCount++;
+      } else if (isApprox) {
+        approximateCount++;
+      } else {
+        siteCenterCount++;
+      }
 
       const stateSlug = p.stateCode ? p.stateCode.toLowerCase() : "india";
       const href = p.href || (p.slug ? `/temples/${stateSlug}/${p.slug}` : undefined);

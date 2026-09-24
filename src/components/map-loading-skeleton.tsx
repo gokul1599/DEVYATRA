@@ -20,7 +20,7 @@ export function MapLoadingSkeleton() {
           Initializing Sacred Atlas
         </h3>
         <p className="mt-2 max-w-sm font-sans text-xs text-stone-400 leading-relaxed">
-          Loading 2,205 verified sanctuary coordinates, administrative boundaries, and live geospatial points…
+          Connecting to verified sanctuary coordinates, administrative boundaries, and live geospatial points…
         </p>
       </div>
 
