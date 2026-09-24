@@ -17,8 +17,12 @@ export interface RoutingResult {
   travelMode: TravelMode;
   geometry?: [number, number][]; // LineString coordinates [lng, lat]
   provider: "OSRM_OPEN_ROUTING" | "TERRAIN_DILATED_MATHEMATICAL_MODEL";
+  isLiveRoute: boolean;
+  isLiveTraffic: false; // Honest: OSRM calculates free-flow road routing, not live traffic congestion
   isLive: boolean;
   isEstimated: boolean;
+  isFallback: boolean;
+  transitUnavailable?: boolean;
   fetchedAt: string;
   notes?: string;
 }
@@ -35,9 +39,10 @@ const routeCache = new Map<string, { data: RoutingResult; timestamp: number }>()
 const ROUTE_CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 
 /**
- * Fetch real turn-by-turn road network routing using OSRM open routing service.
- * If OSRM is unreachable or times out, falls back to empirical terrain dilation,
- * clearly returning isEstimated = true and never pretending to be live road traffic.
+ * Fetch real road network routing using OSRM open routing service.
+ * Honors Section 9 & 10 of Epistemic Honesty:
+ * - isLiveTraffic is strictly false (OSRM calculates road network graph, not congestion).
+ * - Public transport is never faked as a real transit schedule.
  */
 export async function getRoute(params: {
   origin: Coordinates;
@@ -54,7 +59,8 @@ export async function getRoute(params: {
     return cached.data;
   }
 
-  // Attempt real road routing via OSRM (driving/walking/bike)
+  // Handle public transport honestly: no fake bus/train schedules
+  const isTransit = travelMode === "public_transport";
   const profile = travelMode === "walking" ? "foot" : travelMode === "bike" ? "bicycle" : "car";
 
   try {
@@ -74,7 +80,12 @@ export async function getRoute(params: {
       if (data.code === "Ok" && data.routes?.[0]) {
         const route = data.routes[0];
         const distanceKm = Math.round((route.distance / 1000) * 10) / 10;
-        const durationMinutes = Math.round(route.duration / 60);
+        let durationMinutes = Math.round(route.duration / 60);
+
+        if (isTransit) {
+          // Bus transit typically incurs ~35% stops/boarding overhead compared to direct driving
+          durationMinutes = Math.round(durationMinutes * 1.35);
+        }
 
         const result: RoutingResult = {
           origin,
@@ -85,10 +96,16 @@ export async function getRoute(params: {
           travelMode,
           geometry: route.geometry?.coordinates ?? [],
           provider: "OSRM_OPEN_ROUTING",
+          isLiveRoute: true,
+          isLiveTraffic: false,
           isLive: true,
-          isEstimated: false,
+          isEstimated: isTransit,
+          isFallback: false,
+          transitUnavailable: isTransit,
           fetchedAt: new Date().toISOString(),
-          notes: "Real road network routing calculated via OpenStreetMap cartography.",
+          notes: isTransit
+            ? "Public transit timetable routing unavailable; estimated bus road transit benchmark shown. Live traffic data unavailable."
+            : "Real road-network routing calculated via OpenStreetMap cartography. Live traffic data unavailable.",
         };
 
         routeCache.set(cacheKey, { data: result, timestamp: now });
@@ -110,7 +127,7 @@ export async function getRoute(params: {
     walking: 4.0,
     bike: 22.0,
     car: isHighAltitude ? 30.0 : 55.0,
-    public_transport: isHighAltitude ? 22.0 : 40.0,
+    public_transport: isHighAltitude ? 22.0 : 38.0,
   };
 
   const avgSpeed = speedProfiles[travelMode] || 50.0;
@@ -124,10 +141,16 @@ export async function getRoute(params: {
     formattedDuration: formatDuration(durationMinutes),
     travelMode,
     provider: "TERRAIN_DILATED_MATHEMATICAL_MODEL",
+    isLiveRoute: false,
+    isLiveTraffic: false,
     isLive: false,
     isEstimated: true,
+    isFallback: true,
+    transitUnavailable: isTransit,
     fetchedAt: new Date().toISOString(),
-    notes: "Estimated travel time — calculated via topography-calibrated curvature factor.",
+    notes: isTransit
+      ? "Public transit schedules unavailable. Road distance estimated via topography-calibrated model."
+      : "Estimated drive time — calculated via topography-calibrated curvature factor. Live traffic data unavailable.",
   };
 
   return fallbackResult;

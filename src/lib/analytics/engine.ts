@@ -178,41 +178,50 @@ export function getModerationQueue(): FeedbackSubmission[] {
 // 28F & 28G: SHARING & GROWTH LOOPS
 // ─────────────────────────────────────────────────────────────────────────────
 
+export interface PublicSharedJourneyStop {
+  day: number;
+  templeSlug: string;
+  templeName: string;
+  location?: string;
+}
+
 export interface PublicSharedJourney {
   shareId: string;
   publicTitle: string;
   totalDays: number;
-  stops: { day: number; templeSlug: string; templeName: string; location: string }[];
+  stops: PublicSharedJourneyStop[];
   thematicCircuit?: string;
   shareUrl: string;
   createdAt: string;
 }
 
-const sharedJourneyStore = new Map<string, PublicSharedJourney>();
+const memoryShareStore = new Map<string, PublicSharedJourney>();
 
 export function createPublicJourneyShare(params: {
   title: string;
   totalDays: number;
-  stops: { day: number; templeSlug: string; templeName: string; location: string }[];
+  stops: PublicSharedJourneyStop[];
   thematicCircuit?: string;
 }): PublicSharedJourney {
-  const shareId = `yatra_${Math.random().toString(36).substring(2, 10)}`;
-  const shareUrl = `https://templeora.vercel.app/journey/share/${shareId}`;
-
-  const publicSnapshot: PublicSharedJourney = {
+  const shareId = `sh_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 6)}`;
+  const item: PublicSharedJourney = {
     shareId,
+    shareUrl: `/journey/share/${shareId}`,
     publicTitle: params.title,
     totalDays: params.totalDays,
     stops: params.stops,
     thematicCircuit: params.thematicCircuit,
-    shareUrl,
     createdAt: new Date().toISOString(),
   };
-
-  sharedJourneyStore.set(shareId, publicSnapshot);
-  return publicSnapshot;
+  memoryShareStore.set(shareId, item);
+  return item;
 }
 
 export function getPublicSharedJourney(shareId: string): PublicSharedJourney | null {
-  return sharedJourneyStore.get(shareId) || null;
+  return memoryShareStore.get(shareId) || null;
 }
+
+// Database-backed shared journey integration
+import { getSharedJourney } from "@/lib/journeys";
+export { getSharedJourney };
+

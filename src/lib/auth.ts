@@ -81,20 +81,8 @@ interface FallbackSession {
 const fallbackUsers = new Map<string, UserRecord>();
 const fallbackSessions = new Map<string, FallbackSession>();
 
-// Initialize default admin in fallback
-const adminSalt = randomBytes(16).toString("hex");
-const adminHash = hashPassword("Devyatra@2026", adminSalt);
-fallbackUsers.set("admin-default-id", {
-  id: "admin-default-id",
-  name: "Devyatra Admin",
-  email: "admin@devyatra.dev",
-  normalizedEmail: "admin@devyatra.dev",
-  role: "admin",
-  created: new Date().toISOString(),
-  passwordHash: `${adminSalt}:${adminHash}`,
-  preferences: DEFAULT_PREFERENCES,
-  followedTemples: [],
-});
+// Fallback store is strictly empty by default and only used in isolated test environments
+// No hardcoded admin credentials or static passwords are shipped in production
 
 function mapPrismaUser(u: {
   id: string;
@@ -395,4 +383,32 @@ export async function toggleFollowTemple(userId: string, slug: string): Promise<
   const next = current.includes(slug) ? current.filter((s) => s !== slug) : [...current, slug];
   user.followedTemples = next;
   return next;
+}
+
+export async function changePassword(userId: string, currentPass: string, newPass: string): Promise<boolean> {
+  const prisma = getPrisma();
+  if (prisma && !isTestEnv()) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user || !user.password || !verifyPassword(currentPass, user.password)) {
+      return false;
+    }
+    const newHash = createPasswordHash(newPass);
+    await prisma.user.update({
+      where: { id: userId },
+      data: { password: newHash },
+    });
+    // Revoke sessions so user must log in with new credentials
+    await prisma.session.deleteMany({ where: { userId } });
+    return true;
+  }
+  return false;
+}
+
+export async function revokeAllSessions(userId: string): Promise<boolean> {
+  const prisma = getPrisma();
+  if (prisma && !isTestEnv()) {
+    await prisma.session.deleteMany({ where: { userId } });
+    return true;
+  }
+  return false;
 }

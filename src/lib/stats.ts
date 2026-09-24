@@ -11,12 +11,14 @@ export interface PlatformStats {
   pendingRecords: number;
   lastDataRefresh: string;
   isLive: boolean;
+  isFallback: boolean;
+  source: "NEON_POSTGRESQL" | "STATIC_LOCAL_FALLBACK";
   formattedTotalTemples: string;
   formattedDistricts: string;
   formattedStates: string;
 }
 
-// Canonical database verified baseline
+// Canonical static fallback ONLY for isolated offline testing
 export const PLATFORM_STATS_BASELINE: PlatformStats = {
   totalTemples: 2205,
   totalVerifiedTemples: 2205,
@@ -26,8 +28,10 @@ export const PLATFORM_STATS_BASELINE: PlatformStats = {
   verifiedRecords: 2205,
   communityRecords: 0,
   pendingRecords: 0,
-  lastDataRefresh: new Date().toISOString(),
+  lastDataRefresh: "2026-09-24T00:00:00.000Z",
   isLive: false,
+  isFallback: true,
+  source: "STATIC_LOCAL_FALLBACK",
   formattedTotalTemples: "2,205",
   formattedDistricts: "725",
   formattedStates: "36",
@@ -38,8 +42,9 @@ let lastFetchedTime = 0;
 const STATS_CACHE_TTL_MS = 60 * 1000; // 60 seconds edge/memory cache
 
 /**
- * Single Source of Truth for Platform Statistics (Phase 1).
- * Queries relational database live metrics with memory caching and verified baseline fallback.
+ * Single Source of Truth for Platform Statistics.
+ * Queries Neon PostgreSQL directly with zero Math.max artificial inflation.
+ * If database is unreachable, returns fallback clearly flagged as isFallback=true, isLive=false.
  */
 export async function getPlatformStats(): Promise<PlatformStats> {
   const now = Date.now();
@@ -77,32 +82,28 @@ export async function getPlatformStats(): Promise<PlatformStats> {
       prisma.userSubmission.count({ where: { status: "SUBMITTED" } }),
     ]);
 
-    const totalTemples = Math.max(totalCount, PLATFORM_STATS_BASELINE.totalTemples);
-    const totalVerifiedTemples = Math.max(verifiedCount, PLATFORM_STATS_BASELINE.totalVerifiedTemples);
-    const totalStates = Math.max(statesCount, PLATFORM_STATS_BASELINE.totalStates);
-    const totalDistricts = Math.max(districtsCount, PLATFORM_STATS_BASELINE.totalDistricts);
-    const totalAdminUnits = Math.max(adminUnitsCount, PLATFORM_STATS_BASELINE.totalAdminUnits);
-
     cachedStats = {
-      totalTemples,
-      totalVerifiedTemples,
-      totalStates: Math.min(totalStates, 36), // Sovereign India: 28 States + 8 UTs = 36
-      totalDistricts,
-      totalAdminUnits,
-      verifiedRecords: totalVerifiedTemples,
+      totalTemples: totalCount,
+      totalVerifiedTemples: verifiedCount,
+      totalStates: Math.min(statesCount || 36, 36), // Sovereign India: 28 States + 8 UTs = 36
+      totalDistricts: districtsCount,
+      totalAdminUnits: adminUnitsCount,
+      verifiedRecords: verifiedCount,
       communityRecords: communityCount,
       pendingRecords: pendingCount,
       lastDataRefresh: new Date().toISOString(),
       isLive: true,
-      formattedTotalTemples: totalTemples.toLocaleString("en-IN"),
-      formattedDistricts: totalDistricts.toLocaleString("en-IN"),
+      isFallback: false,
+      source: "NEON_POSTGRESQL",
+      formattedTotalTemples: totalCount.toLocaleString("en-IN"),
+      formattedDistricts: districtsCount.toLocaleString("en-IN"),
       formattedStates: "36 states & UTs",
     };
 
     lastFetchedTime = now;
     return cachedStats;
   } catch (err) {
-    console.warn("[getPlatformStats] DB query failed, returning verified baseline:", err);
+    console.warn("[getPlatformStats] DB query failed, returning fallback:", err);
     return PLATFORM_STATS_BASELINE;
   }
 }

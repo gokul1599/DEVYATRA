@@ -161,28 +161,28 @@ export function ArrivalMode({ temple, onMarkVisited, isVisited = false }: Arriva
         <div className="rounded-2xl border border-white/10 bg-black/30 p-4">
           <div className="flex items-center gap-2 text-gold mb-1">
             <Shirt className="h-4 w-4" />
-            <span className="text-xs font-semibold text-ivory">Dress Code</span>
+            <span className="text-xs font-semibold text-ivory">Attire Advisory</span>
           </div>
-          <p className="text-xs text-ivory/80">Traditional Dhoti / Saree</p>
-          <span className="text-[10px] text-amber-300 font-mono mt-1 block">Footwear counter at Gopuram</span>
+          <p className="text-xs text-ivory/80">Modest / Traditional</p>
+          <span className="text-[10px] text-amber-300/80 font-mono mt-1 block">Footwear counter outside entrance</span>
         </div>
 
         <div className="rounded-2xl border border-white/10 bg-black/30 p-4">
           <div className="flex items-center gap-2 text-gold mb-1">
             <Car className="h-4 w-4" />
-            <span className="text-xs font-semibold text-ivory">Nearby Parking</span>
+            <span className="text-xs font-semibold text-ivory">Arrival Parking</span>
           </div>
-          <p className="text-xs text-ivory/80">Trust Grounds (300m)</p>
-          <span className="text-[10px] text-ivory/50 font-mono mt-1 block">Designated Pilgrim Bays</span>
+          <p className="text-xs text-ivory/80">Trust / Municipal Bays</p>
+          <span className="text-[10px] text-ivory/50 font-mono mt-1 block">Inquire at approach road</span>
         </div>
 
         <div className="rounded-2xl border border-white/10 bg-black/30 p-4">
           <div className="flex items-center gap-2 text-gold mb-1">
             <Utensils className="h-4 w-4" />
-            <span className="text-xs font-semibold text-ivory">Annadanam / Prasad</span>
+            <span className="text-xs font-semibold text-ivory">Prasadam / Food</span>
           </div>
-          <p className="text-xs text-ivory/80">Available in Outer Mandapa</p>
-          <span className="text-[10px] text-ivory/50 font-mono mt-1 block">Daily midday distribution</span>
+          <p className="text-xs text-ivory/80">Devasthanam Counter</p>
+          <span className="text-[10px] text-ivory/50 font-mono mt-1 block">Subject to daily temple schedule</span>
         </div>
       </div>
 

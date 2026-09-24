@@ -17,6 +17,14 @@ import {
   Check,
   ShieldCheck,
   Languages,
+  Award,
+  BookOpen,
+  Star,
+  Share2,
+  CheckCircle2,
+  Plus,
+  X,
+  ExternalLink,
 } from "lucide-react";
 import { Container } from "@/components/ui";
 import { DevyatraArt } from "@/components/devyatra-art";
@@ -39,6 +47,31 @@ interface LiteTemple {
   latitude?: number;
   longitude?: number;
   href: string;
+}
+
+interface VisitedTempleItem {
+  id: string;
+  templeId: string;
+  templeSlug: string;
+  templeName: string;
+  visitedAt: string;
+  darshanType?: string | null;
+  notes?: string | null;
+  rating?: number | null;
+  sevaPerformed?: string | null;
+  prasadamTaken?: boolean;
+}
+
+interface JournalEntryItem {
+  id: string;
+  title: string;
+  content: string;
+  journeyId?: string | null;
+  templeId?: string | null;
+  mood?: string | null;
+  photoUrls: string[];
+  entryDate?: string;
+  createdAt?: string;
 }
 
 interface PublicUserData {
@@ -74,8 +107,32 @@ export default function JourneyPage() {
   const [journeys, setJourneys] = useState<SavedJourney[]>([]);
   const [alerts, setAlerts] = useState<TempleAlert[]>([]);
   const [recommendations, setRecommendations] = useState<ScoredTemple[]>([]);
-  const [activeTab, setActiveTab] = useState<"saved" | "places" | "journeys" | "alerts" | "recommendations" | "preferences">("saved");
+  const [activeTab, setActiveTab] = useState<"saved" | "places" | "journeys" | "visited" | "journal" | "alerts" | "recommendations" | "preferences">("saved");
   const [savedPlaces, setSavedPlaces] = useState<Array<{ id: string; name: string; category: string; location: string }>>([]);
+
+  // Sacred Passport & Journal States
+  const [visitedTemples, setVisitedTemples] = useState<VisitedTempleItem[]>([]);
+  const [journalEntries, setJournalEntries] = useState<JournalEntryItem[]>([]);
+  const [showLogVisitModal, setShowLogVisitModal] = useState(false);
+  const [logVisitSlug, setLogVisitSlug] = useState("");
+  const [logDarshanType, setLogDarshanType] = useState("General Darshan");
+  const [logNotes, setLogNotes] = useState("");
+  const [logRating, setLogRating] = useState(5);
+  const [logSeva, setLogSeva] = useState("");
+  const [logPrasadam, setLogPrasadam] = useState(true);
+  const [savingVisit, setSavingVisit] = useState(false);
+
+  // Journal form modal state
+  const [showAddJournalModal, setShowAddJournalModal] = useState(false);
+  const [journalTitle, setJournalTitle] = useState("");
+  const [journalContent, setJournalContent] = useState("");
+  const [journalMood, setJournalMood] = useState("Serene");
+  const [journalTempleId, setJournalTempleId] = useState("");
+  const [savingJournal, setSavingJournal] = useState(false);
+
+  // Journey sharing state
+  const [sharingJourneyId, setSharingJourneyId] = useState<string | null>(null);
+  const [shareFeedback, setShareFeedback] = useState<{ id: string; url: string } | null>(null);
 
   // Editable preferences
   const [prefs, setPrefs] = useState<UserPreferences>({
@@ -124,6 +181,22 @@ export default function JourneyPage() {
             .then((r) => r.json())
             .then((j: { journeys?: SavedJourney[] }) => {
               if (Array.isArray(j.journeys)) setJourneys(j.journeys);
+            })
+            .catch(() => {});
+
+          // Fetch visited temples (Sacred Passport)
+          fetch("/api/journeys/visited")
+            .then((r) => r.json())
+            .then((res: { visited?: VisitedTempleItem[] }) => {
+              if (Array.isArray(res.visited)) setVisitedTemples(res.visited);
+            })
+            .catch(() => {});
+
+          // Fetch pilgrimage journal reflections
+          fetch("/api/journeys/journal")
+            .then((r) => r.json())
+            .then((res: { entries?: JournalEntryItem[] }) => {
+              if (Array.isArray(res.entries)) setJournalEntries(res.entries);
             })
             .catch(() => {});
         } else {
@@ -236,6 +309,100 @@ export default function JourneyPage() {
     });
   };
 
+  const handleShareJourney = async (journeyId: string) => {
+    setSharingJourneyId(journeyId);
+    try {
+      const res = await fetch("/api/journeys/share", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ journeyId, authorName: user?.name || "A Pilgrim" }),
+      });
+      const data = await res.json();
+      if (res.ok && data.shareUrl) {
+        const fullUrl = `${window.location.origin}${data.shareUrl}`;
+        await navigator.clipboard.writeText(fullUrl);
+        setShareFeedback({ id: journeyId, url: fullUrl });
+        setTimeout(() => setShareFeedback(null), 6000);
+      } else {
+        alert(data.error || "Failed to generate share link.");
+      }
+    } catch {
+      alert("Network error sharing journey.");
+    } finally {
+      setSharingJourneyId(null);
+    }
+  };
+
+  const handleLogVisit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!logVisitSlug) return;
+    const selectedT = temples.find((t) => t.slug === logVisitSlug);
+    if (!selectedT) return;
+
+    setSavingVisit(true);
+    try {
+      const res = await fetch("/api/journeys/visited", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          templeId: selectedT.id,
+          templeSlug: selectedT.slug,
+          templeName: selectedT.name,
+          darshanType: logDarshanType,
+          notes: logNotes,
+          rating: logRating,
+          sevaPerformed: logSeva,
+          prasadamTaken: logPrasadam,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && data.visited) {
+        setVisitedTemples((prev) => [data.visited, ...prev.filter((v) => v.templeId !== data.visited.templeId)]);
+        setShowLogVisitModal(false);
+        setLogNotes("");
+        setLogSeva("");
+      } else {
+        alert(data.error || "Failed to record visit. Please ensure you are signed in.");
+      }
+    } catch {
+      alert("Network error recording visit.");
+    } finally {
+      setSavingVisit(false);
+    }
+  };
+
+  const handleAddJournal = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!journalTitle.trim() || !journalContent.trim()) return;
+
+    setSavingJournal(true);
+    try {
+      const res = await fetch("/api/journeys/journal", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: journalTitle.trim(),
+          content: journalContent.trim(),
+          mood: journalMood,
+          templeId: journalTempleId || undefined,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && data.entry) {
+        setJournalEntries((prev) => [data.entry, ...prev]);
+        setShowAddJournalModal(false);
+        setJournalTitle("");
+        setJournalContent("");
+      } else {
+        alert(data.error || "Failed to record journal reflection.");
+      }
+    } catch {
+      alert("Network error saving reflection.");
+    } finally {
+      setSavingJournal(false);
+    }
+  };
+
   return (
     <>
       <section className="relative overflow-hidden pb-8 pt-32">
@@ -329,6 +496,40 @@ export default function JourneyPage() {
               <span className={`rounded-full px-1.5 py-0.2 text-[10px] ${activeTab === "journeys" ? "bg-obsidian/20 text-obsidian" : "bg-white/10 text-ivory-dim"}`}>
                 {journeys.length}
               </span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab("visited")}
+              className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-medium transition-all ${
+                activeTab === "visited"
+                  ? "bg-gold text-obsidian font-semibold"
+                  : "bg-white/[0.04] text-ivory-dim hover:text-ivory hover:bg-white/[0.08]"
+              }`}
+            >
+              <Award className="h-3.5 w-3.5" />
+              <span>Sacred Passport</span>
+              {visitedTemples.length > 0 && (
+                <span className={`rounded-full px-1.5 py-0.2 text-[10px] ${activeTab === "visited" ? "bg-obsidian/20 text-obsidian" : "bg-gold/20 text-gold-bright"}`}>
+                  {visitedTemples.length}
+                </span>
+              )}
+            </button>
+
+            <button
+              onClick={() => setActiveTab("journal")}
+              className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-medium transition-all ${
+                activeTab === "journal"
+                  ? "bg-gold text-obsidian font-semibold"
+                  : "bg-white/[0.04] text-ivory-dim hover:text-ivory hover:bg-white/[0.08]"
+              }`}
+            >
+              <BookOpen className="h-3.5 w-3.5" />
+              <span>Pilgrim Journal</span>
+              {journalEntries.length > 0 && (
+                <span className={`rounded-full px-1.5 py-0.2 text-[10px] ${activeTab === "journal" ? "bg-obsidian/20 text-obsidian" : "bg-white/10 text-ivory-dim"}`}>
+                  {journalEntries.length}
+                </span>
+              )}
             </button>
 
             <button
@@ -602,22 +803,264 @@ export default function JourneyPage() {
                       </div>
 
                       <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.06] pt-4">
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-wrap items-center gap-2">
                           <span className="rounded-full border border-gold/30 bg-gold/10 px-2.5 py-0.5 text-xs text-gold-bright">
                             {j.budget.toUpperCase()} Tier
                           </span>
                           <OfflinePackModal pack={offlinePack} />
+                          <button
+                            type="button"
+                            onClick={() => handleShareJourney(j.id)}
+                            disabled={sharingJourneyId === j.id}
+                            className="inline-flex items-center gap-1.5 rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-xs font-medium text-gold-bright transition-colors hover:bg-gold/20 disabled:opacity-50"
+                          >
+                            <Share2 className="h-3.5 w-3.5" />
+                            <span>{sharingJourneyId === j.id ? "Sharing..." : "Share"}</span>
+                          </button>
                         </div>
                         <Link
                           href={`/plan?circuit=${j.circuitId || ""}`}
                           className="text-xs font-medium text-gold hover:underline"
                         >
-                          Re-open Itinerary in Plan Studio →
+                          Re-open in Plan Studio →
                         </Link>
                       </div>
+
+                      {shareFeedback?.id === j.id && (
+                        <div className="mt-3 flex items-center justify-between gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-2.5 text-xs text-emerald-300">
+                          <span className="flex items-center gap-1.5">
+                            <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                            <span>Share link copied to clipboard!</span>
+                          </span>
+                          <Link
+                            href={shareFeedback.url}
+                            target="_blank"
+                            className="inline-flex items-center gap-1 font-semibold underline hover:text-emerald-200"
+                          >
+                            <span>Open</span>
+                            <ExternalLink className="h-3 w-3" />
+                          </Link>
+                        </div>
+                      )}
                     </div>
                   );
                 })}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── TAB: SACRED PASSPORT (VISITED TEMPLES) ── */}
+        {activeTab === "visited" && (
+          <div>
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <h3 className="font-display text-xl font-medium text-ivory">Sacred Passport</h3>
+                <p className="mt-1 text-xs text-ivory-dim">
+                  Your consecrated pilgrimage chronicle. Track holy darshans, archana sevas, and sacred blessings across Bharat.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  if (!user) {
+                    alert("Please sign in to stamp a visit in your Sacred Passport.");
+                    return;
+                  }
+                  setShowLogVisitModal(true);
+                }}
+                className="inline-flex items-center gap-2 rounded-full bg-gold px-4 py-2 text-xs font-semibold text-obsidian transition-all hover:bg-gold-bright shadow-md"
+              >
+                <Plus className="h-4 w-4" />
+                <span>Stamp Sacred Visit</span>
+              </button>
+            </div>
+
+            {visitedTemples.length === 0 ? (
+              <div className="flex flex-col items-center rounded-3xl border border-dashed border-line px-6 py-16 text-center">
+                <Award className="h-10 w-10 text-gold-dim/50" />
+                <p className="mt-3 font-display text-lg text-ivory">No shrines stamped in your Sacred Passport yet</p>
+                <p className="mt-1 max-w-sm text-xs text-ivory-dim">
+                  Chronicle your holy visits, special darshan types, and sacred prasadam memories across India.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!user) {
+                      window.location.href = "/login";
+                    } else {
+                      setShowLogVisitModal(true);
+                    }
+                  }}
+                  className="mt-6 inline-flex items-center gap-2 rounded-full bg-gold px-5 py-2.5 text-xs font-semibold text-obsidian hover:bg-gold-bright"
+                >
+                  <Plus className="h-4 w-4" /> Stamp Your First Visit
+                </button>
+              </div>
+            ) : (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {visitedTemples.map((v) => (
+                  <div
+                    key={v.id}
+                    className="relative flex flex-col justify-between overflow-hidden rounded-2xl border border-gold/30 bg-gradient-to-br from-obsidian-2 to-[#1a140d] p-6 shadow-xl transition-all hover:border-gold/60"
+                  >
+                    {/* Passport Stamp Watermark */}
+                    <div className="pointer-events-none absolute -right-4 -top-4 h-24 w-24 rounded-full border border-gold/15 flex items-center justify-center rotate-12">
+                      <span className="font-mono text-[9px] uppercase tracking-widest text-gold/25 font-bold">
+                        BHARAT • DARSHAN
+                      </span>
+                    </div>
+
+                    <div>
+                      <div className="flex items-start justify-between gap-2">
+                        <Link
+                          href={`/temples/any/${v.templeSlug}`}
+                          className="font-display text-lg font-medium text-ivory hover:text-gold-bright"
+                        >
+                          {v.templeName}
+                        </Link>
+                        {v.rating && (
+                          <div className="flex items-center gap-0.5 text-gold-bright">
+                            {Array.from({ length: 5 }).map((_, i) => (
+                              <Star
+                                key={i}
+                                className={`h-3 w-3 ${i < v.rating! ? "fill-gold text-gold" : "text-stone-700"}`}
+                              />
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
+                        <span className="rounded-md border border-gold/30 bg-gold/10 px-2 py-0.5 font-mono text-[10px] text-gold-bright font-medium">
+                          {v.darshanType || "Darshan Completed"}
+                        </span>
+                        <span className="text-[11px] text-ivory-dim">
+                          {new Date(v.visitedAt).toLocaleDateString("en-IN", {
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                          })}
+                        </span>
+                      </div>
+
+                      {v.sevaPerformed && (
+                        <p className="mt-3 text-xs text-amber-200/90 font-medium">
+                          ✦ Seva: {v.sevaPerformed}
+                        </p>
+                      )}
+
+                      {v.prasadamTaken && (
+                        <p className="mt-1 flex items-center gap-1 text-[11px] text-emerald-400">
+                          <Check className="h-3 w-3" /> Mahaprasadam Received
+                        </p>
+                      )}
+
+                      {v.notes && (
+                        <p className="mt-3 rounded-xl border border-white/[0.06] bg-black/30 p-3 text-xs italic text-stone-300">
+                          &ldquo;{v.notes}&rdquo;
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="mt-5 flex items-center justify-between border-t border-white/[0.06] pt-3 text-xs">
+                      <span className="font-mono text-[10px] uppercase tracking-wider text-gold-dim">
+                        Passport Stamp #{v.id.slice(-6).toUpperCase()}
+                      </span>
+                      <Link
+                        href={`/temples/any/${v.templeSlug}`}
+                        className="font-medium text-gold hover:underline"
+                      >
+                        Shrine Info →
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── TAB: PILGRIM JOURNAL (REFLECTIONS) ── */}
+        {activeTab === "journal" && (
+          <div>
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <h3 className="font-display text-xl font-medium text-ivory">Pilgrim Journal & Sacred Reflections</h3>
+                <p className="mt-1 text-xs text-ivory-dim">
+                  A contemplative sanctuary for personal sadhana, inner peace, and divine insights recorded on the pilgrimage path.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  if (!user) {
+                    alert("Please sign in to pen your pilgrimage reflection.");
+                    return;
+                  }
+                  setShowAddJournalModal(true);
+                }}
+                className="inline-flex items-center gap-2 rounded-full bg-gold px-4 py-2 text-xs font-semibold text-obsidian transition-all hover:bg-gold-bright shadow-md"
+              >
+                <Plus className="h-4 w-4" />
+                <span>New Reflection</span>
+              </button>
+            </div>
+
+            {journalEntries.length === 0 ? (
+              <div className="flex flex-col items-center rounded-3xl border border-dashed border-line px-6 py-16 text-center">
+                <BookOpen className="h-10 w-10 text-gold-dim/50" />
+                <p className="mt-3 font-display text-lg text-ivory">Your spiritual journal is pristine</p>
+                <p className="mt-1 max-w-sm text-xs text-ivory-dim">
+                  Record moments of silence, sanctum aura, tears of devotion, and profound spiritual realizations.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!user) {
+                      window.location.href = "/login";
+                    } else {
+                      setShowAddJournalModal(true);
+                    }
+                  }}
+                  className="mt-6 inline-flex items-center gap-2 rounded-full bg-gold px-5 py-2.5 text-xs font-semibold text-obsidian hover:bg-gold-bright"
+                >
+                  <Plus className="h-4 w-4" /> Write First Reflection
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-4 max-w-3xl">
+                {journalEntries.map((e) => (
+                  <div
+                    key={e.id}
+                    className="rounded-2xl border border-line bg-obsidian-2 p-6 transition-all hover:border-gold/30 shadow-lg"
+                  >
+                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/[0.06] pb-3">
+                      <div className="flex items-center gap-2">
+                        {e.mood && (
+                          <span className="rounded-full bg-gold/15 px-2.5 py-0.5 font-mono text-[10.5px] font-semibold uppercase tracking-wider text-gold-bright border border-gold/30">
+                            {e.mood}
+                          </span>
+                        )}
+                        <span className="text-xs text-ivory-dim">
+                          {new Date(e.entryDate || e.createdAt || Date.now()).toLocaleDateString("en-IN", {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          })}
+                        </span>
+                      </div>
+                      <span className="font-mono text-[10px] text-stone-500 uppercase tracking-widest">
+                        Reflect #{e.id.slice(-6).toUpperCase()}
+                      </span>
+                    </div>
+
+                    <h4 className="mt-3 font-display text-lg font-medium text-ivory">{e.title}</h4>
+                    <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-stone-300">
+                      {e.content}
+                    </p>
+                  </div>
+                ))}
               </div>
             )}
           </div>
@@ -885,6 +1328,262 @@ export default function JourneyPage() {
           </div>
         )}
       </Container>
+
+      {/* ── MODAL: STAMP SACRED VISIT ── */}
+      {showLogVisitModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
+          <div className="relative w-full max-w-lg rounded-3xl border border-gold/40 bg-[#120E0A] p-6 sm:p-8 shadow-2xl my-8">
+            <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
+              <div className="flex items-center gap-2.5">
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gold/20 text-gold-bright">
+                  <Award className="h-4 w-4" />
+                </span>
+                <div>
+                  <h3 className="font-display text-lg font-semibold text-ivory">Stamp Sacred Passport</h3>
+                  <p className="text-[11px] text-ivory-dim">Record your consecrated pilgrimage darshan</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowLogVisitModal(false)}
+                className="rounded-lg p-1.5 text-stone-400 hover:text-ivory hover:bg-white/5"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleLogVisit} className="mt-5 space-y-4 text-xs">
+              <div>
+                <label className="mb-1.5 block font-medium uppercase tracking-wider text-ivory">
+                  Select Consecrated Shrine *
+                </label>
+                <select
+                  value={logVisitSlug}
+                  onChange={(e) => setLogVisitSlug(e.target.value)}
+                  required
+                  className="w-full rounded-xl border border-line bg-obsidian-3 px-3 py-2.5 text-xs text-ivory outline-none focus:border-gold"
+                >
+                  <option value="">-- Choose a Temple --</option>
+                  {temples.map((t) => (
+                    <option key={t.slug} value={t.slug}>
+                      {t.name} ({t.location}, {t.stateCode})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div>
+                  <label className="mb-1.5 block font-medium uppercase tracking-wider text-ivory">
+                    Darshan Category
+                  </label>
+                  <select
+                    value={logDarshanType}
+                    onChange={(e) => setLogDarshanType(e.target.value)}
+                    className="w-full rounded-xl border border-line bg-obsidian-3 px-3 py-2.5 text-xs text-ivory outline-none focus:border-gold"
+                  >
+                    <option value="General Darshan">General / Sarva Darshan</option>
+                    <option value="Special Entry (₹300/₹500)">Special Entry / Seeghra Darshan</option>
+                    <option value="VIP / Suprabhatham">VIP / Suprabhatham Early Morning</option>
+                    <option value="Seva / Abhishekam">Arjitha Seva / Abhishekam</option>
+                    <option value="Festival / Procession">Utsavam / Divine Rath Yatra</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="mb-1.5 block font-medium uppercase tracking-wider text-ivory">
+                    Darshan Rating
+                  </label>
+                  <div className="flex items-center gap-1.5 rounded-xl border border-line bg-obsidian-3 px-3 py-2">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => setLogRating(star)}
+                        className="p-0.5 text-gold-bright transition-transform hover:scale-125"
+                      >
+                        <Star
+                          className={`h-4 w-4 ${star <= logRating ? "fill-gold text-gold" : "text-stone-700"}`}
+                        />
+                      </button>
+                    ))}
+                    <span className="ml-auto font-mono text-[11px] text-stone-400">{logRating}/5</span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="mb-1.5 block font-medium uppercase tracking-wider text-ivory">
+                  Seva / Pooja Performed (Optional)
+                </label>
+                <input
+                  type="text"
+                  value={logSeva}
+                  onChange={(e) => setLogSeva(e.target.value)}
+                  placeholder="e.g. Archana, Sahasranama, Thulabharam, Angapradakshinam"
+                  className="w-full rounded-xl border border-line bg-obsidian-3 px-3 py-2.5 text-xs text-ivory outline-none placeholder:text-stone-600 focus:border-gold"
+                />
+              </div>
+
+              <div className="flex items-center gap-2 rounded-xl border border-line bg-obsidian-3/60 p-3">
+                <input
+                  type="checkbox"
+                  id="prasadam"
+                  checked={logPrasadam}
+                  onChange={(e) => setLogPrasadam(e.target.checked)}
+                  className="h-4 w-4 accent-gold"
+                />
+                <label htmlFor="prasadam" className="text-xs text-stone-300 cursor-pointer">
+                  Received blessed Temple Mahaprasadam (Laddu, Pongal, Panchamritham, etc.)
+                </label>
+              </div>
+
+              <div>
+                <label className="mb-1.5 block font-medium uppercase tracking-wider text-ivory">
+                  Pilgrim Reflection &amp; Sacred Moments
+                </label>
+                <textarea
+                  rows={3}
+                  value={logNotes}
+                  onChange={(e) => setLogNotes(e.target.value)}
+                  placeholder="The energy of the sanctum, chants echoing through the stone corridors, tears of peace..."
+                  className="w-full rounded-xl border border-line bg-obsidian-3 px-3 py-2 text-xs text-ivory outline-none placeholder:text-stone-600 focus:border-gold"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/[0.08]">
+                <button
+                  type="button"
+                  onClick={() => setShowLogVisitModal(false)}
+                  className="rounded-full border border-white/10 px-4 py-2 text-xs font-medium text-stone-400 hover:text-ivory"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={savingVisit || !logVisitSlug}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-gold px-5 py-2 text-xs font-semibold text-obsidian transition-colors hover:bg-gold-bright disabled:opacity-50"
+                >
+                  <Award className="h-3.5 w-3.5" />
+                  <span>{savingVisit ? "Stamping..." : "Stamp in Passport"}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ── MODAL: ADD PILGRIM JOURNAL REFLECTION ── */}
+      {showAddJournalModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
+          <div className="relative w-full max-w-lg rounded-3xl border border-gold/40 bg-[#120E0A] p-6 sm:p-8 shadow-2xl my-8">
+            <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
+              <div className="flex items-center gap-2.5">
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gold/20 text-gold-bright">
+                  <BookOpen className="h-4 w-4" />
+                </span>
+                <div>
+                  <h3 className="font-display text-lg font-semibold text-ivory">Pen Sacred Reflection</h3>
+                  <p className="text-[11px] text-ivory-dim">Record spiritual realizations and contemplative insights</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowAddJournalModal(false)}
+                className="rounded-lg p-1.5 text-stone-400 hover:text-ivory hover:bg-white/5"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleAddJournal} className="mt-5 space-y-4 text-xs">
+              <div>
+                <label className="mb-1.5 block font-medium uppercase tracking-wider text-ivory">
+                  Reflection Title *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={journalTitle}
+                  onChange={(e) => setJournalTitle(e.target.value)}
+                  placeholder="e.g. Dawn silence at the outer prakaram"
+                  className="w-full rounded-xl border border-line bg-obsidian-3 px-3 py-2.5 text-xs text-ivory outline-none placeholder:text-stone-600 focus:border-gold"
+                />
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div>
+                  <label className="mb-1.5 block font-medium uppercase tracking-wider text-ivory">
+                    Spiritual Mood / Bhavana
+                  </label>
+                  <select
+                    value={journalMood}
+                    onChange={(e) => setJournalMood(e.target.value)}
+                    className="w-full rounded-xl border border-line bg-obsidian-3 px-3 py-2.5 text-xs text-ivory outline-none focus:border-gold"
+                  >
+                    <option value="Serene">Serene (Shanta)</option>
+                    <option value="Devotional">Devotional (Bhakti)</option>
+                    <option value="Blissful">Blissful (Ananda)</option>
+                    <option value="Contemplative">Contemplative (Dhyana)</option>
+                    <option value="Grateful">Grateful (Kritajnata)</option>
+                    <option value="Transformed">Transformed (Sadhana)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="mb-1.5 block font-medium uppercase tracking-wider text-ivory">
+                    Associated Shrine (Optional)
+                  </label>
+                  <select
+                    value={journalTempleId}
+                    onChange={(e) => setJournalTempleId(e.target.value)}
+                    className="w-full rounded-xl border border-line bg-obsidian-3 px-3 py-2.5 text-xs text-ivory outline-none focus:border-gold"
+                  >
+                    <option value="">-- General Reflection --</option>
+                    {temples.map((t) => (
+                      <option key={t.id} value={t.id}>
+                        {t.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="mb-1.5 block font-medium uppercase tracking-wider text-ivory">
+                  Your Sacred Reflection *
+                </label>
+                <textarea
+                  rows={5}
+                  required
+                  value={journalContent}
+                  onChange={(e) => setJournalContent(e.target.value)}
+                  placeholder="Write freely: the stillness before the deity, thoughts that dissolved, clarity received..."
+                  className="w-full rounded-xl border border-line bg-obsidian-3 px-3 py-2.5 text-xs text-ivory outline-none placeholder:text-stone-600 focus:border-gold leading-relaxed"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/[0.08]">
+                <button
+                  type="button"
+                  onClick={() => setShowAddJournalModal(false)}
+                  className="rounded-full border border-white/10 px-4 py-2 text-xs font-medium text-stone-400 hover:text-ivory"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={savingJournal || !journalTitle.trim() || !journalContent.trim()}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-gold px-5 py-2 text-xs font-semibold text-obsidian transition-colors hover:bg-gold-bright disabled:opacity-50"
+                >
+                  <BookOpen className="h-3.5 w-3.5" />
+                  <span>{savingJournal ? "Saving..." : "Save Reflection"}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </>
   );
 }

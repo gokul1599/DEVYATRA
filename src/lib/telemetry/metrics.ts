@@ -51,16 +51,16 @@ export async function getLivePlatformMetrics(): Promise<PlatformMetrics> {
       prisma.templeNearbyPlace.count(),
     ]);
 
-    const temples = Math.max(templesCount, DEFAULT_METRICS.totalTemples);
-    const districts = Math.max(districtsWithTemples, DEFAULT_METRICS.totalDistricts);
+    const temples = templesCount;
+    const districts = districtsWithTemples;
     const states = 36;
 
     cachedMetrics = {
       totalTemples: temples,
       totalDistricts: districts,
       totalStates: states,
-      totalAttractions: Math.max(famousPlacesCount, DEFAULT_METRICS.totalAttractions),
-      totalSpatialLinks: Math.max(linksCount, DEFAULT_METRICS.totalSpatialLinks),
+      totalAttractions: famousPlacesCount,
+      totalSpatialLinks: linksCount,
       centroidFallbacks: 0,
       isLive: true,
       temples,
@@ -71,11 +71,9 @@ export async function getLivePlatformMetrics(): Promise<PlatformMetrics> {
     return cachedMetrics;
   } catch (err) {
     console.error("Failed to query live platform metrics, using verified fallback:", err);
-    const temples = Math.max(TEMPLES.length, DEFAULT_METRICS.totalTemples);
     return {
       ...DEFAULT_METRICS,
-      totalTemples: temples,
-      temples,
+      isLive: false,
     };
   }
 }

@@ -294,21 +294,30 @@ export function BeforeYouVisit({ temple, weatherData }: BeforeYouVisitProps) {
           <div className="space-y-5">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-                <span className="text-[10px] font-mono uppercase text-ivory/50">Wheelchair Access</span>
-                <p className="font-serif text-base font-bold text-ivory mt-1">Ramps to Outer Courtyard</p>
-                <p className="text-xs text-ivory/60 mt-1">Wheelchairs available upon request at the security counter near the main entrance.</p>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[10px] font-mono uppercase text-ivory/50">Wheelchair Ramps</span>
+                  <span className="text-[9.5px] font-mono text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded">Check Locally</span>
+                </div>
+                <p className="font-serif text-base font-bold text-ivory mt-1">Ramp Status Uncertified</p>
+                <p className="text-xs text-ivory/60 mt-1">Ancient stone architecture often contains elevated thresholds and steps. Confirm ramp availability at the enquiry counter.</p>
               </div>
 
               <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-                <span className="text-[10px] font-mono uppercase text-ivory/50">Senior Darshan Queue</span>
-                <p className="font-serif text-base font-bold text-gold mt-1">Designated Seating & Lane</p>
-                <p className="text-xs text-ivory/60 mt-1">Separate queues for senior citizens (60+) and differently-abled devotees with minimal stair climbs.</p>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[10px] font-mono uppercase text-ivory/50">Senior Darshan Queue</span>
+                  <span className="text-[9.5px] font-mono text-gold bg-gold/10 px-2 py-0.5 rounded">Trust Policy</span>
+                </div>
+                <p className="font-serif text-base font-bold text-gold mt-1">Subject to Festival Rush</p>
+                <p className="text-xs text-ivory/60 mt-1">Special priority lines for senior citizens (60+) are operated during peak festivals by select devasthanams.</p>
               </div>
 
               <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-                <span className="text-[10px] font-mono uppercase text-ivory/50">Battery-Operated Carts</span>
-                <p className="font-serif text-base font-bold text-emerald-400 mt-1">Available at Main Gate</p>
-                <p className="text-xs text-ivory/60 mt-1">Free electric shuttle service connecting outer car parking to inner temple mandapa.</p>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[10px] font-mono uppercase text-ivory/50">Electric Carts</span>
+                  <span className="text-[9.5px] font-mono text-ivory/50 bg-white/5 px-2 py-0.5 rounded">Major Sites Only</span>
+                </div>
+                <p className="font-serif text-base font-bold text-ivory mt-1">Hill & Macro Shrines</p>
+                <p className="text-xs text-ivory/60 mt-1">Electric cart transit is present at select large complex shrines (e.g. Tirumala, Madurai). Unindexed for smaller shrines.</p>
               </div>
             </div>
           </div>
@@ -321,17 +330,17 @@ export function BeforeYouVisit({ temple, weatherData }: BeforeYouVisitProps) {
               <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
                 <div className="flex items-center gap-2 text-gold mb-2">
                   <Car className="h-4 w-4" />
-                  <span className="text-xs font-semibold text-ivory">Parking Facility</span>
+                  <span className="text-xs font-semibold text-ivory">Parking</span>
                 </div>
-                <p className="text-xs text-ivory/80">Devasthanam parking available with nominal municipal charges.</p>
+                <p className="text-xs text-ivory/70">Municipal or trust parking bays usually available along approach roads.</p>
               </div>
 
               <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
                 <div className="flex items-center gap-2 text-gold mb-2">
                   <Luggage className="h-4 w-4" />
-                  <span className="text-xs font-semibold text-ivory">Cloak Room</span>
+                  <span className="text-xs font-semibold text-ivory">Cloakroom</span>
                 </div>
-                <p className="text-xs text-ivory/80">Safe locker facilities for bags, mobile phones, and leather articles near entrance.</p>
+                <p className="text-xs text-ivory/70">Check with entrance security for footwear and electronic device keeping stands.</p>
               </div>
 
               <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
@@ -339,15 +348,15 @@ export function BeforeYouVisit({ temple, weatherData }: BeforeYouVisitProps) {
                   <Utensils className="h-4 w-4" />
                   <span className="text-xs font-semibold text-ivory">Annadanam</span>
                 </div>
-                <p className="text-xs text-ivory/80">Free satvik prasadam meals served daily during noon hours in the dining hall.</p>
+                <p className="text-xs text-ivory/70">Free prasadam meals served during noon hours at participating devasthanams.</p>
               </div>
 
               <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
                 <div className="flex items-center gap-2 text-gold mb-2">
                   <Droplets className="h-4 w-4" />
-                  <span className="text-xs font-semibold text-ivory">Drinking Water & Rest</span>
+                  <span className="text-xs font-semibold text-ivory">Drinking Water</span>
                 </div>
-                <p className="text-xs text-ivory/80">RO purified drinking water points and shaded resting corridors available throughout complex.</p>
+                <p className="text-xs text-ivory/70">Drinking water kiosks and shaded waiting mandapas maintained on temple grounds.</p>
               </div>
             </div>
           </div>

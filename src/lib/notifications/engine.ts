@@ -48,7 +48,7 @@ export interface NotificationDelivery {
   eventId: string;
   userId: string;
   channel: NotificationChannel;
-  status: "DELIVERED" | "SUPPRESSED_QUIET_HOURS" | "DISALLOWED_PREFERENCE" | "FAILED";
+  status: "DELIVERED" | "SENT_TO_PROVIDER" | "QUEUED_IN_APP" | "SUPPRESSED_QUIET_HOURS" | "DISALLOWED_PREFERENCE" | "FAILED";
   deliveredAt: string | null;
   rationale: string;
 }
@@ -159,15 +159,18 @@ export function dispatchNotification(params: {
     return delivery;
   }
 
-  // 4. Successful delivery
+  // 4. Dispatch notification with honest status semantics
+  const deliveryStatus = preferredChannel === "IN_APP" ? "QUEUED_IN_APP" : "SENT_TO_PROVIDER";
   const delivery: NotificationDelivery = {
     id: `nd_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
     eventId: event.id,
     userId: userPrefs.userId,
     channel: preferredChannel,
-    status: "DELIVERED",
+    status: deliveryStatus,
     deliveredAt: dispatchTime.toISOString(),
-    rationale: `Delivered via ${preferredChannel}. Verified source: ${event.verifiedSource}`,
+    rationale: preferredChannel === "IN_APP"
+      ? `Queued in-app for user. Verified source: ${event.verifiedSource}`
+      : `Dispatched to ${preferredChannel} external gateway. Verified source: ${event.verifiedSource}`,
   };
   deliveryLog.push(delivery);
   return delivery;

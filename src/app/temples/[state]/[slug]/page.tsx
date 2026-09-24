@@ -43,6 +43,7 @@ import { buildMasterDestinationIntelligence } from "@/lib/intelligence/context-e
 import { CinematicImage } from "@/components/ui/cinematic-image";
 import { resolvePrimaryTempleMedia } from "@/lib/images/resolver";
 import { TempleArchitectureHeritage } from "@/components/temple/temple-architecture-heritage";
+import { ResearchCitationBlock } from "@/components/temple/research-citation-block";
 import { TempleScrollGuard } from "@/components/temple/temple-scroll-guard";
 import { TempleMediaGallery } from "@/components/temple/temple-media-gallery";
 import { TempleTopBar } from "@/components/temple/temple-top-bar";
@@ -347,6 +348,7 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
             {/* Architecture & Visual Heritage */}
             <section id="architecture" className="space-y-8 scroll-mt-28">
               <TempleArchitectureHeritage temple={temple} />
+              <ResearchCitationBlock temple={temple} stateName={st.name} />
             </section>
 
             {/* Heritage Perspectives & Personas */}
