@@ -536,15 +536,15 @@ export function MapExplorer() {
     let isReadyTriggered = false;
     const triggerMapReady = () => {
       if (cancelled || isReadyTriggered) return;
-      if (!map.isStyleLoaded()) return;
-
       isReadyTriggered = true;
       setLoading(false);
       setMapReady(true);
-      try {
-        setupLayers(map, activeGeoJsonRef.current);
-      } catch (err) {
-        console.warn("[MapExplorer] setupLayers error:", err);
+      if (map.isStyleLoaded()) {
+        try {
+          setupLayers(map, activeGeoJsonRef.current);
+        } catch (err) {
+          console.warn("[MapExplorer] setupLayers error:", err);
+        }
       }
       void fetchViewportTemples(map);
       requestAnimationFrame(() => {
@@ -555,22 +555,35 @@ export function MapExplorer() {
     };
 
     map.on("load", triggerMapReady);
-    map.on("style.load", triggerMapReady);
+    map.on("style.load", () => {
+      if (cancelled) return;
+      if (!isReadyTriggered) {
+        triggerMapReady();
+      } else if (map.isStyleLoaded()) {
+        try {
+          setupLayers(map, activeGeoJsonRef.current);
+        } catch (err) {
+          console.warn("[MapExplorer] style.load setupLayers error:", err);
+        }
+      }
+    });
+    map.on("idle", () => {
+      if (cancelled) return;
+      if (!isReadyTriggered) {
+        triggerMapReady();
+      }
+    });
 
     if (map.isStyleLoaded()) {
       triggerMapReady();
     }
 
-    // Safety fallback: ensure loading screen doesn't block UI if style is slow
+    // Safety fallback: ensure loading screen unblocks UI promptly
     const safetyTimer = setTimeout(() => {
       if (!cancelled && !isReadyTriggered) {
-        if (map.isStyleLoaded()) {
-          triggerMapReady();
-        } else {
-          setLoading(false);
-        }
+        triggerMapReady();
       }
-    }, 3500);
+    }, 1500);
 
     map.on("rotate", () => {
       if (!cancelled) {
