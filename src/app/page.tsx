@@ -14,6 +14,8 @@ import {
   SacredRoutes,
   BeyondTheFamous,
 } from "@/components/home/narrative-chapters";
+import { TempleOfTheDay } from "@/components/home/temple-of-the-day";
+import { GeographicAtlasChapter } from "@/components/home/geographic-atlas-chapter";
 
 export default function Home() {
   return (
@@ -24,8 +26,14 @@ export default function Home() {
       {/* 02. India Is Calling Breathing Section */}
       <IndiaIsCalling />
 
-      {/* 03. Chapter I: The Six Sacred Realms & Geographic Atlas */}
+      {/* 03. Daily Archival Spotlight: Temple of the Day */}
+      <TempleOfTheDay />
+
+      {/* 04. Chapter I: The Six Sacred Realms */}
       <ExploreIndia />
+
+      {/* 05. Geographic Atlas: Topological Nodes & Geodetic Fixes */}
+      <GeographicAtlasChapter />
 
       {/* 04. Sacred Landscape: River, Mountain, Forest, Road */}
       <SacredLandscape />

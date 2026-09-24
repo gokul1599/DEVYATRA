@@ -13,6 +13,7 @@ import {
   Navigation,
   Flag,
   AlertTriangle,
+  ArrowRight,
 } from "lucide-react";
 import { getState, nearbyFor, templeUrl, TEMPLES, templesByState } from "@/lib/registry";
 import { resolveTemple } from "@/lib/db/directory";
@@ -336,24 +337,60 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
               <FamilyComfort temple={temple} />
             </section>
 
-            {/* Festivals */}
-            <section id="festivals">
-              <SectionHeading eyebrow="Festivals" title="Mark your calendar" />
-              <div className="grid gap-3 sm:grid-cols-2">
-                {temple.festivals.map((f, i) => (
-                  <Reveal key={f.id} delay={i * 0.05}>
-                    <div className="h-full rounded-2xl border border-line bg-obsidian-2 p-5">
-                      <div className="flex items-start justify-between gap-3">
-                        <p className="font-display text-[16px] font-medium text-ivory">{f.name}</p>
-                        {f.specialDarshan && <Chip tone="terracotta">Special darshan</Chip>}
+            {/* Festivals Arranged Date-wise */}
+            <section id="festivals" className="scroll-mt-28">
+              <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 border-b border-stone-800/80 pb-4">
+                <div>
+                  <span className="font-mono text-[10.5px] uppercase tracking-[0.25em] text-[#C8A24B]">
+                    Sacred Timetable
+                  </span>
+                  <h3 className="font-serif text-2xl font-medium text-[#F2ECE1] mt-1">
+                    Festivals &amp; Celestial Observances
+                  </h3>
+                </div>
+                <span className="font-mono text-xs text-stone-400">
+                  Arranged in Date Order
+                </span>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                {[...temple.festivals]
+                  .sort((a, b) => (a.month * 100 + a.day) - (b.month * 100 + b.day))
+                  .map((f, i) => (
+                    <Reveal key={f.id} delay={i * 0.05}>
+                      <div className="flex flex-col justify-between h-full rounded-3xl border border-stone-800/80 bg-stone-950/80 p-5 backdrop-blur-sm transition-all hover:border-[#C8A24B]/50 hover:bg-stone-900/80">
+                        <div>
+                          <div className="flex items-start justify-between gap-3">
+                            <div>
+                              <span className="font-mono text-[10px] uppercase tracking-wider text-[#C8A24B]">
+                                Month {f.month} · Day {f.day}
+                              </span>
+                              <p className="font-serif text-lg font-medium text-[#F2ECE1] mt-0.5">{f.name}</p>
+                            </div>
+                            {f.specialDarshan && (
+                              <span className="shrink-0 rounded-full border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 font-mono text-[9.5px] text-amber-300">
+                                Special Darshan
+                              </span>
+                            )}
+                          </div>
+                          <p className="mt-2 flex items-center gap-1.5 text-xs font-mono text-stone-400">
+                            <CalendarDays className="h-3.5 w-3.5 text-[#C8A24B]" /> {f.dateLabel}
+                          </p>
+                          <p className="mt-3 text-xs leading-relaxed text-stone-300">{f.description}</p>
+                        </div>
+
+                        <div className="mt-5 border-t border-stone-800/70 pt-3 flex items-center justify-end">
+                          <Link
+                            href={`/plan?temple=${temple.slug}&festival=${encodeURIComponent(f.name)}`}
+                            className="inline-flex items-center gap-1.5 rounded-full border border-[#C8A24B]/40 bg-[#C8A24B]/10 px-3 py-1 text-[11px] font-mono text-[#E4BE72] transition-colors hover:bg-[#C8A24B]/20"
+                          >
+                            <span>Plan for this festival</span>
+                            <ArrowRight className="h-3 w-3" />
+                          </Link>
+                        </div>
                       </div>
-                      <p className="mt-1 flex items-center gap-1.5 text-[12.5px] text-gold-bright">
-                        <CalendarDays className="h-3.5 w-3.5" /> {f.dateLabel}
-                      </p>
-                      <p className="mt-2.5 text-[13px] leading-relaxed text-ivory-dim">{f.description}</p>
-                    </div>
-                  </Reveal>
-                ))}
+                    </Reveal>
+                  ))}
               </div>
             </section>
           </div>

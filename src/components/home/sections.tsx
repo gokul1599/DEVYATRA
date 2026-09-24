@@ -11,7 +11,6 @@ import {
   ArrowRight,
   Compass,
   Clock,
-  Calendar,
   Layers,
 } from "lucide-react";
 import { getState, getStates, templesByState, getFestivalAll, templeUrl } from "@/lib/registry";
@@ -541,37 +540,58 @@ export function FestivalStrip() {
           </Link>
         </div>
 
-        {/* Horizontal Editorial Timeline Rail */}
+        {/* Horizontal Editorial Timeline Rail Arranged Date-wise */}
         <div className="flex gap-5 overflow-x-auto pb-4 [scrollbar-width:thin] no-scrollbar">
           {upcoming.map((f) => {
             const key = `${f.name}-${f.date.toISOString()}`;
+            const diffMs = f.date.getTime() - now.getTime();
+            const diffDays = Math.max(0, Math.ceil(diffMs / (1000 * 60 * 60 * 24)));
+            const countdown = diffDays === 0 ? "Today" : diffDays === 1 ? "Tomorrow" : `In ${diffDays} days`;
+            const dayNum = String(f.date.getDate()).padStart(2, "0");
+            const monthAbbr = f.date.toLocaleString("en-US", { month: "short" }).toUpperCase();
+
             return (
               <Link
                 key={key}
                 href={`${templeUrl(f.temple)}#festivals`}
-                className="group relative w-72 shrink-0 snap-start overflow-hidden rounded-3xl border border-stone-800/80 bg-stone-950/80 p-6 backdrop-blur-sm transition-all duration-300 hover:border-[#C8A24B]/60 hover:bg-stone-900/90 shadow-xl"
+                className="group relative w-80 shrink-0 snap-start overflow-hidden rounded-3xl border border-stone-800/80 bg-stone-950/80 p-6 backdrop-blur-sm transition-all duration-300 hover:border-[#C8A24B]/60 hover:bg-stone-900/90 shadow-xl flex flex-col justify-between"
               >
-                <div className="flex items-center justify-between text-[11px] font-mono text-[#C8A24B]">
-                  <span className="flex items-center gap-1.5">
-                    <Calendar className="h-3.5 w-3.5" />
-                    {fmtDate(f.date)}
-                  </span>
-                  <span className="text-stone-400">Lunar Tithi</span>
+                <div>
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="flex flex-col items-center justify-center rounded-2xl border border-[#C8A24B]/30 bg-[#C8A24B]/10 px-2.5 py-1.5 text-center shrink-0">
+                        <span className="font-mono text-base font-bold text-[#E4BE72] leading-none">
+                          {dayNum}
+                        </span>
+                        <span className="font-mono text-[8.5px] uppercase tracking-wider text-[#C8A24B] mt-0.5">
+                          {monthAbbr}
+                        </span>
+                      </div>
+                      <div className="text-[11px] font-mono text-[#C8A24B]">
+                        <span>{f.dateLabel}</span>
+                        <p className="text-[10px] text-stone-500 font-mono mt-0.5">{fmtDate(f.date)}</p>
+                      </div>
+                    </div>
+
+                    <span className="shrink-0 rounded-full border border-stone-800 bg-stone-900/80 px-2.5 py-0.5 text-[10px] font-mono text-stone-300">
+                      {countdown}
+                    </span>
+                  </div>
+
+                  <h4 className="mt-4 font-serif text-lg font-medium text-[#F2ECE1] group-hover:text-[#E4BE72] transition-colors leading-snug">
+                    {f.name}
+                  </h4>
+                  <p className="mt-1 text-xs font-serif text-stone-300 truncate">
+                    {f.temple.name} · {getState(f.temple.stateCode)?.name ?? f.temple.location}
+                  </p>
+                  <p className="mt-2.5 line-clamp-2 text-xs leading-relaxed text-stone-400">
+                    {f.description}
+                  </p>
                 </div>
 
-                <h4 className="mt-3 font-serif text-xl font-medium text-[#F2ECE1] group-hover:text-[#E4BE72] transition-colors leading-snug">
-                  {f.name}
-                </h4>
-                <p className="mt-1 text-xs font-serif text-stone-300 truncate">
-                  {f.temple.name}
-                </p>
-                <p className="mt-3 line-clamp-2 text-xs leading-relaxed text-stone-400">
-                  {f.description}
-                </p>
-
-                <div className="mt-5 flex items-center gap-1 text-[11px] font-mono text-[#C8A24B] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                  <span>View Festival Details</span>
-                  <ArrowRight className="h-3 w-3" />
+                <div className="mt-5 border-t border-stone-800/80 pt-3 flex items-center justify-between text-[11px] font-mono text-[#C8A24B]">
+                  <span>Explore Pilgrimage</span>
+                  <ArrowRight className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-1" />
                 </div>
               </Link>
             );

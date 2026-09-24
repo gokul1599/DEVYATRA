@@ -12,6 +12,7 @@ const cols = [
       { label: "Explore India", href: "/explore" },
       { label: "All temples", href: "/temples" },
       { label: "Festival calendar", href: "/festivals" },
+      { label: "Editorial Stories", href: "/stories" },
       { label: "AI journey planner", href: "/plan" },
     ],
   },
@@ -20,6 +21,7 @@ const cols = [
     links: [
       { label: "My Journey", href: "/journey" },
       { label: "Sign in", href: "/login" },
+      { label: "Submit a Temple", href: "/submit" },
       { label: "Report incorrect info", href: "/report" },
     ],
   },

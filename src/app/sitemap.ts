@@ -12,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes = [
     "/", "/explore", "/temples", "/festivals", "/nearby", "/plan", "/search",
     "/journey", "/verify", "/report", "/about", "/login", "/register", "/map",
+    "/stories", "/submit", "/collections",
   ].map((p) => ({ url: `${base}${p}`, lastModified: now, changeFrequency: "weekly" as const, priority: 0.7 }));
 
   const explore = getStatesForSitemap().map((s) => ({
@@ -35,6 +36,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
+  const stories = [
+    "chola-granite-monuments-and-bronze-devotion",
+    "himalayan-mandakini-trail-kedarnath",
+    "sacred-geometry-vastu-purusha-mandala",
+    "puri-rath-yatra-cosmic-wheels",
+  ].map((s) => ({
+    url: `${base}/stories/${s}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.85,
+  }));
+
   const templePages = TEMPLES.map((t) => ({
     url: `${base}/temples/${getState(t.stateCode)?.slug ?? ""}/${t.slug}`,
     lastModified: now,
@@ -42,7 +55,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.9,
   }));
 
-  return [...staticRoutes, ...explore, ...collections, ...circuits, ...templePages];
+  return [...staticRoutes, ...explore, ...collections, ...circuits, ...stories, ...templePages];
 }
 
 function getStatesForSitemap(): string[] {

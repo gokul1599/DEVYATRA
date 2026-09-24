@@ -26,6 +26,7 @@ const NAV = [
   { href: "/map", key: "nav_map", label: "Map" },
   { href: "/temples", key: "nav_temples", label: "Temples" },
   { href: "/festivals", key: "nav_festivals", label: "Festivals" },
+  { href: "/stories", key: "nav_stories", label: "Stories" },
   { href: "/journey", key: "nav_saved", label: "Journey" },
 ] as const;
 
