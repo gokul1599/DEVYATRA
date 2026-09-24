@@ -24,7 +24,9 @@ import {
   Printer,
   ShieldCheck,
   Bookmark,
+  Share2,
 } from "lucide-react";
+import { TripCostPanel } from "@/components/plan/trip-cost-panel";
 import type { PlanResult } from "@/lib/ai/engine";
 import { cn } from "@/lib/cn";
 
@@ -141,6 +143,7 @@ const INTERESTS = [
 export default function PlanStudio() {
   const sp = useSearchParams();
   const initialTemple = sp.get("temple") ?? "";
+  const festivalParam = sp.get("festival") ?? "";
 
   const [allTemples, setAllTemples] = useState<LiteTemple[]>([]);
   const [selectedTemples, setSelectedTemples] = useState<LiteTemple[]>([]);
@@ -168,8 +171,10 @@ export default function PlanStudio() {
   const [error, setError] = useState("");
   const [copyFeedback, setCopyFeedback] = useState(false);
   const [saveFeedback, setSaveFeedback] = useState<string | null>(null);
+  const [lastSavedId, setLastSavedId] = useState<string | null>(null);
+  const [shareFeedback, setShareFeedback] = useState<string | null>(null);
 
-  // Fetch full live catalog of 1,926 temples from Neon PostgreSQL
+  // Fetch full live catalog of verified temples from Neon PostgreSQL
   useEffect(() => {
     fetch("/api/temples-lite")
       .then((r) => r.json())
@@ -325,10 +330,14 @@ export default function PlanStudio() {
           travelMode: travel,
           budget,
           itineraryBrief: result?.summary ?? null,
+          familyMode: hasChildren,
+          seniorMode: hasElderly,
+          accessibilityMode: hasAccessibility,
         }),
       });
       const data = await resp.json();
-      if (resp.ok) {
+      if (resp.ok && data.journey) {
+        setLastSavedId(data.journey.id);
         setSaveFeedback("Saved!");
         setTimeout(() => setSaveFeedback(null), 3000);
       } else {
@@ -338,6 +347,34 @@ export default function PlanStudio() {
     } catch {
       setSaveFeedback("Error saving");
       setTimeout(() => setSaveFeedback(null), 3000);
+    }
+  };
+
+  const shareCurrentJourney = async () => {
+    if (!lastSavedId) {
+      setShareFeedback("Save journey first");
+      setTimeout(() => setShareFeedback(null), 3000);
+      return;
+    }
+    try {
+      const resp = await fetch("/api/journeys/share", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ journeyId: lastSavedId }),
+      });
+      const data = await resp.json();
+      if (resp.ok && data.shareUrl) {
+        const full = `${window.location.origin}${data.shareUrl}`;
+        navigator.clipboard.writeText(full);
+        setShareFeedback("Link Copied!");
+        setTimeout(() => setShareFeedback(null), 3500);
+      } else {
+        setShareFeedback(data.error || "Error sharing");
+        setTimeout(() => setShareFeedback(null), 3000);
+      }
+    } catch {
+      setShareFeedback("Error sharing");
+      setTimeout(() => setShareFeedback(null), 3000);
     }
   };
 
@@ -351,6 +388,18 @@ export default function PlanStudio() {
             Select 1 to 5 temples across India. The AI sequences travel legs, darshan pacing, and meal breaks based on your itinerary.
           </p>
         </div>
+
+        {festivalParam && (
+          <div className="flex items-center gap-2.5 rounded-2xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-xs text-amber-200">
+            <Sparkles className="h-4 w-4 text-amber-400 shrink-0" />
+            <div>
+              <p className="font-semibold text-amber-300">Auspicious Festival Itinerary</p>
+              <p className="text-[11.5px] text-amber-200/90 mt-0.5">
+                Planning pilgrimage for <strong>{festivalParam}</strong>. Special darshan pacing and peak hours calibrated.
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Curated Sacred Circuits */}
         <div>
@@ -795,6 +844,22 @@ export default function PlanStudio() {
                     </>
                   )}
                 </button>
+                <button
+                  onClick={shareCurrentJourney}
+                  className="inline-flex items-center gap-1 rounded-lg border border-white/[0.08] bg-white/[0.04] px-2.5 py-1.5 text-xs font-medium text-ivory-dim hover:text-ivory hover:border-gold/30"
+                >
+                  {shareFeedback ? (
+                    <>
+                      <Check className="h-3.5 w-3.5 text-emerald-400" />
+                      <span className="text-emerald-300">{shareFeedback}</span>
+                    </>
+                  ) : (
+                    <>
+                      <Share2 className="h-3.5 w-3.5" />
+                      <span>Share Plan</span>
+                    </>
+                  )}
+                </button>
               </div>
             </div>
 
@@ -901,6 +966,13 @@ export default function PlanStudio() {
                 </div>
               </div>
             </div>
+
+            {/* Transparent Pilgrim Trip Cost Estimator */}
+            <TripCostPanel
+              totalDays={days}
+              totalEstimatedKm={Math.max(60, selectedTemples.length * 85)}
+              templeCount={selectedTemples.length}
+            />
           </div>
         ) : null}
       </div>

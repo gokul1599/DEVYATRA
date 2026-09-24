@@ -21,6 +21,8 @@ interface NavSection {
 }
 
 const TEMPLE_SECTIONS: NavSection[] = [
+  { id: "arrival-mode", label: "Arrival Mode" },
+  { id: "before-you-visit", label: "Before You Visit" },
   { id: "command-center", label: "Command Center" },
   { id: "intelligence", label: "Live Intel" },
   { id: "access-points", label: "Access & Gates" },

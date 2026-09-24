@@ -13,7 +13,7 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized. Please sign in." }, { status: 401 });
   }
 
-  const journeys = getSavedJourneys(user.id);
+  const journeys = await getSavedJourneys(user.id);
   return NextResponse.json({ success: true, journeys });
 }
 
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const saved = saveJourney(user.id, {
+    const saved = await saveJourney(user.id, {
       title: body.title,
       circuitId: body.circuitId,
       templeSlugs: body.templeSlugs,
@@ -44,6 +44,10 @@ export async function POST(req: NextRequest) {
       budget: body.budget || "mid",
       itineraryBrief: body.itineraryBrief,
       notes: body.notes,
+      familyMode: Boolean(body.familyMode),
+      seniorMode: Boolean(body.seniorMode),
+      accessibilityMode: Boolean(body.accessibilityMode),
+      costBreakdown: body.costBreakdown,
     });
 
     return NextResponse.json({ success: true, journey: saved });
@@ -66,7 +70,7 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: "Missing journey ID." }, { status: 400 });
   }
 
-  const deleted = deleteSavedJourney(user.id, journeyId);
+  const deleted = await deleteSavedJourney(user.id, journeyId);
   if (!deleted) {
     return NextResponse.json({ error: "Journey not found or unauthorized." }, { status: 404 });
   }

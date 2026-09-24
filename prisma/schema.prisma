@@ -623,3 +623,88 @@ model TempleMedia {
   @@index([sourceType])
   @@index([googlePlaceId])
 }
+
+// ─── Phase 14 & 17: Permanent Database-Backed Journeys & Public Sharing ─────
+
+model Journey {
+  id                String          @id @default(cuid())
+  userId            String
+  title             String
+  circuitId         String?
+  templeSlugs       String[]        @default([])
+  templeNames       String[]        @default([])
+  startDate         String
+  totalDays         Int             @default(1)
+  travelMode        String          @default("car")
+  budget            String          @default("moderate")
+  itineraryBrief    Json?
+  notes             String?
+  familyMode        Boolean         @default(false)
+  seniorMode        Boolean         @default(false)
+  accessibilityMode Boolean         @default(false)
+  costBreakdown     Json?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  sharedJourneys    SharedJourney[]
+
+  @@index([userId])
+}
+
+model SharedJourney {
+  id             String    @id @default(cuid())
+  shareCode      String    @unique // 12-char secure unique share identifier
+  journeyId      String
+  journey        Journey   @relation(fields: [journeyId], references: [id], onDelete: Cascade)
+  userId         String
+  authorName     String    @default("A Pilgrim")
+  isPublic       Boolean   @default(true)
+  allowCopy      Boolean   @default(true)
+  viewsCount     Int       @default(0)
+  createdAt      DateTime  @default(now())
+  expiresAt      DateTime?
+
+  @@index([shareCode])
+  @@index([userId])
+}
+
+// ─── Phase 13 & 41: My Yatra Journal & Mark as Visited ───────────────────────
+
+model VisitedTemple {
+  id             String    @id @default(cuid())
+  userId         String
+  templeId       String
+  templeSlug     String
+  templeName     String
+  visitedAt      DateTime  @default(now())
+  darshanType    String?   // "general" | "special" | "mangal_aarti"
+  notes          String?
+  rating         Int?      // 1-5 subjective pilgrimage satisfaction
+  sevaPerformed  String?
+  prasadamTaken  Boolean   @default(false)
+  isPrivate      Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@unique([userId, templeId])
+  @@index([userId])
+  @@index([templeId])
+}
+
+model JournalEntry {
+  id             String    @id @default(cuid())
+  userId         String
+  journeyId      String?
+  templeId       String?
+  title          String
+  content        String
+  entryDate      DateTime  @default(now())
+  mood           String?   // "peaceful" | "transcendent" | "gratitude" | "reflective"
+  photoUrls      String[]  @default([])
+  isPrivate      Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([journeyId])
+  @@index([templeId])
+}

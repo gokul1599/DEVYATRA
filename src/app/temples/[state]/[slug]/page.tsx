@@ -48,6 +48,9 @@ import { TempleMediaGallery } from "@/components/temple/temple-media-gallery";
 import { TempleTopBar } from "@/components/temple/temple-top-bar";
 import { TempleDna } from "@/components/temple/temple-dna";
 import { SourceTransparencyDrawer } from "@/components/temple/source-transparency-drawer";
+import { BeforeYouVisit } from "@/components/temple/before-you-visit";
+import { ArrivalMode } from "@/components/temple/arrival-mode";
+import { getLiveWeather } from "@/lib/providers/weather";
 import { cn } from "@/lib/cn";
 
 export const dynamicParams = true;
@@ -88,6 +91,7 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
   const temple = await resolveTemple(slug);
   if (!temple) notFound();
   const masterIntelligence = await buildMasterDestinationIntelligence(temple.id);
+  const weather = await getLiveWeather(temple.latitude, temple.longitude, temple.location);
 
   const st =
     getState(stateSlug) ||
@@ -237,6 +241,26 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
         {/* Temple DNA Identity Matrix */}
         <section id="temple-dna" className="mb-12 scroll-mt-28">
           <TempleDna temple={temple} stateName={st.name} />
+        </section>
+
+        {/* Arrival Mode & On-Site Proximity Navigation */}
+        <section id="arrival-mode" className="mb-12 scroll-mt-28">
+          <ArrivalMode temple={temple} />
+        </section>
+
+        {/* Essential Pilgrim Guide: Before You Visit */}
+        <section id="before-you-visit" className="mb-12 scroll-mt-28">
+          <BeforeYouVisit
+            temple={temple}
+            weatherData={{
+              temperatureCelsius: weather.temperatureCelsius,
+              conditionLabel: weather.conditionLabel,
+              rainProbabilityPercent: weather.rainProbabilityPercent,
+              sunriseTime: weather.sunriseTime,
+              sunsetTime: weather.sunsetTime,
+              isLive: weather.isLive,
+            }}
+          />
         </section>
 
         {/* Destination Command Center */}

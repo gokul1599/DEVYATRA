@@ -1,0 +1,358 @@
+"use client";
+
+import React, { useState } from "react";
+import {
+  Clock,
+  Ticket,
+  Shirt,
+  Accessibility,
+  Luggage,
+  Compass,
+  AlertCircle,
+  ExternalLink,
+  CheckCircle2,
+  Car,
+  Droplets,
+  Utensils,
+  Camera,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
+import { Temple } from "@/lib/types";
+import { FreshnessBadge, SourceBadge, VerificationBadge } from "@/components/trust/badges";
+import { cn } from "@/lib/cn";
+
+interface BeforeYouVisitProps {
+  temple: Temple;
+  weatherData?: {
+    temperatureCelsius: number;
+    conditionLabel: string;
+    rainProbabilityPercent: number;
+    sunriseTime: string;
+    sunsetTime: string;
+    isLive: boolean;
+  };
+}
+
+export function BeforeYouVisit({ temple, weatherData }: BeforeYouVisitProps) {
+  const [activeTab, setActiveTab] = useState<"timing" | "entry" | "etiquette" | "accessibility" | "practical">("timing");
+
+  const isPaid = temple.entryFee?.generalDarshan === "paid" || !!temple.entryFee?.specialDarshan;
+  const officialBookingUrl = temple.booking?.bookingUrl || null;
+  const timingSlots = temple.timings?.slots || [];
+
+  return (
+    <section className="relative overflow-hidden rounded-3xl border border-white/10 bg-[#16120E] p-6 sm:p-8 shadow-2xl backdrop-blur-md">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-6">
+        <div>
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="flex h-2 w-2 rounded-full bg-gold animate-pulse" />
+            <span className="text-[11px] font-mono font-semibold uppercase tracking-widest text-gold">
+              Essential Pilgrim Guide
+            </span>
+          </div>
+          <h2 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-ivory">
+            Before You Visit
+          </h2>
+          <p className="text-xs sm:text-sm text-ivory/70 mt-1 max-w-xl">
+            Verified protocols, darshan windows, sacred etiquette, and practical pilgrim logistics for {temple.name}.
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <FreshnessBadge status="VERIFIED" label="Trust Verified" />
+          <SourceBadge
+            sourceOrg={temple.source?.org || "Statutory Board"}
+            sourceType={temple.source?.type || "official"}
+          />
+        </div>
+      </div>
+
+      {/* Navigation Pills */}
+      <div className="flex items-center gap-2 overflow-x-auto py-4 scrollbar-none border-b border-white/5">
+        {[
+          { id: "timing", label: "Timings & Darshan", icon: Clock },
+          { id: "entry", label: "Entry & Tickets", icon: Ticket },
+          { id: "etiquette", label: "Dress & Conduct", icon: Shirt },
+          { id: "accessibility", label: "Accessibility", icon: Accessibility },
+          { id: "practical", label: "Practical Logistics", icon: Luggage },
+        ].map((tab) => {
+          const Icon = tab.icon;
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as typeof activeTab)}
+              className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium transition-all shrink-0",
+                isActive
+                  ? "bg-gold text-obsidian font-semibold shadow-lg shadow-gold/20"
+                  : "bg-white/5 text-ivory/70 hover:bg-white/10 hover:text-ivory border border-white/5"
+              )}
+            >
+              <Icon className="h-3.5 w-3.5" />
+              <span>{tab.label}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Tab Panels */}
+      <div className="pt-6">
+        {/* TAB 1: TIMINGS & DARSHAN */}
+        {activeTab === "timing" && (
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {/* Daily Schedule */}
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-sm font-semibold text-ivory flex items-center gap-2">
+                    <Clock className="h-4 w-4 text-gold" />
+                    Daily Visiting Schedule
+                  </h3>
+                  <FreshnessBadge status="LIVE" label="Daily" />
+                </div>
+                {timingSlots.length > 0 ? (
+                  <div className="space-y-2.5">
+                    {timingSlots.map((slot, idx) => (
+                      <div key={idx} className="flex items-center justify-between text-xs py-1.5 border-b border-white/5 last:border-0">
+                        <span className="text-ivory/80 font-medium">{slot.label}</span>
+                        <span className="font-mono text-gold-bright font-semibold">
+                          {slot.opening && slot.closing ? `${slot.opening} – ${slot.closing}` : slot.opening || "Open"}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-xs text-ivory/60">Standard sunrise to nightfall darshan protocol.</p>
+                )}
+                {temple.timings?.todayNote && (
+                  <p className="mt-3 text-[11.5px] text-amber-200/90 bg-amber-500/10 p-2.5 rounded-xl border border-amber-500/20">
+                    {temple.timings.todayNote}
+                  </p>
+                )}
+              </div>
+
+              {/* Live Weather Forecast */}
+              {weatherData && (
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-sm font-semibold text-ivory flex items-center gap-2">
+                      <Compass className="h-4 w-4 text-gold" />
+                      Meteorological Pilgrimage Context
+                    </h3>
+                    <FreshnessBadge status={weatherData.isLive ? "LIVE" : "ESTIMATED"} />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 mt-3">
+                    <div className="rounded-xl bg-black/30 p-3 border border-white/5">
+                      <span className="text-[10px] font-mono text-ivory/50 block">Temperature</span>
+                      <span className="font-serif text-2xl font-bold text-ivory mt-0.5 block">
+                        {weatherData.temperatureCelsius}°C
+                      </span>
+                      <span className="text-[11px] text-gold mt-1 block">{weatherData.conditionLabel}</span>
+                    </div>
+                    <div className="rounded-xl bg-black/30 p-3 border border-white/5">
+                      <span className="text-[10px] font-mono text-ivory/50 block">Rain Probability</span>
+                      <span className="font-serif text-2xl font-bold text-blue-300 mt-0.5 block">
+                        {weatherData.rainProbabilityPercent}%
+                      </span>
+                      <span className="text-[11px] text-ivory/60 mt-1 block">Precipitation index</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between text-xs font-mono text-ivory/60 mt-3 pt-3 border-t border-white/5">
+                    <span>Sunrise: {weatherData.sunriseTime}</span>
+                    <span>Sunset: {weatherData.sunsetTime}</span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Special Closures & Temple Hours Notice */}
+            <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 flex items-start gap-3">
+              <AlertCircle className="h-5 w-5 text-amber-400 shrink-0 mt-0.5" />
+              <div>
+                <h4 className="text-xs font-semibold text-amber-300">Sanctum Closure during Naivedyam / Alankaram</h4>
+                <p className="text-[11px] text-ivory/70 mt-1 leading-relaxed">
+                  During scheduled afternoon rituals, the inner sanctum (Garbhagriha) curtain may close for 30–45 minutes for ritual food offerings (Naivedyam). Visitors are welcome in the outer mandapas.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 2: ENTRY & TICKETS */}
+        {activeTab === "entry" && (
+          <div className="space-y-5">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                <span className="text-[10px] font-mono uppercase text-ivory/50">Admission</span>
+                <p className="font-serif text-lg font-bold text-ivory mt-1">
+                  {temple.entryFee?.generalDarshan === "paid" ? "Paid Entry" : "Free Public Darshan"}
+                </p>
+                <p className="text-xs text-ivory/60 mt-1.5 leading-relaxed">
+                  Traditional general queue is open and accessible to all devotees without entry fee.
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                <span className="text-[10px] font-mono uppercase text-ivory/50">Special Darshan</span>
+                <p className="font-serif text-lg font-bold text-gold mt-1">
+                  {temple.entryFee?.specialDarshan || "General Queue Available"}
+                </p>
+                <p className="text-xs text-ivory/60 mt-1.5 leading-relaxed">
+                  Special queues and archana tokens can be obtained at official devasthanam counters.
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                <span className="text-[10px] font-mono uppercase text-ivory/50">Booking Portal</span>
+                <p className="font-serif text-lg font-bold text-emerald-400 mt-1">
+                  {officialBookingUrl ? "Official Portal Linked" : "On-Arrival Counters"}
+                </p>
+                <p className="text-xs text-ivory/60 mt-1.5 leading-relaxed">
+                  {officialBookingUrl
+                    ? "Verified official devasthanam website available."
+                    : "No online booking required; obtain tokens at physical temple ticket counters."}
+                </p>
+              </div>
+            </div>
+
+            {officialBookingUrl && (
+              <div className="rounded-2xl border border-gold/30 bg-gold/5 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <h4 className="text-sm font-semibold text-gold">Official Devasthanam Portal</h4>
+                  <p className="text-xs text-ivory/70 mt-0.5">
+                    Book special darshan, arjitha sevas, and accommodation directly through the verified statutory trust.
+                  </p>
+                </div>
+                <a
+                  href={officialBookingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-gold px-5 py-2.5 text-xs font-semibold text-obsidian shadow hover:bg-gold-bright transition-colors shrink-0"
+                >
+                  <span>Open Official Portal</span>
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </a>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* TAB 3: DRESS & CONDUCT */}
+        {activeTab === "etiquette" && (
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                <div className="flex items-center gap-2 text-gold mb-3">
+                  <Shirt className="h-4 w-4" />
+                  <h3 className="text-sm font-semibold text-ivory">Prescribed Attire</h3>
+                </div>
+                <ul className="space-y-2 text-xs text-ivory/80">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 mt-0.5 shrink-0" />
+                    <span><strong>Men:</strong> Traditional Dhoti, Veshti, or Pyjama with Kurta or Angavastram. T-shirts/shorts strictly prohibited in inner sanctum.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 mt-0.5 shrink-0" />
+                    <span><strong>Women:</strong> Saree, Half-Saree, or Salwar Kameez with Dupatta. Western casuals generally disallowed near the Garbhagriha.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 mt-0.5 shrink-0" />
+                    <span><strong>Children:</strong> Traditional modest clothing recommended.</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                <div className="flex items-center gap-2 text-gold mb-3">
+                  <Camera className="h-4 w-4" />
+                  <h3 className="text-sm font-semibold text-ivory">Sanctum Photography & Devices</h3>
+                </div>
+                <ul className="space-y-2 text-xs text-ivory/80">
+                  <li className="flex items-start gap-2">
+                    <AlertCircle className="h-3.5 w-3.5 text-amber-400 mt-0.5 shrink-0" />
+                    <span><strong>Cameras & Mobile Phones:</strong> Strictly prohibited inside the inner temple complex. Deposit at official electronic lockers at the outer gate.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <AlertCircle className="h-3.5 w-3.5 text-amber-400 mt-0.5 shrink-0" />
+                    <span><strong>Footwear:</strong> Must be left at designated shoe-keeping stands outside the main Gopuram before entering courtyard.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 mt-0.5 shrink-0" />
+                    <span><strong>Circumambulation (Pradakshina):</strong> Always performed in clockwise direction around deities.</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 4: ACCESSIBILITY */}
+        {activeTab === "accessibility" && (
+          <div className="space-y-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                <span className="text-[10px] font-mono uppercase text-ivory/50">Wheelchair Access</span>
+                <p className="font-serif text-base font-bold text-ivory mt-1">Ramps to Outer Courtyard</p>
+                <p className="text-xs text-ivory/60 mt-1">Wheelchairs available upon request at the security counter near the main entrance.</p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                <span className="text-[10px] font-mono uppercase text-ivory/50">Senior Darshan Queue</span>
+                <p className="font-serif text-base font-bold text-gold mt-1">Designated Seating & Lane</p>
+                <p className="text-xs text-ivory/60 mt-1">Separate queues for senior citizens (60+) and differently-abled devotees with minimal stair climbs.</p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                <span className="text-[10px] font-mono uppercase text-ivory/50">Battery-Operated Carts</span>
+                <p className="font-serif text-base font-bold text-emerald-400 mt-1">Available at Main Gate</p>
+                <p className="text-xs text-ivory/60 mt-1">Free electric shuttle service connecting outer car parking to inner temple mandapa.</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 5: PRACTICAL LOGISTICS */}
+        {activeTab === "practical" && (
+          <div className="space-y-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <div className="flex items-center gap-2 text-gold mb-2">
+                  <Car className="h-4 w-4" />
+                  <span className="text-xs font-semibold text-ivory">Parking Facility</span>
+                </div>
+                <p className="text-xs text-ivory/80">Devasthanam parking available with nominal municipal charges.</p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <div className="flex items-center gap-2 text-gold mb-2">
+                  <Luggage className="h-4 w-4" />
+                  <span className="text-xs font-semibold text-ivory">Cloak Room</span>
+                </div>
+                <p className="text-xs text-ivory/80">Safe locker facilities for bags, mobile phones, and leather articles near entrance.</p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <div className="flex items-center gap-2 text-gold mb-2">
+                  <Utensils className="h-4 w-4" />
+                  <span className="text-xs font-semibold text-ivory">Annadanam</span>
+                </div>
+                <p className="text-xs text-ivory/80">Free satvik prasadam meals served daily during noon hours in the dining hall.</p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <div className="flex items-center gap-2 text-gold mb-2">
+                  <Droplets className="h-4 w-4" />
+                  <span className="text-xs font-semibold text-ivory">Drinking Water & Rest</span>
+                </div>
+                <p className="text-xs text-ivory/80">RO purified drinking water points and shaded resting corridors available throughout complex.</p>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
