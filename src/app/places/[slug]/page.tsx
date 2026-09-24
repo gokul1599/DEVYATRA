@@ -326,11 +326,11 @@ export default async function PlaceDetailPage({ params }: Props) {
               {/* Action Buttons */}
               <div className="pt-4 border-t border-stone-800/80 space-y-2.5">
                 <Link
-                  href={`/map?lat=${destination.latitude}&lng=${destination.longitude}&zoom=15`}
+                  href={`/map?place=${destination.slug || destination.id}&lat=${destination.latitude}&lng=${destination.longitude}&zoom=15`}
                   className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#C8A24B] py-3 text-xs font-mono font-semibold uppercase tracking-wider text-black hover:bg-[#E4BE72] transition-colors shadow-lg shadow-[#C8A24B]/10"
                 >
                   <Compass className="h-4 w-4" />
-                  <span>Open in Sacred Map</span>
+                  <span>View on Sacred Map</span>
                 </Link>
 
                 <a

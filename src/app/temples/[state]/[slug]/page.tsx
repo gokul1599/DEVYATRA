@@ -11,6 +11,7 @@ import {
   ExternalLink,
   Quote,
   Navigation,
+  Compass,
   Flag,
   AlertTriangle,
   ArrowRight,
@@ -231,6 +232,14 @@ export default async function TemplePage({ params }: { params: Promise<{ state: 
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <LiveStatus temple={temple} />
               <PlanCta slug={temple.slug} />
+              <Link
+                href={`/map?temple=${temple.slug}&lat=${temple.latitude}&lng=${temple.longitude}&zoom=15`}
+                className="flex items-center gap-1.5 rounded-full border border-gold/40 bg-gold/10 px-4 py-2 text-xs font-semibold text-gold-bright hover:bg-gold/20 hover:border-gold transition-colors"
+                title="View on Sacred Atlas Map"
+              >
+                <Compass className="h-3.5 w-3.5" />
+                <span>View on Map</span>
+              </Link>
               <SaveButton slug={temple.slug} className="h-10 w-10 rounded-full" />
               {masterIntelligence && <SafetyModeModal safety={masterIntelligence.emergencySafety} />}
             </div>

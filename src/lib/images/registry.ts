@@ -13,7 +13,29 @@ export type ImageRightsType =
   | "CREATIVE_COMMONS"
   | "UNSPLASH_LICENSE"
   | "OFFICIAL_PROVENANCE"
+  | "GOOGLE_PLACES_ATTRIBUTION"
+  | "AI_ILLUSTRATION"
   | "ARTISTIC_INTERPRETATION";
+
+export type DestinationImageRole =
+  | "HERO"
+  | "EXTERIOR"
+  | "ARCHITECTURE"
+  | "INTERIOR"
+  | "LANDSCAPE"
+  | "FESTIVAL"
+  | "DETAIL"
+  | "HISTORICAL"
+  | "FOOD"
+  | "NEARBY"
+  | "ACTIVITY"
+  | "BEACH"
+  | "NATURE"
+  | "WILDLIFE"
+  | "FAMILY"
+  | "ROUTE"
+  | "REGION"
+  | "CULTURE";
 
 export type FocalPoint = "center" | "top" | "bottom" | "left" | "right";
 
@@ -22,13 +44,19 @@ export interface DestinationImage {
   src: string;
   alt: string;
   caption?: string;
+  destinationId?: string;
   templeSlug?: string;
   stateCode?: string;
+  district?: string;
   region?: "North" | "South" | "East" | "West" | "Central" | "Northeast";
-  category: "LANDMARK" | "REGION_HERO" | "ARCHITECTURE" | "FESTIVAL" | "JOURNEY" | "GALLERY";
+  category: "LANDMARK" | "REGION_HERO" | "ARCHITECTURE" | "FESTIVAL" | "JOURNEY" | "GALLERY" | "HERITAGE" | "NATURE" | "BEACHES" | "WILDLIFE" | "FOOD" | "CULTURE";
+  role?: DestinationImageRole;
+  sourceType?: "DATABASE" | "CURATED" | "GOOGLE_PLACES" | "OFFICIAL" | "ASI" | "CC" | "AI_GENERATED" | "UNSPLASH" | "NONE";
   rights: ImageRightsType;
   credit: string;
   sourceUrl?: string;
+  factualOrIllustrative?: "factual" | "illustrative";
+  approved?: boolean;
   focalPoint: FocalPoint;
   aspectRatio?: "16/9" | "4/3" | "1/1" | "21/9";
 }
