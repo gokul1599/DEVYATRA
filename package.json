@@ -4,12 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build --webpack",
+    "build": "node scripts/copy-maplibre-worker.mjs && next build --webpack",
     "start": "next start",
     "lint": "eslint",
     "test": "node scripts/test.mjs",
     "generate": "prisma generate",
-    "postinstall": "prisma generate",
+    "postinstall": "prisma generate && node scripts/copy-maplibre-worker.mjs",
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
     "db:seed": "tsx prisma/seed.ts"

@@ -7,9 +7,11 @@ import Script from "next/script";
  * Supports NEXT_PUBLIC_GOOGLE_MAPS_API_KEY with standard fallback.
  */
 export function GoogleMapsScript() {
-  const apiKey =
-    process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ||
-    "AIzaSyAOVYRIgupAurZup5y1PRh8Ismb1A3lLao";
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+
+  if (!apiKey) {
+    return null;
+  }
 
   return (
     <>

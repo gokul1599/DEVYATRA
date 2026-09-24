@@ -4,6 +4,17 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
+
+// Configure same-origin web worker URL to prevent Next.js chunk 404
+if (typeof window !== "undefined") {
+  try {
+    if (maplibregl.config) {
+      maplibregl.config.WORKER_URL = "/maplibre/maplibre-gl-worker.mjs";
+    }
+  } catch (err) {
+    console.warn("[MapExplorer] Setting MapLibre WORKER_URL warning:", err);
+  }
+}
 import {
   Compass,
   ExternalLink,
@@ -68,6 +79,19 @@ interface Suggestion {
   lat?: number;
   lng?: number;
   id?: string;
+}
+
+function isWebGLSupported(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    const canvas = document.createElement("canvas");
+    return !!(
+      window.WebGLRenderingContext &&
+      (canvas.getContext("webgl2") || canvas.getContext("webgl") || canvas.getContext("experimental-webgl"))
+    );
+  } catch {
+    return false;
+  }
 }
 
 export function MapExplorer() {
@@ -170,16 +194,21 @@ export function MapExplorer() {
 
   // Configure custom layers on MapLibre source
   const setupLayers = useCallback((map: maplibregl.Map, collection: DestinationFeatureCollection) => {
-    // 1. Add GeoJSON Source with Native Clustering
-    if (!map.getSource("temples")) {
-      map.addSource("temples", {
-        type: "geojson",
-        data: collection,
-        cluster: true,
-        clusterMaxZoom: 14,
-        clusterRadius: 50,
-      });
+    if (!map || !map.isStyleLoaded()) {
+      return;
     }
+
+    try {
+      // 1. Add GeoJSON Source with Native Clustering
+      if (!map.getSource("temples")) {
+        map.addSource("temples", {
+          type: "geojson",
+          data: collection,
+          cluster: true,
+          clusterMaxZoom: 14,
+          clusterRadius: 50,
+        });
+      }
 
     // 2. Clusters layer
     if (!map.getLayer("temple-clusters")) {
@@ -340,6 +369,9 @@ export function MapExplorer() {
     map.on("mouseleave", "unclustered-point", () => {
       map.getCanvas().style.cursor = "";
     });
+    } catch (err) {
+      console.warn("[MapExplorer] setupLayers caught error:", err);
+    }
   }, [currentStyle, selectedId]);
 
   // Update layer styles whenever selectedId changes
@@ -402,9 +434,15 @@ export function MapExplorer() {
       activeGeoJsonRef.current = collection;
 
       // Update GeoJSON source
-      const source = map.getSource("temples") as maplibregl.GeoJSONSource | undefined;
-      if (source) {
-        source.setData(collection);
+      try {
+        const source = map.getSource("temples") as maplibregl.GeoJSONSource | undefined;
+        if (source && map.isStyleLoaded()) {
+          source.setData(collection);
+        } else if (map.isStyleLoaded()) {
+          setupLayers(map, collection);
+        }
+      } catch (err) {
+        console.warn("[MapExplorer] Source data update error:", err);
       }
 
       // Transform features to MapPlaceItems
@@ -449,6 +487,13 @@ export function MapExplorer() {
     const container = mapContainerRef.current;
     if (!container) return;
 
+    if (!isWebGLSupported()) {
+      setMapError("WebGL is not supported or hardware acceleration is disabled in your browser. Switched to list view.");
+      setActiveTab("list");
+      setLoading(false);
+      return;
+    }
+
     let cancelled = false;
     setLoading(true);
     setMapError(null);
@@ -458,17 +503,25 @@ export function MapExplorer() {
         ? MAP_STYLES.primaryLiberty
         : MAP_STYLES.primaryVector;
 
-    const map = new maplibregl.Map({
-      container,
-      style: styleUrl,
-      center: [DEFAULT_MAP_CENTER.lng, DEFAULT_MAP_CENTER.lat],
-      zoom: DEFAULT_MAP_CENTER.zoom,
-      minZoom: 3.5,
-      maxZoom: 18,
-      attributionControl: false,
-    });
-
-    mapRef.current = map;
+    let map: maplibregl.Map;
+    try {
+      map = new maplibregl.Map({
+        container,
+        style: styleUrl,
+        center: [DEFAULT_MAP_CENTER.lng, DEFAULT_MAP_CENTER.lat],
+        zoom: DEFAULT_MAP_CENTER.zoom,
+        minZoom: 3.5,
+        maxZoom: 18,
+        attributionControl: false,
+      });
+      mapRef.current = map;
+    } catch (err) {
+      console.error("[MapExplorer] Map constructor error:", err);
+      setMapError("Unable to initialize cartography engine in your browser.");
+      setActiveTab("list");
+      setLoading(false);
+      return;
+    }
 
     // Compact open cartography attribution
     map.addControl(
@@ -483,28 +536,41 @@ export function MapExplorer() {
     let isReadyTriggered = false;
     const triggerMapReady = () => {
       if (cancelled || isReadyTriggered) return;
+      if (!map.isStyleLoaded()) return;
+
       isReadyTriggered = true;
+      setLoading(false);
       setMapReady(true);
-      setupLayers(map, activeGeoJsonRef.current);
+      try {
+        setupLayers(map, activeGeoJsonRef.current);
+      } catch (err) {
+        console.warn("[MapExplorer] setupLayers error:", err);
+      }
       void fetchViewportTemples(map);
       requestAnimationFrame(() => {
-        map.resize();
+        try {
+          map.resize();
+        } catch {}
       });
     };
 
+    map.on("load", triggerMapReady);
+    map.on("style.load", triggerMapReady);
+
     if (map.isStyleLoaded()) {
       triggerMapReady();
-    } else {
-      map.once("load", triggerMapReady);
-      map.once("style.load", triggerMapReady);
     }
 
-    // Safety fallback: ensure map opens without getting stuck behind loading screen
+    // Safety fallback: ensure loading screen doesn't block UI if style is slow
     const safetyTimer = setTimeout(() => {
       if (!cancelled && !isReadyTriggered) {
-        triggerMapReady();
+        if (map.isStyleLoaded()) {
+          triggerMapReady();
+        } else {
+          setLoading(false);
+        }
       }
-    }, 800);
+    }, 3500);
 
     map.on("rotate", () => {
       if (!cancelled) {
