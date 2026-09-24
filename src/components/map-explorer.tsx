@@ -133,7 +133,16 @@ export function MapExplorer() {
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [filterCategory, setFilterCategory] = useState<
-    "all" | "verified" | "heritage" | "nature" | "open"
+    | "all"
+    | "sacred"
+    | "heritage"
+    | "nature"
+    | "beaches"
+    | "wildlife"
+    | "culture"
+    | "food"
+    | "verified"
+    | "open"
   >("all");
   const [showAreaSearchPill, setShowAreaSearchPill] = useState(false);
 
@@ -153,9 +162,13 @@ export function MapExplorer() {
     if ((p as unknown as { isCentroidFallback?: boolean }).isCentroidFallback) return false;
     if (filterCategory === "verified") return p.verified || p.source === "verified";
     if (filterCategory === "open") return p.openNow === true;
+    if (filterCategory === "sacred") {
+      return p.category === "TEMPLE" || p.category === "SACRED" || p.category === "PILGRIMAGE";
+    }
     if (filterCategory === "heritage") {
-      const txt = `${p.name} ${p.address || ""}`.toLowerCase();
+      const txt = `${p.name} ${p.subcategory || ""} ${p.address || ""}`.toLowerCase();
       return (
+        p.category === "HERITAGE" ||
         p.certainty === "religious_site" ||
         txt.includes("fort") ||
         txt.includes("palace") ||
@@ -166,15 +179,63 @@ export function MapExplorer() {
       );
     }
     if (filterCategory === "nature") {
-      const txt = `${p.name} ${p.address || ""}`.toLowerCase();
+      const txt = `${p.name} ${p.subcategory || ""} ${p.address || ""}`.toLowerCase();
       return (
+        p.category === "NATURE" ||
         txt.includes("ghat") ||
         txt.includes("river") ||
         txt.includes("ganga") ||
         txt.includes("kund") ||
         txt.includes("lake") ||
         txt.includes("hills") ||
-        txt.includes("teerth")
+        txt.includes("teerth") ||
+        txt.includes("waterfall") ||
+        txt.includes("falls")
+      );
+    }
+    if (filterCategory === "beaches") {
+      const txt = `${p.name} ${p.subcategory || ""} ${p.address || ""}`.toLowerCase();
+      return (
+        p.category === "BEACHES" ||
+        txt.includes("beach") ||
+        txt.includes("coast") ||
+        txt.includes("sea") ||
+        txt.includes("ocean")
+      );
+    }
+    if (filterCategory === "wildlife") {
+      const txt = `${p.name} ${p.subcategory || ""} ${p.address || ""}`.toLowerCase();
+      return (
+        p.category === "WILDLIFE" ||
+        p.category === "PARKS" ||
+        txt.includes("national park") ||
+        txt.includes("sanctuary") ||
+        txt.includes("tiger") ||
+        txt.includes("wildlife")
+      );
+    }
+    if (filterCategory === "culture") {
+      const txt = `${p.name} ${p.subcategory || ""} ${p.address || ""}`.toLowerCase();
+      return (
+        p.category === "CULTURE" ||
+        txt.includes("museum") ||
+        txt.includes("palace") ||
+        txt.includes("mahal") ||
+        txt.includes("art") ||
+        txt.includes("theatre")
+      );
+    }
+    if (filterCategory === "food") {
+      const txt = `${p.name} ${p.subcategory || ""} ${p.address || ""}`.toLowerCase();
+      return (
+        p.category === "FOOD" ||
+        txt.includes("dhaba") ||
+        txt.includes("gali") ||
+        txt.includes("bazaar") ||
+        txt.includes("sweets") ||
+        txt.includes("lassi") ||
+        txt.includes("prasadam") ||
+        txt.includes("kachori")
       );
     }
     return true;
@@ -420,7 +481,7 @@ export function MapExplorer() {
         ne.lat.toFixed(4),
       ].join(",");
 
-      const response = await fetch(`/api/map/viewport?bbox=${bbox}&limit=150`, {
+      const response = await fetch(`/api/map/viewport?bbox=${bbox}&category=${filterCategory}&limit=200`, {
         signal: controller.signal,
         cache: "no-store",
       });
@@ -480,7 +541,7 @@ export function MapExplorer() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [filterCategory, setupLayers]);
 
   // MapLibre Initialization & Lifecycle
   useEffect(() => {
@@ -737,6 +798,126 @@ export function MapExplorer() {
     if (!map) return;
     map.resetNorthPitch({ duration: 400 });
   };
+
+  // Deep-linking URL handler for ?temple=slug, ?place=slug, ?lat=&lng=, ?category=
+  const deepLinkHandledRef = useRef(false);
+  useEffect(() => {
+    if (!mapReady || deepLinkHandledRef.current || typeof window === "undefined") return;
+    deepLinkHandledRef.current = true;
+
+    const sp = new URLSearchParams(window.location.search);
+    const templeSlug = sp.get("temple");
+    const placeSlug = sp.get("place");
+    const latStr = sp.get("lat");
+    const lngStr = sp.get("lng");
+    const zoomStr = sp.get("zoom");
+    const catStr = sp.get("category");
+
+    if (
+      catStr &&
+      [
+        "all",
+        "sacred",
+        "heritage",
+        "nature",
+        "beaches",
+        "wildlife",
+        "culture",
+        "food",
+        "verified",
+        "open",
+      ].includes(catStr.toLowerCase())
+    ) {
+      setFilterCategory(catStr.toLowerCase() as typeof filterCategory);
+    }
+
+    if (templeSlug) {
+      void fetch(`/api/v1/temples/${templeSlug}`)
+        .then((r) => (r.ok ? r.json() : null))
+        .then((t) => {
+          if (t && t.latitude && t.longitude) {
+            setSelectedId(t.id);
+            if (mapRef.current) {
+              mapRef.current.flyTo({
+                center: [t.longitude, t.latitude],
+                zoom: 15.5,
+                speed: 1.4,
+                essential: true,
+              });
+            }
+          }
+        })
+        .catch(() => {});
+    } else if (placeSlug) {
+      void fetch(`/api/destinations?q=${encodeURIComponent(placeSlug)}`)
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d) => {
+          if (d && Array.isArray(d.items) && d.items.length > 0) {
+            const first = d.items[0];
+            setSelectedId(first.id);
+            if (mapRef.current) {
+              mapRef.current.flyTo({
+                center: [first.longitude, first.latitude],
+                zoom: 15,
+                speed: 1.4,
+                essential: true,
+              });
+            }
+          }
+        })
+        .catch(() => {});
+    } else if (latStr && lngStr) {
+      const lat = parseFloat(latStr);
+      const lng = parseFloat(lngStr);
+      const zoom = zoomStr ? parseFloat(zoomStr) : 14;
+      if (!isNaN(lat) && !isNaN(lng) && isValidCoordinate(lat, lng)) {
+        if (mapRef.current) {
+          mapRef.current.flyTo({
+            center: [lng, lat],
+            zoom,
+            speed: 1.4,
+            essential: true,
+          });
+        }
+      }
+    }
+  }, [mapReady]);
+
+  // Synchronize URL query params with selection and active category
+  useEffect(() => {
+    if (typeof window === "undefined" || !mapReady) return;
+    const url = new URL(window.location.href);
+    if (selected) {
+      if ((selected.category === "TEMPLE" || selected.category === "SACRED") && selected.href) {
+        const slug = selected.href.split("/").pop();
+        if (slug) {
+          url.searchParams.set("temple", slug);
+          url.searchParams.delete("place");
+        }
+      } else {
+        url.searchParams.set("place", selected.id);
+        url.searchParams.delete("temple");
+      }
+    } else {
+      url.searchParams.delete("temple");
+      url.searchParams.delete("place");
+    }
+
+    if (filterCategory && filterCategory !== "all") {
+      url.searchParams.set("category", filterCategory);
+    } else {
+      url.searchParams.delete("category");
+    }
+
+    window.history.replaceState(null, "", url.toString());
+  }, [selectedId, selected, filterCategory, mapReady]);
+
+  // Refetch viewport items when filterCategory changes
+  useEffect(() => {
+    if (mapRef.current && mapReady) {
+      void fetchViewportTemples(mapRef.current);
+    }
+  }, [filterCategory, fetchViewportTemples, mapReady]);
 
   // Search input handler with debounce
   useEffect(() => {
@@ -1002,12 +1183,17 @@ export function MapExplorer() {
         </div>
 
         {/* Quick Filter Chips */}
-        <div className="pointer-events-auto mx-auto flex w-full max-w-xl items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+        <div className="pointer-events-auto mx-auto flex w-full max-w-2xl items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
           {[
-            { id: "all", label: "All Sanctuaries" },
-            { id: "verified", label: "Verified Only" },
-            { id: "heritage", label: "Heritage & Jyotirlingas" },
-            { id: "nature", label: "Ghats & Rivers" },
+            { id: "all", label: "All Nodes" },
+            { id: "sacred", label: "🛕 Sacred Shrines" },
+            { id: "heritage", label: "🏛️ Heritage & ASI" },
+            { id: "nature", label: "🌿 Nature & Ghats" },
+            { id: "beaches", label: "🏖️ Beaches & Coast" },
+            { id: "wildlife", label: "🐅 Wildlife Reserves" },
+            { id: "culture", label: "🎭 Culture & Arts" },
+            { id: "food", label: "🍲 Food & Bazaars" },
+            { id: "verified", label: "🛡️ Verified Only" },
             { id: "open", label: "Open Now" },
           ].map((chip) => (
             <button
@@ -1114,55 +1300,89 @@ export function MapExplorer() {
           </div>
         )}
 
-        {/* Floating Selected Sanctuary Card (Google-Maps-style) */}
+        {/* Floating Selected Node Card (Desktop: Floating Bottom-Left / Mobile: Responsive Bottom Sheet) */}
         {selected && (
-          <div className="pointer-events-none absolute bottom-5 left-4 right-4 sm:right-auto sm:w-96 z-20">
-            <div className="pointer-events-auto rounded-3xl border border-gold/40 bg-obsidian-2/95 p-4 shadow-2xl backdrop-blur-xl space-y-3">
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex items-center gap-2.5">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-gold/30 bg-gold/10 text-gold-bright text-xl">
-                    🛕
+          <div className="pointer-events-none absolute bottom-0 inset-x-0 sm:inset-x-auto sm:bottom-5 sm:left-4 sm:w-96 z-20">
+            <div className="pointer-events-auto rounded-t-3xl sm:rounded-3xl border-t sm:border border-gold/40 bg-obsidian-2/95 p-4 shadow-2xl backdrop-blur-xl space-y-3 max-h-[85vh] overflow-y-auto">
+              {/* Real Verified Photo Header */}
+              {selected.image ? (
+                <div className="relative h-32 w-full overflow-hidden rounded-2xl border border-line bg-black">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={selected.image}
+                    alt={selected.name}
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-obsidian/90 via-transparent to-transparent" />
+                  <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 rounded-full bg-black/70 px-2.5 py-0.5 text-[10px] font-mono text-gold-bright border border-gold/30 backdrop-blur-md">
+                    <span>{selected.category || "SANCTUARY"}</span>
                   </div>
-                  <div>
+                  <button
+                    onClick={() => setSelectedId(null)}
+                    aria-label="Close sanctuary card"
+                    className="absolute top-2.5 right-2.5 rounded-full bg-black/60 p-1 text-ivory-dim hover:text-ivory transition-colors backdrop-blur-sm"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              ) : null}
+
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  {!selected.image && (
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-gold/30 bg-gold/10 text-gold-bright text-xl">
+                      {selected.category === "HERITAGE"
+                        ? "🏛️"
+                        : selected.category === "NATURE"
+                        ? "🌿"
+                        : selected.category === "BEACHES"
+                        ? "🏖️"
+                        : selected.category === "WILDLIFE"
+                        ? "🐅"
+                        : selected.category === "FOOD"
+                        ? "🍲"
+                        : "🛕"}
+                    </div>
+                  )}
+                  <div className="min-w-0">
                     <div className="flex items-center gap-1.5">
-                      <h4 className="font-serif text-[15px] font-semibold text-ivory line-clamp-1">
+                      <h4 className="font-serif text-[15px] font-semibold text-ivory truncate">
                         {selected.name}
                       </h4>
                       {selected.verified && (
                         <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-400" />
                       )}
                     </div>
-                    <p className="text-[11.5px] text-ivory-dim line-clamp-1">
+                    <p className="text-[11.5px] text-ivory-dim truncate">
                       {selected.address || [selected.district, selected.state].filter(Boolean).join(", ")}
                     </p>
                   </div>
                 </div>
-                <button
-                  onClick={() => setSelectedId(null)}
-                  aria-label="Close sanctuary card"
-                  className="rounded-full p-1 text-ivory-dim hover:text-ivory transition-colors"
-                >
-                  <X className="h-4 w-4" />
-                </button>
+                {!selected.image && (
+                  <button
+                    onClick={() => setSelectedId(null)}
+                    aria-label="Close sanctuary card"
+                    className="rounded-full p-1 text-ivory-dim hover:text-ivory transition-colors shrink-0"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
               </div>
 
               {/* Quality & Hierarchy Badges */}
-              <div className="flex items-center gap-2 text-[10.5px]">
+              <div className="flex flex-wrap items-center gap-2 text-[10.5px]">
                 {selectedQuality && (
                   <span className="rounded-full bg-gold/15 px-2.5 py-0.5 font-semibold text-gold-bright border border-gold/30">
                     {selectedQuality.accuracyLabel}
                   </span>
                 )}
+                <span className="rounded-full bg-stone-800/80 px-2 py-0.5 text-stone-300 border border-stone-700/60 font-mono text-[10px]">
+                  {selected.subcategory || selected.category || "Sanctuary"}
+                </span>
                 {userLocation && (
-                  <span className="text-ivory-dim">
-                    ~
-                    {calculateHaversineKm(
-                      userLocation.lat,
-                      userLocation.lng,
-                      selected.latitude,
-                      selected.longitude
-                    ).toFixed(1)}{" "}
-                    km away
+                  <span className="text-ivory-dim font-mono text-[10.5px]">
+                    ~{calculateHaversineKm(userLocation.lat, userLocation.lng, selected.latitude, selected.longitude).toFixed(1)} km (~{Math.round(calculateHaversineKm(userLocation.lat, userLocation.lng, selected.latitude, selected.longitude) * 1.8)} min drive)
                   </span>
                 )}
               </div>
@@ -1174,7 +1394,7 @@ export function MapExplorer() {
                     href={selected.href}
                     className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-gold px-3.5 py-2 text-xs font-semibold text-obsidian shadow-md hover:bg-gold-bright transition-colors"
                   >
-                    <span>Explore Sanctuary</span>
+                    <span>Explore Guide</span>
                     <ExternalLink className="h-3.5 w-3.5" />
                   </Link>
                 )}
@@ -1182,11 +1402,18 @@ export function MapExplorer() {
                   href={`https://www.google.com/maps/dir/?api=1&destination=${selected.latitude},${selected.longitude}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-1.5 rounded-xl border border-line bg-obsidian-3 px-3.5 py-2 text-xs font-medium text-ivory hover:border-gold transition-colors"
+                  className="flex items-center justify-center gap-1.5 rounded-xl border border-line bg-obsidian-3 px-3 py-2 text-xs font-medium text-ivory hover:border-gold transition-colors"
                 >
                   <Car className="h-3.5 w-3.5 text-gold" />
                   <span>Directions</span>
                 </a>
+                <Link
+                  href={`/plan?destination=${encodeURIComponent(selected.name)}`}
+                  className="hidden sm:flex items-center justify-center gap-1 rounded-xl border border-line bg-obsidian-3 px-3 py-2 text-xs font-medium text-ivory hover:border-gold transition-colors"
+                  title="Add to Yatra Plan"
+                >
+                  <span>Plan</span>
+                </Link>
               </div>
             </div>
           </div>

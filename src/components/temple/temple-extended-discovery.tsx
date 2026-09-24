@@ -145,12 +145,13 @@ export function TempleExtendedDiscovery({
       if (activeBand !== "ALL" && item.distanceBand !== activeBand) {
         return false;
       }
-      if (activeCategory !== "ALL") {
         if (activeCategory === "TEMPLE" && item.category !== "TEMPLE" && item.category !== "PILGRIMAGE") return false;
         if (activeCategory === "HERITAGE" && item.category !== "HERITAGE") return false;
         if (activeCategory === "NATURE" && item.category !== "NATURE" && item.category !== "VIEWPOINT") return false;
+        if (activeCategory === "BEACHES" && item.category !== "BEACHES") return false;
+        if (activeCategory === "WILDLIFE" && item.category !== "WILDLIFE") return false;
         if (activeCategory === "CULTURE" && item.category !== "CULTURE") return false;
-      }
+        if (activeCategory === "FOOD" && item.category !== "FOOD") return false;
       if (activeStyle !== "ALL" && !item.travelStyles.includes(activeStyle)) {
         return false;
       }
@@ -255,7 +256,10 @@ export function TempleExtendedDiscovery({
             { id: "TEMPLE", label: "Sacred Shrines" },
             { id: "HERITAGE", label: "ASI & Heritage" },
             { id: "NATURE", label: "Nature & Sangam" },
+            { id: "BEACHES", label: "Beaches & Coast" },
+            { id: "WILDLIFE", label: "Wildlife" },
             { id: "CULTURE", label: "Culture & Arts" },
+            { id: "FOOD", label: "Food & Bazaars" },
           ].map((cat) => (
             <button
               key={cat.id}

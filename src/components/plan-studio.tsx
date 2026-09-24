@@ -143,6 +143,8 @@ const INTERESTS = [
 export default function PlanStudio() {
   const sp = useSearchParams();
   const initialTemple = sp.get("temple") ?? "";
+  const destinationParam = sp.get("destination") ?? "";
+  const originParam = sp.get("origin") ?? "";
   const festivalParam = sp.get("festival") ?? "";
 
   const [allTemples, setAllTemples] = useState<LiteTemple[]>([]);
@@ -153,7 +155,7 @@ export default function PlanStudio() {
 
   // Pilgrimage options (Route Lab supporting 1 to 7+ days)
   const [days, setDays] = useState<1 | 2 | 3 | 5 | 7>(1);
-  const [originLocation, setOriginLocation] = useState("");
+  const [originLocation, setOriginLocation] = useState(originParam || "");
   const [people, setPeople] = useState(2);
   const [budget, setBudget] = useState<"budget" | "moderate" | "premium">("moderate");
   const [pace, setPace] = useState<"leisurely" | "standard" | "fast">("standard");
@@ -183,6 +185,16 @@ export default function PlanStudio() {
         if (initialTemple) {
           const match = d.find((t) => t.slug === initialTemple || t.id === initialTemple);
           if (match) setSelectedTemples([match]);
+        } else if (destinationParam) {
+          const destLower = destinationParam.toLowerCase();
+          const match = d.find(
+            (t) =>
+              t.name.toLowerCase().includes(destLower) ||
+              t.location.toLowerCase().includes(destLower) ||
+              t.district.toLowerCase().includes(destLower)
+          );
+          if (match) setSelectedTemples([match]);
+          else if (d.length > 0) setSelectedTemples([d[0]]);
         } else if (d.length > 0) {
           setSelectedTemples([d[0]]);
         }
@@ -190,7 +202,7 @@ export default function PlanStudio() {
       .catch((err) => {
         console.error("Failed to load temples lite:", err);
       });
-  }, [initialTemple]);
+  }, [initialTemple, destinationParam]);
 
   const selectCuratedCircuit = (circuit: (typeof CURATED_CIRCUITS)[number]) => {
     const matched = allTemples.filter(

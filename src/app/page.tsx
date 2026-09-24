@@ -16,6 +16,11 @@ import {
 } from "@/components/home/narrative-chapters";
 import { TempleOfTheDay } from "@/components/home/temple-of-the-day";
 import { GeographicAtlasChapter } from "@/components/home/geographic-atlas-chapter";
+import {
+  BeginYourJourney,
+  BeyondTheTemple,
+  WeekendEscapes,
+} from "@/components/home/discovery-suite";
 
 export default function Home() {
   return (
@@ -23,43 +28,52 @@ export default function Home() {
       {/* 01. Cinematic Hero */}
       <Hero />
 
-      {/* 02. India Is Calling Breathing Section */}
+      {/* 02. Begin Your Journey: Visual Multi-Category Discovery Tiles */}
+      <BeginYourJourney />
+
+      {/* 03. India Is Calling Breathing Section */}
       <IndiaIsCalling />
 
-      {/* 03. Daily Archival Spotlight: Temple of the Day */}
+      {/* 04. Daily Archival Spotlight: Temple of the Day */}
       <TempleOfTheDay />
 
-      {/* 04. Chapter I: The Six Sacred Realms */}
+      {/* 05. Chapter I: The Six Sacred Realms of Bharat */}
       <ExploreIndia />
 
-      {/* 05. Geographic Atlas: Topological Nodes & Geodetic Fixes */}
+      {/* 06. Geographic Atlas: Topological Nodes & Geodetic Fixes */}
       <GeographicAtlasChapter />
 
-      {/* 04. Sacred Landscape: River, Mountain, Forest, Road */}
+      {/* 07. Beyond the Temple: Complete Multi-Category Circuits */}
+      <BeyondTheTemple />
+
+      {/* 08. Sacred Landscape: River, Mountain, Forest, Road */}
       <SacredLandscape />
 
-      {/* 05. Chapter II: Masterpieces of Stone & Living Sanctuaries */}
+      {/* 09. Chapter II: Masterpieces of Stone & Living Sanctuaries */}
       <Famous />
 
-      {/* 06. Chapter III: Sacred Geometry & Shilpa Shastra */}
+      {/* 10. Weekend Escapes: 1, 2 & 3 Day Regional Micro-Yatras */}
+      <WeekendEscapes />
+
+      {/* 11. Chapter III: Sacred Geometry & Shilpa Shastra */}
       <ArchitectureShowcase />
 
-      {/* 07. Chapter IV: The Celestial Calendar of Bharat */}
+      {/* 12. Chapter IV: The Celestial Calendar of Bharat */}
       <FestivalStrip />
 
-      {/* 08. Sacred Routes & Multi-Temple Corridors */}
+      {/* 13. Sacred Routes & Multi-Temple Corridors */}
       <SacredRoutes />
 
-      {/* 09. Chapter V: The Pilgrimage Studio / Plan Your Yatra */}
+      {/* 14. Chapter V: The Pilgrimage Studio / Plan Your Yatra */}
       <PlanBand />
 
-      {/* 10. Beyond the Famous / Hidden Architectural Jewels */}
+      {/* 15. Beyond the Famous / Hidden Architectural Jewels */}
       <BeyondTheFamous />
 
-      {/* 11. Chapter VI: The Archival Standard & Verification */}
+      {/* 16. Chapter VI: The Archival Standard & Verification */}
       <TrustSection />
 
-      {/* 12. Epilogue: The Open Road */}
+      {/* 17. Epilogue: The Open Road */}
       <CtaBand />
     </main>
   );

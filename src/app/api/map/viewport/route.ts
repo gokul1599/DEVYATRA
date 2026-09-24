@@ -4,11 +4,13 @@ import { parseBoundingBox, isWithinIndiaBounds } from "@/lib/map/location-qualit
 import { DestinationGeoJSONFeature, DestinationFeatureCollection } from "@/lib/map/geojson";
 import { assessLocationQuality } from "@/lib/map/location-quality";
 import { rateLimit } from "@/lib/rate-limit";
+import { getTempleImage } from "@/lib/images/registry";
+import { VERIFIED_DESTINATIONS } from "@/lib/destinations/registry";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const MAP_RATE_LIMIT = 60; // 60 viewport queries per minute per IP
+const MAP_RATE_LIMIT = 90; // 90 viewport queries per minute per IP
 
 export async function GET(req: NextRequest) {
   const clientIp =
@@ -28,7 +30,7 @@ export async function GET(req: NextRequest) {
   const bboxStr = searchParams.get("bbox");
   const category = searchParams.get("category")?.toUpperCase() || "ALL";
   const verifiedOnly = searchParams.get("verifiedOnly") === "true" || searchParams.get("verifiedOnly") === "1";
-  const limit = Math.min(250, Math.max(10, parseInt(searchParams.get("limit") || "150", 10)));
+  const limit = Math.min(300, Math.max(10, parseInt(searchParams.get("limit") || "150", 10)));
 
   const bbox = parseBoundingBox(bboxStr);
   if (!bbox) {
@@ -39,18 +41,20 @@ export async function GET(req: NextRequest) {
   }
 
   const prisma = getPrisma();
-  if (!prisma) {
-    return NextResponse.json({ error: "Database unavailable" }, { status: 503 });
-  }
+  const features: DestinationGeoJSONFeature[] = [];
+  let exactCount = 0;
+  let siteCenterCount = 0;
+  let approximateCount = 0;
 
   try {
-    const features: DestinationGeoJSONFeature[] = [];
-    let exactCount = 0;
-    let siteCenterCount = 0;
-    let approximateCount = 0;
+    // 1. Query Temples within bounding box if category includes sacred / all
+    const shouldFetchTemples =
+      category === "ALL" ||
+      category === "TEMPLE" ||
+      category === "SACRED" ||
+      category === "PILGRIMAGE";
 
-    // 1. Query Temples within bounding box
-    if (category === "ALL" || category === "TEMPLE" || category === "PILGRIMAGE") {
+    if (prisma && shouldFetchTemples) {
       const temples = await prisma.temple.findMany({
         where: {
           isCentroidFallback: false, // Strict: Zero centroid fallbacks
@@ -79,8 +83,20 @@ export async function GET(req: NextRequest) {
           sourceType: true,
           googlePlaceId: true,
           dataConfidence: true,
+          images: true,
           district: { select: { name: true } },
           state: { select: { name: true, slug: true } },
+          media: {
+            where: {
+              OR: [
+                { isApproved: true },
+                { verificationStatus: "VERIFIED" },
+                { verificationStatus: "AUTO_APPROVED" },
+              ],
+            },
+            take: 1,
+            select: { publicUrl: true },
+          },
         },
         take: limit,
       });
@@ -103,6 +119,11 @@ export async function GET(req: NextRequest) {
         else approximateCount++;
 
         const stateSlug = t.state?.slug || "india";
+        const imageRef =
+          t.media?.[0]?.publicUrl ||
+          getTempleImage(t.slug)?.src ||
+          t.images?.[0] ||
+          null;
 
         features.push({
           type: "Feature",
@@ -138,20 +159,20 @@ export async function GET(req: NextRequest) {
             distanceKm: null,
             googlePlaceId: t.googlePlaceId,
             href: `/temples/${stateSlug}/${t.slug}`,
-            imageReference: null,
+            imageReference: imageRef,
           },
         });
       }
     }
 
-    // 2. Query Famous Places (ASI Monuments, Nature, Heritage) if category permits
-    if (category === "ALL" || category === "HERITAGE" || category === "NATURE" || category === "CULTURE") {
-      const placesLimit = Math.max(20, limit - features.length);
+    // 2. Query Famous Places from Database
+    if (prisma && (category !== "TEMPLE" && category !== "SACRED")) {
+      const placesLimit = Math.max(30, limit - features.length);
       const famousPlaces = await prisma.famousPlace.findMany({
         where: {
           latitude: { gte: bbox.minLat, lte: bbox.maxLat },
           longitude: { gte: bbox.minLng, lte: bbox.maxLng },
-          ...(category !== "ALL" ? { category } : {}),
+          ...(category !== "ALL" ? { category: { equals: category, mode: "insensitive" } } : {}),
           ...(verifiedOnly ? { verificationStatus: { in: ["VERIFIED_OFFICIAL", "VERIFIED_SOURCE"] } } : {}),
         },
         select: {
@@ -202,7 +223,7 @@ export async function GET(req: NextRequest) {
             id: p.id,
             name: p.name,
             slug: p.slug,
-            category: p.category,
+            category: p.category.toUpperCase(),
             subcategory: p.subcategory,
             mainDeity: null,
             address: p.address,
@@ -229,6 +250,56 @@ export async function GET(req: NextRequest) {
           },
         });
       }
+    }
+
+    // 3. Include Static Verified Destinations within bounding box
+    const seenIds = new Set(features.map((f) => f.properties.id || f.properties.slug));
+    const matchingRegistryDestinations = VERIFIED_DESTINATIONS.filter((d) => {
+      if (d.latitude < bbox.minLat || d.latitude > bbox.maxLat) return false;
+      if (d.longitude < bbox.minLng || d.longitude > bbox.maxLng) return false;
+      if (category !== "ALL" && d.category !== category) return false;
+      return !seenIds.has(d.id) && !seenIds.has(d.slug);
+    });
+
+    for (const d of matchingRegistryDestinations) {
+      features.push({
+        type: "Feature",
+        id: d.id,
+        geometry: {
+          type: "Point",
+          coordinates: [d.longitude, d.latitude],
+        },
+        properties: {
+          id: d.id,
+          name: d.name,
+          slug: d.slug,
+          category: d.category,
+          subcategory: d.subcategory,
+          mainDeity: null,
+          address: [d.city, d.district, d.state].filter(Boolean).join(", "),
+          city: d.city || d.district,
+          district: d.district,
+          state: d.state,
+          stateCode: null,
+          latitude: d.latitude,
+          longitude: d.longitude,
+          accuracy: "EXACT",
+          accuracyLabel: "Exact GPS Geodetic",
+          accuracyDescription: "Directly verified against statutory records",
+          badgeVariant: "gold",
+          qualityScore: 95,
+          verificationStatus: "VERIFIED_OFFICIAL",
+          sourceType: d.provenance.sourceType,
+          sourceName: d.provenance.sourceType.toUpperCase(),
+          isVerified: true,
+          openNow: null,
+          distanceKm: null,
+          googlePlaceId: null,
+          href: `/places/${d.slug}`,
+          imageReference: d.image,
+        },
+      });
+      exactCount++;
     }
 
     const collection: DestinationFeatureCollection = {

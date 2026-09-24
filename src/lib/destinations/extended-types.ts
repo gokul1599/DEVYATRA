@@ -69,7 +69,22 @@ export interface ExtendedDiscoveryItem {
   slug: string;
   name: string;
   nativeName?: string | null;
-  category: "TEMPLE" | "HERITAGE" | "PILGRIMAGE" | "NATURE" | "VIEWPOINT" | "CULTURE" | "FOOD" | "STAY" | "ESSENTIALS";
+  category:
+    | "TEMPLE"
+    | "HERITAGE"
+    | "PILGRIMAGE"
+    | "NATURE"
+    | "VIEWPOINT"
+    | "BEACHES"
+    | "WILDLIFE"
+    | "PARKS"
+    | "ADVENTURE"
+    | "CULTURE"
+    | "FAMILY"
+    | "FOOD"
+    | "SHOPPING"
+    | "STAY"
+    | "ESSENTIALS";
   subcategory?: string | null;
   description: string;
   latitude: number;
