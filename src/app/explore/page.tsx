@@ -18,6 +18,8 @@ import { DevyatraArt } from "@/components/devyatra-art";
 import { Stagger, StaggerItem } from "@/components/motion";
 import { CinematicImage } from "@/components/ui/cinematic-image";
 import { REGIONAL_LANDSCAPES } from "@/lib/images/registry";
+import { VERIFIED_DESTINATIONS, CATEGORY_METADATA } from "@/lib/destinations/registry";
+import { MAP_CATEGORIES } from "@/lib/map/categories";
 
 export const dynamic = "force-dynamic";
 
@@ -417,6 +419,119 @@ export default async function ExplorePage() {
             >
               <Sparkles className="h-4 w-4" />
               <span>AI Pilgrimage Planner</span>
+            </Link>
+          </div>
+        </Container>
+      </section>
+
+      {/* ── All-India Destination Discovery: Caves, Hills, Waterfalls, Heritage ── */}
+      <section className="border-t border-line/60 bg-gradient-to-b from-stone-950 via-stone-900/40 to-stone-950 py-14">
+        <Container>
+          <div className="mb-8 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-amber-300">
+                <Compass className="h-3.5 w-3.5" />
+                <span>All-India Travel & Experience Atlas</span>
+              </div>
+              <h2 className="mt-2 font-display text-2xl font-medium text-ivory sm:text-4xl">
+                Beyond the Temple: Hills, Caves, Waterfalls & Heritage
+              </h2>
+            </div>
+            <p className="text-xs text-ivory-dim sm:max-w-md">
+              Discover verified geological wonders, ancient rock-cut cave monasteries, tiered waterfalls, misty hill stations, and sacred coastlines across all 28 states and 8 union territories.
+            </p>
+          </div>
+
+          {/* Category Filter Pills (Deep-linked to /map?category=...) */}
+          <div className="flex flex-wrap gap-2 mb-8">
+            {MAP_CATEGORIES.filter((c) => c.id !== "verified").map((cat) => (
+              <Link
+                key={cat.id}
+                href={cat.id === "all" ? "/map" : `/map?category=${cat.id}`}
+                className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-mono font-medium border transition-all hover:scale-105 ${cat.bgClass} ${cat.textClass} ${cat.borderClass}`}
+              >
+                <span>{cat.label}</span>
+              </Link>
+            ))}
+          </div>
+
+          {/* Featured Destination Cards Grid */}
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {[
+              "ajanta-caves",
+              "ellora-caves-kailasa-temple",
+              "jog-falls-sharavathi",
+              "munnar-tea-gardens-and-anamudi",
+              "dudhsagar-waterfalls",
+              "pangong-tso-lake-ladakh",
+              "radhanagar-beach-havelock",
+              "hampi-group-of-monuments",
+              "kaziranga-national-park",
+              "chitrakote-waterfall-bastar",
+              "ooty-queen-of-hill-stations",
+              "borra-caves-araku-valley",
+            ]
+              .map((slug) => VERIFIED_DESTINATIONS.find((d) => d.slug === slug))
+              .filter(Boolean)
+              .map((dest) => {
+                if (!dest) return null;
+                const meta = CATEGORY_METADATA[dest.category] || CATEGORY_METADATA.HERITAGE;
+                return (
+                  <Link
+                    key={dest.id}
+                    href={`/places/${dest.slug}`}
+                    className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-stone-800/80 bg-stone-950/80 transition-all duration-300 hover:-translate-y-1 hover:border-[#C8A24B]/50 hover:bg-stone-900/60 shadow-lg"
+                  >
+                    <div className="relative aspect-[16/10] w-full overflow-hidden">
+                      <img
+                        src={dest.image}
+                        alt={dest.imageAlt}
+                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/20 to-transparent" />
+                      <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5">
+                        <span className={`rounded-full px-2 py-0.5 text-[10px] font-mono font-semibold border ${meta.badgeColor} backdrop-blur-md`}>
+                          {meta.icon} {dest.category}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="p-4 flex-1 flex flex-col justify-between">
+                      <div>
+                        <div className="flex items-center gap-1.5 text-[11px] font-mono text-stone-400">
+                          <MapPin className="h-3 w-3 text-[#C8A24B]" />
+                          <span>{dest.district}, {dest.state}</span>
+                        </div>
+                        <h3 className="mt-1 font-serif text-base font-medium text-ivory group-hover:text-gold-bright transition-colors line-clamp-1">
+                          {dest.name}
+                        </h3>
+                        <p className="mt-1.5 text-xs text-ivory-dim/80 line-clamp-2 leading-relaxed">
+                          {dest.description}
+                        </p>
+                      </div>
+
+                      <div className="mt-4 flex items-center justify-between border-t border-stone-800/60 pt-3 text-[11px]">
+                        <span className="font-mono text-stone-400">{dest.subcategory}</span>
+                        <span className="inline-flex items-center gap-1 font-medium text-gold group-hover:translate-x-0.5 transition-transform">
+                          <span>Explore</span>
+                          <ArrowRight className="h-3 w-3" />
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+          </div>
+
+          <div className="mt-8 flex justify-center">
+            <Link
+              href="/map"
+              className="inline-flex items-center gap-2 rounded-xl border border-gold/40 bg-gold/10 px-6 py-3 text-xs font-semibold text-gold-bright transition-all hover:bg-gold/20 hover:scale-[1.02]"
+            >
+              <Globe2 className="h-4 w-4" />
+              <span>Explore All 89+ Verified Destinations on Interactive Sacred Map</span>
+              <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </Container>
