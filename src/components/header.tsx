@@ -19,6 +19,7 @@ import { Logo } from "@/components/ui";
 import { SUPPORTED_LANGUAGES } from "@/lib/i18n";
 import { useApp } from "@/components/providers";
 import { cn } from "@/lib/cn";
+import { motion } from "motion/react";
 
 const NAV = [
   { href: "/explore", key: "nav_explore", label: "Explore" },
@@ -48,7 +49,10 @@ export function Header() {
   }, []);
 
   return (
-    <header
+    <motion.header
+      initial={{ y: -16, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.65, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-all duration-500",
         scrolled
@@ -161,7 +165,7 @@ export function Header() {
           </Link>
         </div>
       </div>
-    </header>
+    </motion.header>
   );
 }
 
