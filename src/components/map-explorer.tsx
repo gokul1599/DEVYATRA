@@ -29,6 +29,12 @@ import { type DestinationGeoJSONFeature } from "@/lib/map/geojson";
 import { loadGoogleMaps } from "@/lib/map/google-loader";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 
+declare global {
+  interface Window {
+    gm_authFailure?: () => void;
+  }
+}
+
 interface Suggestion {
   type: "place" | "temple" | "query";
   placeId?: string;
@@ -448,6 +454,15 @@ export function MapExplorer() {
           void fetchViewportTemples(map);
           setLoading(false);
 
+          // Hook Google Maps authentication or API activation failure
+          window.gm_authFailure = () => {
+            console.warn("[MapExplorer] Google Maps API Authentication/Activation Failure detected.");
+            if (!cancelled) {
+              setLoading(false);
+              setMapError("auth_failure");
+            }
+          };
+
           // ResizeObserver
           if (typeof ResizeObserver !== "undefined") {
             const ro = new ResizeObserver(() => {
@@ -470,7 +485,8 @@ export function MapExplorer() {
         console.error("[MapExplorer] Failed to load Google Maps SDK:", err);
         if (!cancelled) {
           setLoading(false);
-          setMapError("Google Maps is temporarily unavailable. Using list explorer instead.");
+          const msg = (err as Error)?.message;
+          setMapError(msg === "auth_failure" ? "auth_failure" : "Google Maps is temporarily unavailable. Using list explorer instead.");
         }
       });
 
@@ -915,29 +931,86 @@ export function MapExplorer() {
         {/* Offline / Failure Mode UI */}
         {mapError && (
           <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-obsidian-2/95 p-6 text-center backdrop-blur-md">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gold/15 text-gold-bright mb-4 border border-gold/30">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-500/15 text-amber-400 mb-4 border border-amber-500/30">
               <MapIcon className="h-7 w-7" />
             </div>
-            <h3 className="font-display text-xl font-medium text-ivory">
-              Google Maps is temporarily unavailable
-            </h3>
-            <p className="mt-2 max-w-sm text-xs leading-relaxed text-ivory-dim">
-              The Google Maps JavaScript API could not be reached. You can retry map initialization or browse all verified sanctuaries in list view.
-            </p>
-            <div className="mt-5 flex items-center gap-3">
-              <button
-                onClick={() => setMapRetryCount((c) => c + 1)}
-                className="rounded-xl bg-gold px-4 py-2 text-xs font-semibold text-obsidian shadow-md hover:bg-gold-bright transition-colors"
-              >
-                Retry
-              </button>
-              <button
-                onClick={() => setActiveTab("list")}
-                className="rounded-xl border border-line bg-obsidian-3 px-4 py-2 text-xs font-medium text-ivory hover:border-gold transition-colors"
-              >
-                Open List View ({filteredItems.length})
-              </button>
-            </div>
+
+            {mapError === "auth_failure" ? (
+              <div className="max-w-md space-y-3">
+                <h3 className="font-display text-xl font-medium text-ivory">
+                  Google Maps API Activation Required
+                </h3>
+                <p className="text-xs leading-relaxed text-ivory-dim">
+                  Your Google Maps API key was loaded, but Google returned an authentication error because the <strong className="text-gold-bright">Maps JavaScript API</strong> is not activated on your Google Cloud project, or billing is not linked.
+                </p>
+                <div className="rounded-xl border border-line bg-obsidian-3/80 p-3.5 text-left space-y-2 text-[12px] text-ivory-dim">
+                  <div className="font-semibold text-ivory">Quick Fix in Google Cloud Console:</div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-gold font-bold">1.</span>
+                    <span>Click the button below to open Google Cloud Console.</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-gold font-bold">2.</span>
+                    <span>Click the blue <strong className="text-white">&quot;Enable&quot;</strong> button for <strong>Maps JavaScript API</strong>.</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-gold font-bold">3.</span>
+                    <span>Ensure billing is linked to your project (Google includes $200 monthly free credit).</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-gold font-bold">4.</span>
+                    <span>Under Credentials &gt; Restrictions, add <code className="text-gold">https://templeora.vercel.app/*</code>.</span>
+                  </div>
+                </div>
+
+                <div className="mt-4 flex flex-col sm:flex-row items-center justify-center gap-2.5">
+                  <a
+                    href="https://console.cloud.google.com/apis/library/maps-backend.googleapis.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex w-full sm:w-auto items-center justify-center gap-1.5 rounded-xl bg-gold px-4 py-2.5 text-xs font-semibold text-obsidian shadow-md hover:bg-gold-bright transition-colors"
+                  >
+                    <span>Enable Maps JS API in Google Cloud</span>
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                  <button
+                    onClick={() => setMapRetryCount((c) => c + 1)}
+                    className="flex w-full sm:w-auto items-center justify-center rounded-xl border border-line bg-obsidian-3 px-4 py-2.5 text-xs font-medium text-ivory hover:border-gold transition-colors"
+                  >
+                    Retry Map
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("list")}
+                    className="flex w-full sm:w-auto items-center justify-center rounded-xl border border-line bg-obsidian-3 px-4 py-2.5 text-xs font-medium text-ivory hover:border-gold transition-colors"
+                  >
+                    View List ({filteredItems.length})
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="max-w-sm space-y-2">
+                <h3 className="font-display text-xl font-medium text-ivory">
+                  Google Maps is temporarily unavailable
+                </h3>
+                <p className="text-xs leading-relaxed text-ivory-dim">
+                  {mapError}
+                </p>
+                <div className="mt-5 flex items-center justify-center gap-3">
+                  <button
+                    onClick={() => setMapRetryCount((c) => c + 1)}
+                    className="rounded-xl bg-gold px-4 py-2 text-xs font-semibold text-obsidian shadow-md hover:bg-gold-bright transition-colors"
+                  >
+                    Retry
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("list")}
+                    className="rounded-xl border border-line bg-obsidian-3 px-4 py-2 text-xs font-medium text-ivory hover:border-gold transition-colors"
+                  >
+                    Open List View ({filteredItems.length})
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
 

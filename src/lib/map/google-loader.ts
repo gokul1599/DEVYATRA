@@ -9,6 +9,7 @@ declare global {
   interface Window {
     google?: typeof google;
     initMap?: () => void;
+    gm_authFailure?: () => void;
   }
 }
 
@@ -67,6 +68,19 @@ export function loadGoogleMaps(): Promise<typeof google.maps> {
         }
       }
       onReady();
+    };
+
+    // Chain into authentication failure callback
+    const prevAuth = window.gm_authFailure;
+    window.gm_authFailure = () => {
+      if (prevAuth) {
+        try {
+          prevAuth();
+        } catch {
+          /* ignore */
+        }
+      }
+      reject(new Error("auth_failure"));
     };
 
     const existingScript = document.getElementById("google-maps-js-sdk") as HTMLScriptElement | null;

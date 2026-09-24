@@ -253,3 +253,8 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Suppress Google Maps ugly default error modal so TEMPLEORA's guided resolution UI displays cleanly */
+.gm-err-container, .gm-err-content, .gm-err-autocomplete {
+  display: none !important;
+}
