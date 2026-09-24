@@ -21,21 +21,26 @@ import { useApp } from "@/components/providers";
 import { GoogleAttribution } from "@/components/google-attribution";
 import type { DiscoveredPlace, DiscoveryResult } from "@/lib/google/types";
 import {
+  DEFAULT_MAP_CENTER,
+  INDIA_BOUNDS,
   assessLocationQuality,
   isWithinIndiaBounds,
-  INDIA_BOUNDS,
-  DEFAULT_MAP_CENTER,
   type LocationQualityAssessment,
 } from "@/lib/map/location-quality";
 import { discoveredPlacesToGeoJSON, type DestinationGeoJSONFeature } from "@/lib/map/geojson";
-import {
-  MAP_STYLE_CONFIGS,
-  MAP_FALLBACK_CHAIN,
-  type MapStyleKey,
-} from "@/lib/map/data-engine";
+import { MAP_STYLES } from "@/lib/map/data-engine";
 import * as maplibregl from "maplibre-gl";
 
 import "maplibre-gl/dist/maplibre-gl.css";
+
+type RuntimeMapStyle = "dark" | "liberty" | "satellite" | "carto";
+
+const FALLBACK_CHAIN: Record<RuntimeMapStyle, RuntimeMapStyle | null> = {
+  dark: "satellite",
+  liberty: "satellite",
+  satellite: "carto",
+  carto: null,
+};
 
 interface Suggestion {
   type: "place" | "query";
@@ -49,30 +54,23 @@ export function MapExplorer() {
   const mapRef = useRef<maplibregl.Map | null>(null);
   const userMarkerRef = useRef<maplibregl.Marker | null>(null);
 
-  // Fallback & Health state refs
-  const failedStylesRef = useRef<Set<MapStyleKey>>(new Set());
-  const isHealthyRef = useRef<boolean>(false);
-  const startupTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const mapStyleKeyRef = useRef<MapStyleKey>("dark");
-
-  // Viewport request throttling & abort refs
-  const viewportAbortControllerRef = useRef<AbortController | null>(null);
-  const viewportThrottleTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const resizeObserverRef = useRef<ResizeObserver | null>(null);
-  const triggerFallbackRef = useRef<(failedStyle: MapStyleKey, reason: string) => void>(() => {});
-
   const [activeTab, setActiveTab] = useState<"map" | "list">("map");
-  const [mapStyleKey, setMapStyleKey] = useState<MapStyleKey>("dark");
+  const [mapStyleKey, setMapStyleKey] = useState<RuntimeMapStyle>("dark");
   const [items, setItems] = useState<DiscoveredPlace[]>([]);
   const [loading, setLoading] = useState(true);
   const [mode, setMode] = useState<DiscoveryResult["mode"] | null>(null);
   const [stale, setStale] = useState(false);
   const [failed, setFailed] = useState(false);
 
-  // Distinct Map vs Data Error states
+  // Error States & Control Refs
   const [mapError, setMapError] = useState<string | null>(null);
   const [dataError, setDataError] = useState<string | null>(null);
-  const [mapInitTrigger, setMapInitTrigger] = useState(0);
+
+  const fallbackLockRef = useRef(false);
+  const mapRenderableRef = useRef(false);
+  const mapTimeoutRef = useRef<number | null>(null);
+  const viewportAbortRef = useRef<AbortController | null>(null);
+  const viewportTimerRef = useRef<number | null>(null);
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [filterCategory, setFilterCategory] = useState<
@@ -85,11 +83,6 @@ export function MapExplorer() {
   const [ac, setAc] = useState<Suggestion[]>([]);
   const [acOpen, setAcOpen] = useState(false);
   const [acIdx, setAcIdx] = useState(-1);
-
-  // Sync ref for styleKey
-  useEffect(() => {
-    mapStyleKeyRef.current = mapStyleKey;
-  }, [mapStyleKey]);
 
   const filteredItems = (Array.isArray(items) ? items : []).filter((p) => {
     // Zero centroid fallback guarantee
@@ -152,191 +145,21 @@ export function MapExplorer() {
       })
     : null;
 
-  // Reusable Layer & Source Installer
-  const installLayers = useCallback((map: maplibregl.Map, placesList: DiscoveredPlace[]) => {
-    try {
-      const geojsonData = discoveredPlacesToGeoJSON(placesList);
-      const existingSource = map.getSource("destinations") as maplibregl.GeoJSONSource | undefined;
-
-      if (!existingSource) {
-        map.addSource("destinations", {
-          type: "geojson",
-          data: geojsonData,
-          cluster: true,
-          clusterRadius: 45,
-          clusterMaxZoom: 14,
-        });
-      } else {
-        existingSource.setData(geojsonData);
-      }
-
-      // 1. Cluster Circles Layer
-      if (!map.getLayer("clusters")) {
-        map.addLayer({
-          id: "clusters",
-          type: "circle",
-          source: "destinations",
-          filter: ["has", "point_count"],
-          paint: {
-            "circle-color": [
-              "step",
-              ["get", "point_count"],
-              "#c8a24b", // Gold for < 10
-              10,
-              "#d9822b", // Saffron for 10-30
-              30,
-              "#ff8c42", // Vivid Saffron for 30+
-            ],
-            "circle-radius": [
-              "step",
-              ["get", "point_count"],
-              18,
-              10,
-              24,
-              30,
-              30,
-            ],
-            "circle-stroke-width": 2.5,
-            "circle-stroke-color": "#ffffff",
-            "circle-opacity": 0.92,
-          },
-        });
-      }
-
-      // 2. Cluster Count Text Layer
-      if (!map.getLayer("cluster-count")) {
-        map.addLayer({
-          id: "cluster-count",
-          type: "symbol",
-          source: "destinations",
-          filter: ["has", "point_count"],
-          layout: {
-            "text-field": "{point_count_abbreviated}",
-            "text-size": 12,
-            "text-allow-overlap": true,
-            "text-ignore-placement": true,
-          },
-          paint: {
-            "text-color": "#0d0b09",
-          },
-        });
-      }
-
-      // 3. Unclustered Single Point Halo (Outer Glow)
-      if (!map.getLayer("unclustered-halo")) {
-        map.addLayer({
-          id: "unclustered-halo",
-          type: "circle",
-          source: "destinations",
-          filter: ["!", ["has", "point_count"]],
-          paint: {
-            "circle-color": "rgba(228, 190, 114, 0.25)",
-            "circle-radius": 14,
-            "circle-stroke-width": 0,
-          },
-        });
-      }
-
-      // 4. Unclustered Single Point Inner Pin
-      if (!map.getLayer("unclustered-point")) {
-        map.addLayer({
-          id: "unclustered-point",
-          type: "circle",
-          source: "destinations",
-          filter: ["!", ["has", "point_count"]],
-          paint: {
-            "circle-color": [
-              "case",
-              ["get", "isVerified"],
-              "#e4be72", // Gold for verified
-              "#ff8c42", // Saffron for live/other
-            ],
-            "circle-radius": 7,
-            "circle-stroke-width": 2,
-            "circle-stroke-color": "#ffffff",
-          },
-        });
-      }
-    } catch (layerErr) {
-      console.warn("[MapExplorer] Layer installation warning:", layerErr);
-    }
-  }, []);
-
-  // Sync GeoJSON features to MapLibre source when filtered items change
+  // Sync GeoJSON features to MapLibre source
   const updateMapSource = useCallback((placesList: DiscoveredPlace[]) => {
     const map = mapRef.current;
     if (!map || !map.isStyleLoaded()) return;
 
     const source = map.getSource("destinations") as maplibregl.GeoJSONSource | undefined;
-    if (!source) {
-      installLayers(map, placesList);
-      return;
-    }
+    if (!source) return;
 
     const geojson = discoveredPlacesToGeoJSON(placesList);
     source.setData(geojson);
-  }, [installLayers]);
+  }, []);
 
   useEffect(() => {
     updateMapSource(filteredItems);
   }, [filteredItems, updateMapSource]);
-
-  // Viewport-driven full database discovery with aborting & error separation
-  const fetchViewportTemples = useCallback(async (map: maplibregl.Map) => {
-    try {
-      if (viewportAbortControllerRef.current) {
-        viewportAbortControllerRef.current.abort();
-      }
-      const controller = new AbortController();
-      viewportAbortControllerRef.current = controller;
-
-      const bounds = map.getBounds();
-      const bboxStr = `${bounds.getWest().toFixed(4)},${bounds.getSouth().toFixed(4)},${bounds.getEast().toFixed(4)},${bounds.getNorth().toFixed(4)}`;
-      const res = await fetch(`/api/map/viewport?bbox=${bboxStr}&limit=120`, {
-        signal: controller.signal,
-      });
-
-      if (!res.ok) {
-        if (res.status === 429) {
-          setDataError("Map requests throttled. Please wait a moment.");
-        } else {
-          setDataError("Destination data temporarily unavailable.");
-        }
-        return;
-      }
-
-      const data = await res.json();
-      setDataError(null);
-
-      if (data.features && Array.isArray(data.features)) {
-        const newPlaces: DiscoveredPlace[] = data.features.map((f: DestinationGeoJSONFeature) => ({
-          id: f.properties.id,
-          name: f.properties.name,
-          category: f.properties.category,
-          latitude: f.geometry.coordinates[1],
-          longitude: f.geometry.coordinates[0],
-          address: f.properties.address || `${f.properties.city || ""}, ${f.properties.state || ""}`.trim(),
-          region: f.properties.state || f.properties.district,
-          verified: f.properties.isVerified ? { href: f.properties.href || `/temples/india/${f.properties.slug || ""}` } : undefined,
-          source: f.properties.sourceType || "database",
-          googlePlaceId: f.properties.googlePlaceId || undefined,
-        }));
-
-        setItems((prev) => {
-          const mapById = new Map<string, DiscoveredPlace>();
-          for (const item of prev) mapById.set(item.id, item);
-          for (const item of newPlaces) mapById.set(item.id, item);
-          return Array.from(mapById.values());
-        });
-      }
-    } catch (err: unknown) {
-      if (err instanceof Error && err.name === "AbortError") {
-        return;
-      }
-      console.warn("[MapExplorer] Viewport fetch error:", err);
-      setDataError("Destination data temporarily unavailable.");
-    }
-  }, []);
 
   // Fetch discoveries for area (Search This Area or specific target)
   const fetchArea = useCallback(
@@ -384,257 +207,650 @@ export function MapExplorer() {
     []
   );
 
-  // Trigger finite fallback chain without cycling forever
-  const triggerFallback = useCallback((failedStyle: MapStyleKey, reason: string) => {
-    console.warn(`[MapExplorer] Style "${failedStyle}" failed: ${reason}. Advancing fallback.`);
-    failedStylesRef.current.add(failedStyle);
+  // Viewport Data Engine
+  const fetchViewportTemples = useCallback(
+    async (map: maplibregl.Map) => {
+      viewportAbortRef.current?.abort();
 
-    const nextStyle = MAP_FALLBACK_CHAIN[failedStyle];
-    if (nextStyle && !failedStylesRef.current.has(nextStyle)) {
-      setMapStyleKey(nextStyle);
-      const map = mapRef.current;
-      if (map) {
-        try {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          map.setStyle(MAP_STYLE_CONFIGS[nextStyle] as any);
-          map.once("styledata", () => {
-            installLayers(map, filteredItemsRef.current);
-          });
-        } catch (err) {
-          console.error("[MapExplorer] Failed to switch to fallback style:", err);
-          triggerFallbackRef.current(nextStyle, "setStyle threw exception");
+      const controller = new AbortController();
+      viewportAbortRef.current = controller;
+
+      try {
+        const bounds = map.getBounds();
+
+        const bbox = [
+          bounds.getWest().toFixed(4),
+          bounds.getSouth().toFixed(4),
+          bounds.getEast().toFixed(4),
+          bounds.getNorth().toFixed(4),
+        ].join(",");
+
+        const response = await fetch(
+          `/api/map/viewport?bbox=${bbox}&limit=120`,
+          {
+            signal: controller.signal,
+            cache: "no-store",
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(
+            `Viewport request failed with ${response.status}`
+          );
         }
+
+        const data = await response.json();
+
+        if (!Array.isArray(data.features)) {
+          throw new Error("Viewport response contains no GeoJSON features");
+        }
+
+        const newPlaces: DiscoveredPlace[] = data.features
+          .filter(
+            (feature: DestinationGeoJSONFeature) =>
+              Number.isFinite(feature.geometry.coordinates[0]) &&
+              Number.isFinite(feature.geometry.coordinates[1])
+          )
+          .map((feature: DestinationGeoJSONFeature) => ({
+            id: feature.properties.id,
+            name: feature.properties.name,
+            category: feature.properties.category,
+            latitude: feature.geometry.coordinates[1],
+            longitude: feature.geometry.coordinates[0],
+            address:
+              feature.properties.address ||
+              `${feature.properties.city || ""}, ${
+                feature.properties.state || ""
+              }`.trim(),
+            region:
+              feature.properties.state ||
+              feature.properties.district ||
+              "India",
+            verified: feature.properties.isVerified
+              ? {
+                  href:
+                    feature.properties.href ||
+                    `/temples/india/${
+                      feature.properties.slug || ""
+                    }`,
+                }
+              : undefined,
+            source:
+              feature.properties.sourceType === "verified"
+                ? "verified"
+                : "cached",
+            googlePlaceId:
+              feature.properties.googlePlaceId || undefined,
+            types: [],
+            openNow: feature.properties.openNow ?? null,
+            mapsUrl:
+              feature.properties.googlePlaceId
+                ? `https://www.google.com/maps/place/?q=place_id:${feature.properties.googlePlaceId}`
+                : `https://www.google.com/maps/search/?api=1&query=${feature.geometry.coordinates[1]},${feature.geometry.coordinates[0]}`,
+            certainty: "temple",
+          }));
+
+        setItems((previous) => {
+          const byId = new Map<string, DiscoveredPlace>();
+
+          for (const item of previous) {
+            byId.set(item.id, item);
+          }
+
+          for (const item of newPlaces) {
+            byId.set(item.id, item);
+          }
+
+          return Array.from(byId.values());
+        });
+
+        setDataError(null);
+      } catch (error) {
+        if (
+          error instanceof DOMException &&
+          error.name === "AbortError"
+        ) {
+          return;
+        }
+
+        console.error(
+          "[MapExplorer] viewport data error:",
+          error
+        );
+
+        setDataError(
+          "Destination data is temporarily unavailable. The map remains available."
+        );
       }
-    } else {
-      console.error("[MapExplorer] All style fallbacks exhausted.");
-      setMapError("Interactive map could not be initialized on this network or device.");
-      setActiveTab("list");
-    }
-  }, [installLayers]);
+    },
+    []
+  );
 
+  // MapLibre Initialization & Lifecycle
   useEffect(() => {
-    triggerFallbackRef.current = triggerFallback;
-  }, [triggerFallback]);
+    const container = mapContainerRef.current;
 
-  // Non-destructive style switcher for user controls
-  const changeMapStyle = useCallback((newStyle: MapStyleKey) => {
-    setMapStyleKey(newStyle);
-    const map = mapRef.current;
-    if (!map) return;
-
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      map.setStyle(MAP_STYLE_CONFIGS[newStyle] as any);
-      map.once("styledata", () => {
-        installLayers(map, filteredItemsRef.current);
-      });
-    } catch (err) {
-      console.warn("[MapExplorer] Error switching style:", err);
-      triggerFallback(newStyle, "User style switch threw error");
-    }
-  }, [installLayers, triggerFallback]);
-
-  // Full clean reset / retry
-  const handleRetryMap = useCallback(() => {
-    setMapError(null);
-    setDataError(null);
-    failedStylesRef.current.clear();
-    setMapStyleKey("dark");
-    setMapInitTrigger((v) => v + 1);
-  }, []);
-
-  // Initialize MapLibre GL Map (Once per lifecycle or on explicit retry)
-  useEffect(() => {
-    if (!mapContainerRef.current) return;
-    let isCancelled = false;
-    isHealthyRef.current = false;
-
-    // Clear any previous abort controllers & timers
-    if (viewportAbortControllerRef.current) {
-      viewportAbortControllerRef.current.abort();
-    }
-    if (viewportThrottleTimerRef.current) {
-      clearTimeout(viewportThrottleTimerRef.current);
-    }
-    if (startupTimeoutRef.current) {
-      clearTimeout(startupTimeoutRef.current);
+    if (!container) {
+      return;
     }
 
-    const styleDef = MAP_STYLE_CONFIGS[mapStyleKeyRef.current];
+    let cancelled = false;
+    let map: maplibregl.Map | null = null;
 
-    let map: maplibregl.Map;
+    mapRenderableRef.current = false;
+    fallbackLockRef.current = false;
+
+    const styleDefinition =
+      mapStyleKey === "dark"
+        ? MAP_STYLES.primaryVector
+        : mapStyleKey === "liberty"
+          ? MAP_STYLES.primaryLiberty
+          : mapStyleKey === "satellite"
+            ? MAP_STYLES.esriSatellite
+            : MAP_STYLES.cartoDark;
+
+    const installDestinationLayers = () => {
+      if (!map || !map.isStyleLoaded()) {
+        return;
+      }
+
+      try {
+        if (!map.getSource("destinations")) {
+          map.addSource("destinations", {
+            type: "geojson",
+            data: discoveredPlacesToGeoJSON(
+              filteredItemsRef.current
+            ),
+            cluster: true,
+            clusterRadius: 45,
+            clusterMaxZoom: 14,
+          });
+        }
+
+        if (!map.getLayer("clusters")) {
+          map.addLayer({
+            id: "clusters",
+            type: "circle",
+            source: "destinations",
+            filter: ["has", "point_count"],
+            paint: {
+              "circle-color": [
+                "step",
+                ["get", "point_count"],
+                "#c8a24b",
+                10,
+                "#d9822b",
+                30,
+                "#ff8c42",
+              ],
+              "circle-radius": [
+                "step",
+                ["get", "point_count"],
+                18,
+                10,
+                24,
+                30,
+                30,
+              ],
+              "circle-stroke-width": 2,
+              "circle-stroke-color": "#ffffff",
+              "circle-opacity": 0.92,
+            },
+          });
+        }
+
+        if (!map.getLayer("cluster-count")) {
+          map.addLayer({
+            id: "cluster-count",
+            type: "symbol",
+            source: "destinations",
+            filter: ["has", "point_count"],
+            layout: {
+              "text-field": "{point_count_abbreviated}",
+              "text-size": 12,
+              "text-allow-overlap": true,
+              "text-ignore-placement": true,
+            },
+            paint: {
+              "text-color": "#0d0b09",
+            },
+          });
+        }
+
+        if (!map.getLayer("unclustered-halo")) {
+          map.addLayer({
+            id: "unclustered-halo",
+            type: "circle",
+            source: "destinations",
+            filter: ["!", ["has", "point_count"]],
+            paint: {
+              "circle-color": "rgba(228,190,114,0.25)",
+              "circle-radius": 14,
+              "circle-stroke-width": 0,
+            },
+          });
+        }
+
+        if (!map.getLayer("unclustered-point")) {
+          map.addLayer({
+            id: "unclustered-point",
+            type: "circle",
+            source: "destinations",
+            filter: ["!", ["has", "point_count"]],
+            paint: {
+              "circle-color": [
+                "case",
+                ["get", "isVerified"],
+                "#e4be72",
+                "#ff8c42",
+              ],
+              "circle-radius": 7,
+              "circle-stroke-width": 2,
+              "circle-stroke-color": "#ffffff",
+            },
+          });
+        }
+      } catch (error) {
+        console.error(
+          "[MapExplorer] destination layer installation failed:",
+          error
+        );
+
+        setMapError(
+          "The map loaded, but destination layers could not be initialized."
+        );
+      }
+    };
+
+    const moveEnd = () => {
+      if (!map) {
+        return;
+      }
+
+      setShowAreaSearchPill(true);
+
+      if (viewportTimerRef.current !== null) {
+        window.clearTimeout(viewportTimerRef.current);
+      }
+
+      viewportTimerRef.current = window.setTimeout(() => {
+        if (!map || cancelled) {
+          return;
+        }
+
+        void fetchViewportTemples(map);
+      }, 1000);
+    };
+
+    const scheduleFallback = (reason: string) => {
+      if (
+        cancelled ||
+        fallbackLockRef.current ||
+        mapRenderableRef.current
+      ) {
+        return;
+      }
+
+      const nextStyle = FALLBACK_CHAIN[mapStyleKey];
+
+      console.warn(
+        `[MapExplorer] Map startup failure: ${reason}`
+      );
+
+      if (!nextStyle) {
+        setMapError(
+          "All interactive map sources are currently unavailable. List view is still available."
+        );
+        return;
+      }
+
+      fallbackLockRef.current = true;
+
+      setMapError(
+        "Map source unavailable. Switching to a backup map source…"
+      );
+
+      window.setTimeout(() => {
+        if (cancelled) {
+          return;
+        }
+
+        setMapStyleKey(nextStyle);
+      }, 100);
+    };
+
     try {
       map = new maplibregl.Map({
-        container: mapContainerRef.current,
+        container,
+        // MapLibre accepts either a URL or an inline StyleSpecification.
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        style: styleDef as any,
-        center: [DEFAULT_MAP_CENTER.lng, DEFAULT_MAP_CENTER.lat],
+        style: styleDefinition as any,
+
+        center: [
+          DEFAULT_MAP_CENTER.lng,
+          DEFAULT_MAP_CENTER.lat,
+        ],
+
         zoom: DEFAULT_MAP_CENTER.zoom,
+
         minZoom: 3.5,
         maxZoom: 18.5,
+
         maxBounds: [
-          [INDIA_BOUNDS.minLng - 10, INDIA_BOUNDS.minLat - 5],
-          [INDIA_BOUNDS.maxLng + 10, INDIA_BOUNDS.maxLat + 5],
+          [
+            INDIA_BOUNDS.minLng - 10,
+            INDIA_BOUNDS.minLat - 5,
+          ],
+          [
+            INDIA_BOUNDS.maxLng + 10,
+            INDIA_BOUNDS.maxLat + 5,
+          ],
         ],
-        attributionControl: false,
+
+        attributionControl: { compact: true },
+
+        dragRotate: false,
+        pitchWithRotate: false,
       });
-    } catch (err) {
-      console.error("[MapExplorer] WebGL initialization failed:", err);
+    } catch (error) {
+      console.error(
+        "[MapExplorer] Map constructor failed:",
+        error
+      );
+
       setTimeout(() => {
-        setMapError("WebGL initialization failed on this device");
-        setActiveTab("list");
+        setMapError(
+          "Interactive map could not be initialized on this device."
+        );
       }, 0);
+
       return;
     }
 
     mapRef.current = map;
 
-    // Grace period startup timer (12s)
-    startupTimeoutRef.current = setTimeout(() => {
-      if (!isHealthyRef.current && !isCancelled) {
-        triggerFallback(mapStyleKeyRef.current, "Initial render timeout (12s)");
+    map.on("error", (event) => {
+      console.warn(
+        "[MapExplorer] MapLibre runtime error:",
+        event
+      );
+
+      if (!mapRenderableRef.current) {
+        scheduleFallback("style/tile initialization failure");
+      }
+    });
+
+    map.on("load", () => {
+      if (cancelled || !map) {
+        return;
+      }
+
+      installDestinationLayers();
+
+      void fetchViewportTemples(map);
+
+      setMapError(null);
+      setLoading(false);
+
+      try {
+        map.addControl(
+          new maplibregl.NavigationControl({
+            showCompass: true,
+            visualizePitch: false,
+          }),
+          "top-right"
+        );
+      } catch (error) {
+        console.warn(
+          "[MapExplorer] Navigation control failed:",
+          error
+        );
+      }
+
+      map.on(
+        "click",
+        "clusters",
+        async (event) => {
+          if (!map) {
+            return;
+          }
+
+          const features = map.queryRenderedFeatures(
+            event.point,
+            {
+              layers: ["clusters"],
+            }
+          );
+
+          if (!features.length) {
+            return;
+          }
+
+          const clusterId =
+            features[0].properties?.cluster_id;
+
+          if (
+            typeof clusterId !== "number"
+          ) {
+            return;
+          }
+
+          const source = map.getSource(
+            "destinations"
+          ) as maplibregl.GeoJSONSource | undefined;
+
+          if (!source) {
+            return;
+          }
+
+          try {
+            const zoom =
+              await source.getClusterExpansionZoom(
+                clusterId
+              );
+
+            const geometry = features[0]
+              .geometry as {
+              type: "Point";
+              coordinates: [number, number];
+            };
+
+            map.easeTo({
+              center: geometry.coordinates,
+              zoom: Math.min(zoom + 0.5, 17),
+            });
+          } catch (error) {
+            console.error(
+              "[MapExplorer] Cluster expansion failed:",
+              error
+            );
+          }
+        }
+      );
+
+      map.on(
+        "click",
+        "unclustered-point",
+        (event) => {
+          if (!map || !event.features?.length) {
+            return;
+          }
+
+          const feature = event.features[0];
+
+          const id =
+            feature.properties?.id;
+
+          if (!id) {
+            return;
+          }
+
+          setSelectedId(String(id));
+
+          const geometry = feature.geometry as {
+            type: "Point";
+            coordinates: [number, number];
+          };
+
+          map.easeTo({
+            center: geometry.coordinates,
+            offset: [0, 50],
+          });
+        }
+      );
+
+      map.on(
+        "mouseenter",
+        "clusters",
+        () => {
+          if (map) {
+            map.getCanvas().style.cursor =
+              "pointer";
+          }
+        }
+      );
+
+      map.on(
+        "mouseleave",
+        "clusters",
+        () => {
+          if (map) {
+            map.getCanvas().style.cursor =
+              "";
+          }
+        }
+      );
+
+      map.on(
+        "mouseenter",
+        "unclustered-point",
+        () => {
+          if (map) {
+            map.getCanvas().style.cursor =
+              "pointer";
+          }
+        }
+      );
+
+      map.on(
+        "mouseleave",
+        "unclustered-point",
+        () => {
+          if (map) {
+            map.getCanvas().style.cursor =
+              "";
+          }
+        }
+      );
+
+      map.on("moveend", moveEnd);
+    });
+
+    /*
+     * A style replacement removes custom sources/layers.
+     * Reinstall them after every successful style load.
+     */
+    map.on("style.load", () => {
+      if (cancelled || !map) {
+        return;
+      }
+
+      installDestinationLayers();
+    });
+
+    /*
+     * `idle` is used as the successful-render signal.
+     * Once this happens we stop automatic startup fallback.
+     */
+    const markRenderable = () => {
+      if (cancelled) {
+        return;
+      }
+
+      mapRenderableRef.current = true;
+      fallbackLockRef.current = false;
+
+      if (mapTimeoutRef.current !== null) {
+        window.clearTimeout(mapTimeoutRef.current);
+        mapTimeoutRef.current = null;
+      }
+
+      setMapError(null);
+    };
+
+    map.once("idle", markRenderable);
+
+    /*
+     * Protect against a style that never reaches a usable state.
+     */
+    mapTimeoutRef.current = window.setTimeout(() => {
+      if (!mapRenderableRef.current) {
+        scheduleFallback(
+          "initial map rendering timed out"
+        );
       }
     }, 12000);
 
-    // Map error listener: distinguishes fatal startup errors from later tile warnings
-    map.on("error", (e) => {
-      console.warn("[MapExplorer] Map tile or style warning:", e);
-      if (!isHealthyRef.current) {
-        const msg = e.error?.message || "";
-        const isFatal =
-          msg.includes("Failed to fetch") ||
-          msg.includes("NetworkError") ||
-          msg.includes("WebGL") ||
-          msg.includes("style");
-        if (isFatal) {
-          triggerFallback(mapStyleKeyRef.current, msg || "Fatal initial style error");
-        }
+    /*
+     * Keep MapLibre dimensions synchronized with the actual DOM.
+     */
+    const resizeObserver =
+      typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(() => {
+            if (!map || cancelled) {
+              return;
+            }
+
+            map.resize();
+          })
+        : null;
+
+    resizeObserver?.observe(container);
+
+    /*
+     * Initial resize after dynamic import/layout.
+     */
+    requestAnimationFrame(() => {
+      if (!map || cancelled) {
+        return;
       }
-    });
 
-    // Mark map healthy on idle / successful render
-    map.on("idle", () => {
-      if (!isHealthyRef.current) {
-        isHealthyRef.current = true;
-        if (startupTimeoutRef.current) {
-          clearTimeout(startupTimeoutRef.current);
-          startupTimeoutRef.current = null;
-        }
-      }
-    });
-
-    try {
-      map.addControl(new maplibregl.NavigationControl({ showCompass: true, visualizePitch: true }), "top-right");
-    } catch (ctrlErr) {
-      console.warn("[MapExplorer] NavigationControl error:", ctrlErr);
-    }
-
-    // Attach ResizeObserver to map container
-    if (mapContainerRef.current) {
-      const ro = new ResizeObserver(() => {
-        if (mapRef.current) {
-          mapRef.current.resize();
-        }
-      });
-      ro.observe(mapContainerRef.current);
-      resizeObserverRef.current = ro;
-    }
-
-    // On Load: install layers & query sovereign India viewport
-    map.on("load", () => {
-      if (isCancelled) return;
-      setMapError(null);
-      installLayers(map, filteredItemsRef.current);
-      fetchViewportTemples(map);
-      setLoading(false);
-    });
-
-    // Event handlers attached once per map instance
-    // Cluster Click -> Smooth Expansion
-    map.on("click", "clusters", async (e: maplibregl.MapLayerMouseEvent) => {
-      const features = map.queryRenderedFeatures(e.point, { layers: ["clusters"] });
-      if (!features.length) return;
-      const clusterId = features[0].properties?.cluster_id as number;
-      const source = map.getSource("destinations") as maplibregl.GeoJSONSource | undefined;
-      if (!source) return;
-
-      try {
-        const zoom = await source.getClusterExpansionZoom(clusterId);
-        const geom = features[0].geometry as { type: "Point"; coordinates: [number, number] };
-        map.easeTo({
-          center: geom.coordinates,
-          zoom: Math.min(zoom + 0.5, 17),
-        });
-      } catch (err) {
-        console.error("[MapExplorer] Cluster expansion error:", err);
-      }
-    });
-
-    // Point Click -> Select Destination
-    map.on("click", "unclustered-point", (e: maplibregl.MapLayerMouseEvent) => {
-      if (!e.features?.length) return;
-      const feat = e.features[0];
-      setSelectedId(feat.properties?.id ?? null);
-      const geom = feat.geometry as { type: "Point"; coordinates: [number, number] };
-      map.easeTo({
-        center: geom.coordinates,
-        offset: [0, 50],
-      });
-    });
-
-    // Cursor Styling
-    map.on("mouseenter", "clusters", () => {
-      map.getCanvas().style.cursor = "pointer";
-    });
-    map.on("mouseleave", "clusters", () => {
-      map.getCanvas().style.cursor = "";
-    });
-    map.on("mouseenter", "unclustered-point", () => {
-      map.getCanvas().style.cursor = "pointer";
-    });
-    map.on("mouseleave", "unclustered-point", () => {
-      map.getCanvas().style.cursor = "";
-    });
-
-    // User pan detection: throttled viewport query & Search This Area pill
-    map.on("moveend", () => {
-      setShowAreaSearchPill(true);
-      if (viewportThrottleTimerRef.current) {
-        clearTimeout(viewportThrottleTimerRef.current);
-      }
-      viewportThrottleTimerRef.current = setTimeout(() => {
-        fetchViewportTemples(map);
-      }, 900);
+      map.resize();
     });
 
     return () => {
-      isCancelled = true;
-      if (startupTimeoutRef.current) {
-        clearTimeout(startupTimeoutRef.current);
-        startupTimeoutRef.current = null;
+      cancelled = true;
+
+      viewportAbortRef.current?.abort();
+      viewportAbortRef.current = null;
+
+      if (viewportTimerRef.current !== null) {
+        window.clearTimeout(viewportTimerRef.current);
+        viewportTimerRef.current = null;
       }
-      if (viewportThrottleTimerRef.current) {
-        clearTimeout(viewportThrottleTimerRef.current);
-        viewportThrottleTimerRef.current = null;
+
+      if (mapTimeoutRef.current !== null) {
+        window.clearTimeout(mapTimeoutRef.current);
+        mapTimeoutRef.current = null;
       }
-      if (viewportAbortControllerRef.current) {
-        viewportAbortControllerRef.current.abort();
-        viewportAbortControllerRef.current = null;
+
+      resizeObserver?.disconnect();
+
+      if (map) {
+        try {
+          map.remove();
+        } catch (error) {
+          console.warn(
+            "[MapExplorer] Map cleanup warning:",
+            error
+          );
+        }
       }
-      if (resizeObserverRef.current) {
-        resizeObserverRef.current.disconnect();
-        resizeObserverRef.current = null;
-      }
-      if (userMarkerRef.current) {
-        userMarkerRef.current.remove();
-        userMarkerRef.current = null;
-      }
-      if (mapRef.current) {
-        mapRef.current.remove();
-        mapRef.current = null;
-      }
+
+      mapRef.current = null;
+      mapRenderableRef.current = false;
     };
-  }, [mapInitTrigger, installLayers, fetchViewportTemples, triggerFallback]);
+  }, [mapStyleKey, fetchViewportTemples]);
 
   // Search Area Trigger
   const handleSearchThisArea = () => {
@@ -891,7 +1107,7 @@ export function MapExplorer() {
             {(["dark", "liberty", "satellite"] as const).map((style) => (
               <button
                 key={style}
-                onClick={() => changeMapStyle(style)}
+                onClick={() => setMapStyleKey(style)}
                 className={cn(
                   "rounded-lg px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider transition-colors",
                   (mapStyleKey === style || (mapStyleKey === "carto" && style === "dark"))
@@ -923,13 +1139,18 @@ export function MapExplorer() {
       {/* Map View Container */}
       <div
         className={cn(
-          "relative flex-1 w-full h-full min-h-0",
+          "relative min-h-0 flex-1 w-full h-full",
           activeTab === "list" ? "hidden lg:block" : "block"
         )}
       >
-        <div ref={mapContainerRef} className="h-full w-full min-h-0" tabIndex={0} aria-label="Interactive Geographic Map" />
+        <div
+          ref={mapContainerRef}
+          className="h-full min-h-0 w-full"
+          tabIndex={0}
+          aria-label="Interactive Geographic Map"
+        />
 
-        {/* Dignified Map Error Fallback UI (Only when renderer itself fails) */}
+        {/* Dignified Map Error Fallback UI */}
         {mapError && (
           <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-obsidian-2/95 p-6 text-center backdrop-blur-md">
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gold/15 text-gold-bright mb-4 border border-gold/30">
@@ -941,7 +1162,21 @@ export function MapExplorer() {
             </p>
             <div className="mt-5 flex items-center gap-3">
               <button
-                onClick={handleRetryMap}
+                onClick={() => {
+                  fallbackLockRef.current = false;
+                  mapRenderableRef.current = false;
+                  setMapError(null);
+
+                  setMapStyleKey(
+                    mapStyleKey === "carto"
+                      ? "dark"
+                      : mapStyleKey === "dark"
+                        ? "satellite"
+                        : mapStyleKey === "satellite"
+                          ? "carto"
+                          : "satellite"
+                  );
+                }}
                 className="rounded-xl bg-gold px-4 py-2 text-xs font-semibold text-obsidian shadow-md hover:bg-gold-bright transition-colors"
               >
                 Retry Map
@@ -974,12 +1209,11 @@ export function MapExplorer() {
           </button>
         </div>
 
-        {/* Data degradation notification: keeps map visible! */}
+        {/* Separate data-error indicator: keeps map visible! */}
         {dataError && !mapError && (
-          <div className="pointer-events-none absolute inset-x-0 bottom-6 z-20 flex justify-center px-4">
-            <div className="pointer-events-auto flex max-w-md items-center gap-2 rounded-2xl border border-amber-500/40 bg-obsidian-2/95 px-4 py-2 text-xs text-ivory shadow-2xl backdrop-blur-md">
-              <WifiOff className="h-4 w-4 shrink-0 text-amber-400" />
-              <span>{dataError} Retrying automatically on pan…</span>
+          <div className="pointer-events-none absolute inset-x-0 bottom-4 z-20 flex justify-center px-4">
+            <div className="pointer-events-auto rounded-full border border-amber-500/30 bg-obsidian-3/95 px-4 py-2 text-[11px] text-amber-200 shadow-2xl backdrop-blur-xl">
+              {dataError}
             </div>
           </div>
         )}

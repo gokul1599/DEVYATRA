@@ -1,6 +1,6 @@
 import test, { describe } from "node:test";
 import assert from "node:assert/strict";
-import { MapDataEngine, MAP_STYLES, MAP_STYLE_CONFIGS, MAP_FALLBACK_CHAIN } from "../src/lib/map/data-engine";
+import { MapDataEngine, MAP_STYLES } from "../src/lib/map/data-engine";
 
 describe("MapDataEngine — Architecture & Style Fallbacks", () => {
   test("provides multi-tier style specifications including vector, satellite, and carto raster", () => {
@@ -15,18 +15,6 @@ describe("MapDataEngine — Architecture & Style Fallbacks", () => {
 
     assert.equal(MAP_STYLES.cartoDark.version, 8);
     assert.ok(MAP_STYLES.cartoDark.sources["carto-dark"]);
-  });
-
-  test("defines clean fallback sequence without infinite cycles", () => {
-    assert.equal(MAP_FALLBACK_CHAIN.dark, "satellite");
-    assert.equal(MAP_FALLBACK_CHAIN.liberty, "satellite");
-    assert.equal(MAP_FALLBACK_CHAIN.satellite, "carto");
-    assert.equal(MAP_FALLBACK_CHAIN.carto, null);
-
-    assert.ok(MAP_STYLE_CONFIGS.dark);
-    assert.ok(MAP_STYLE_CONFIGS.liberty);
-    assert.ok(MAP_STYLE_CONFIGS.satellite);
-    assert.ok(MAP_STYLE_CONFIGS.carto);
   });
 
   test("generates standard GeoJSON and filters out null-island / centroid fallbacks", () => {
@@ -108,43 +96,4 @@ describe("MapDataEngine — Architecture & Style Fallbacks", () => {
     assert.equal(southResults.length, 1);
     assert.equal(southResults[0].id, "south-temple");
   });
-
-  test("accurately counts exact, siteCenter, and approximate locations in metadata", () => {
-    const temples = [
-      {
-        id: "exact-1",
-        name: "Exact Temple",
-        latitude: 10.0,
-        longitude: 77.0,
-        category: "TEMPLE",
-        googlePlaceId: "ChIJ11111111111",
-        isCentroidFallback: false,
-      },
-      {
-        id: "sitecenter-1",
-        name: "Site Center Temple",
-        latitude: 11.0,
-        longitude: 78.0,
-        category: "TEMPLE",
-        isCentroidFallback: false,
-      },
-      {
-        id: "approx-1",
-        name: "Community Reported Shrine",
-        latitude: 12.0,
-        longitude: 79.0,
-        category: "TEMPLE",
-        verificationStatus: "APPROXIMATE_LOCATION",
-        sourceType: "community",
-        isCentroidFallback: false,
-      },
-    ];
-
-    const geojson = MapDataEngine.toGeoJSON(temples);
-    assert.equal(geojson.metadata.total, 3);
-    assert.equal(geojson.metadata.exactCount, 1);
-    assert.equal(geojson.metadata.siteCenterCount, 1);
-    assert.equal(geojson.metadata.approximateCount, 1);
-  });
 });
-

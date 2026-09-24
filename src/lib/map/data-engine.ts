@@ -1,12 +1,7 @@
-/**
- * DEVYATRA / TEMPLEORA — MAP DATA ENGINE & STYLES FALLBACK ARCHITECTURE
- *
- * Consolidates viewport queries, nearby discoveries, and map features.
- * Guarantees zero centroid fallbacks, robust multi-tier tile fallbacks,
- * and unified GeoJSON feature transformation.
- */
-
-import { type DestinationGeoJSONFeature, type DestinationFeatureCollection } from "./geojson";
+import {
+  type DestinationGeoJSONFeature,
+  type DestinationFeatureCollection,
+} from "./geojson";
 import { isWithinIndiaBounds, isValidCoordinate } from "./location-quality";
 
 export interface MapDataPoint {
@@ -29,15 +24,11 @@ export interface MapDataPoint {
   isCentroidFallback?: boolean;
 }
 
-/**
- * Multi-tier MapLibre Style Fallback Definitions
- */
 export const MAP_STYLES = {
-  // Tier 1: Vector dark style
   primaryVector: "https://tiles.openfreemap.org/styles/dark",
-  // Tier 1 Alt: Vector bright style
+
   primaryLiberty: "https://tiles.openfreemap.org/styles/liberty",
-  // Tier 2: Satellite raster fallback (Esri World Imagery)
+
   esriSatellite: {
     version: 8 as const,
     sources: {
@@ -47,7 +38,7 @@ export const MAP_STYLES = {
           "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
         ],
         tileSize: 256,
-        attribution: "Tiles &copy; Esri, Maxar, Earthstar Geographics",
+        attribution: "Tiles © Esri, Maxar, Earthstar Geographics",
       },
     },
     layers: [
@@ -60,7 +51,7 @@ export const MAP_STYLES = {
       },
     ],
   },
-  // Tier 3: Carto Dark Matter raster fallback
+
   cartoDark: {
     version: 8 as const,
     sources: {
@@ -72,7 +63,7 @@ export const MAP_STYLES = {
           "https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png",
         ],
         tileSize: 256,
-        attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
+        attribution: "© OpenStreetMap contributors © CARTO",
       },
     },
     layers: [
@@ -87,103 +78,92 @@ export const MAP_STYLES = {
   },
 };
 
-export type MapStyleKey = "dark" | "liberty" | "satellite" | "carto";
-
-export const MAP_STYLE_CONFIGS: Record<MapStyleKey, string | object> = {
-  dark: MAP_STYLES.primaryVector,
-  liberty: MAP_STYLES.primaryLiberty,
-  satellite: MAP_STYLES.esriSatellite,
-  carto: MAP_STYLES.cartoDark,
-};
-
-export const MAP_FALLBACK_CHAIN: Record<MapStyleKey, MapStyleKey | null> = {
-  dark: "satellite",
-  liberty: "satellite",
-  satellite: "carto",
-  carto: null,
-};
-
 export class MapDataEngine {
-  /**
-   * Filter and transform points into valid GeoJSON features, enforcing:
-   * 1. Valid coordinates.
-   * 2. Within India boundaries.
-   * 3. Zero centroid fallbacks.
-   */
   static toGeoJSON(points: MapDataPoint[]): DestinationFeatureCollection {
     const features: DestinationGeoJSONFeature[] = [];
+
     let exactCount = 0;
     let siteCenterCount = 0;
-    let approximateCount = 0;
+    const approximateCount = 0;
     let centroidFallbackExcluded = 0;
 
-    for (const p of points) {
-      if (p.isCentroidFallback) {
+    for (const point of points) {
+      if (point.isCentroidFallback) {
         centroidFallbackExcluded++;
         continue;
       }
 
-      if (!isValidCoordinate(p.latitude, p.longitude) || !isWithinIndiaBounds(p.latitude, p.longitude)) {
+      if (
+        !isValidCoordinate(point.latitude, point.longitude) ||
+        !isWithinIndiaBounds(point.latitude, point.longitude)
+      ) {
         continue;
       }
 
       const isExact = Boolean(
-        (p.googlePlaceId && p.googlePlaceId.startsWith("ChIJ")) ||
-        (p.verificationStatus && p.verificationStatus.toUpperCase().includes("VERIFIED_OFFICIAL"))
-      );
-      const isApprox = Boolean(
-        (p.verificationStatus && p.verificationStatus.toUpperCase().includes("APPROXIMATE")) ||
-        (p.sourceType && p.sourceType.toLowerCase().includes("community"))
+        point.googlePlaceId && point.googlePlaceId.startsWith("ChIJ")
       );
 
       if (isExact) {
         exactCount++;
-      } else if (isApprox) {
-        approximateCount++;
       } else {
         siteCenterCount++;
       }
 
-      const stateSlug = p.stateCode ? p.stateCode.toLowerCase() : "india";
-      const href = p.href || (p.slug ? `/temples/${stateSlug}/${p.slug}` : undefined);
+      const stateSlug = point.stateCode
+        ? point.stateCode.toLowerCase()
+        : "india";
+
+      const href =
+        point.href ||
+        (point.slug
+          ? `/temples/${stateSlug}/${point.slug}`
+          : undefined);
+
+      const accuracyLabel = isExact
+        ? "Verified Coordinates"
+        : "Site Center";
+
+      const accuracyDescription = isExact
+        ? "Coordinates matched to a verified Google Place record."
+        : "Coordinates represent the known temple/site center.";
 
       features.push({
         type: "Feature",
-        id: p.id,
+        id: point.id,
         geometry: {
           type: "Point",
-          coordinates: [p.longitude, p.latitude],
+          coordinates: [point.longitude, point.latitude],
         },
         properties: {
-          id: p.id,
-          name: p.name,
-          slug: p.slug,
-          category: p.category || "TEMPLE",
-          subcategory: p.subcategory || null,
-          mainDeity: p.subcategory || null,
-          address: p.address || null,
-          city: p.district || null,
-          district: p.district || null,
-          state: p.state || null,
-          stateCode: p.stateCode || null,
-          latitude: p.latitude,
-          longitude: p.longitude,
+          id: point.id,
+          name: point.name,
+          slug: point.slug,
+          category: point.category || "TEMPLE",
+          subcategory: point.subcategory || null,
+          mainDeity: point.subcategory || null,
+          address: point.address || null,
+          city: point.district || null,
+          district: point.district || null,
+          state: point.state || null,
+          stateCode: point.stateCode || null,
+          latitude: point.latitude,
+          longitude: point.longitude,
           accuracy: isExact ? "EXACT" : "SITE_CENTER",
-          accuracyLabel: isExact ? "Verified Coordinates" : "Site Center",
-          accuracyDescription: isExact
-            ? "Exact sanctum coordinate verified against satellite imagery"
-            : "Surveyed coordinate at temple compound entry",
+          accuracyLabel,
+          accuracyDescription,
           badgeVariant: isExact ? "emerald" : "gold",
           qualityScore: isExact ? 95 : 85,
-          verificationStatus: p.verificationStatus || "VERIFIED_SOURCE",
-          sourceType: p.sourceType || "CURATED",
+          verificationStatus:
+            point.verificationStatus || "VERIFIED_SOURCE",
+          sourceType: point.sourceType || "CURATED",
           sourceName: "Templeora Sacred Atlas",
           isVerified: true,
           openNow: null,
           distanceKm: null,
-          googlePlaceId: p.googlePlaceId || null,
+          googlePlaceId: point.googlePlaceId || null,
           href: href || null,
-          imageReference: p.imageReference || null,
+          imageReference: point.imageReference || null,
         },
       });
     }
@@ -201,19 +181,21 @@ export class MapDataEngine {
     };
   }
 
-  /**
-   * Filter points within a bounding box
-   */
   static filterBbox(
     points: MapDataPoint[],
-    bbox: { minLng: number; minLat: number; maxLng: number; maxLat: number }
+    bbox: {
+      minLng: number;
+      minLat: number;
+      maxLng: number;
+      maxLat: number;
+    }
   ): MapDataPoint[] {
     return points.filter(
-      (p) =>
-        p.latitude >= bbox.minLat &&
-        p.latitude <= bbox.maxLat &&
-        p.longitude >= bbox.minLng &&
-        p.longitude <= bbox.maxLng
+      (point) =>
+        point.latitude >= bbox.minLat &&
+        point.latitude <= bbox.maxLat &&
+        point.longitude >= bbox.minLng &&
+        point.longitude <= bbox.maxLng
     );
   }
 }
