@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { askCompanion } from "@/lib/ai/engine";
+import { askGroqTempleCompanion } from "@/lib/ai/groq";
 import { sanitizeAiInput } from "@/lib/ai/guard";
 import { getTemple } from "@/lib/registry";
 import { resolveTemple } from "@/lib/db/directory";
@@ -35,6 +35,11 @@ export async function POST(req: NextRequest) {
   if (!temple) {
     return NextResponse.json({ error: "Unknown temple" }, { status: 404 });
   }
-  const answer = askCompanion(temple, check.sanitizedText, lang ?? "en");
-  return NextResponse.json({ answer: answer.text, facts: answer.facts });
+
+  const answer = await askGroqTempleCompanion(temple, check.sanitizedText, lang ?? "en");
+  return NextResponse.json({
+    answer: answer.text,
+    facts: answer.facts,
+    provider: answer.provider,
+  });
 }

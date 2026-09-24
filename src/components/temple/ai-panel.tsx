@@ -32,14 +32,19 @@ export function AiPanel({
   const [tab, setTab] = useState<"ask" | "plan">("ask");
   return (
     <div className="overflow-hidden rounded-3xl border border-gold/20 bg-surface-warm">
-      <div className="flex items-center gap-2 border-b border-white/[0.06] px-5 py-4">
-        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gold/15 text-gold-bright">
-          <Bot className="h-5 w-5" />
-        </span>
-        <div>
-          <p className="text-[14px] font-medium text-ivory">Devyatra Companion</p>
-          <p className="text-[11.5px] text-ivory-dim">Answered only from verified, indexed context</p>
+      <div className="flex items-center justify-between border-b border-white/[0.06] px-5 py-4">
+        <div className="flex items-center gap-2">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gold/15 text-gold-bright">
+            <Bot className="h-5 w-5" />
+          </span>
+          <div>
+            <p className="text-[14px] font-medium text-ivory">Devyatra Companion</p>
+            <p className="text-[11.5px] text-ivory-dim">Answered only from verified, indexed context</p>
+          </div>
         </div>
+        <span className="hidden sm:inline-flex items-center gap-1 rounded-full border border-gold/30 bg-gold/10 px-2.5 py-0.5 font-mono text-[10.5px] text-gold-bright">
+          <Sparkles className="h-3 w-3" /> Groq AI
+        </span>
       </div>
 
       <div className="flex gap-1 border-b border-white/[0.06] px-5 pt-3">
@@ -121,8 +126,8 @@ function AskStudio({ templeId, templeName, lang }: { templeId: string; templeNam
             </span>
             <div
               className={cn(
-                "max-w-[85%] rounded-2xl px-4 py-2.5 text-[13.5px] leading-relaxed",
-                m.role === "ai" ? "bg-obsidian-3 text-ivory" : "bg-gold/15 text-ivory"
+                "max-w-[85%] rounded-2xl px-4 py-2.5 text-[13.5px] leading-relaxed whitespace-pre-line",
+                m.role === "ai" ? "bg-obsidian-3 text-ivory border border-white/5" : "bg-gold/15 text-ivory"
               )}
             >
               {m.text}
