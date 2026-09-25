@@ -34,6 +34,7 @@ import type { TempleAlert } from "@/lib/intelligence/alerts";
 import type { ScoredTemple } from "@/lib/discovery/personalized";
 import type { UserPreferences } from "@/lib/auth";
 import { OfflinePackModal } from "@/components/journey/offline-pack-modal";
+import { CalendarDownloadButton } from "@/components/journey/calendar-download-button";
 import { buildOfflineJourneyPack, type OfflineDestinationItem } from "@/lib/intelligence/offline-pack";
 
 interface LiteTemple {
@@ -808,6 +809,7 @@ export default function JourneyPage() {
                             {j.budget.toUpperCase()} Tier
                           </span>
                           <OfflinePackModal pack={offlinePack} />
+                          <CalendarDownloadButton journey={j} />
                           <button
                             type="button"
                             onClick={() => handleShareJourney(j.id)}

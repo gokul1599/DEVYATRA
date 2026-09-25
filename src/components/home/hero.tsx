@@ -60,10 +60,9 @@ function NearMeButton() {
   );
 }
 
-interface PlatformStats {
-  temples: number;
-  districts: number;
-  states: number;
+interface HeroStats {
+  states: string;
+  isLive: boolean;
 }
 
 export function Hero() {
@@ -75,10 +74,9 @@ export function Hero() {
   const [journeyOpen, setJourneyOpen] = useState(false);
   const reduced = useReducedMotion() ?? false;
 
-  const [stats, setStats] = useState<PlatformStats>({
-    temples: 2205,
-    districts: 725,
-    states: 36,
+  const [stats, setStats] = useState<HeroStats>({
+    states: "36",
+    isLive: false,
   });
 
   // Mouse Parallax for Desktop
@@ -105,7 +103,14 @@ export function Hero() {
   useEffect(() => {
     fetch("/api/stats")
       .then((r) => r.json())
-      .then((data: PlatformStats) => setStats(data))
+      .then((data: { totalStates?: number; states?: number; isLive?: boolean }) => {
+        if (data && (data.totalStates || data.states)) {
+          setStats({
+            states: String(data.totalStates || data.states || 36),
+            isLive: !!data.isLive,
+          });
+        }
+      })
       .catch(() => {});
   }, []);
 

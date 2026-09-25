@@ -37,19 +37,27 @@ const cols = [
 ];
 
 export function Footer() {
-  const [stats, setStats] = useState({
-    temples: "2,205",
-    states: "36",
+  const [stats, setStats] = useState<{
+    templeLabel: string;
+    stateLabel: string;
+  }>({
+    templeLabel: "Verified Directory",
+    stateLabel: "36 States & UTs",
   });
 
   useEffect(() => {
     fetch("/api/stats")
       .then((r) => r.json())
-      .then((data: { temples?: number; states?: number }) => {
-        if (data.temples && data.states) {
+      .then((data: { isLive?: boolean; totalTemples?: number; totalStates?: number; formattedTotalTemples?: string }) => {
+        if (data?.isLive && typeof data.totalTemples === "number" && data.totalTemples > 0) {
           setStats({
-            temples: data.temples.toLocaleString("en-IN"),
-            states: String(data.states),
+            templeLabel: `${data.totalTemples.toLocaleString("en-IN")} temples`,
+            stateLabel: `${data.totalStates || 36} states & UTs`,
+          });
+        } else if (data?.formattedTotalTemples && data.formattedTotalTemples !== "Statistics temporarily unavailable") {
+          setStats({
+            templeLabel: `${data.formattedTotalTemples} temples`,
+            stateLabel: "36 states & UTs",
           });
         }
       })
@@ -70,8 +78,8 @@ export function Footer() {
             <span className="text-[13.5px] font-medium">Verified temple information, intelligently explored.</span>
           </div>
           <div className="flex items-center gap-6 text-[12.5px] text-ivory-dim">
-            <span className="flex items-center gap-1.5"><Landmark className="h-3.5 w-3.5 text-gold-dim" /> {stats.temples} temples</span>
-            <span className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5 text-gold-dim" /> {stats.states} states &amp; UTs</span>
+            <span className="flex items-center gap-1.5"><Landmark className="h-3.5 w-3.5 text-gold-dim" /> {stats.templeLabel}</span>
+            <span className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5 text-gold-dim" /> {stats.stateLabel}</span>
             <span className="flex items-center gap-1.5"><CalendarDays className="h-3.5 w-3.5 text-gold-dim" /> Live schedules</span>
           </div>
         </Container>

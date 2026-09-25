@@ -21,6 +21,7 @@ export type DestinationCategory =
   | "CAVES"
   | "HILLS"
   | "WATERFALLS"
+  | "LAKES"
   | "NATURE"
   | "BEACHES"
   | "PARKS"
@@ -106,11 +107,18 @@ export const CATEGORY_METADATA: Record<
     heroTagline: "High Summits & Cloud Sanctuaries",
   },
   WATERFALLS: {
-    label: "Waterfalls & Sacred Lakes",
-    description: "Roaring plunges, tiered mountain cascades, sacred glacial tarns, and expansive wetlands.",
+    label: "Waterfalls & Cascades",
+    description: "Roaring plunges, tiered mountain cascades, and monsoon canyon falls across the Western Ghats and Northeast.",
     badgeColor: "bg-cyan-500/15 text-cyan-300 border-cyan-500/30",
-    icon: "🌊",
+    icon: "💧",
     heroTagline: "Living Waters & Cascading Falls",
+  },
+  LAKES: {
+    label: "Lakes & Water Bodies",
+    description: "High-altitude glacial tarns, expansive wetlands, freshwater lakes, and iconic riverfront lagoons.",
+    badgeColor: "bg-sky-500/15 text-sky-300 border-sky-500/30",
+    icon: "🌊",
+    heroTagline: "Pristine Waters & High-Altitude Tarns",
   },
   NATURE: {
     label: "Nature & Landscapes",

@@ -18,23 +18,23 @@ export interface PlatformStats {
   formattedStates: string;
 }
 
-// Canonical static fallback ONLY for isolated offline testing
+// Canonical static fallback when database is disconnected or offline
 export const PLATFORM_STATS_BASELINE: PlatformStats = {
-  totalTemples: 2205,
-  totalVerifiedTemples: 2205,
+  totalTemples: 0,
+  totalVerifiedTemples: 0,
   totalStates: 36,
-  totalDistricts: 725,
-  totalAdminUnits: 4120,
-  verifiedRecords: 2205,
+  totalDistricts: 0,
+  totalAdminUnits: 0,
+  verifiedRecords: 0,
   communityRecords: 0,
   pendingRecords: 0,
-  lastDataRefresh: "2026-09-24T00:00:00.000Z",
+  lastDataRefresh: "Database disconnected",
   isLive: false,
   isFallback: true,
   source: "STATIC_LOCAL_FALLBACK",
-  formattedTotalTemples: "2,205",
-  formattedDistricts: "725",
-  formattedStates: "36",
+  formattedTotalTemples: "Statistics temporarily unavailable",
+  formattedDistricts: "Statistics temporarily unavailable",
+  formattedStates: "36 States & UTs",
 };
 
 let cachedStats: PlatformStats | null = null;

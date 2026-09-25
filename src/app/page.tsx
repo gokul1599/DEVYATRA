@@ -1,6 +1,7 @@
 import { Hero } from "@/components/home/hero";
 import {
   ExploreIndia,
+  IndiaInOneAtlas,
   Famous,
   ArchitectureShowcase,
   FestivalStrip,
@@ -46,7 +47,10 @@ export default function Home() {
       {/* 07. Beyond the Temple: Complete Multi-Category Circuits */}
       <BeyondTheTemple />
 
-      {/* 08. Sacred Landscape: River, Mountain, Forest, Road */}
+      {/* 08. India in One Atlas: National Natural & Heritage Frontiers */}
+      <IndiaInOneAtlas />
+
+      {/* 09. Sacred Landscape: River, Mountain, Forest, Road */}
       <SacredLandscape />
 
       {/* 09. Chapter II: Masterpieces of Stone & Living Sanctuaries */}

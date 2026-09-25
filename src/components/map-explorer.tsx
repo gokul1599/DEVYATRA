@@ -500,6 +500,7 @@ export function MapExplorer() {
               "CAVES", "#854D0E",
               "HILLS", "#0D9488",
               "WATERFALLS", "#06B6D4",
+              "LAKES", "#0284C7",
               "NATURE", "#10B981",
               "BEACHES", "#0284C7",
               "BEACH", "#0284C7",

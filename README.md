@@ -30,26 +30,17 @@ Open http://localhost:3000.
 - `npm run build` — production build (includes lint + type-check)
 - `npx tsc --noEmit` — type check only
 
-## Default admin
+## Administration & Security
 
-```
-admin@devyatra.dev / Devyatra@2026
-```
+Authentication is backed by PostgreSQL via Prisma with scrypt password hashing and secure HTTP-only sessions. Admin accounts are provisioned securely via database migration seeds or admin CLI scripts using environment variables (`ADMIN_INITIAL_EMAIL` and `ADMIN_INITIAL_PASSWORD`). No static default credentials are hardcoded into production builds.
 
-## Data
+## Data & Architecture
 
-Temples live as in-memory typed seed modules under `src/data/` (no DB yet).
-Runtime state (users, sessions, reports) is file-backed in `.data/`.
-
-- Types: `src/lib/types.ts`
-- Registry + routing helpers: `src/lib/registry.ts`
-- Search: `src/lib/search.ts`
-- AI planner/companion: `src/lib/ai/engine.ts`
-- Auth: `src/lib/auth.ts`
-- Reports: `src/lib/reports.ts`
-
-See `docs/data-import.md` for the ingestion pipeline, and `prisma/schema.prisma`
-for the target relational model that the in-memory layer will eventually back.
+- **Database**: PostgreSQL (Neon serverless) managed via Prisma ORM (`prisma/schema.prisma`).
+- **Destination Atlas**: Grounded geospatial registry (`src/lib/destinations/`) spanning sacred shrines, UNESCO monuments, caves, waterfalls, lakes, wildlife reserves, and cultural hubs across all 36 states and union territories.
+- **Cartography**: MapLibre GL with sovereign geodetic boundary coordinates and vector clustering.
+- **Media & Provenance**: Zero visual hallucination image resolver (`src/lib/images/resolver.ts`) attributing verified official, Wikimedia Commons, and licensed photography.
+- **Routing & Travel**: OpenStreetMap/OSRM road network routing and Open-Meteo live weather integration.
 
 ## Directories
 

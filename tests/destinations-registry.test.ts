@@ -18,6 +18,7 @@ describe("V3.0 Destination & Experience Registry — Data Integrity & Provenance
     assert.ok(categoriesFound.has("CAVES"), "Must contain CAVES destinations");
     assert.ok(categoriesFound.has("HILLS"), "Must contain HILLS destinations");
     assert.ok(categoriesFound.has("WATERFALLS"), "Must contain WATERFALLS destinations");
+    assert.ok(categoriesFound.has("LAKES"), "Must contain LAKES destinations");
     assert.ok(categoriesFound.has("NATURE"), "Must contain NATURE destinations");
     assert.ok(categoriesFound.has("BEACHES"), "Must contain BEACHES destinations");
     assert.ok(categoriesFound.has("WILDLIFE"), "Must contain WILDLIFE destinations");
@@ -97,6 +98,10 @@ describe("V3.0 Destination & Experience Registry — Data Integrity & Provenance
     assert.ok(waterfalls.items.length > 0);
     assert.ok(waterfalls.items.every((d) => d.category === "WATERFALLS"));
 
+    const lakes = queryDestinations({ category: "LAKES" });
+    assert.ok(lakes.items.length > 0);
+    assert.ok(lakes.items.every((d) => d.category === "LAKES"));
+
     const beaches = queryDestinations({ category: "BEACHES" });
     assert.ok(beaches.items.length > 0);
     assert.ok(beaches.items.every((d) => d.category === "BEACHES"));
@@ -123,6 +128,10 @@ describe("V3.0 Destination & Experience Registry — Data Integrity & Provenance
     assert.equal(ajanta.name, "Ajanta Caves (UNESCO World Heritage)");
     assert.equal(ajanta.category, "CAVES");
 
+    const dalLake = getDestinationBySlug("dal-lake-and-shikara-srinagar");
+    assert.ok(dalLake);
+    assert.equal(dalLake.category, "LAKES");
+
     const nonExistent = getDestinationBySlug("non-existent-destination-xyz");
     assert.equal(nonExistent, undefined);
   });
@@ -134,6 +143,7 @@ describe("V3.0 Destination & Experience Registry — Data Integrity & Provenance
       "CAVES",
       "HILLS",
       "WATERFALLS",
+      "LAKES",
       "NATURE",
       "BEACHES",
       "PARKS",

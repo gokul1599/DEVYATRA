@@ -31,7 +31,7 @@ const DISCOVERY_CATEGORIES: {
 }[] = [
   {
     category: "SACRED",
-    name: "Sacred & Living Sanctuaries",
+    name: "Living Sanctuaries & Teerthams",
     count: "2,205 Verified Shrines",
     image: "https://images.unsplash.com/photo-1609137144813-7d9921338f24?auto=format&fit=crop&w=800&q=80",
     href: "/map?category=sacred",
@@ -44,11 +44,32 @@ const DISCOVERY_CATEGORIES: {
     href: "/map?category=heritage",
   },
   {
-    category: "NATURE",
-    name: "River Valleys & Waterfalls",
-    count: "Glacial & Forest Reserves",
+    category: "CAVES",
+    name: "Ancient Rock-Cut Caves",
+    count: "Ajanta, Ellora, Badami & More",
+    image: "https://images.unsplash.com/photo-1609137144820-2212a433a758?auto=format&fit=crop&w=800&q=80",
+    href: "/map?category=caves",
+  },
+  {
+    category: "HILLS",
+    name: "Mist Hills & Mountain Summits",
+    count: "Western Ghats & Himalayas",
+    image: "https://images.unsplash.com/photo-1596176530529-78163a4f7af2?auto=format&fit=crop&w=800&q=80",
+    href: "/map?category=hills",
+  },
+  {
+    category: "LAKES",
+    name: "Sacred Lakes & Lagoons",
+    count: "Pangong, Dal, Loktak & Chilika",
+    image: "https://images.unsplash.com/photo-1581793745862-99fde7fa73d2?auto=format&fit=crop&w=800&q=80",
+    href: "/map?category=lakes",
+  },
+  {
+    category: "WATERFALLS",
+    name: "Perennial Waterfalls & Gorges",
+    count: "Jog, Dudhsagar, Athirappilly",
     image: "https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?auto=format&fit=crop&w=800&q=80",
-    href: "/map?category=nature",
+    href: "/map?category=waterfalls",
   },
   {
     category: "BEACHES",
@@ -59,28 +80,21 @@ const DISCOVERY_CATEGORIES: {
   },
   {
     category: "WILDLIFE",
-    name: "Tiger & Rhino Reserves",
-    count: "106 National Parks",
+    name: "Tiger Reserves & Wildlife",
+    count: "106 National Sanctuaries",
     image: "https://images.unsplash.com/photo-1564349683136-77e08dba1ef6?auto=format&fit=crop&w=800&q=80",
     href: "/map?category=wildlife",
   },
   {
-    category: "ADVENTURE",
-    name: "Sacred Treks & High Passes",
-    count: "Himalayan Ridge Trails",
-    image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
-    href: "/map?category=nature",
-  },
-  {
     category: "CULTURE",
     name: "Royal Palaces & Living Arts",
-    count: "Dynastic Architecture",
+    count: "Dynastic Architecture & Crafts",
     image: "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=800&q=80",
     href: "/map?category=culture",
   },
   {
     category: "FOOD",
-    name: "Temple Flavors & Ancient Bazaars",
+    name: "Temple Flavors & Bazaars",
     count: "Centuries of Culinary Heritage",
     image: "https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=800&q=80",
     href: "/map?category=food",
@@ -113,7 +127,7 @@ export function BeginYourJourney() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {DISCOVERY_CATEGORIES.map((item) => {
             const meta = CATEGORY_METADATA[item.category];
             return (

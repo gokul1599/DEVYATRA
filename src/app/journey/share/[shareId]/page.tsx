@@ -18,6 +18,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import type { Metadata } from "next";
+import { CalendarDownloadButton } from "@/components/journey/calendar-download-button";
 
 export const dynamic = "force-dynamic";
 
@@ -70,7 +71,8 @@ export default async function SharedJourneyPage({
             </span>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-3">
+            <CalendarDownloadButton journey={journey} variant="hero" />
             <Link
               href={cloneUrl}
               className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-saffron to-gold px-5 py-2.5 text-xs font-semibold text-obsidian shadow-lg transition-transform hover:scale-105"

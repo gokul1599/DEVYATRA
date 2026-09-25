@@ -14,6 +14,7 @@
  */
 
 import { getTempleImage, type DestinationImage, type ImageRightsType } from "./registry";
+import { getDestinationBySlug } from "@/lib/destinations/registry";
 
 export interface ResolvedTempleMedia {
   id: string;
@@ -194,6 +195,15 @@ export function resolveDestinationMedia(place: {
   image?: string | null;
   state?: string | null;
   district?: string | null;
+  googlePlaceId?: string | null;
+  imageCredit?: {
+    photographer?: string;
+    source?: string;
+    license?: string;
+  };
+  provenance?: {
+    sourceType?: string;
+  };
 }): ResolvedTempleMedia {
   if (!place) {
     return {
@@ -210,17 +220,63 @@ export function resolveDestinationMedia(place: {
     };
   }
 
-  // 1. Direct verified image on the place
-  if (place.image && (place.image.startsWith("https://") || place.image.startsWith("http://") || place.image.startsWith("/"))) {
+  // 1. Check if place has a verified destination record in registry
+  let credit = "Verified Destination Registry";
+  let rights: ImageRightsType = "OFFICIAL_PROVENANCE";
+  let sourceType: ResolvedTempleMedia["sourceType"] = "CURATED";
+
+  if (place.slug) {
+    const destRecord = getDestinationBySlug(place.slug);
+    if (destRecord) {
+      if (destRecord.imageCredit) {
+        credit = `${destRecord.imageCredit.photographer} · ${destRecord.imageCredit.source}`;
+        const srcLower = destRecord.imageCredit.source.toLowerCase();
+        const licLower = destRecord.imageCredit.license.toLowerCase();
+
+        if (srcLower.includes("unsplash") || licLower.includes("unsplash")) {
+          rights = "UNSPLASH_LICENSE";
+        } else if (srcLower.includes("wikimedia") || licLower.includes("cc") || licLower.includes("creative commons")) {
+          rights = "CREATIVE_COMMONS";
+          sourceType = "CC";
+        } else if (srcLower.includes("asi") || licLower.includes("public domain")) {
+          rights = "PUBLIC_DOMAIN";
+          sourceType = "ASI";
+        } else if (srcLower.includes("tourism") || licLower.includes("government")) {
+          rights = "OFFICIAL_PROVENANCE";
+          sourceType = "OFFICIAL";
+        }
+      }
+    }
+  }
+
+  // 2. Direct verified image on the place
+  const imgSrc = place.image;
+  if (imgSrc && (imgSrc.startsWith("https://") || imgSrc.startsWith("http://") || imgSrc.startsWith("/"))) {
+    // Discriminate based on URL domain/provider signature
+    if (imgSrc.includes("googleusercontent.com") || imgSrc.includes("ggpht.com") || place.googlePlaceId) {
+      rights = "GOOGLE_PLACES_ATTRIBUTION";
+      sourceType = "GOOGLE_PLACES";
+      credit = "Google Maps Contributor";
+    } else if (imgSrc.includes("wikimedia.org") || imgSrc.includes("wikipedia.org")) {
+      rights = "CREATIVE_COMMONS";
+      sourceType = "CC";
+    } else if (imgSrc.includes("unsplash.com")) {
+      rights = "UNSPLASH_LICENSE";
+    } else if (imgSrc.includes("ai-illustration") || imgSrc.includes("synthetic")) {
+      rights = "AI_ILLUSTRATION";
+    }
+
     return {
       id: `img-${place.slug || place.id || "dest"}`,
-      src: place.image,
+      src: imgSrc,
       alt: `${place.name} in ${[place.district, place.state].filter(Boolean).join(", ")}`,
       caption: `${place.name} — ${place.category || "Sacred Destination"}`,
-      sourceType: "CURATED",
-      rights: "UNSPLASH_LICENSE",
-      credit: "Verified Destination Registry / Curated Collection",
-      hasFactualPhoto: true,
+      sourceType,
+      rights,
+      credit: place.imageCredit?.photographer
+        ? `${place.imageCredit.photographer} · ${place.imageCredit.source || "Verified Contributor"}`
+        : credit,
+      hasFactualPhoto: rights !== "AI_ILLUSTRATION",
       verificationStatus: "VERIFIED",
       aspectRatio: "16/9",
       focalPoint: "center",

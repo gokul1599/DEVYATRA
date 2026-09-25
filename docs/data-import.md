@@ -63,18 +63,14 @@ A temple record must satisfy `Temple` in `src/lib/types.ts`. Key fields:
   until a provider is wired; the UI renders the chip only when present.
 - **Booking widgets** — reserve `widget` for trusted embed sources; never fake.
 
-## Target relational schema
+## Relational schema
 
-`prisma/schema.prisma` captures the relational model (sqlite) that the in-memory
-layer should migrate into once a DB is adopted. Fields like `slots`, `verification`,
-`badges` are stored as JSON strings there.
+`prisma/schema.prisma` captures the relational model in PostgreSQL (Neon serverless).
+State is stored in the database with strict relational schemas for users, sessions,
+saved journeys, temples, and destination records.
 
-## Runtime state files (`.data/`)
+## Data Security & Administration
 
-- `users.json` — accounts (scrypt-hashed), seeded admin `admin@devyatra.dev`
-- `sessions` — in-memory only (lost on restart)
-- `saved.json` — per-user saved temple lists (`GET/POST /api/saved`)
-- `feeds.json` — live business-data feed state (source, updatedAt, places)
-- `reports.json` — correction queue
-
-Everything under `.data/` is git-ignored.
+- User credentials are encrypted with scrypt hashing.
+- Admin privileges are governed by role-based access control directly in the database.
+- Sessions are persisted with cryptographically secure tokens.

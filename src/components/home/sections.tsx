@@ -23,6 +23,7 @@ import { SectionShell } from "@/components/ui/section-shell";
 import { SacredArchitectureShowcase } from "@/components/home/sacred-architecture-showcase";
 import { REGIONAL_LANDSCAPES, CURATED_LANDMARK_IMAGES } from "@/lib/images/registry";
 import { CinematicImage } from "@/components/ui/cinematic-image";
+import { VERIFIED_DESTINATIONS, type DestinationCategory, CATEGORY_METADATA } from "@/lib/destinations/registry";
 
 /* -------------------------------------------------------------------------- */
 /* Chapter I: The Sacred Geography of Bharat (Explore India)                   */
@@ -225,6 +226,185 @@ export async function ExploreIndia() {
               </Link>
             ))}
           </div>
+        </div>
+      </Container>
+    </SectionShell>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Editorial Chapter: India in One Atlas (National Destination Discoveries)   */
+/* -------------------------------------------------------------------------- */
+
+const ATLAS_EXPEDITIONS: {
+  category: DestinationCategory;
+  badge: "Iconic Landmark" | "Natural Wonder" | "National Heritage" | "Protected Sanctuary" | "Sacred Teertham";
+  slug: string;
+  curatedTitle: string;
+  curatedDescription: string;
+}[] = [
+  {
+    category: "LAKES",
+    badge: "Natural Wonder",
+    slug: "pangong-tso-lake-ladakh",
+    curatedTitle: "Alpine Glacial Tarns & Lagoons",
+    curatedDescription: "High-altitude endorheic lake at 14,270 ft spanning 134 km across Ladakh and Tibet. Turquoise crystal waters change shade continuously under Himalayan sunlight.",
+  },
+  {
+    category: "CAVES",
+    badge: "National Heritage",
+    slug: "ajanta-caves",
+    curatedTitle: "Monolithic Rock-Cut Architecture",
+    curatedDescription: "30 rock-cut Buddhist sanctuaries chiseled into a horseshoe canyon gorge from 2nd century BCE, preserving masterpiece tempera murals and monolithic chaitya stupas.",
+  },
+  {
+    category: "HILLS",
+    badge: "Iconic Landmark",
+    slug: "spiti-valley-and-key-monastery",
+    curatedTitle: "Cold Deserts & High Passes",
+    curatedDescription: "A 1,000-year-old monastery citadel perched dramatically at 13,668 ft above the meandering Spiti River, surrounded by barren snow-dusted crags.",
+  },
+  {
+    category: "WATERFALLS",
+    badge: "Natural Wonder",
+    slug: "dudhsagar-waterfalls",
+    curatedTitle: "Perennial Forest Cascades",
+    curatedDescription: "Four-tiered milky torrent plunging 1,017 feet through the dense Western Ghats canopy of Bhagwan Mahaveer Sanctuary along the historic railway viaduct.",
+  },
+  {
+    category: "BEACHES",
+    badge: "Iconic Landmark",
+    slug: "radhanagar-beach-havelock",
+    curatedTitle: "Sacred Shores & Pristine Coral Rim",
+    curatedDescription: "Vast crescent shoreline fringed with ancient padauk and mahua rainforest, celebrated for gentle turquoise surf and Blue Flag environmental certification.",
+  },
+  {
+    category: "WILDLIFE",
+    badge: "Protected Sanctuary",
+    slug: "kaziranga-national-park",
+    curatedTitle: "Endangered Corridors & Grasslands",
+    curatedDescription: "UNESCO World Heritage floodplains of the Brahmaputra housing two-thirds of the world's Great Indian One-Horned Rhinoceros and viable breeding tiger populations.",
+  },
+];
+
+export function IndiaInOneAtlas() {
+  return (
+    <SectionShell sectionId="explore" id="india-atlas" className="py-24 md:py-32 chapter-charcoal">
+      <Container wide>
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 border-b border-stone-800/80 pb-10">
+          <div className="max-w-2xl">
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.25em] text-[#C8A24B]">
+              National Atlas · Beyond The Temple
+            </span>
+            <h2 className="mt-3 font-serif text-3xl font-medium tracking-tight text-[#F2ECE1] sm:text-4xl md:text-5xl">
+              India in One Atlas
+            </h2>
+            <p className="mt-4 font-sans text-sm md:text-base leading-relaxed text-stone-300">
+              India&apos;s sacred geography lives within an extraordinary continuum of ancient rock-cut caves,
+              mist-cloaked Western Ghats, high-altitude alpine lakes, and protected biodiversity sanctuaries.
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-3 shrink-0 self-start md:self-end">
+            <Link
+              href="/map"
+              className="inline-flex items-center gap-2 rounded-full bg-[#C8A24B] px-5 py-2.5 text-xs font-mono font-semibold uppercase tracking-wider text-black transition-all hover:bg-[#E4BE72]"
+            >
+              <Compass className="h-3.5 w-3.5" />
+              <span>Interactive Map Atlas</span>
+            </Link>
+            <Link
+              href="/map?category=lakes"
+              className="inline-flex items-center gap-2 rounded-full border border-stone-700/80 bg-stone-900/60 px-5 py-2.5 text-xs font-mono tracking-wider uppercase text-stone-300 transition-all hover:border-[#C8A24B] hover:text-[#F2ECE1]"
+            >
+              <span>Explore All Frontiers</span>
+              <ArrowRight className="h-3.5 w-3.5 text-[#C8A24B]" />
+            </Link>
+          </div>
+        </div>
+
+        {/* 6 Geographic Frontier Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {ATLAS_EXPEDITIONS.map((exp) => {
+            const dest = VERIFIED_DESTINATIONS.find((d) => d.slug === exp.slug);
+            const meta = CATEGORY_METADATA[exp.category];
+            const imageSrc = dest?.image || "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80";
+            const imageAlt = dest?.imageAlt || exp.curatedTitle;
+            const photographer = dest?.imageCredit?.photographer || "Verified Contributor";
+
+            return (
+              <div
+                key={exp.slug}
+                className="group flex flex-col justify-between overflow-hidden rounded-3xl border border-stone-800/80 bg-stone-950 p-6 transition-all duration-300 hover:border-[#C8A24B]/50 hover:shadow-2xl"
+              >
+                <div>
+                  <div className="relative h-56 w-full overflow-hidden rounded-2xl border border-stone-800 mb-6">
+                    <Image
+                      src={imageSrc}
+                      alt={imageAlt}
+                      fill
+                      className="object-cover brightness-[0.8] transition-transform duration-700 group-hover:scale-105"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                    
+                    {/* Landmark Badge - Truthful, Non-ranking */}
+                    <div className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full bg-black/75 px-3 py-1 text-[11px] font-mono text-stone-200 border border-stone-700/60 backdrop-blur-md">
+                      <BadgeCheck className="h-3.5 w-3.5 text-[#C8A24B]" />
+                      <span>{exp.badge}</span>
+                    </div>
+
+                    {/* Location Badge */}
+                    {dest && (
+                      <div className="absolute bottom-3 left-3 flex items-center gap-1 text-[11px] font-mono text-stone-300">
+                        <MapPin className="h-3.5 w-3.5 text-[#C8A24B]" />
+                        <span>{dest.district}, {dest.state}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-2 text-[10.5px] font-mono uppercase tracking-wider text-[#C8A24B] mb-2">
+                    <span>{meta?.icon || "✦"}</span>
+                    <span>{meta?.label || exp.category}</span>
+                  </div>
+
+                  <h3 className="font-serif text-xl font-medium text-[#F2ECE1] leading-snug group-hover:text-[#E4BE72] transition-colors">
+                    {dest?.name || exp.curatedTitle}
+                  </h3>
+
+                  <p className="mt-3 font-sans text-xs md:text-sm text-stone-300 line-clamp-3 leading-relaxed">
+                    {dest?.description || exp.curatedDescription}
+                  </p>
+
+                  {/* Highlights tag pills */}
+                  {dest?.highlights && (
+                    <div className="mt-4 flex flex-wrap gap-1.5">
+                      {dest.highlights.slice(0, 2).map((h, i) => (
+                        <span
+                          key={i}
+                          className="rounded-md border border-stone-800 bg-stone-900/60 px-2 py-0.5 text-[10.5px] font-mono text-stone-400"
+                        >
+                          {h}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-stone-800/80 flex items-center justify-between">
+                  <Link
+                    href={`/places/${exp.slug}`}
+                    className="inline-flex items-center gap-1.5 text-xs font-mono text-[#C8A24B] hover:text-[#E4BE72] transition-colors"
+                  >
+                    <span>View Destination Intel</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                  <span className="text-[10px] font-mono text-stone-500" title={`Photo: ${photographer}`}>
+                    Photo: {photographer}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </Container>
     </SectionShell>
