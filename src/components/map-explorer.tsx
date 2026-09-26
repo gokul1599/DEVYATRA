@@ -216,7 +216,16 @@ export function MapExplorer() {
   const [saveBusy, setSaveBusy] = useState(false);
 
   // Canonical Filters: Category & Administrative Location
-  const [filterCategory, setFilterCategory] = useState<string>("all");
+  const [filterCategory, setFilterCategory] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      const sp = new URLSearchParams(window.location.search);
+      const cat = sp.get("category")?.toLowerCase();
+      if (cat && (cat === "all" || MAP_CATEGORIES.some((c) => c.id === cat))) {
+        return cat;
+      }
+    }
+    return "all";
+  });
   const [activeLocation, setActiveLocation] = useState<ActiveLocationFilter | null>(null);
   const [showAreaSearchPill, setShowAreaSearchPill] = useState(false);
 
@@ -667,7 +676,9 @@ export function MapExplorer() {
     async (
       mapInstance?: maplibregl.Map,
       overrideCategory?: string,
-      overrideLocation?: ActiveLocationFilter | null
+      overrideLocation?: ActiveLocationFilter | null,
+      shouldFitBounds = false,
+      isBboxScope = false
     ) => {
       const map = mapInstance || mapRef.current;
       if (!map) return;
@@ -702,6 +713,8 @@ export function MapExplorer() {
         if (cat === "verified") {
           params.set("verifiedOnly", "true");
           params.set("category", "ALL");
+        } else if (cat !== "all" && !loc && !isBboxScope) {
+          params.set("allIndia", "true");
         }
 
         if (loc) {
@@ -742,6 +755,49 @@ export function MapExplorer() {
           console.warn("[MapExplorer] Source data update error:", err);
         }
 
+        // Fit map bounds to encompass all returned category points if requested
+        if (shouldFitBounds && collection.features.length > 0) {
+          let [minLng, minLat, maxLng, maxLat] = collection.metadata?.bbox || [
+            Infinity,
+            Infinity,
+            -Infinity,
+            -Infinity,
+          ];
+          if (minLng === Infinity) {
+            for (const f of collection.features) {
+              const [lng, lat] = f.geometry.coordinates;
+              if (lng < minLng) minLng = lng;
+              if (lat < minLat) minLat = lat;
+              if (lng > maxLng) maxLng = lng;
+              if (lat > maxLat) maxLat = lat;
+            }
+          }
+
+          if (minLng !== Infinity && (minLng !== maxLng || minLat !== maxLat)) {
+            const prefersReduced =
+              typeof window !== "undefined" &&
+              window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            map.fitBounds(
+              [
+                [minLng, minLat],
+                [maxLng, maxLat],
+              ],
+              {
+                padding: { top: 120, bottom: 80, left: sidebarOpen ? 420 : 80, right: 80 },
+                maxZoom: 12,
+                duration: prefersReduced ? 100 : 900,
+              }
+            );
+          } else if (collection.features.length === 1) {
+            const [lng, lat] = collection.features[0].geometry.coordinates;
+            map.flyTo({
+              center: [lng, lat],
+              zoom: 12,
+              duration: 800,
+            });
+          }
+        }
+
         // Transform features to MapPlaceItems
         const mappedItems: MapPlaceItem[] = collection.features.map((f: DestinationGeoJSONFeature) => {
           const props = f.properties;
@@ -779,8 +835,20 @@ export function MapExplorer() {
         setLoading(false);
       }
     },
-    [filterCategory, activeLocation, setupLayers]
+    [filterCategory, activeLocation, sidebarOpen, setupLayers]
   );
+
+  // Synchronize category filter with Next.js navigation and URL searchParams
+  useEffect(() => {
+    const cat = searchParams.get("category")?.toLowerCase();
+    const validCat = cat && (cat === "all" || MAP_CATEGORIES.some((c) => c.id === cat)) ? cat : "all";
+    if (validCat !== filterCategory) {
+      setFilterCategory(validCat);
+      if (mapRef.current) {
+        void fetchViewportTemples(mapRef.current, validCat, activeLocation, validCat !== "all");
+      }
+    }
+  }, [searchParams, filterCategory, activeLocation, fetchViewportTemples]);
 
   // MapLibre Initialization & Lifecycle
   useEffect(() => {
@@ -851,7 +919,9 @@ export function MapExplorer() {
           console.warn("[MapExplorer] setupLayers error:", err);
         }
       }
-      void fetchViewportTemples(map);
+      const initialCat = searchParams.get("category")?.toLowerCase() || filterCategory;
+      const initialFit = initialCat !== "all";
+      void fetchViewportTemples(map, initialCat, activeLocation, initialFit);
       requestAnimationFrame(() => {
         try {
           map.resize();
@@ -910,7 +980,7 @@ export function MapExplorer() {
 
       viewportTimerRef.current = setTimeout(() => {
         if (!cancelled && mapRef.current) {
-          void fetchViewportTemples(mapRef.current);
+          void fetchViewportTemples(mapRef.current, undefined, undefined, false, true);
         }
       }, 700);
     });
@@ -960,7 +1030,7 @@ export function MapExplorer() {
     setFilterCategory(catId);
     updateUrlParams({ category: catId === "all" ? null : catId });
     if (mapRef.current) {
-      void fetchViewportTemples(mapRef.current, catId, activeLocation);
+      void fetchViewportTemples(mapRef.current, catId, activeLocation, catId !== "all");
     }
   };
 
@@ -1515,7 +1585,7 @@ export function MapExplorer() {
       {showAreaSearchPill && !loading && (
         <div className="pointer-events-none absolute inset-x-0 top-28 z-20 flex justify-center">
           <button
-            onClick={() => void fetchViewportTemples()}
+            onClick={() => void fetchViewportTemples(undefined, undefined, undefined, false, true)}
             disabled={loading}
             className="pointer-events-auto flex items-center gap-1.5 rounded-full border border-gold/40 bg-obsidian-2/95 px-4 py-2 text-xs font-semibold text-gold-bright shadow-2xl backdrop-blur-md transition-transform hover:scale-105 active:scale-95 disabled:opacity-50"
           >

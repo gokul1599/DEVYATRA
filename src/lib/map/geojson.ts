@@ -59,6 +59,7 @@ export interface DestinationFeatureCollection {
     siteCenterCount: number;
     approximateCount: number;
     centroidFallbackExcluded: number;
+    bbox?: [number, number, number, number] | null;
   };
 }
 

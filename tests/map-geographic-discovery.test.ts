@@ -138,4 +138,49 @@ describe("Map Geographic Discovery & Administrative Hierarchy", () => {
     assert.equal(isValidCategory("HERITAGE"), true);
     assert.equal(isValidCategory("INVALID_CAT"), false);
   });
+
+  test("all 15 explore categories have non-zero verified destinations in the registry", () => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { VERIFIED_DESTINATIONS } = require("../src/lib/destinations/registry");
+    const categoriesToTest = [
+      "sacred",
+      "heritage",
+      "caves",
+      "hills",
+      "waterfalls",
+      "lakes",
+      "nature",
+      "beaches",
+      "wildlife",
+      "parks",
+      "family",
+      "adventure",
+      "culture",
+      "food",
+      "shopping",
+    ];
+
+    for (const cat of categoriesToTest) {
+      const norm = normalizeCategory(cat);
+      const matches = VERIFIED_DESTINATIONS.filter(
+        (d: { category: string; latitude: number; longitude: number; name: string }) =>
+          normalizeCategory(d.category) === norm
+      );
+      assert.ok(
+        matches.length > 0,
+        `Expected non-zero destinations for category ${cat} (${norm}), got ${matches.length}`
+      );
+      for (const m of matches) {
+        assert.ok(
+          m.latitude >= 6.5 && m.latitude <= 37.5,
+          `${m.name} latitude ${m.latitude} out of India bounds`
+        );
+        assert.ok(
+          m.longitude >= 68.0 && m.longitude <= 97.5,
+          `${m.name} longitude ${m.longitude} out of India bounds`
+        );
+      }
+    }
+  });
 });
+

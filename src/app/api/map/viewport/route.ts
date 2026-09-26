@@ -38,10 +38,13 @@ export async function GET(req: NextRequest) {
   const cityFilter = searchParams.get("city")?.trim() || null;
   const qFilter = searchParams.get("q")?.trim() || null;
 
-  let bbox = parseBoundingBox(bboxStr);
+  const isAllIndia = searchParams.get("allIndia") === "true" || searchParams.get("scope") === "all";
+  let bbox = (isAllIndia || (rawCategory !== "ALL" && !stateFilter && !districtFilter && !cityFilter && searchParams.get("scope") !== "bbox"))
+    ? INDIA_BOUNDS
+    : parseBoundingBox(bboxStr);
+
   if (!bbox) {
-    // If no bbox but location filters are passed, use India bounds
-    if (stateFilter || districtFilter || cityFilter || qFilter || rawCategory !== "ALL") {
+    if (stateFilter || districtFilter || cityFilter || qFilter || rawCategory !== "ALL" || isAllIndia) {
       bbox = INDIA_BOUNDS;
     } else {
       return NextResponse.json(
@@ -345,7 +348,7 @@ export async function GET(req: NextRequest) {
     const matchingRegistryDestinations = VERIFIED_DESTINATIONS.filter((d) => {
       if (d.latitude < bbox.minLat || d.latitude > bbox.maxLat) return false;
       if (d.longitude < bbox.minLng || d.longitude > bbox.maxLng) return false;
-      if (normCat && d.category !== normCat) return false;
+      if (normCat && normalizeCategory(d.category) !== normCat) return false;
       if (districtFilter && !d.district.toLowerCase().includes(districtFilter.toLowerCase())) return false;
       if (stateFilter && !d.state.toLowerCase().includes(stateFilter.toLowerCase())) return false;
       if (cityFilter && d.city && !d.city.toLowerCase().includes(cityFilter.toLowerCase())) return false;
@@ -371,7 +374,7 @@ export async function GET(req: NextRequest) {
           id: d.id,
           name: d.name,
           slug: d.slug,
-          category: d.category,
+          category: normalizeCategory(d.category),
           subcategory: d.subcategory,
           mainDeity: null,
           address: [d.city, d.district, d.state].filter(Boolean).join(", "),
@@ -401,6 +404,24 @@ export async function GET(req: NextRequest) {
       exactCount++;
     }
 
+    let minLng = Infinity;
+    let minLat = Infinity;
+    let maxLng = -Infinity;
+    let maxLat = -Infinity;
+
+    for (const f of features) {
+      const [lng, lat] = f.geometry.coordinates;
+      if (lng < minLng) minLng = lng;
+      if (lat < minLat) minLat = lat;
+      if (lng > maxLng) maxLng = lng;
+      if (lat > maxLat) maxLat = lat;
+    }
+
+    const featureBbox =
+      features.length > 0
+        ? ([minLng, minLat, maxLng, maxLat] as [number, number, number, number])
+        : null;
+
     const collection: DestinationFeatureCollection = {
       type: "FeatureCollection",
       features,
@@ -410,6 +431,7 @@ export async function GET(req: NextRequest) {
         siteCenterCount,
         approximateCount,
         centroidFallbackExcluded: 0,
+        bbox: featureBbox,
       },
     };
 
