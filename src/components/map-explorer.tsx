@@ -189,11 +189,12 @@ export function MapExplorer() {
     },
   });
 
-  const [activeTab, setActiveTab] = useState<"map" | "list">("map");
+  const [activeTab, setActiveTab] = useState<"map" | "filters" | "list">("map");
   const [currentStyle, setCurrentStyle] = useState<"liberty" | "dark">("liberty");
   const [items, setItems] = useState<MapPlaceItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [mapReady, setMapReady] = useState(false);
+  const [leftPanelOpen, setLeftPanelOpen] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Bearing for rotating compass
@@ -783,7 +784,12 @@ export function MapExplorer() {
                 [maxLng, maxLat],
               ],
               {
-                padding: { top: 120, bottom: 80, left: sidebarOpen ? 420 : 80, right: 80 },
+                padding: {
+                  top: 80,
+                  bottom: 80,
+                  left: leftPanelOpen ? 340 : 80,
+                  right: sidebarOpen ? 400 : 80,
+                },
                 maxZoom: 12,
                 duration: prefersReduced ? 100 : 900,
               }
@@ -835,7 +841,7 @@ export function MapExplorer() {
         setLoading(false);
       }
     },
-    [filterCategory, activeLocation, sidebarOpen, setupLayers]
+    [filterCategory, activeLocation, leftPanelOpen, sidebarOpen, setupLayers]
   );
 
   // Synchronize category filter with Next.js navigation and URL searchParams
@@ -1385,12 +1391,81 @@ export function MapExplorer() {
 
   return (
     <div className="relative flex h-[calc(100vh-4rem)] lg:h-[calc(100vh-4.5rem)] w-full flex-col lg:flex-row overflow-hidden bg-obsidian">
-      {/* Top Floating Search & Filter Bar */}
-      <div className="pointer-events-none absolute inset-x-0 top-3 z-30 flex flex-col gap-2 px-3 sm:px-6">
-        <div className="pointer-events-auto mx-auto flex w-full max-w-xl items-center gap-2">
-          {/* Autocomplete Search Bar */}
-          <div className="relative flex-1">
-            <div className="flex items-center gap-2.5 rounded-2xl border border-line bg-obsidian-2/95 px-3.5 py-2.5 shadow-2xl backdrop-blur-md transition-colors focus-within:border-gold/50">
+      {/* ── Mobile Tab Segmented Toggle (< lg) ── */}
+      <div className="flex lg:hidden w-full items-center justify-around border-b border-line bg-obsidian-2 px-2 py-1.5 z-30 shrink-0">
+        <button
+          onClick={() => setActiveTab("filters")}
+          className={cn(
+            "flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium transition-colors",
+            activeTab === "filters"
+              ? "bg-gold text-obsidian font-semibold shadow"
+              : "text-ivory-dim hover:text-ivory"
+          )}
+        >
+          <Compass className="h-3.5 w-3.5" />
+          <span>Categories</span>
+          {filterCategory !== "all" && (
+            <span className="h-1.5 w-1.5 rounded-full bg-gold-bright" />
+          )}
+        </button>
+        <button
+          onClick={() => setActiveTab("map")}
+          className={cn(
+            "flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium transition-colors",
+            activeTab === "map"
+              ? "bg-gold text-obsidian font-semibold shadow"
+              : "text-ivory-dim hover:text-ivory"
+          )}
+        >
+          <MapIcon className="h-3.5 w-3.5" />
+          <span>Map</span>
+        </button>
+        <button
+          onClick={() => setActiveTab("list")}
+          className={cn(
+            "flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium transition-colors",
+            activeTab === "list"
+              ? "bg-gold text-obsidian font-semibold shadow"
+              : "text-ivory-dim hover:text-ivory"
+          )}
+        >
+          <List className="h-3.5 w-3.5" />
+          <span>Places ({items.length})</span>
+        </button>
+      </div>
+
+      {/* ── Left Sidebar: Search, Filters & 15-Category Directory ── */}
+      <aside
+        className={cn(
+          "flex flex-col border-line bg-obsidian-2 lg:w-[320px] lg:border-r shrink-0 transition-all z-20",
+          activeTab === "filters" ? "flex flex-1 w-full" : (leftPanelOpen ? "hidden lg:flex" : "hidden")
+        )}
+      >
+        {/* Left Panel Header */}
+        <div className="border-b border-line px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gold/10 text-gold-bright border border-gold/30">
+              <Compass className="h-4 w-4 text-gold" />
+            </div>
+            <div>
+              <h2 className="font-serif text-sm font-semibold text-ivory">Atlas Directory</h2>
+              <p className="text-[10.5px] text-ivory-dim">Categories & Search</p>
+            </div>
+          </div>
+          <button
+            onClick={() => setLeftPanelOpen(false)}
+            title="Collapse categories panel"
+            aria-label="Collapse categories panel"
+            className="hidden lg:flex h-7 w-7 items-center justify-center rounded-lg text-ivory-dim hover:text-ivory hover:bg-obsidian-3 transition-colors"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+        </div>
+
+        {/* Search input with autocomplete inside the left sidebar */}
+        <div className="p-3 border-b border-line space-y-2">
+          <div className="relative">
+            <div className="flex items-center gap-2 rounded-xl border border-line bg-obsidian-3/80 px-3 py-2 text-xs transition-colors focus-within:border-gold/50">
               <Search className="h-4 w-4 shrink-0 text-gold-dim" />
               <input
                 type="text"
@@ -1407,10 +1482,10 @@ export function MapExplorer() {
                 onFocus={() => suggestions.length > 0 && setSuggestOpen(true)}
                 placeholder={
                   activeLocation
-                    ? `Search within ${activeLocation.name}…`
-                    : t("map_search") || "Search destinations, cities, districts, or states…"
+                    ? `Search in ${activeLocation.name}…`
+                    : t("map_search") || "Search places, cities, states…"
                 }
-                className="w-full bg-transparent text-[13.5px] text-ivory placeholder-ivory-dim/60 outline-none"
+                className="w-full bg-transparent text-xs text-ivory placeholder-ivory-dim/60 outline-none"
                 aria-label={t("map_search") || "Search map"}
               />
               {isSearching && (
@@ -1432,9 +1507,9 @@ export function MapExplorer() {
               )}
             </div>
 
-            {/* Suggestions Dropdown with Distinct Badges */}
+            {/* Suggestions Dropdown positioned relative to the search box */}
             {suggestOpen && suggestions.length > 0 && (
-              <div className="absolute left-0 right-0 top-full mt-2 max-h-80 overflow-y-auto rounded-2xl border border-line bg-obsidian-2/95 p-1.5 shadow-2xl backdrop-blur-xl">
+              <div className="absolute left-0 right-0 top-full mt-1.5 max-h-72 overflow-y-auto rounded-xl border border-line bg-obsidian-2/98 p-1.5 shadow-2xl backdrop-blur-xl z-50">
                 {suggestions.map((s, idx) => {
                   const isDestination = s.type === "destination";
                   const isDistrict = s.type === "district";
@@ -1446,9 +1521,12 @@ export function MapExplorer() {
                   return (
                     <button
                       key={`${s.type}-${s.title}-${idx}`}
-                      onClick={() => void handleSelectSuggestion(s)}
+                      onClick={() => {
+                        void handleSelectSuggestion(s);
+                        if (activeTab === "filters") setActiveTab("map");
+                      }}
                       className={cn(
-                        "flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-left transition-colors",
+                        "flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-left transition-colors",
                         suggestIdx === idx
                           ? "bg-gold/15 text-gold-bright"
                           : "text-ivory hover:bg-obsidian-3 hover:text-gold-bright"
@@ -1486,122 +1564,150 @@ export function MapExplorer() {
             )}
           </div>
 
-          {/* Mobile Tab Toggle */}
-          <div className="flex lg:hidden pointer-events-auto items-center rounded-2xl border border-line bg-obsidian-2/95 p-1 shadow-2xl backdrop-blur-md">
-            <button
-              onClick={() => setActiveTab("map")}
-              className={cn(
-                "flex items-center gap-1 rounded-xl px-3 py-1.5 text-xs font-medium transition-colors",
-                activeTab === "map"
-                  ? "bg-gold text-obsidian font-semibold shadow"
-                  : "text-ivory-dim hover:text-ivory"
+          {/* Active Filter Chips in Left Panel */}
+          {hasAnyFilter && (
+            <div className="flex items-center gap-1.5 flex-wrap pt-1">
+              {filterCategory !== "all" && (
+                <div className="inline-flex items-center gap-1.5 rounded-lg border border-gold/40 bg-gold/15 px-2 py-0.5 text-[10.5px] font-medium text-gold-bright">
+                  <span>{MAP_CATEGORIES.find((c) => c.id === filterCategory)?.label || filterCategory}</span>
+                  <button
+                    onClick={() => handleSelectCategory("all")}
+                    className="rounded p-0.5 hover:bg-gold/20"
+                    aria-label="Remove category filter"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
               )}
-            >
-              <MapIcon className="h-3.5 w-3.5" />
-              <span>Map</span>
-            </button>
-            <button
-              onClick={() => setActiveTab("list")}
-              className={cn(
-                "flex items-center gap-1 rounded-xl px-3 py-1.5 text-xs font-medium transition-colors",
-                activeTab === "list"
-                  ? "bg-gold text-obsidian font-semibold shadow"
-                  : "text-ivory-dim hover:text-ivory"
+              {activeLocation && (
+                <div className="inline-flex items-center gap-1.5 rounded-lg border border-cyan-500/40 bg-cyan-500/15 px-2 py-0.5 text-[10.5px] font-medium text-cyan-300">
+                  <MapPin className="h-3 w-3 text-cyan-400" />
+                  <span className="truncate max-w-[120px]">{activeLocation.name}</span>
+                  <button
+                    onClick={handleClearLocation}
+                    className="rounded p-0.5 hover:bg-cyan-500/20"
+                    aria-label="Remove location filter"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
               )}
-            >
-              <List className="h-3.5 w-3.5" />
-              <span>List ({items.length})</span>
-            </button>
-          </div>
+              <button
+                onClick={handleClearAllFilters}
+                className="text-[10px] text-ivory-dim/70 hover:text-gold-bright underline ml-auto"
+              >
+                Clear all
+              </button>
+            </div>
+          )}
         </div>
 
-        {/* Quick Filter Chips (15 Categories + All) */}
-        <div className="pointer-events-auto mx-auto flex w-full max-w-3xl items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+        {/* Categories List (All 15 + All Destinations) */}
+        <div className="flex-1 overflow-y-auto px-3 py-2 space-y-1 scrollbar-thin">
+          <div className="text-[11px] font-semibold uppercase tracking-wider text-ivory-dim/60 px-2 pt-1 pb-1.5 flex items-center justify-between">
+            <span>Explore Categories</span>
+            <span className="text-[10px] text-ivory-dim/40 font-mono">{MAP_CATEGORIES.length}</span>
+          </div>
+
           {MAP_CATEGORIES.map((chip) => {
             const Icon = ICON_MAP[chip.iconName] || Compass;
             const isActive = filterCategory === chip.id;
+
             return (
               <button
                 key={chip.id}
-                onClick={() => handleSelectCategory(chip.id)}
+                onClick={() => {
+                  handleSelectCategory(chip.id);
+                  if (activeTab === "filters") setActiveTab("map");
+                }}
                 className={cn(
-                  "flex items-center gap-1.5 shrink-0 rounded-full border px-3 py-1 text-[11px] font-medium shadow-md backdrop-blur-md transition-all active:scale-95",
+                  "w-full flex items-center justify-between gap-2.5 rounded-xl px-2.5 py-2 text-left transition-all text-xs group",
                   isActive
-                    ? "border-gold bg-gold text-obsidian font-semibold shadow-gold/20"
-                    : "border-line bg-obsidian-2/90 text-ivory-dim hover:border-gold/40 hover:text-ivory"
+                    ? "bg-gold/15 text-gold-bright font-semibold border border-gold/40 shadow-sm"
+                    : "text-ivory-dim hover:text-ivory hover:bg-obsidian-3 border border-transparent"
                 )}
               >
-                <Icon className={cn("h-3 w-3", isActive ? "text-obsidian" : "text-gold-dim")} />
-                <span>{chip.label}</span>
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <span
+                    className={cn(
+                      "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border transition-transform group-hover:scale-105",
+                      isActive
+                        ? "border-gold/50 bg-gold/20 text-gold-bright"
+                        : `${chip.bgClass} ${chip.borderClass} ${chip.textClass}`
+                    )}
+                  >
+                    <Icon className="h-3.5 w-3.5" />
+                  </span>
+                  <span className="truncate">{chip.label}</span>
+                </div>
+                {isActive && (
+                  <span className="h-1.5 w-1.5 rounded-full bg-gold shrink-0" />
+                )}
               </button>
             );
           })}
         </div>
 
-        {/* Active Filter Chips & Clear Strip */}
-        {hasAnyFilter && (
-          <div className="pointer-events-auto mx-auto flex w-full max-w-xl items-center gap-1.5 flex-wrap justify-center pt-0.5">
-            {filterCategory !== "all" && (
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-gold/40 bg-gold/15 px-2.5 py-0.5 text-[10.5px] font-medium text-gold-bright backdrop-blur-md">
-                <span>{MAP_CATEGORIES.find((c) => c.id === filterCategory)?.label || filterCategory}</span>
-                <button
-                  onClick={() => handleSelectCategory("all")}
-                  className="rounded-full p-0.5 hover:bg-gold/20"
-                  aria-label="Remove category filter"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </div>
-            )}
-
-            {activeLocation && (
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-cyan-500/40 bg-cyan-500/15 px-2.5 py-0.5 text-[10.5px] font-medium text-cyan-300 backdrop-blur-md">
-                <MapPin className="h-3 w-3 text-cyan-400" />
-                <span>
-                  {activeLocation.name}
-                  {activeLocation.state ? `, ${activeLocation.state}` : ""}
-                </span>
-                <button
-                  onClick={handleClearLocation}
-                  className="rounded-full p-0.5 hover:bg-cyan-500/20"
-                  aria-label="Remove location filter"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </div>
-            )}
-
-            <button
-              onClick={handleClearAllFilters}
-              className="text-[10px] text-ivory-dim/80 hover:text-gold-bright underline transition-colors px-1"
-            >
-              Clear all
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* "Search This Area" Floating Pill */}
-      {showAreaSearchPill && !loading && (
-        <div className="pointer-events-none absolute inset-x-0 top-28 z-20 flex justify-center">
+        {/* Footer actions in Left Panel */}
+        <div className="border-t border-line p-3 flex items-center justify-between text-xs bg-obsidian-3/40">
           <button
-            onClick={() => void fetchViewportTemples(undefined, undefined, undefined, false, true)}
-            disabled={loading}
-            className="pointer-events-auto flex items-center gap-1.5 rounded-full border border-gold/40 bg-obsidian-2/95 px-4 py-2 text-xs font-semibold text-gold-bright shadow-2xl backdrop-blur-md transition-transform hover:scale-105 active:scale-95 disabled:opacity-50"
+            onClick={() => handleToggleStyle(currentStyle === "liberty" ? "dark" : "liberty")}
+            className="flex items-center gap-1.5 rounded-lg border border-line bg-obsidian-2 px-2.5 py-1.5 text-[11px] text-ivory-dim hover:text-ivory hover:border-gold/30 transition-colors"
+            title="Toggle Map Style"
           >
-            <Compass className="h-3.5 w-3.5 text-gold animate-spin duration-3000" />
-            <span>Search This Area</span>
+            <Layers className="h-3.5 w-3.5 text-gold" />
+            <span>{currentStyle === "liberty" ? "Liberty" : "Dark"}</span>
+          </button>
+          <button
+            onClick={handleResetToIndia}
+            className="flex items-center gap-1.5 rounded-lg border border-line bg-obsidian-2 px-2.5 py-1.5 text-[11px] text-ivory-dim hover:text-gold-bright hover:border-gold/30 transition-colors"
+          >
+            <Navigation2 className="h-3.5 w-3.5 text-gold" />
+            <span>Reset India</span>
           </button>
         </div>
-      )}
+      </aside>
 
-      {/* Main Map Viewport */}
+      {/* ── Middle Map Viewport ── */}
       <div
         className={cn(
           "relative flex-1 w-full h-full min-h-0 min-w-0 overflow-hidden",
-          activeTab === "list" && "hidden lg:block"
+          activeTab !== "map" && "hidden lg:block"
         )}
       >
+        {/* Floating Expand Left Panel Button when collapsed on desktop */}
+        {!leftPanelOpen && (
+          <div className="pointer-events-none absolute top-4 left-4 z-20 hidden lg:flex">
+            <button
+              onClick={() => setLeftPanelOpen(true)}
+              title="Show Categories & Filters"
+              aria-label="Show Categories & Filters"
+              className="pointer-events-auto flex items-center gap-1.5 rounded-2xl border border-line bg-obsidian-2/95 px-3.5 py-2 text-xs font-semibold text-gold-bright shadow-2xl backdrop-blur-md transition-all hover:border-gold hover:scale-105 active:scale-95"
+            >
+              <ChevronRight className="h-4 w-4" />
+              <span>Categories</span>
+              {filterCategory !== "all" && (
+                <span className="rounded-full bg-gold/20 px-2 py-0.5 text-[10px] text-gold-bright">
+                  {MAP_CATEGORIES.find((c) => c.id === filterCategory)?.label || filterCategory}
+                </span>
+              )}
+            </button>
+          </div>
+        )}
+
+        {/* "Search This Area" Floating Pill */}
+        {showAreaSearchPill && !loading && (
+          <div className="pointer-events-none absolute inset-x-0 top-4 z-20 flex justify-center">
+            <button
+              onClick={() => void fetchViewportTemples(undefined, undefined, undefined, false, true)}
+              disabled={loading}
+              className="pointer-events-auto flex items-center gap-1.5 rounded-full border border-gold/40 bg-obsidian-2/95 px-4 py-2 text-xs font-semibold text-gold-bright shadow-2xl backdrop-blur-md transition-transform hover:scale-105 active:scale-95 disabled:opacity-50"
+            >
+              <Compass className="h-3.5 w-3.5 text-gold animate-spin duration-3000" />
+              <span>Search This Area</span>
+            </button>
+          </div>
+        )}
         {/* MapLibre Canvas Container */}
         <div
           ref={mapContainerRef}
@@ -1861,12 +1967,11 @@ export function MapExplorer() {
         )}
       </div>
 
-      {/* Side Sanctuary Drawer (Desktop 28% / Mobile Full List) */}
+      {/* Right Places Panel (Desktop right side / Mobile Places tab) */}
       <aside
         className={cn(
-          "flex flex-col border-line bg-obsidian-2 lg:w-[400px] lg:border-l shrink-0 transition-all",
-          activeTab === "map" && (sidebarOpen ? "hidden lg:flex" : "hidden"),
-          activeTab === "list" && "flex flex-1"
+          "flex flex-col border-line bg-obsidian-2 lg:w-[380px] xl:w-[400px] lg:border-l shrink-0 transition-all z-20",
+          activeTab === "list" ? "flex flex-1 w-full" : (sidebarOpen ? "hidden lg:flex" : "hidden")
         )}
       >
         {/* Header summary */}
