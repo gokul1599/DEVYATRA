@@ -2,13 +2,16 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { Compass, Sparkles } from "lucide-react";
 import AuthForm from "@/components/auth-form";
+import { getPlatformStats } from "@/lib/stats";
 
 export const metadata: Metadata = {
   title: "Begin Your Journey · Templeora",
-  description: "Create an account on Templeora — India's Sacred Atlas to curate sacred yatra corridors, record darshans, and explore 2,205 verified temples.",
+  description: "Create an account on Templeora — India's Sacred Atlas to curate sacred yatra corridors, record darshans, and explore verified temples.",
 };
 
-export default function RegisterPage() {
+export default async function RegisterPage() {
+  const stats = await getPlatformStats();
+
   return (
     <main className="relative min-h-screen bg-[#0A0806] pt-16 lg:pt-0">
       <div className="grid min-h-[calc(100vh-64px)] lg:min-h-screen lg:grid-cols-12">
@@ -44,9 +47,9 @@ export default function RegisterPage() {
           </div>
 
           <div className="relative z-10 flex items-center gap-6 text-xs font-mono text-stone-400">
-            <span>2,205 Sanctuaries</span>
+            <span>{stats.formattedTotalTemples} Sanctuaries</span>
             <span>•</span>
-            <span>36 States &amp; UTs</span>
+            <span>{stats.formattedStates} States &amp; UTs</span>
             <span>•</span>
             <span className="text-emerald-400 flex items-center gap-1.5">
               <Sparkles className="h-3 w-3" /> 100% Free Forever

@@ -125,7 +125,11 @@ export function BeforeYouVisit({ temple, weatherData }: BeforeYouVisitProps) {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-xs text-ivory/60">Standard sunrise to nightfall darshan protocol.</p>
+                  <p className="text-xs text-ivory/60">
+                    {temple.verified
+                      ? "Daily visiting hours are managed by temple trust administration."
+                      : "Specific darshan slot timings are not currently published in statutory records. Please consult the local temple office."}
+                  </p>
                 )}
                 {temple.timings?.todayNote && (
                   <p className="mt-3 text-[11.5px] text-amber-200/90 bg-amber-500/10 p-2.5 rounded-xl border border-amber-500/20">
@@ -168,13 +172,13 @@ export function BeforeYouVisit({ temple, weatherData }: BeforeYouVisitProps) {
               )}
             </div>
 
-            {/* Special Closures & Temple Hours Notice */}
+            {/* Rituals & Darshan Protocol Advisory */}
             <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 flex items-start gap-3">
               <AlertCircle className="h-5 w-5 text-amber-400 shrink-0 mt-0.5" />
               <div>
-                <h4 className="text-xs font-semibold text-amber-300">Sanctum Closure during Naivedyam / Alankaram</h4>
+                <h4 className="text-xs font-semibold text-amber-300">Darshan &amp; Ritual Protocols</h4>
                 <p className="text-[11px] text-ivory/70 mt-1 leading-relaxed">
-                  During scheduled afternoon rituals, the inner sanctum (Garbhagriha) curtain may close for 30–45 minutes for ritual food offerings (Naivedyam). Visitors are welcome in the outer mandapas.
+                  Sanctum access and curtain timings during pujas, alankaram, and naivedyam are regulated by the local temple administration and traditional sampradaya. Devotees are advised to verify auspicious seva schedules at the temple information counter.
                 </p>
               </div>
             </div>

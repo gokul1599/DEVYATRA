@@ -530,7 +530,7 @@ export default async function ExplorePage() {
               className="inline-flex items-center gap-2 rounded-xl border border-gold/40 bg-gold/10 px-6 py-3 text-xs font-semibold text-gold-bright transition-all hover:bg-gold/20 hover:scale-[1.02]"
             >
               <Globe2 className="h-4 w-4" />
-              <span>Explore All 89+ Verified Destinations on Interactive Sacred Map</span>
+              <span>Explore All {VERIFIED_DESTINATIONS.length} Verified Destinations on Interactive Sacred Map</span>
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

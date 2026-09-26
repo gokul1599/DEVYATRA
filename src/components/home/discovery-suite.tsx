@@ -32,7 +32,7 @@ const DISCOVERY_CATEGORIES: {
   {
     category: "SACRED",
     name: "Living Sanctuaries & Teerthams",
-    count: "2,205 Verified Shrines",
+    count: "Verified Living Shrines",
     image: "https://images.unsplash.com/photo-1609137144813-7d9921338f24?auto=format&fit=crop&w=800&q=80",
     href: "/map?category=sacred",
   },

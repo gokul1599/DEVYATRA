@@ -92,7 +92,7 @@ export async function ExploreIndia() {
                   <Compass className="h-3.5 w-3.5" />
                   <span>Peninsular Realm</span>
                   <span className="text-stone-500">•</span>
-                  <span>1,600+ Sanctuaries</span>
+                  <span>Living Sanctuaries</span>
                 </div>
                 <h3 className="font-serif text-2xl md:text-3xl font-medium text-[#F2ECE1] group-hover:text-[#E4BE72] transition-colors">
                   {REGIONAL_LANDSCAPES[1].name}
@@ -206,7 +206,7 @@ export async function ExploreIndia() {
               </h3>
             </div>
             <p className="text-xs text-stone-400 font-mono">
-              36 States & UTs • 725 Administrative Districts
+              All 36 States &amp; UTs • Nationwide District Coverage
             </p>
           </div>
 
@@ -452,7 +452,7 @@ export function Famous() {
             href="/temples"
             className="inline-flex items-center gap-2 rounded-full border border-stone-700/80 bg-stone-900/60 px-5 py-2.5 text-xs font-mono tracking-wider uppercase text-stone-300 transition-all hover:border-[#C8A24B] hover:text-[#F2ECE1] hover:bg-stone-800/80 shrink-0 self-start md:self-end"
           >
-            <span>View All 2,205 Sanctuaries</span>
+            <span>View All Sanctuaries</span>
             <ArrowRight className="h-3.5 w-3.5 text-[#C8A24B]" />
           </Link>
         </div>

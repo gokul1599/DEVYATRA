@@ -65,7 +65,7 @@ export function CalendarDownloadButton({
         {downloaded ? (
           <>
             <Check className="h-4 w-4 text-emerald-400" />
-            <span className="text-emerald-300">Added to Calendar!</span>
+            <span className="text-emerald-300">Calendar file downloaded</span>
           </>
         ) : (
           <>
@@ -87,7 +87,7 @@ export function CalendarDownloadButton({
       {downloaded ? (
         <>
           <Check className="h-3.5 w-3.5 text-emerald-400" />
-          <span className="text-emerald-300">.ics Saved</span>
+          <span className="text-emerald-300">Calendar file downloaded</span>
         </>
       ) : (
         <>

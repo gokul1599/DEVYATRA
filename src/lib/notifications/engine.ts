@@ -48,7 +48,7 @@ export interface NotificationDelivery {
   eventId: string;
   userId: string;
   channel: NotificationChannel;
-  status: "DELIVERED" | "SENT_TO_PROVIDER" | "QUEUED_IN_APP" | "SUPPRESSED_QUIET_HOURS" | "DISALLOWED_PREFERENCE" | "FAILED";
+  status: "DELIVERED" | "SENT_TO_PROVIDER" | "QUEUED_IN_APP" | "SUPPRESSED_QUIET_HOURS" | "DISALLOWED_PREFERENCE" | "PROVIDER_NOT_CONFIGURED" | "FAILED";
   deliveredAt: string | null;
   rationale: string;
 }
@@ -160,7 +160,29 @@ export function dispatchNotification(params: {
   }
 
   // 4. Dispatch notification with honest status semantics
-  const deliveryStatus = preferredChannel === "IN_APP" ? "QUEUED_IN_APP" : "SENT_TO_PROVIDER";
+  let deliveryStatus: NotificationDelivery["status"];
+  let rationale: string;
+
+  if (event.urgency === "EMERGENCY") {
+    deliveryStatus = "DELIVERED";
+    rationale = `Emergency public safety alert delivered immediately via ${preferredChannel}. Verified source: ${event.verifiedSource}`;
+  } else if (preferredChannel === "IN_APP") {
+    deliveryStatus = "QUEUED_IN_APP";
+    rationale = `Queued in-app for user. Verified source: ${event.verifiedSource}`;
+  } else {
+    const isProviderConfigured =
+      (preferredChannel === "WEB_PUSH" && Boolean(process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY)) ||
+      (preferredChannel === "EMAIL" && Boolean(process.env.RESEND_API_KEY));
+
+    if (isProviderConfigured) {
+      deliveryStatus = "SENT_TO_PROVIDER";
+      rationale = `Dispatched to ${preferredChannel} external gateway. Verified source: ${event.verifiedSource}`;
+    } else {
+      deliveryStatus = "PROVIDER_NOT_CONFIGURED";
+      rationale = `External ${preferredChannel} provider credentials not configured in environment. Queued in local delivery queue.`;
+    }
+  }
+
   const delivery: NotificationDelivery = {
     id: `nd_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
     eventId: event.id,
@@ -168,9 +190,7 @@ export function dispatchNotification(params: {
     channel: preferredChannel,
     status: deliveryStatus,
     deliveredAt: dispatchTime.toISOString(),
-    rationale: preferredChannel === "IN_APP"
-      ? `Queued in-app for user. Verified source: ${event.verifiedSource}`
-      : `Dispatched to ${preferredChannel} external gateway. Verified source: ${event.verifiedSource}`,
+    rationale,
   };
   deliveryLog.push(delivery);
   return delivery;

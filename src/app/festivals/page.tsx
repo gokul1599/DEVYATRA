@@ -7,7 +7,7 @@ import { FestivalExplorer, type SerializedFestival } from "@/components/festival
 
 export const metadata: Metadata = {
   title: "The Celestial Calendar of Bharat · Sacred Festivals · Templeora",
-  description: "Pan-India sacred temple festival calendar arranged strictly date-wise. Processions, Rath Yatras, Kalyanotsavams, and Jayantis across 2,205 sanctuaries.",
+  description: "Pan-India sacred temple festival calendar arranged strictly date-wise. Processions, Rath Yatras, Kalyanotsavams, and Jayantis across verified living sanctuaries.",
 };
 
 export default async function FestivalsPage() {

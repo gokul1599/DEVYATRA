@@ -79,7 +79,7 @@ export function WatchJourneyModal({ open, onClose }: WatchJourneyModalProps) {
                 </h3>
 
                 <p className="mt-3 text-xs sm:text-sm text-stone-300 max-w-md leading-relaxed">
-                  Journey through 2,205 living sanctuaries, 6 sacred realms, and ancient river confluences mapped with archival fidelity.
+                  Journey through living sanctuaries, 6 sacred realms, and ancient river confluences mapped with archival fidelity.
                 </p>
 
                 <div className="mt-6 flex flex-wrap items-center justify-center gap-3">

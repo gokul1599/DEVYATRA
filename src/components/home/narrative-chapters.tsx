@@ -359,7 +359,7 @@ export function BeyondTheFamous() {
             href="/temples"
             className="inline-flex items-center gap-2 rounded-full border border-stone-700/80 bg-stone-900/60 px-5 py-2.5 text-xs font-mono tracking-wider uppercase text-stone-300 transition-all hover:border-[#C8A24B] hover:text-[#F2ECE1] shrink-0"
           >
-            <span>All 2,205 Sanctuaries</span>
+            <span>View All Sanctuaries</span>
             <ArrowRight className="h-3.5 w-3.5 text-[#C8A24B]" />
           </Link>
         </div>

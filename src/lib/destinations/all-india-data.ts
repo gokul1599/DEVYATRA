@@ -3181,4 +3181,2337 @@ export const ALL_INDIA_DESTINATIONS: DestinationRecord[] = [
       verifiedDate: "2026-08-25",
     },
   },
+  {
+    "id": "dest-taj-mahal-agra",
+    "slug": "taj-mahal-agra",
+    "name": "Taj Mahal (UNESCO World Heritage)",
+    "nativeName": "ताज महल",
+    "category": "HERITAGE",
+    "primaryCategory": "HERITAGE",
+    "subtype": "Mughal White Marble Mausoleum & World Wonder",
+    "subcategory": "Mughal White Marble Mausoleum & World Wonder",
+    "tags": [
+      "unesco",
+      "seven-wonders",
+      "mughal-architecture",
+      "makrana-marble",
+      "yamuna-riverfront"
+    ],
+    "culturalTags": [
+      "Shah Jahan",
+      "Mumtaz Mahal",
+      "Pietra Dura",
+      "Charbagh"
+    ],
+    "audienceTags": [
+      "family",
+      "heritage-buffs",
+      "international-travelers",
+      "architecture-enthusiasts"
+    ],
+    "description": "An immense mausoleum of white Makrana marble, built in Agra between 1631 and 1648 by order of the Mughal emperor Shah Jahan in memory of his wife Mumtaz Mahal. Celebrated globally as the jewel of Muslim art in India and one of the universally admired masterpieces of the world's heritage, featuring exquisite Pietra Dura floral inlay, 43-meter minarets, and Persian Charbagh formal gardens along the Yamuna riverfront.",
+    "latitude": 27.1751,
+    "longitude": 78.0421,
+    "locationConfidence": "exact",
+    "city": "Agra",
+    "district": "Agra",
+    "state": "Uttar Pradesh",
+    "image": "https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "The Taj Mahal reflecting symmetrically in the Yamuna Charbagh fountain pool at sunrise, Agra",
+    "imageCredit": {
+      "photographer": "Jovyn Chamb",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "October to March",
+    "timings": "Sunrise to Sunset (Closed on Fridays for prayers)",
+    "entryFee": "₹50 (Indian citizens), ₹1100 (Foreign tourists) + ₹200 optional for Main Mausoleum chamber",
+    "recommendedDuration": "Half Day (3–4 Hours)",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "Sunrise to Sunset (Closed Fridays)",
+    "verifiedEntryFee": "₹50 (Indians), ₹1100 (Foreigners) + ₹200 (Mausoleum)",
+    "officialWebsite": "https://www.tajmahal.gov.in",
+    "unescoReference": "252",
+    "asiReference": "ASI-UP-AGR-001",
+    "highlights": [
+      "White Makrana Marble Central Dome",
+      "Pietra Dura Semi-Precious Stone Inlay",
+      "Yamuna Riverfront Axis Alignment",
+      "Symmetric Charbagh Water Channels"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Mankameshwar Shiva Temple, Agra",
+      "slug": "mankameshwar-temple-agra",
+      "distanceKm": 2.5
+    },
+    "provenance": {
+      "sourceType": "unesco",
+      "verifiedDate": "2026-09-01",
+      "sourceUrl": "https://whc.unesco.org/en/list/252"
+    }
+  },
+  {
+    "id": "dest-itmad-ud-daulah-agra",
+    "slug": "itmad-ud-daulah-agra",
+    "name": "Tomb of I'timad-ud-Daulah (Baby Taj)",
+    "nativeName": "एतमादुद्दौला का मक़बरा",
+    "category": "HERITAGE",
+    "primaryCategory": "HERITAGE",
+    "subtype": "Pietra Dura Marble Mausoleum & Jewel Box Tomb",
+    "subcategory": "Pietra Dura Marble Mausoleum & Jewel Box Tomb",
+    "tags": [
+      "mughal-architecture",
+      "baby-taj",
+      "nur-jahan",
+      "pietra-dura",
+      "jali-screens"
+    ],
+    "culturalTags": [
+      "Nur Jahan",
+      "Mirza Ghiyas Beg",
+      "Pietra Dura",
+      "Yamuna River"
+    ],
+    "audienceTags": [
+      "heritage-buffs",
+      "architecture-enthusiasts",
+      "photographers"
+    ],
+    "description": "Often described as a 'jewel box' and regarded as a draft of the Taj Mahal, this elegant tomb was commissioned by Empress Nur Jahan between 1622 and 1628 for her father Mirza Ghiyas Beg. Built entirely from white Rajasthani marble encrusted with semi-precious stone Pietra Dura, it marks the historic architectural transition from red sandstone to white marble in Mughal architecture.",
+    "latitude": 27.1929,
+    "longitude": 78.031,
+    "locationConfidence": "exact",
+    "city": "Agra",
+    "district": "Agra",
+    "state": "Uttar Pradesh",
+    "image": "https://images.unsplash.com/photo-1592635196078-9fe3d54f2377?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Intricate Pietra Dura marble lattice and facade of the Tomb of Itmad-ud-Daulah, Agra",
+    "imageCredit": {
+      "photographer": "Sylwia Bartyzel",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "October to March",
+    "timings": "06:00 AM - 06:00 PM",
+    "entryFee": "₹30 (Indian citizens), ₹310 (Foreign tourists)",
+    "recommendedDuration": "1.5 to 2 Hours",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "06:00 AM - 06:00 PM Daily",
+    "verifiedEntryFee": "₹30 (Indians), ₹310 (Foreigners)",
+    "officialWebsite": "https://asi.nic.in",
+    "asiReference": "ASI-UP-AGR-002",
+    "highlights": [
+      "Precursor to the Taj Mahal",
+      "Intricate Geometric Jali Marble Screens",
+      "Fine Semi-Precious Cypress Tree Inlays",
+      "Tranquil Yamuna Eastern Bank Setting"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Mankameshwar Shiva Temple, Agra",
+      "slug": "mankameshwar-temple-agra",
+      "distanceKm": 3.2
+    },
+    "provenance": {
+      "sourceType": "asi",
+      "verifiedDate": "2026-09-01"
+    }
+  },
+  {
+    "id": "dest-agra-fort-unesco",
+    "slug": "agra-fort-unesco",
+    "name": "Agra Fort (UNESCO World Heritage)",
+    "nativeName": "आगरा का किला",
+    "category": "FORTS",
+    "primaryCategory": "FORTS",
+    "subtype": "Imperial Mughal Red Sandstone Citadel",
+    "subcategory": "Imperial Mughal Red Sandstone Citadel",
+    "tags": [
+      "unesco",
+      "mughal-citadel",
+      "akbar",
+      "shah-jahan",
+      "sheesh-mahal"
+    ],
+    "culturalTags": [
+      "Emperor Akbar",
+      "Jahangiri Mahal",
+      "Diwan-i-Khas",
+      "Musamman Burj"
+    ],
+    "audienceTags": [
+      "family",
+      "heritage-buffs",
+      "history-buffs"
+    ],
+    "description": "A colossal 16th-century Mughal red sandstone fortress founded by Emperor Akbar on the banks of the Yamuna River. Enclosed by 2.5-km double battlements, this imperial city served as the main residence of the emperors of the Mughal Dynasty until 1638. Houses Jahangiri Mahal, Khas Mahal, Sheesh Mahal, and Musamman Burj where Shah Jahan spent his final years gazing at the Taj Mahal.",
+    "latitude": 27.1795,
+    "longitude": 78.0211,
+    "locationConfidence": "exact",
+    "city": "Agra",
+    "district": "Agra",
+    "state": "Uttar Pradesh",
+    "image": "https://images.unsplash.com/photo-1598890777032-bde835ba27c2?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Amar Singh Gate and imposing red sandstone ramparts of Agra Fort, Uttar Pradesh",
+    "imageCredit": {
+      "photographer": "Faisal",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "October to March",
+    "timings": "06:00 AM - 06:00 PM",
+    "entryFee": "₹50 (Indian citizens), ₹650 (Foreign tourists)",
+    "recommendedDuration": "2 to 3 Hours",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "06:00 AM - 06:00 PM Daily",
+    "verifiedEntryFee": "₹50 (Indians), ₹650 (Foreigners)",
+    "officialWebsite": "https://asi.nic.in",
+    "unescoReference": "251",
+    "asiReference": "ASI-UP-AGR-003",
+    "highlights": [
+      "Jahangiri Mahal Architectural Synthesis",
+      "Sheesh Mahal Mirrored Mosaic Palace",
+      "Musamman Burj Taj Mahal River Vista",
+      "Amar Singh Gate Defensive Ramparts"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Mankameshwar Shiva Temple, Agra",
+      "slug": "mankameshwar-temple-agra",
+      "distanceKm": 1.2
+    },
+    "provenance": {
+      "sourceType": "unesco",
+      "verifiedDate": "2026-09-01",
+      "sourceUrl": "https://whc.unesco.org/en/list/251"
+    }
+  },
+  {
+    "id": "dest-fatehpur-sikri-royal-city",
+    "slug": "fatehpur-sikri-royal-city",
+    "name": "Fatehpur Sikri Imperial Complex (UNESCO)",
+    "nativeName": "फ़तेहपुर सीकरी",
+    "category": "HERITAGE",
+    "primaryCategory": "HERITAGE",
+    "subtype": "Mughal Ceremonial Capital & Buland Darwaza",
+    "subcategory": "Mughal Ceremonial Capital & Buland Darwaza",
+    "tags": [
+      "unesco",
+      "buland-darwaza",
+      "akbar",
+      "salim-chishti",
+      "sandstone-city"
+    ],
+    "culturalTags": [
+      "Emperor Akbar",
+      "Sheikh Salim Chishti",
+      "Din-i Ilahi",
+      "Panch Mahal"
+    ],
+    "audienceTags": [
+      "family",
+      "heritage-buffs",
+      "photographers"
+    ],
+    "description": "The fortified ghost capital founded by Emperor Akbar in 1571 CE atop a rocky ridge 37 km west of Agra. Preserves the finest ensemble of unified Mughal architecture, anchored by the colossal 54-meter Buland Darwaza (Gate of Magnificence), the white marble Dargah of Sufi Saint Sheikh Salim Chishti, the 5-tiered Panch Mahal pavilion, and the Diwan-i-Khas with its iconic carved central pillar.",
+    "latitude": 27.0945,
+    "longitude": 77.6679,
+    "locationConfidence": "exact",
+    "city": "Fatehpur Sikri",
+    "district": "Agra",
+    "state": "Uttar Pradesh",
+    "image": "https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "The monumental 54-meter Buland Darwaza gate at Fatehpur Sikri complex, Uttar Pradesh",
+    "imageCredit": {
+      "photographer": "Rahul Pandit",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "October to March",
+    "timings": "Sunrise to Sunset",
+    "entryFee": "₹50 (Indian citizens), ₹610 (Foreign tourists)",
+    "recommendedDuration": "Half Day (3–4 Hours)",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "Sunrise to Sunset Daily",
+    "verifiedEntryFee": "₹50 (Indians), ₹610 (Foreigners)",
+    "officialWebsite": "https://asi.nic.in",
+    "unescoReference": "255",
+    "asiReference": "ASI-UP-AGR-004",
+    "highlights": [
+      "54-Meter Colossal Buland Darwaza",
+      "White Marble Dargah of Sheikh Salim Chishti",
+      "Panch Mahal 5-Tier Wind Pavilion",
+      "Diwan-i-Khas Intricate Central Lotus Pillar"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Bateshwar 101 Shiva Temple Complex, Yamuna",
+      "slug": "bateshwar-temple-complex",
+      "distanceKm": 85
+    },
+    "provenance": {
+      "sourceType": "unesco",
+      "verifiedDate": "2026-09-01",
+      "sourceUrl": "https://whc.unesco.org/en/list/255"
+    }
+  },
+  {
+    "id": "dest-mehtab-bagh-agra",
+    "slug": "mehtab-bagh-moonlight-garden-agra",
+    "name": "Mehtab Bagh (Moonlight Garden)",
+    "nativeName": "मेहताब बाग",
+    "category": "GARDENS",
+    "primaryCategory": "GARDENS",
+    "subtype": "Mughal Riverfront Charbagh Garden",
+    "subcategory": "Mughal Riverfront Charbagh Garden",
+    "tags": [
+      "mughal-gardens",
+      "taj-reflection",
+      "charbagh",
+      "yamuna-sunset",
+      "photography"
+    ],
+    "culturalTags": [
+      "Babur",
+      "Shah Jahan",
+      "Charbagh",
+      "Yamuna Floodplain"
+    ],
+    "audienceTags": [
+      "photographers",
+      "couples",
+      "sunset-seekers",
+      "family"
+    ],
+    "description": "The last of eleven Mughal-built gardens along the Yamuna River, located directly north of the Taj Mahal complex across the river. Perfectly aligned with the Taj Mahal, this 25-acre symmetrical Charbagh complex was designed by Emperor Babur and later restored by Emperor Shah Jahan as an ideal moonlight viewing pleasure garden, offering an unobstructed, crowd-free reflection of the marble wonder at sunset.",
+    "latitude": 27.1799,
+    "longitude": 78.0422,
+    "locationConfidence": "exact",
+    "city": "Agra",
+    "district": "Agra",
+    "state": "Uttar Pradesh",
+    "image": "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Mehtab Bagh formal Mughal gardens with symmetric view of the Taj Mahal across River Yamuna",
+    "imageCredit": {
+      "photographer": "Julian Yu",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "October to March (Golden hour / Sunset)",
+    "timings": "06:00 AM - 06:00 PM",
+    "entryFee": "₹25 (Indian citizens), ₹300 (Foreign tourists)",
+    "recommendedDuration": "1.5 to 2 Hours",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "06:00 AM - 06:00 PM Daily",
+    "verifiedEntryFee": "₹25 (Indians), ₹300 (Foreigners)",
+    "officialWebsite": "https://asi.nic.in",
+    "asiReference": "ASI-UP-AGR-005",
+    "highlights": [
+      "Direct Axis Reflection of the Taj Mahal",
+      "Symmetric Yamuna Riverfront Sunset Vista",
+      "Restored Mughal Charbagh Walkways",
+      "Quiet Birdwatching River Ecology"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Mankameshwar Shiva Temple, Agra",
+      "slug": "mankameshwar-temple-agra",
+      "distanceKm": 3
+    },
+    "provenance": {
+      "sourceType": "asi",
+      "verifiedDate": "2026-09-01"
+    }
+  },
+  {
+    "id": "dest-hawa-mahal-jaipur",
+    "slug": "hawa-mahal-palace-of-winds-jaipur",
+    "name": "Hawa Mahal (Palace of Winds)",
+    "nativeName": "हवा महल, जयपुर",
+    "category": "PALACES",
+    "primaryCategory": "PALACES",
+    "subtype": "Rajput Honeycomb Sandstone Crown Palace",
+    "subcategory": "Rajput Honeycomb Sandstone Crown Palace",
+    "tags": [
+      "jaipur-pink-city",
+      "rajput-architecture",
+      "jharokha",
+      "crown-palace",
+      "sawai-pratap-singh"
+    ],
+    "culturalTags": [
+      "Maharaja Sawai Pratap Singh",
+      "Lal Chand Ustad",
+      "Lord Krishna Crown",
+      "Teej Festival"
+    ],
+    "audienceTags": [
+      "family",
+      "photographers",
+      "heritage-buffs",
+      "architecture-enthusiasts"
+    ],
+    "description": "An extraordinary five-storey pyramidal palace of red and pink sandstone built in 1799 by Maharaja Sawai Pratap Singh and designed by Lal Chand Ustad in the form of the crown of Lord Krishna. Featuring 953 exquisitely carved jharokha honeycomb windows, the structure was engineered using the Venturi effect to allow soothing mountain breezes to cool the chambers while royal ladies observed street processions unseen.",
+    "latitude": 26.9239,
+    "longitude": 75.8267,
+    "locationConfidence": "exact",
+    "city": "Jaipur",
+    "district": "Jaipur",
+    "state": "Rajasthan",
+    "image": "https://images.unsplash.com/photo-1603287681836-b174ce5074c2?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Intricate pink sandstone honeycomb facade and 953 jharokhas of Hawa Mahal, Jaipur",
+    "imageCredit": {
+      "photographer": "Insha Warsi",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "October to March",
+    "timings": "09:00 AM - 05:00 PM",
+    "entryFee": "₹50 (Indian citizens), ₹200 (Foreign tourists)",
+    "recommendedDuration": "1 to 2 Hours",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "09:00 AM - 05:00 PM Daily",
+    "verifiedEntryFee": "₹50 (Indians), ₹200 (Foreigners)",
+    "officialWebsite": "https://tourism.rajasthan.gov.in",
+    "highlights": [
+      "953 Intricately Carved Jharokha Windows",
+      "Venturi Effect Natural Air Cooling Design",
+      "Crown of Lord Krishna Pyramidal Elevation",
+      "Panoramic Vista of Pink City & Jantar Mantar"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Govind Dev Ji Temple, City Palace Complex",
+      "slug": "govind-dev-ji-temple-jaipur",
+      "distanceKm": 0.8
+    },
+    "provenance": {
+      "sourceType": "tourism",
+      "verifiedDate": "2026-09-01"
+    }
+  },
+  {
+    "id": "dest-jantar-mantar-jaipur",
+    "slug": "jantar-mantar-jaipur-unesco",
+    "name": "Jantar Mantar Astronomical Observatory (UNESCO)",
+    "nativeName": "जंतर मंतर, जयपुर",
+    "category": "HERITAGE",
+    "primaryCategory": "HERITAGE",
+    "subtype": "18th Century Astronomical Stone Instruments",
+    "subcategory": "18th Century Astronomical Stone Instruments",
+    "tags": [
+      "unesco",
+      "astronomy",
+      "ancient-science",
+      "sundial",
+      "sawai-jai-singh"
+    ],
+    "culturalTags": [
+      "Maharaja Sawai Jai Singh II",
+      "Vrihat Samrat Yantra",
+      "Jyotish Vidya",
+      "Naked Eye Astronomy"
+    ],
+    "audienceTags": [
+      "family",
+      "science-buffs",
+      "heritage-buffs",
+      "students"
+    ],
+    "description": "A collection of 19 monumental stone architectural astronomical instruments built by the Rajput king Sawai Jai Singh II and completed in 1734. The site features the world's largest stone sundial (Vrihat Samrat Yantra) standing 27 meters tall, capable of measuring local solar time to an accuracy of two seconds, alongside celestial coordinate tracking bowl instruments reflecting the zenith of medieval Indian astronomy.",
+    "latitude": 26.9248,
+    "longitude": 75.8246,
+    "locationConfidence": "exact",
+    "city": "Jaipur",
+    "district": "Jaipur",
+    "state": "Rajasthan",
+    "image": "https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "The colossal stone geometric arc of the Samrat Yantra sundial at Jantar Mantar, Jaipur",
+    "imageCredit": {
+      "photographer": "Annie Spratt",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "October to March (Midday best for sundial observation)",
+    "timings": "09:00 AM - 05:00 PM",
+    "entryFee": "₹50 (Indian citizens), ₹200 (Foreign tourists)",
+    "recommendedDuration": "1.5 to 2 Hours",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "09:00 AM - 05:00 PM Daily",
+    "verifiedEntryFee": "₹50 (Indians), ₹200 (Foreigners)",
+    "officialWebsite": "https://tourism.rajasthan.gov.in",
+    "unescoReference": "1338",
+    "highlights": [
+      "World's Largest Stone Sundial (27m high, 2-sec precision)",
+      "Jai Prakash Yantra Inverted Celestial Hemispheres",
+      "Rama Yantra Altitude & Azimuth Instruments",
+      "19 UNESCO Monumental Stone Astrological Apparatuses"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Govind Dev Ji Temple, City Palace Complex",
+      "slug": "govind-dev-ji-temple-jaipur",
+      "distanceKm": 0.5
+    },
+    "provenance": {
+      "sourceType": "unesco",
+      "verifiedDate": "2026-09-01",
+      "sourceUrl": "https://whc.unesco.org/en/list/1338"
+    }
+  },
+  {
+    "id": "dest-city-palace-jaipur",
+    "slug": "city-palace-jaipur",
+    "name": "City Palace Jaipur (Mubarak Mahal & Chandra Mahal)",
+    "nativeName": "सिटी पैलेस, जयपुर",
+    "category": "PALACES",
+    "primaryCategory": "PALACES",
+    "subtype": "Royal Kachhwaha Palace Complex & Museum",
+    "subcategory": "Royal Kachhwaha Palace Complex & Museum",
+    "tags": [
+      "royal-residence",
+      "kachhwaha-dynasty",
+      "chandra-mahal",
+      "peacock-gate",
+      "silver-urns"
+    ],
+    "culturalTags": [
+      "Maharaja Sawai Jai Singh II",
+      "Pritam Niwas Chowk",
+      "Gangajali",
+      "Govind Dev Ji"
+    ],
+    "audienceTags": [
+      "family",
+      "heritage-buffs",
+      "luxury-travelers"
+    ],
+    "description": "The royal seat of the Kachhwaha Rajput rulers, established in 1727 by Maharaja Sawai Jai Singh II when he relocated his capital from Amber. The sprawling complex synthesizes Rajput, Mughal, and European architecture. Highlights include the 7-storey Chandra Mahal (still home to the titular royal family), Pritam Niwas Chowk with its four legendary seasonal Peacock Gates, and the Diwan-i-Khas housing two colossal Guinness-record sterling silver Gangajali urns.",
+    "latitude": 26.9258,
+    "longitude": 75.8237,
+    "locationConfidence": "exact",
+    "city": "Jaipur",
+    "district": "Jaipur",
+    "state": "Rajasthan",
+    "image": "https://images.unsplash.com/photo-1599661046827-dacff0c0f09a?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Pritam Niwas Chowk ornate Peacock Gate in the inner courtyard of City Palace, Jaipur",
+    "imageCredit": {
+      "photographer": "Khemraj Rawat",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "October to March",
+    "timings": "09:30 AM - 05:00 PM (Night Tour: 07:00 PM - 10:00 PM)",
+    "entryFee": "₹300 (Indians), ₹700 (Foreigners) standard courtyard ticket",
+    "recommendedDuration": "2 to 3 Hours",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "09:30 AM - 05:00 PM Daily",
+    "verifiedEntryFee": "₹300 (Indians), ₹700 (Foreigners)",
+    "officialWebsite": "https://royaljaipur.in",
+    "highlights": [
+      "Pritam Niwas Chowk 4 Iconic Peacock & Season Gates",
+      "Chandra Mahal Living Royal Heritage Suites",
+      "World's Largest Sterling Silver Vessels (Gangajali)",
+      "Royal Baggi Khana & Weaponry Armory"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Govind Dev Ji Temple, City Palace Complex",
+      "slug": "govind-dev-ji-temple-jaipur",
+      "distanceKm": 0.3
+    },
+    "provenance": {
+      "sourceType": "official",
+      "verifiedDate": "2026-09-01"
+    }
+  },
+  {
+    "id": "dest-kumbhalgarh-fort",
+    "slug": "kumbhalgarh-fort-wall-rajasthan",
+    "name": "Kumbhalgarh Fort & Great Wall of India (UNESCO)",
+    "nativeName": "कुम्भलगढ़ दुर्ग",
+    "category": "FORTS",
+    "primaryCategory": "FORTS",
+    "subtype": "Mewar Hill Citadel & 36-km Ramparts",
+    "subcategory": "Mewar Hill Citadel & 36-km Ramparts",
+    "tags": [
+      "unesco",
+      "hill-forts-rajasthan",
+      "great-wall",
+      "mewar-dynasty",
+      "maharana-pratap"
+    ],
+    "culturalTags": [
+      "Rana Kumbha",
+      "Maharana Pratap Birthplace",
+      "Aravalli Range",
+      "Badal Mahal"
+    ],
+    "audienceTags": [
+      "adventure-seekers",
+      "trekking",
+      "heritage-buffs",
+      "family"
+    ],
+    "description": "A monumental Mewar hill fortress built during the 15th century by Rana Kumbha atop a 1,100-meter peak in the Aravalli Range. Encircled by a colossal 36-kilometer continuous defensive stone wall—the second-longest continuous wall in the world after the Great Wall of China. The citadel houses Badal Mahal (Cloud Palace) at its summit, offering breathtaking panoramic views of the Marwar desert, and shelters over 360 ancient Hindu and Jain temples.",
+    "latitude": 25.1479,
+    "longitude": 73.5873,
+    "locationConfidence": "exact",
+    "city": "Kumbhalgarh",
+    "district": "Rajsamand",
+    "state": "Rajasthan",
+    "image": "https://images.unsplash.com/photo-1608755728617-aefab37d2edd?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "The imposing continuous stone battlements of the 36-km Kumbhalgarh Fort wall, Rajasthan",
+    "imageCredit": {
+      "photographer": "Yash Sharma",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "September to March",
+    "timings": "09:00 AM - 06:00 PM (Light & Sound Show at 07:00 PM)",
+    "entryFee": "₹40 (Indian citizens), ₹600 (Foreign tourists)",
+    "recommendedDuration": "Half Day (3–5 Hours)",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "09:00 AM - 06:00 PM Daily",
+    "verifiedEntryFee": "₹40 (Indians), ₹600 (Foreigners)",
+    "officialWebsite": "https://asi.nic.in",
+    "unescoReference": "247",
+    "asiReference": "ASI-RJ-RAJ-001",
+    "highlights": [
+      "36-km Long Second-Largest Continuous Wall in the World",
+      "Badal Mahal Cloud Palace with 360° Aravalli Panoramas",
+      "Birthplace of Legendary Warrior Maharana Pratap",
+      "360+ Ancient Hindu and Jain Temples within Citadel"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Ranakpur Jain Chaturmukha Dharana Vihara",
+      "slug": "ranakpur-jain-temple",
+      "distanceKm": 48
+    },
+    "provenance": {
+      "sourceType": "unesco",
+      "verifiedDate": "2026-09-01",
+      "sourceUrl": "https://whc.unesco.org/en/list/247"
+    }
+  },
+  {
+    "id": "dest-chand-baori-abhaneri",
+    "slug": "chand-baori-stepwell-abhaneri",
+    "name": "Chand Baori Stepwell & Harshat Mata Temple",
+    "nativeName": "चाँद बावड़ी, आभानेरी",
+    "category": "ARCHITECTURE",
+    "primaryCategory": "ARCHITECTURE",
+    "subtype": "9th Century Colossal Geometric Stepwell",
+    "subcategory": "9th Century Colossal Geometric Stepwell",
+    "tags": [
+      "stepwell",
+      "geometric-architecture",
+      "nikumbha-rajputs",
+      "ancient-water-harvesting",
+      "abhaneri"
+    ],
+    "culturalTags": [
+      "King Chanda",
+      "Harshat Mata",
+      "Escher Geometry",
+      "Vedic Hydro-Engineering"
+    ],
+    "audienceTags": [
+      "architecture-enthusiasts",
+      "photographers",
+      "heritage-buffs"
+    ],
+    "description": "One of the oldest, deepest, and most architecturally breathtaking stepwells in the world, built in the 9th century CE by King Chanda of the Nikumbha dynasty. Descending 20 meters (64 feet) across 13 storeys, it is lined with exactly 3,500 narrow stone steps arranged in mesmerizing, perfectly symmetrical triangular patterns. Adjacent to the stepwell stands the Harshat Mata Temple, a ruined 8th-century jewel of Pratihara carved stone architecture.",
+    "latitude": 27.0072,
+    "longitude": 76.6064,
+    "locationConfidence": "exact",
+    "city": "Abhaneri",
+    "district": "Dausa",
+    "state": "Rajasthan",
+    "image": "https://images.unsplash.com/photo-1596178065887-1198b6148b2b?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Intricate geometric inverted triangular staircases of the ancient Chand Baori stepwell, Abhaneri",
+    "imageCredit": {
+      "photographer": "Jeremy Bishop",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "October to March",
+    "timings": "07:00 AM - 05:00 PM",
+    "entryFee": "₹25 (Indian citizens), ₹300 (Foreign tourists)",
+    "recommendedDuration": "1.5 to 2 Hours",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "07:00 AM - 05:00 PM Daily",
+    "verifiedEntryFee": "₹25 (Indians), ₹300 (Foreigners)",
+    "officialWebsite": "https://asi.nic.in",
+    "asiReference": "ASI-RJ-DAU-001",
+    "highlights": [
+      "3,500 Symmetrical Triangular Steps across 13 Storeys",
+      "Deepest & Largest Ancient Stepwell (20m subterranean depth)",
+      "Nikumbha Rajput Intricate Sandstone Sculptural Niches",
+      "Adjacent 8th-Century Harshat Mata Temple Ruins"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Mehandipur Balaji Temple, Dausa",
+      "slug": "mehandipur-balaji-temple",
+      "distanceKm": 35
+    },
+    "provenance": {
+      "sourceType": "asi",
+      "verifiedDate": "2026-09-01"
+    }
+  },
+  {
+    "id": "dest-india-gate-delhi",
+    "slug": "india-gate-kartavya-path-delhi",
+    "name": "India Gate & National War Memorial",
+    "nativeName": "इण्डिया गेट एवं राष्ट्रीय समर स्मारक",
+    "category": "HERITAGE",
+    "primaryCategory": "HERITAGE",
+    "subtype": "National Triumphal Arch & War Memorial",
+    "subcategory": "National Triumphal Arch & War Memorial",
+    "tags": [
+      "national-memorial",
+      "kartavya-path",
+      "lutyens-delhi",
+      "amar-jawan-jyoti",
+      "netaji-canopy"
+    ],
+    "culturalTags": [
+      "Edwin Lutyens",
+      "Amar Jawan Jyoti",
+      "Param Vir Chakra",
+      "Kartavya Path"
+    ],
+    "audienceTags": [
+      "family",
+      "citizens",
+      "national-pride",
+      "evening-walks"
+    ],
+    "description": "The soaring 42-meter triumphal arch standing at the eastern terminus of Kartavya Path (formerly Rajpath) in New Delhi, designed by Sir Edwin Lutyens in 1921 to honor 84,000 soldiers who fell in the First World War and Third Anglo-Afghan War. Inscribed with 13,300 soldier names, the ceremonial complex is crowned by the black granite Netaji Subhas Chandra Bose canopy and integrated with the National War Memorial with its concentric Chakras of Sacrifice and Amar Jawan Jyoti eternal flame.",
+    "latitude": 28.6129,
+    "longitude": 77.2295,
+    "locationConfidence": "exact",
+    "city": "New Delhi",
+    "district": "New Delhi",
+    "state": "Delhi",
+    "image": "https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "India Gate illuminated against the twilight sky on Kartavya Path, New Delhi",
+    "imageCredit": {
+      "photographer": "Vikram Shenoy",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "October to March (Evenings year-round)",
+    "timings": "India Gate: Open 24 Hours | War Memorial: 09:00 AM - 09:00 PM",
+    "entryFee": "Free entry for all citizens and international visitors",
+    "recommendedDuration": "1.5 to 2.5 Hours",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "Open 24 Hours (Memorial closes 09:00 PM)",
+    "verifiedEntryFee": "Free Entry",
+    "officialWebsite": "https://nationalwarmemorial.gov.in",
+    "highlights": [
+      "42-Meter Ceremonial Triumphal Archway",
+      "National War Memorial 4 Concentric Concentric Chakras",
+      "Amar Jawan Jyoti Eternal Flame of Valour",
+      "Kartavya Path Lawns & Fountains Evening Promenade"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Swaminarayan Akshardham Temple, New Delhi",
+      "slug": "akshardham-temple-delhi",
+      "distanceKm": 7.5
+    },
+    "provenance": {
+      "sourceType": "official",
+      "verifiedDate": "2026-09-01"
+    }
+  },
+  {
+    "id": "dest-humayuns-tomb-delhi",
+    "slug": "humayuns-tomb-delhi-unesco",
+    "name": "Humayun's Tomb & Sunder Nursery (UNESCO)",
+    "nativeName": "हुमायूँ का मक़बरा",
+    "category": "HERITAGE",
+    "primaryCategory": "HERITAGE",
+    "subtype": "Mughal Garden Tomb & Charbagh Prototype",
+    "subcategory": "Mughal Garden Tomb & Charbagh Prototype",
+    "tags": [
+      "unesco",
+      "mughal-architecture",
+      "red-sandstone",
+      "charbagh",
+      "sunder-nursery"
+    ],
+    "culturalTags": [
+      "Empress Bega Begum",
+      "Mirak Mirza Ghiyas",
+      "Mughal Dynastic Necropolis",
+      "Yamuna Floodplain"
+    ],
+    "audienceTags": [
+      "family",
+      "heritage-buffs",
+      "nature-lovers",
+      "architecture-enthusiasts"
+    ],
+    "description": "The tomb of the Mughal Emperor Humayun, commissioned in 1558 CE by his first wife Empress Bega Begum and designed by Persian architect Mirak Mirza Ghiyas. The first garden-tomb on the Indian subcontinent, it introduced the monumental double-dome and geometric Persian Charbagh layout that reached its zenith eighty years later in the Taj Mahal. Adjoins Sunder Nursery, a restored 90-acre UNESCO-awarded ecological heritage park.",
+    "latitude": 28.5933,
+    "longitude": 77.2507,
+    "locationConfidence": "exact",
+    "city": "New Delhi",
+    "district": "South East Delhi",
+    "state": "Delhi",
+    "image": "https://images.unsplash.com/photo-1585135497273-1a86b09fe70e?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Humayun's Tomb grand red sandstone facade and white marble dome flanked by Charbagh pools, Delhi",
+    "imageCredit": {
+      "photographer": "Surya Prakash",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "October to March",
+    "timings": "06:00 AM - 06:00 PM",
+    "entryFee": "₹40 (Indian citizens), ₹600 (Foreign tourists)",
+    "recommendedDuration": "2 to 3 Hours",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "06:00 AM - 06:00 PM Daily",
+    "verifiedEntryFee": "₹40 (Indians), ₹600 (Foreigners)",
+    "officialWebsite": "https://asi.nic.in",
+    "unescoReference": "477",
+    "asiReference": "ASI-DL-DLH-001",
+    "highlights": [
+      "Architectural Precursor to the Taj Mahal",
+      "Pioneering High Double Marble Dome",
+      "Persian Charbagh Flowing Water Channels",
+      "Adjacent Sunder Nursery 90-Acre Heritage Arboretum"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Kalkaji Mandir (Maa Kalka Shakti Teertham)",
+      "slug": "kalkaji-mandir-delhi",
+      "distanceKm": 5
+    },
+    "provenance": {
+      "sourceType": "unesco",
+      "verifiedDate": "2026-09-01",
+      "sourceUrl": "https://whc.unesco.org/en/list/477"
+    }
+  },
+  {
+    "id": "dest-gateway-of-india-mumbai",
+    "slug": "gateway-of-india-mumbai",
+    "name": "Gateway of India & Apollo Bunder",
+    "nativeName": "गेटवे ऑफ इंडिया, मुंबई",
+    "category": "HERITAGE",
+    "primaryCategory": "HERITAGE",
+    "subtype": "Indo-Saracenic Triumphal Arch Harbor Monument",
+    "subcategory": "Indo-Saracenic Triumphal Arch Harbor Monument",
+    "tags": [
+      "mumbai-landmark",
+      "indo-saracenic",
+      "apollo-bunder",
+      "arabian-sea",
+      "elephanta-ferry"
+    ],
+    "culturalTags": [
+      "George Wittet",
+      "1911 Royal Visit",
+      "First Battalion Somerset Light Infantry",
+      "Taj Mahal Palace Hotel"
+    ],
+    "audienceTags": [
+      "family",
+      "couples",
+      "international-travelers",
+      "sea-lovers"
+    ],
+    "description": "An iconic 26-meter basalt triumphal arch erected at Apollo Bunder overlooking the Arabian Sea, completed in 1924 to commemorate the landing of King George V and Queen Mary. Designed by Scottish architect George Wittet in the Indo-Saracenic style with 16th-century Gujarati architectural elements, this monumental gate served as the ceremonial departure point for the last British troops in 1948 and remains Mumbai's premier waterfront landmark.",
+    "latitude": 18.922,
+    "longitude": 72.8347,
+    "locationConfidence": "exact",
+    "city": "Mumbai",
+    "district": "Mumbai City",
+    "state": "Maharashtra",
+    "image": "https://images.unsplash.com/photo-1570168007204-dfb528c6958f?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Gateway of India basalt stone arch on the waterfront promenade overlooking Mumbai harbor",
+    "imageCredit": {
+      "photographer": "Atharva Tulsi",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "October to March (Early morning or sunset)",
+    "timings": "Open 24 Hours (Plaza promenade accessible daily)",
+    "entryFee": "Free entry for all visitors",
+    "recommendedDuration": "1 to 2 Hours",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "Open 24 Hours",
+    "verifiedEntryFee": "Free Entry",
+    "officialWebsite": "https://mumbaicity.gov.in",
+    "highlights": [
+      "26-Meter Yellow Basalt Indo-Saracenic Arch",
+      "Overlooking Mumbai Harbor & Arabian Sea",
+      "Departure Jetty for Elephanta Island Caves Ferry",
+      "Adjacent 1903 Heritage Taj Mahal Palace Hotel"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Mumbadevi Temple (Patron Goddess of Mumbai)",
+      "slug": "mumbadevi-temple-mumbai",
+      "distanceKm": 4.5
+    },
+    "provenance": {
+      "sourceType": "tourism",
+      "verifiedDate": "2026-09-01"
+    }
+  },
+  {
+    "id": "dest-victoria-memorial-kolkata",
+    "slug": "victoria-memorial-kolkata",
+    "name": "Victoria Memorial Hall & Maidan Gardens",
+    "nativeName": "ভিক্টোরিয়া মেমোরিয়াল",
+    "category": "HERITAGE",
+    "primaryCategory": "HERITAGE",
+    "subtype": "White Makrana Marble Palace & National Museum",
+    "subcategory": "White Makrana Marble Palace & National Museum",
+    "tags": [
+      "kolkata-landmark",
+      "makrana-marble",
+      "national-museum",
+      "maidan",
+      "colonial-art"
+    ],
+    "culturalTags": [
+      "William Emerson",
+      "Lord Curzon",
+      "Makrana Marble",
+      "Angel of Victory"
+    ],
+    "audienceTags": [
+      "family",
+      "history-buffs",
+      "art-enthusiasts",
+      "photographers"
+    ],
+    "description": "A monumental white Makrana marble palace constructed between 1906 and 1921 on 64 acres of manicured grounds along Kolkata's Maidan. Designed by Sir William Emerson blending Indo-Saracenic, Classical, and Mughal styles, the building is crowned by a 16-foot rotating bronze Angel of Victory. The museum holds 25 galleries containing 28,394 artifacts, including historic oil paintings by Thomas and William Daniell, rare manuscripts, and colonial archives.",
+    "latitude": 22.5448,
+    "longitude": 88.3426,
+    "locationConfidence": "exact",
+    "city": "Kolkata",
+    "district": "Kolkata",
+    "state": "West Bengal",
+    "image": "https://images.unsplash.com/photo-1558431382-27e303142255?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Victoria Memorial white marble dome and facade reflected in the south garden pool, Kolkata",
+    "imageCredit": {
+      "photographer": "Aniket Bhattacharya",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "October to March",
+    "timings": "Gardens: 05:30 AM - 06:15 PM | Museum: 10:00 AM - 06:00 PM (Closed Mondays)",
+    "entryFee": "Gardens: ₹20; Museum + Gardens: ₹50 (Indian citizens), ₹500 (Foreign tourists)",
+    "recommendedDuration": "2 to 3 Hours",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "Gardens 05:30-18:15 | Museum 10:00-18:00 (Closed Mon)",
+    "verifiedEntryFee": "₹20 (Gardens), ₹50 (Museum Indians), ₹500 (Foreigners)",
+    "officialWebsite": "https://www.victoriamemorial-cal.org",
+    "highlights": [
+      "White Makrana Marble Grand Palace Architecture",
+      "16-Foot Rotating Bronze Angel of Victory Dome Finial",
+      "25 Royal Galleries with 28,000+ Historic Artworks",
+      "64 Acres of Landscaped Water Bodies and Walking Paths"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Kalighat Kali Temple (51 Shakti Peeth)",
+      "slug": "kalighat-temple-kolkata",
+      "distanceKm": 4
+    },
+    "provenance": {
+      "sourceType": "official",
+      "verifiedDate": "2026-09-01"
+    }
+  },
+  {
+    "id": "dest-charminar-hyderabad",
+    "slug": "charminar-and-laad-bazaar-hyderabad",
+    "name": "Charminar & Laad Bazaar Pearl Quarter",
+    "nativeName": "చార్మినార్ / چارمینار",
+    "category": "HERITAGE",
+    "primaryCategory": "HERITAGE",
+    "subtype": "Qutb Shahi Granite Landmark & Historic Bazaar",
+    "subcategory": "Qutb Shahi Granite Landmark & Historic Bazaar",
+    "tags": [
+      "hyderabad-landmark",
+      "qutb-shahi",
+      "laad-bazaar",
+      "nizami-culture",
+      "hyderabadi-pearls"
+    ],
+    "culturalTags": [
+      "Muhammad Quli Qutb Shah",
+      "Musi River",
+      "Laad Bazaar Bangles",
+      "Old Hyderabad"
+    ],
+    "audienceTags": [
+      "family",
+      "culture-buffs",
+      "foodies",
+      "shoppers"
+    ],
+    "description": "The square granite and lime-mortar monument and ceremonial gateway built in 1591 CE by Sultan Muhammad Quli Qutb Shah to commemorate the eradication of plague from the newly founded city of Hyderabad. Featuring four 56-meter grand minarets with 149 winding steps and an upper floor containing Hyderabad's oldest mosque. The monument stands at the heart of the historic Walled City, ringed by the glittering glass and lacquer bangle shops of Laad Bazaar.",
+    "latitude": 17.3616,
+    "longitude": 78.4747,
+    "locationConfidence": "exact",
+    "city": "Hyderabad",
+    "district": "Hyderabad",
+    "state": "Telangana",
+    "image": "https://images.unsplash.com/photo-1609137144820-2212a433a758?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "The four soaring minarets and ornate arches of the 1591 CE Charminar, Hyderabad",
+    "imageCredit": {
+      "photographer": "Prabhu Teja",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "October to March (Evening for bazaar buzz)",
+    "timings": "09:30 AM - 05:30 PM (Surrounding bazaar open till 10:00 PM)",
+    "entryFee": "₹25 (Indian citizens), ₹300 (Foreign tourists)",
+    "recommendedDuration": "2 to 3 Hours",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "09:30 AM - 05:30 PM Daily",
+    "verifiedEntryFee": "₹25 (Indians), ₹300 (Foreigners)",
+    "officialWebsite": "https://asi.nic.in",
+    "asiReference": "ASI-TG-HYD-001",
+    "highlights": [
+      "Four 56-Meter Stately Minarets with Spiral Stairs",
+      "Oldest Surviving Mosque in Hyderabad on Upper Level",
+      "Adjacent Laad Bazaar Centuries-Old Lacquer Bangles",
+      "Epicenter of Hyderabadi Haleem and Biryani Food Streets"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Bhagyalakshmi Temple, Charminar Base",
+      "slug": "bhagyalakshmi-temple-hyderabad",
+      "distanceKm": 0.05
+    },
+    "provenance": {
+      "sourceType": "asi",
+      "verifiedDate": "2026-09-01"
+    }
+  },
+  {
+    "id": "dest-statue-of-unity-kevadia",
+    "slug": "statue-of-unity-kevadia",
+    "name": "Statue of Unity (Sardar Vallabhbhai Patel)",
+    "nativeName": "સ્ટેચ્યુ ઓફ યુનિટી",
+    "category": "CULTURE",
+    "primaryCategory": "CULTURE",
+    "subtype": "World's Tallest Monument (182 meters)",
+    "subcategory": "World's Tallest Monument (182 meters)",
+    "tags": [
+      "worlds-tallest-statue",
+      "sardar-patel",
+      "narmada-river",
+      "iron-man-of-india",
+      "modern-wonder"
+    ],
+    "culturalTags": [
+      "Sardar Vallabhbhai Patel",
+      "Ram V. Sutar",
+      "Ek Bharat Shreshtha Bharat",
+      "Narmada River"
+    ],
+    "audienceTags": [
+      "family",
+      "students",
+      "national-pride",
+      "international-travelers"
+    ],
+    "description": "The world's tallest statue with a height of 182 meters (597 feet), twice the height of the Statue of Liberty, dedicated to Sardar Vallabhbhai Patel, the Iron Man of India who united 562 princely states. Designed by master sculptor Ram V. Sutar and inaugurated in 2018 on Sadhu Bet island facing the Sardar Sarovar Dam on the sacred Narmada River. Features a high-speed elevator to the 153-meter chest viewing gallery accommodating 200 visitors simultaneously.",
+    "latitude": 21.838,
+    "longitude": 73.7191,
+    "locationConfidence": "exact",
+    "city": "Ekta Nagar (Kevadia)",
+    "district": "Narmada",
+    "state": "Gujarat",
+    "image": "https://images.unsplash.com/photo-1597042034825-98319f6a72e8?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Colossal 182-meter Statue of Unity rising above the Narmada River basin at Kevadia",
+    "imageCredit": {
+      "photographer": "Mitul Gajera",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "October to March",
+    "timings": "08:00 AM - 06:00 PM (Closed on Mondays for maintenance)",
+    "entryFee": "₹150 (Basic Entry), ₹380 (Viewing Gallery Entry)",
+    "recommendedDuration": "1 Full Day (Complex spans multiple attractions)",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "08:00 AM - 06:00 PM (Closed Mondays)",
+    "verifiedEntryFee": "₹150 (Basic Entry), ₹380 (Viewing Gallery)",
+    "officialWebsite": "https://statueofunity.in",
+    "highlights": [
+      "182-Meter Colossal Bronze-Clad Structure",
+      "153-Meter Viewing Gallery with Sardar Sarovar Dam Vistas",
+      "Valley of Flowers & Butterfly Bio-Park",
+      "Evening Laser Light & Projection Mapping Show"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Garudeshwar Datta Mandir, Narmada Riverbank",
+      "slug": "garudeshwar-datta-mandir",
+      "distanceKm": 12
+    },
+    "provenance": {
+      "sourceType": "official",
+      "verifiedDate": "2026-09-01",
+      "sourceUrl": "https://statueofunity.in"
+    }
+  },
+  {
+    "id": "dest-great-rann-of-kutch",
+    "slug": "great-rann-of-kutch-white-desert",
+    "name": "Great Rann of Kutch (White Salt Desert)",
+    "nativeName": "ગ્રેટ રણ ઓફ કચ્છ",
+    "category": "NATURE",
+    "primaryCategory": "NATURE",
+    "subtype": "Seasonal Endless White Salt Marsh & Desert Safari",
+    "subcategory": "Seasonal Endless White Salt Marsh & Desert Safari",
+    "tags": [
+      "white-desert",
+      "rann-utsav",
+      "salt-flats",
+      "full-moon-mirage",
+      "kutch-culture"
+    ],
+    "culturalTags": [
+      "Rann Utsav",
+      "Rogan Art",
+      "Kutchi Embroidery",
+      "Kalo Dungar"
+    ],
+    "audienceTags": [
+      "photographers",
+      "adventure-seekers",
+      "family",
+      "culture-buffs"
+    ],
+    "description": "The largest seasonal salt marsh desert in the world, spanning over 7,505 square kilometers of shimmering white salt flats in the Thar Desert biome. Flooded during the monsoon by Arabian Sea tides and inland rivers, the waters evaporate by November to reveal an immaculate blinding-white salt crust extending to the horizon. Hosts the world-renowned 3-month Rann Utsav celebrating Kutchi handicrafts, camel caravans, and surreal full-moon desert nights.",
+    "latitude": 23.8344,
+    "longitude": 69.8358,
+    "locationConfidence": "exact",
+    "city": "Dhordo",
+    "district": "Kutch",
+    "state": "Gujarat",
+    "image": "https://images.unsplash.com/photo-1582650625119-3a31f8418b7d?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Endless crystalline white salt crust stretching towards the horizon in the Great Rann of Kutch",
+    "imageCredit": {
+      "photographer": "Parth Vyas",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "November to February (Best on full moon nights)",
+    "timings": "06:00 AM - 08:00 PM (Checkpost permit timings)",
+    "entryFee": "₹100 (Adults) + ₹50 (Vehicle Permit) via Gujarat Police portal/Dhordo checkpost",
+    "recommendedDuration": "1 to 2 Days",
+    "operationalStatus": "SEASONAL",
+    "verifiedHours": "06:00 AM - 08:00 PM (Nov to Feb peak)",
+    "verifiedEntryFee": "₹100 per person + ₹50 vehicle permit",
+    "officialWebsite": "https://www.gujarattourism.com",
+    "highlights": [
+      "7,500 sq km Sparkling Crystalline White Salt Flats",
+      "Full Moon Night Mirages over the Endless Horizon",
+      "Rann Utsav Kutchi Folk Music & Artisan Village",
+      "Flamingo City Protected Wetland Migratory Colony"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Kalo Dungar Dattatreya Temple (Highest Point of Kutch)",
+      "slug": "kalo-dungar-temple",
+      "distanceKm": 45
+    },
+    "provenance": {
+      "sourceType": "tourism",
+      "verifiedDate": "2026-09-01"
+    }
+  },
+  {
+    "id": "dest-pattadakal-unesco",
+    "slug": "pattadakal-group-of-monuments-unesco",
+    "name": "Pattadakal Badami Chalukya Sanctuary (UNESCO)",
+    "nativeName": "ಪಟ್ಟದಕಲ್ಲು ಸ್ಮಾರಕಗಳು",
+    "category": "HERITAGE",
+    "primaryCategory": "HERITAGE",
+    "subtype": "UNESCO 7th–8th Century Temple Architecture Confluence",
+    "subcategory": "UNESCO 7th–8th Century Temple Architecture Confluence",
+    "tags": [
+      "unesco",
+      "chalukya-dynasty",
+      "dravida-nagara-fusion",
+      "malaprabha-river",
+      "virupaksha"
+    ],
+    "culturalTags": [
+      "Queen Lokamahadevi",
+      "King Vikramaditya II",
+      "Kailasanatha Inspiration",
+      "Malaprabha River"
+    ],
+    "audienceTags": [
+      "heritage-buffs",
+      "architecture-enthusiasts",
+      "historians"
+    ],
+    "description": "A prestigious UNESCO World Heritage complex on the banks of the Malaprabha River where early Chalukya kings were coronated (Pattada-Kallu meaning 'stone of coronation'). Built in the 7th and 8th centuries CE, it represents the harmonic pinnacle of an eclectic art that achieved a harmonious blend of architectural forms from northern Nagara (Rekha-Nagara prasada) and southern Dravidian (Vimana) temple styles, anchored by the grand Virupaksha Temple.",
+    "latitude": 15.9483,
+    "longitude": 75.816,
+    "locationConfidence": "exact",
+    "city": "Pattadakal",
+    "district": "Bagalkot",
+    "state": "Karnataka",
+    "image": "https://images.unsplash.com/photo-1620052581237-5d36667be337?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Intricately carved sandstone towers and mandapas of the Virupaksha Temple at Pattadakal",
+    "imageCredit": {
+      "photographer": "Kiran CK",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "October to March",
+    "timings": "06:00 AM - 06:00 PM",
+    "entryFee": "₹40 (Indian citizens), ₹600 (Foreign tourists)",
+    "recommendedDuration": "2 to 3 Hours",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "06:00 AM - 06:00 PM Daily",
+    "verifiedEntryFee": "₹40 (Indians), ₹600 (Foreigners)",
+    "officialWebsite": "https://asi.nic.in",
+    "unescoReference": "239",
+    "asiReference": "ASI-KA-BAG-001",
+    "highlights": [
+      "Fusion of Nagara (North) and Dravida (South) Temple Styles",
+      "Virupaksha Temple Carved with Ramayana & Mahabharata Epics",
+      "Sangameshwara Temple Oldest Dravidian Shrine on Site",
+      "Malaprabha Holy Riverbank Royal Coronation Enclosure"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Virupaksha Temple, Pattadakal Complex",
+      "slug": "virupaksha-temple-pattadakal",
+      "distanceKm": 0.05
+    },
+    "provenance": {
+      "sourceType": "unesco",
+      "verifiedDate": "2026-09-01",
+      "sourceUrl": "https://whc.unesco.org/en/list/239"
+    }
+  },
+  {
+    "id": "dest-aihole-cradle-architecture",
+    "slug": "aihole-cradle-of-indian-temple-architecture",
+    "name": "Aihole (Cradle of Indian Temple Architecture)",
+    "nativeName": "ಐಹೊಳೆ ದೇವಾಲಯ ಸಂಕೀರ್ಣ",
+    "category": "ARCHITECTURE",
+    "primaryCategory": "ARCHITECTURE",
+    "subtype": "120+ 5th to 12th Century Experimental Stone Temples",
+    "subcategory": "120+ 5th to 12th Century Experimental Stone Temples",
+    "tags": [
+      "cradle-of-architecture",
+      "chalukya",
+      "durga-temple",
+      "lad-khan",
+      "rock-cut-caves"
+    ],
+    "culturalTags": [
+      "Ayyavole 500 Merchant Guild",
+      "Pulakeshin II",
+      "Ravana Phadi",
+      "Shilpa Shastra Experimentation"
+    ],
+    "audienceTags": [
+      "architecture-enthusiasts",
+      "heritage-buffs",
+      "scholars"
+    ],
+    "description": "A historic village on the Malaprabha River celebrated as the experimental laboratory and 'Cradle of Indian Temple Architecture'. Preserves over 120 stone temples constructed between the 5th and 12th centuries CE by the Badami Chalukyas. Famous for the unique apsidal barrel-roofed Durga Temple inspired by Buddhist chaityas, the ancient Lad Khan Temple, and the 6th-century Ravana Phadi rock-cut cave featuring a monumental ten-armed dancing Shiva Nataraja.",
+    "latitude": 16.0197,
+    "longitude": 75.8817,
+    "locationConfidence": "exact",
+    "city": "Aihole",
+    "district": "Bagalkot",
+    "state": "Karnataka",
+    "image": "https://images.unsplash.com/photo-1590766940554-634a7ed41450?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "The unique apsidal carved stone peristyle of the 7th-century Durga Temple at Aihole",
+    "imageCredit": {
+      "photographer": "Gaurav Bagdi",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "October to March",
+    "timings": "09:00 AM - 05:30 PM",
+    "entryFee": "₹25 (Indian citizens), ₹300 (Foreign tourists)",
+    "recommendedDuration": "Half Day (3–4 Hours)",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "09:00 AM - 05:30 PM Daily",
+    "verifiedEntryFee": "₹25 (Indians), ₹300 (Foreigners)",
+    "officialWebsite": "https://asi.nic.in",
+    "asiReference": "ASI-KA-BAG-002",
+    "highlights": [
+      "Apsidal Durga Temple with Unique Buddhist-Chaitya Barrel Roof",
+      "Lad Khan Temple Ancient 5th-Century Stone Pavilion",
+      "Ravana Phadi 6th-Century Rock Cave with 10-Armed Dancing Shiva",
+      "Over 120 Prototype Temples of Northern and Southern Designs"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Durga Temple Sanctum, Aihole Complex",
+      "slug": "durga-temple-aihole",
+      "distanceKm": 0.05
+    },
+    "provenance": {
+      "sourceType": "asi",
+      "verifiedDate": "2026-09-01"
+    }
+  },
+  {
+    "id": "dest-coorg-madikeri-highlands",
+    "slug": "coorg-madikeri-coffee-hills",
+    "name": "Coorg (Madikeri & Talakaveri Coffee Highlands)",
+    "nativeName": "ಕೊಡಗು - ಮಡಿಕೇರಿ",
+    "category": "HILLS",
+    "primaryCategory": "HILLS",
+    "subtype": "Western Ghats Mist Hills, Coffee Plantations & River Origin",
+    "subcategory": "Western Ghats Mist Hills, Coffee Plantations & River Origin",
+    "tags": [
+      "coffee-country",
+      "scotland-of-india",
+      "western-ghats",
+      "talakaveri",
+      "abbey-falls"
+    ],
+    "culturalTags": [
+      "Kodava Culture",
+      "Mother Kaveri",
+      "Brahmagiri Hills",
+      "Namdroling Golden Temple"
+    ],
+    "audienceTags": [
+      "nature-lovers",
+      "coffee-enthusiasts",
+      "couples",
+      "trekkers"
+    ],
+    "description": "Known as the 'Scotland of India', Coorg (Kodagu) is a lush highland district on the eastern slopes of the Western Ghats blanketed by emerald coffee estates, cardamom plantations, and misty teak forests. Anchored by the historic capital of Madikeri with Raja's Seat and Omkareshwara Temple, the roaring Abbey Falls, and Talakaveri atop the Brahmagiri Hills—the deeply revered sacred birthplace of Mother Kaveri River.",
+    "latitude": 12.4244,
+    "longitude": 75.7382,
+    "locationConfidence": "exact",
+    "city": "Madikeri",
+    "district": "Kodagu",
+    "state": "Karnataka",
+    "image": "https://images.unsplash.com/photo-1596176530529-78163a4f7af2?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Misty mountain ridges and lush emerald coffee plantations of Coorg highlands, Karnataka",
+    "imageCredit": {
+      "photographer": "Prashant Gautam",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "October to March (Post-monsoon coffee bloom)",
+    "timings": "Outdoor exploration daylight (06:00 AM - 06:00 PM)",
+    "entryFee": "Nominal fees at specific sites (Raja's Seat ₹10, Abbey Falls ₹15)",
+    "recommendedDuration": "2 to 3 Days",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "06:00 AM - 06:00 PM across viewpoints",
+    "verifiedEntryFee": "Nominal entry (₹10 - ₹20)",
+    "officialWebsite": "https://karnatakatourism.org",
+    "highlights": [
+      "Talakaveri Brahmagiri Hill Sacred Origin of River Kaveri",
+      "Abbey Falls Roaring through Coffee & Spice Groves",
+      "Raja's Seat Panoramic Sunset Valley Viewpoint",
+      "Namdroling Golden Temple Tibetan Monastic Seat at Bylakuppe"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Talakaveri Temple & Holy Agasthya Kund",
+      "slug": "talakaveri-temple",
+      "distanceKm": 42
+    },
+    "provenance": {
+      "sourceType": "tourism",
+      "verifiedDate": "2026-09-01"
+    }
+  },
+  {
+    "id": "dest-kanyakumari-triveni-sangam",
+    "slug": "kanyakumari-triveni-sangam-and-rock-memorial",
+    "name": "Kanyakumari (Triveni Sangam & Vivekananda Rock)",
+    "nativeName": "கன்னியாகுமரி முக்கடல் சங்கமம்",
+    "category": "SACRED",
+    "primaryCategory": "SACRED",
+    "subtype": "Cape Comorin Tri-Sea Confluence & Sacred Ocean Shore",
+    "subcategory": "Cape Comorin Tri-Sea Confluence & Sacred Ocean Shore",
+    "tags": [
+      "tri-sea-confluence",
+      "vivekananda-rock",
+      "thiruvalluvar-statue",
+      "cape-comorin",
+      "southernmost-tip"
+    ],
+    "culturalTags": [
+      "Swami Vivekananda",
+      "Thiruvalluvar",
+      "Kanya Kumari Amman",
+      "Triveni Sangam"
+    ],
+    "audienceTags": [
+      "pilgrims",
+      "family",
+      "patriots",
+      "sunrise-sunset-seekers"
+    ],
+    "description": "The southernmost tip of the Indian mainland (Cape Comorin), where the waters of the Arabian Sea, the Gulf of Mannar (Bay of Bengal), and the Indian Ocean converge at the holy Triveni Sangam. Revered since antiquity for the 3,000-year-old sea-facing shrine of Devi Kanya Kumari. Just 500 meters offshore upon twin granite islets stand the Vivekananda Rock Memorial—where Swami Vivekananda attained enlightenment in 1892—and the towering 133-foot stone statue of saint-philosopher Thiruvalluvar.",
+    "latitude": 8.078,
+    "longitude": 77.555,
+    "locationConfidence": "exact",
+    "city": "Kanyakumari",
+    "district": "Kanniyakumari",
+    "state": "Tamil Nadu",
+    "image": "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Vivekananda Rock Memorial and 133-ft Thiruvalluvar statue surrounded by the Indian Ocean",
+    "imageCredit": {
+      "photographer": "Kalyan Varma",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "October to March",
+    "timings": "Ferry to Rock: 08:00 AM - 04:30 PM | Shore & Sangam: Open 24 Hours",
+    "entryFee": "₹50 (Ferry ticket to Vivekananda Rock Memorial)",
+    "recommendedDuration": "1 to 2 Days",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "Ferry 08:00 AM - 04:30 PM | Shore 24 Hours",
+    "verifiedEntryFee": "₹50 (Ferry ride)",
+    "officialWebsite": "https://kanniyakumari.nic.in",
+    "highlights": [
+      "Triveni Sangam Confluence of Three Oceans",
+      "Vivekananda Rock Memorial Offshore Spiritual Sanctorum",
+      "133-Foot Colossal Stone Thiruvalluvar Statue",
+      "Spectacular Simultaneous Sunrise and Sunset Horizons"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Bhagavathy Amman Temple, Kanyakumari Sea Gate",
+      "slug": "kanyakumari-amman-temple",
+      "distanceKm": 0.3
+    },
+    "provenance": {
+      "sourceType": "tourism",
+      "verifiedDate": "2026-09-01"
+    }
+  },
+  {
+    "id": "dest-alleppey-backwaters",
+    "slug": "alleppey-backwaters-and-vembanad-lake",
+    "name": "Alleppey (Alappuzha) Backwaters & Vembanad Lake",
+    "nativeName": "ആലപ്പുഴ കായലുകൾ",
+    "category": "LAKES",
+    "primaryCategory": "LAKES",
+    "subtype": "Vembanad Wetland Ramsar Sanctuary & Kettuvallam Canals",
+    "subcategory": "Vembanad Wetland Ramsar Sanctuary & Kettuvallam Canals",
+    "tags": [
+      "venice-of-the-east",
+      "houseboats",
+      "kettuvallam",
+      "vembanad-lake",
+      "snake-boat-race"
+    ],
+    "culturalTags": [
+      "Nehru Trophy Boat Race",
+      "Kuttanad Below-Sea Farming",
+      "Kettuvallam Houseboats",
+      "Karimeen"
+    ],
+    "audienceTags": [
+      "couples",
+      "family",
+      "nature-lovers",
+      "photography"
+    ],
+    "description": "Celebrated by Lord Curzon as the 'Venice of the East', Alleppey (Alappuzha) is the shimmering hub of Kerala's vast backwater network of tranquil canals, lagoons, and paddy fields. Hugging the southern shores of Vembanad Lake—India's longest lake and a globally protected Ramsar wetland. Travelers traverse palm-fringed waterways in traditional thatched Kettuvallam houseboats, observing below-sea-level Kuttanad farming and the annual Nehru Trophy Snake Boat Race (Vallam Kali).",
+    "latitude": 9.4981,
+    "longitude": 76.3388,
+    "locationConfidence": "exact",
+    "city": "Alappuzha",
+    "district": "Alappuzha",
+    "state": "Kerala",
+    "image": "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Traditional wooden thatched Kettuvallam houseboat cruising calm palm-fringed Alleppey backwaters",
+    "imageCredit": {
+      "photographer": "Kyran Low",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "September to March",
+    "timings": "Houseboat cruises typically depart 11:30 AM to 05:30 PM (Night anchor by 06:00 PM)",
+    "entryFee": "Public water taxi/ferry from ₹10; Private houseboats priced per charter",
+    "recommendedDuration": "1 to 2 Days (Overnight Houseboat recommended)",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "Cruises operate 11:30 AM - 05:30 PM",
+    "verifiedEntryFee": "Public ferry from ₹10; Private charters vary",
+    "officialWebsite": "https://www.keralatourism.org",
+    "highlights": [
+      "Vembanad Lake India's Longest Protected Ramsar Wetland",
+      "Traditional Kettuvallam Thatched Houseboat Cruises",
+      "Kuttanad Unique Below-Sea-Level Paddy Farming Belt",
+      "Punnamada Lake Venue of Nehru Trophy Snake Boat Race"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Ambalappuzha Sri Krishna Temple (Famous Palpayasam)",
+      "slug": "ambalappuzha-sri-krishna-temple",
+      "distanceKm": 14
+    },
+    "provenance": {
+      "sourceType": "tourism",
+      "verifiedDate": "2026-09-01"
+    }
+  },
+  {
+    "id": "dest-basilica-bom-jesus-goa",
+    "slug": "basilica-of-bom-jesus-old-goa-unesco",
+    "name": "Basilica of Bom Jesus (UNESCO World Heritage)",
+    "nativeName": "बोम जीझस बेसिलिका",
+    "category": "HERITAGE",
+    "primaryCategory": "HERITAGE",
+    "subtype": "16th-Century Baroque Basilica & Relics of St. Francis Xavier",
+    "subcategory": "16th-Century Baroque Basilica & Relics of St. Francis Xavier",
+    "tags": [
+      "unesco",
+      "baroque-architecture",
+      "old-goa",
+      "st-francis-xavier",
+      "churches-of-goa"
+    ],
+    "culturalTags": [
+      "St. Francis Xavier",
+      "Jesuit Architecture",
+      "Laterite Stone",
+      "Goan Portuguese Heritage"
+    ],
+    "audienceTags": [
+      "heritage-buffs",
+      "family",
+      "pilgrims",
+      "architecture-enthusiasts"
+    ],
+    "description": "A consecrated minor basilica in Old Goa completed in 1605, recognized as one of the finest examples of Baroque architecture in Asia and part of the UNESCO World Heritage site 'Churches and Convents of Goa'. Built from dark unplastered red laterite stone, it holds the sacred silver casket containing the mortal remains of Saint Francis Xavier, venerated across the Christian world, alongside an opulent gilded high altar dedicated to the Infant Jesus.",
+    "latitude": 15.5009,
+    "longitude": 73.9116,
+    "locationConfidence": "exact",
+    "city": "Old Goa",
+    "district": "North Goa",
+    "state": "Goa",
+    "image": "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Unplastered red laterite Baroque facade of the Basilica of Bom Jesus, Old Goa",
+    "imageCredit": {
+      "photographer": "Frederik Schindler",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "November to March",
+    "timings": "09:00 AM - 06:30 PM (Sundays: 10:30 AM - 06:30 PM)",
+    "entryFee": "Free entry for all visitors",
+    "recommendedDuration": "1.5 to 2.5 Hours",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "09:00 AM - 06:30 PM Daily (Sun from 10:30 AM)",
+    "verifiedEntryFee": "Free Entry",
+    "officialWebsite": "https://asi.nic.in",
+    "unescoReference": "234",
+    "asiReference": "ASI-GA-NG-001",
+    "highlights": [
+      "Unplastered Red Laterite Tri-Tier Baroque Facade",
+      "Sacred Silver Casket Holding Relics of St. Francis Xavier",
+      "Intricate Gilded High Altar of Infant Jesus",
+      "Adjacent Se Cathedral Largest Church in Asia"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Mangueshi Shiva Temple, Priol (Goan Hindu Citadel)",
+      "slug": "mangueshi-temple-goa",
+      "distanceKm": 9.5
+    },
+    "provenance": {
+      "sourceType": "unesco",
+      "verifiedDate": "2026-09-01",
+      "sourceUrl": "https://whc.unesco.org/en/list/234"
+    }
+  },
+  {
+    "id": "dest-fort-aguada-goa",
+    "slug": "fort-aguada-and-lighthouse-candolim",
+    "name": "Fort Aguada & 1864 Portuguese Lighthouse",
+    "nativeName": "किल्ले आगूवाद, कांदोळीम",
+    "category": "FORTS",
+    "primaryCategory": "FORTS",
+    "subtype": "17th-Century Coastal Bastion on Mandovi Estuary",
+    "subcategory": "17th-Century Coastal Bastion on Mandovi Estuary",
+    "tags": [
+      "coastal-fort",
+      "portuguese-fort",
+      "candolim-beach",
+      "arabian-sea-bastion",
+      "lighthouse"
+    ],
+    "culturalTags": [
+      "Portuguese Armada",
+      "Mandovi River",
+      "Freshwater Cistern",
+      "1864 Lighthouse"
+    ],
+    "audienceTags": [
+      "history-buffs",
+      "family",
+      "sunset-seekers",
+      "photographers"
+    ],
+    "description": "A well-preserved 17th-century Portuguese fortress commanding the mouth of the Mandovi River and Sinquerim Beach in North Goa. Erected in 1612 to guard against Dutch naval fleets and Maratha raids, the fort derives its name ('Aguada' meaning watering place) from its colossal subterranean freshwater cistern holding 2,376,000 gallons of spring water that replenished transoceanic merchant vessels. Features a four-storey 1864 granite lighthouse overlooking the Arabian Sea.",
+    "latitude": 15.492,
+    "longitude": 73.7738,
+    "locationConfidence": "exact",
+    "city": "Candolim",
+    "district": "North Goa",
+    "state": "Goa",
+    "image": "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Historic stone ramparts and four-storey circular lighthouse of Fort Aguada overlooking the sea, Goa",
+    "imageCredit": {
+      "photographer": "Ashwini Chaudhary",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "November to March (Late afternoon sunset)",
+    "timings": "09:30 AM - 06:00 PM",
+    "entryFee": "₹25 (Indian citizens), ₹300 (Foreign tourists)",
+    "recommendedDuration": "2 Hours",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "09:30 AM - 06:00 PM Daily",
+    "verifiedEntryFee": "₹25 (Indians), ₹300 (Foreigners)",
+    "officialWebsite": "https://asi.nic.in",
+    "asiReference": "ASI-GA-NG-002",
+    "highlights": [
+      "1612 Portuguese Coastal Fortress on Mandovi Estuary",
+      "2.3-Million Gallon Subterranean Freshwater Ship Cistern",
+      "Historic 1864 Four-Storey Circular Lighthouse",
+      "Dramatic Cliffside Sunset Panoramas across Arabian Sea"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Shanta Durga Temple, Kavlem (Traditional Goan Shrine)",
+      "slug": "shanta-durga-temple-goa",
+      "distanceKm": 28
+    },
+    "provenance": {
+      "sourceType": "asi",
+      "verifiedDate": "2026-09-01"
+    }
+  },
+  {
+    "id": "dest-bandhavgarh-tiger-reserve",
+    "slug": "bandhavgarh-tiger-reserve-tala",
+    "name": "Bandhavgarh National Park & Ancient Hill Citadel",
+    "nativeName": "बांधवगढ़ राष्ट्रीय उद्यान",
+    "category": "WILDLIFE",
+    "primaryCategory": "WILDLIFE",
+    "subtype": "Tiger Reserve with Highest Density of Bengal Tigers",
+    "subcategory": "Tiger Reserve with Highest Density of Bengal Tigers",
+    "tags": [
+      "tiger-reserve",
+      "project-tiger",
+      "highest-tiger-density",
+      "sal-forest",
+      "ancient-citadel"
+    ],
+    "culturalTags": [
+      "Shesh Shaiya Vishnu",
+      "Rewa White Tigers",
+      "Vindhya Hills",
+      "Ramayana Legend"
+    ],
+    "audienceTags": [
+      "wildlife-enthusiasts",
+      "photographers",
+      "safari-goers",
+      "nature-lovers"
+    ],
+    "description": "Spread across 1,536 square kilometers in the Vindhya Hills of Madhya Pradesh, Bandhavgarh boasts the highest recorded density of Royal Bengal Tigers in the world. Centered around the 2,000-year-old Bandhavgarh Fort gifted by Lord Rama to his brother Lakshmana ('Bandhav-Garh' meaning Brother's Fort), the sanctuary harbors sal forests, rocky ridges, and the revered 10th-century 35-foot reclining Shesh Shaiya rock statue of Lord Vishnu beside a perennial spring.",
+    "latitude": 23.6936,
+    "longitude": 80.9632,
+    "locationConfidence": "exact",
+    "city": "Tala",
+    "district": "Umaria",
+    "state": "Madhya Pradesh",
+    "image": "https://images.unsplash.com/photo-1561731216-c3a4d99437d5?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "A majestic Royal Bengal tiger prowling through the dense sal forest of Bandhavgarh",
+    "imageCredit": {
+      "photographer": "David Clode",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "October to June (Peak sightings March to May; Closed Jul-Sep)",
+    "timings": "Morning Safari: 06:00 AM - 10:00 AM | Afternoon Safari: 02:30 PM - 05:30 PM (Closed Wed PM)",
+    "entryFee": "Safari vehicle, guide and permit fees regulated by MP Forest Department portal",
+    "recommendedDuration": "2 to 3 Days (Multiple game drives recommended)",
+    "operationalStatus": "SEASONAL",
+    "verifiedHours": "Safaris: 06:00-10:00 & 14:30-17:30 (Closed Jul-Sep)",
+    "verifiedEntryFee": "Per vehicle safari tariffs via MP Forest portal",
+    "officialWebsite": "https://forest.mponline.gov.in",
+    "highlights": [
+      "World's Highest Density of Royal Bengal Tigers",
+      "Colossal 35-Foot Reclining Shesh Shaiya Vishnu Rock Sculpture",
+      "2,000-Year-Old Bandhavgarh Sandstone Hill Fort",
+      "Pristine Sal Valley Biome with Leopards, Sloth Bears & Gaur"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Shesh Shaiya Vishnu Shrine, Tala Core Forest",
+      "slug": "shesh-shaiya-bandhavgarh",
+      "distanceKm": 3
+    },
+    "provenance": {
+      "sourceType": "government",
+      "verifiedDate": "2026-09-01"
+    }
+  },
+  {
+    "id": "dest-pachmarhi-biosphere",
+    "slug": "pachmarhi-biosphere-queen-of-satpura",
+    "name": "Pachmarhi (Queen of Satpura) & Dhupgarh Peak",
+    "nativeName": "पचमढ़ी बायोस्फीयर रिज़र्व",
+    "category": "HILLS",
+    "primaryCategory": "HILLS",
+    "subtype": "UNESCO Biosphere Reserve, Sandstone Canyons & High Peaks",
+    "subcategory": "UNESCO Biosphere Reserve, Sandstone Canyons & High Peaks",
+    "tags": [
+      "queen-of-satpura",
+      "unesco-biosphere",
+      "dhupgarh",
+      "pandava-caves",
+      "bee-falls"
+    ],
+    "culturalTags": [
+      "Pandavas Exile",
+      "Chauragarh Trishul Pilgrimage",
+      "Satpura Gonds",
+      "Mahadeo Sanctuary"
+    ],
+    "audienceTags": [
+      "nature-lovers",
+      "trekkers",
+      "family",
+      "pilgrims"
+    ],
+    "description": "The sole hill station of Madhya Pradesh nestled at 1,067 meters in the Satpura Range, designated as a UNESCO Biosphere Reserve. Known as 'Satpura ki Rani' (Queen of Satpura), Pachmarhi is famed for Mount Dhupgarh (1,352 m)—the highest peak in central India offering legendary sunrise and sunset panoramas—alongside roaring plunge cascades including Bee Falls and Silver Falls, 1,000-year-old rock shelters, and the mountain pilgrimage of Chauragarh.",
+    "latitude": 22.4674,
+    "longitude": 78.4346,
+    "locationConfidence": "exact",
+    "city": "Pachmarhi",
+    "district": "Narmadapuram",
+    "state": "Madhya Pradesh",
+    "image": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Sunset rolling mist over the sandstone cliffs and pine valleys of Pachmarhi Satpura range",
+    "imageCredit": {
+      "photographer": "Bailey Zindel",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "October to June",
+    "timings": "06:00 AM - 06:00 PM (Forest viewpoints close at sunset)",
+    "entryFee": "Pachmarhi Forest Department eco-tourism vehicle permits apply",
+    "recommendedDuration": "2 to 3 Days",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "06:00 AM - 06:00 PM across forest viewpoints",
+    "verifiedEntryFee": "Eco-permit fees set by MP Forest Dept",
+    "officialWebsite": "https://www.mptourism.com",
+    "highlights": [
+      "Dhupgarh (1,352 m) Highest Mountain Summit in Central India",
+      "Bee Falls (Jamuna Prapat) Roaring Plunge Cascade",
+      "Ancient Pandava Caves Rock-Cut Meditation Cells",
+      "Chauragarh Mountain Crag with Thousands of Devotional Trishuls"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Bada Mahadeo & Chauragarh Shiva Sanctuary",
+      "slug": "chauragarh-shiva-temple",
+      "distanceKm": 15
+    },
+    "provenance": {
+      "sourceType": "tourism",
+      "verifiedDate": "2026-09-01"
+    }
+  },
+  {
+    "id": "dest-auli-bugyal-ski",
+    "slug": "auli-bugyal-ski-slopes-chamoli",
+    "name": "Auli Bugyal & Nanda Devi Alpine Meadows (3,050 m)",
+    "nativeName": "औली बुग्याल, चमोली",
+    "category": "HILLS",
+    "primaryCategory": "HILLS",
+    "subtype": "High Himalayan Alpine Meadow & Winter Ski Resort",
+    "subcategory": "High Himalayan Alpine Meadow & Winter Ski Resort",
+    "tags": [
+      "ski-resort",
+      "alpine-bugyal",
+      "nanda-devi",
+      "ropeway",
+      "garhwal-himalayas"
+    ],
+    "culturalTags": [
+      "Nanda Devi Peak",
+      "Adi Shankaracharya Jyotirmath",
+      "Chamoli Garhwal",
+      "Trishul Peak"
+    ],
+    "audienceTags": [
+      "skiing-enthusiasts",
+      "adventure-seekers",
+      "couples",
+      "trekkers"
+    ],
+    "description": "An awe-inspiring Himalayan alpine meadow (bugyal) situated at an elevation of 2,500 to 3,050 meters in the Garhwal Himalayas. Regarded as India's premier ski destination, Auli offers breathtaking 360-degree views of sacred peaks including Nanda Devi (7,816 m), Kamet, Trishul, and Mana Parvat. Connected to Joshimath via a 4-km cable car—one of the highest ropeways in Asia—the meadow transforms from wildflower carpets in summer into world-class powder ski slopes in winter.",
+    "latitude": 30.5281,
+    "longitude": 79.5694,
+    "locationConfidence": "exact",
+    "city": "Joshimath",
+    "district": "Chamoli",
+    "state": "Uttarakhand",
+    "image": "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Snow-draped alpine ski slopes of Auli facing the towering Nanda Devi Himalayan peaks",
+    "imageCredit": {
+      "photographer": "Siddhesh Mangore",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "December to March (Skiing & Snow) | May to October (Lush Green Bugyal)",
+    "timings": "Cable Car: 09:00 AM - 04:30 PM",
+    "entryFee": "Free access to meadow; Joshimath-Auli Cable Car ₹1000 round trip",
+    "recommendedDuration": "2 to 3 Days",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "Ropeway 09:00 AM - 04:30 PM",
+    "verifiedEntryFee": "Ropeway ₹1000 round-trip; Meadow entry free",
+    "officialWebsite": "https://uttarakhandtourism.gov.in",
+    "highlights": [
+      "360° Panoramas of India's Highest Peaks (Nanda Devi, Trishul, Kamet)",
+      "4-km Joshimath-Auli Ropeway One of the Longest in Asia",
+      "World's Highest Artificial Snow-Making Lake at 3,000m",
+      "Winter International Ski Federation (FIS) Approved Slopes"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Jyotirmath (Northern Peeth of Adi Shankaracharya)",
+      "slug": "jyotirmath-shankaracharya-math",
+      "distanceKm": 12
+    },
+    "provenance": {
+      "sourceType": "tourism",
+      "verifiedDate": "2026-09-01"
+    }
+  },
+  {
+    "id": "dest-nainital-lake-shakti",
+    "slug": "nainital-lake-and-naina-peak",
+    "name": "Nainital Lake (Naini Tal) & Naina Devi Teertham",
+    "nativeName": "नैनीताल झील एवं नैना देवी",
+    "category": "LAKES",
+    "primaryCategory": "LAKES",
+    "subtype": "Sacred Crescent Hill-Station Lake & Shakti Peeth",
+    "subcategory": "Sacred Crescent Hill-Station Lake & Shakti Peeth",
+    "tags": [
+      "shakti-peeth",
+      "crescent-lake",
+      "kumaon-hills",
+      "mall-road",
+      "naina-peak"
+    ],
+    "culturalTags": [
+      "Maa Naina Devi Shakti Peeth",
+      "Tri-Rishi Sarovar",
+      "Kumaon Culture",
+      "Seven Pine Hills"
+    ],
+    "audienceTags": [
+      "family",
+      "couples",
+      "pilgrims",
+      "nature-lovers"
+    ],
+    "description": "A natural freshwater crescent lake situated at an elevation of 1,938 meters in the Kumaon foothills, encircled by seven verdant pine-clad hills. Revered in the Skanda Purana as Tri-Rishi Sarovar and as the holy Shakti Peeth where Goddess Sati's emerald eye ('Naina') fell. Boasts colorful rowing yachts along Mall Road, the ancient Maa Naina Devi Temple on its northern bank, and Naina Peak (2,615 m) offering sweeping vistas of the snowbound Great Himalayas.",
+    "latitude": 29.3919,
+    "longitude": 79.4542,
+    "locationConfidence": "exact",
+    "city": "Nainital",
+    "district": "Nainital",
+    "state": "Uttarakhand",
+    "image": "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Emerald waters of crescent Nainital lake surrounded by misty pine-covered Kumaon mountains",
+    "imageCredit": {
+      "photographer": "Aman Sharma",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "March to June & September to November",
+    "timings": "Boating: 06:00 AM - 06:00 PM | Promenade & Temple: 06:00 AM - 09:00 PM",
+    "entryFee": "Free access to lake and temple; Rowing boat ₹210 - ₹350 per round",
+    "recommendedDuration": "1 to 2 Days",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "Boating 06:00-18:00 | Temple 06:00-21:00",
+    "verifiedEntryFee": "Temple Free; Boating ₹210 - ₹350",
+    "officialWebsite": "https://nainital.gov.in",
+    "highlights": [
+      "Sacred Crescent Lake where Sati's Eye Fell (Shakti Peeth)",
+      "Maa Naina Devi Temple on the Picturesque Northern Shore",
+      "Vintage Rowing Boats & Yachting Under Pine Ridge Cliffs",
+      "Naina Peak (2,615 m) Panoramic View of Great Himalayan Range"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Maa Naina Devi Shakti Peeth, Naini Tal Bank",
+      "slug": "naina-devi-temple-nainital",
+      "distanceKm": 0.1
+    },
+    "provenance": {
+      "sourceType": "tourism",
+      "verifiedDate": "2026-09-01"
+    }
+  },
+  {
+    "id": "dest-manali-solang-valley",
+    "slug": "manali-and-solang-valley-kullu",
+    "name": "Manali & Solang Valley (Beas River Gorge)",
+    "nativeName": "मनाली एवं सोलांग घाटी",
+    "category": "HILLS",
+    "primaryCategory": "HILLS",
+    "subtype": "Pir Panjal Alpine Valley, Cedar Groves & Adventure Basin",
+    "subcategory": "Pir Panjal Alpine Valley, Cedar Groves & Adventure Basin",
+    "tags": [
+      "beas-river",
+      "solang-valley",
+      "paragliding",
+      "hidimba-temple",
+      "kullu-valley"
+    ],
+    "culturalTags": [
+      "Sage Manu Sanctuary",
+      "Hidimba Devi Dhungri Forest",
+      "Atal Tunnel",
+      "Pir Panjal Range"
+    ],
+    "audienceTags": [
+      "adventure-seekers",
+      "family",
+      "couples",
+      "skiers"
+    ],
+    "description": "Nestled at 2,050 meters along the roaring Beas River in the Kullu Valley, Manali was historically founded by Sage Manu as the valley of gods. Guarded by the four-tiered 1553 CE pagoda-style Hidimba Devi Temple amid giant deodar cedars. 14 km upstream lies Solang Valley, an exhilarating natural amphitheater renowned for paragliding, zorbing, and quad-biking in summer, and alpine ski runs in winter, serving as the southern gateway to the 9.02-km Atal Tunnel.",
+    "latitude": 32.2432,
+    "longitude": 77.1892,
+    "locationConfidence": "exact",
+    "city": "Manali",
+    "district": "Kullu",
+    "state": "Himachal Pradesh",
+    "image": "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Snow-capped peaks and cedar forests framing the rushing Beas River in Manali, Himachal Pradesh",
+    "imageCredit": {
+      "photographer": "Shubham Sharma",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "March to June (Summer flowers) | December to February (Snow)",
+    "timings": "Solang activities: 09:00 AM - 05:00 PM | Hidimba Temple: 08:00 AM - 06:00 PM",
+    "entryFee": "Free entry to valley; adventure sports priced per activity by registered operators",
+    "recommendedDuration": "2 to 3 Days",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "Daytime sports 09:00 AM - 05:00 PM",
+    "verifiedEntryFee": "Free Entry; Activity fees vary",
+    "officialWebsite": "https://himachaltourism.gov.in",
+    "highlights": [
+      "Solang Valley Natural Alpine Adventure Amphitheater",
+      "Ancient 1553 CE Pagoda Hidimba Devi Temple in Cedar Woods",
+      "Beas River White Water Rafting & Trout Stream Confluences",
+      "Southern Portal of the Engineering Marvel Atal Tunnel"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Hidimba Devi Temple, Dhungri Cedar Sanctuary",
+      "slug": "hidimba-devi-temple-manali",
+      "distanceKm": 2.5
+    },
+    "provenance": {
+      "sourceType": "tourism",
+      "verifiedDate": "2026-09-01"
+    }
+  },
+  {
+    "id": "dest-khajjiar-mini-switzerland",
+    "slug": "khajjiar-mini-switzerland-chamba",
+    "name": "Khajjiar Plateau & Sacred Khajji Nag Lake",
+    "nativeName": "खज्जियार झील एवं नाग मंदिर",
+    "category": "HILLS",
+    "primaryCategory": "HILLS",
+    "subtype": "Alpine Glade Meadow, Cedar Wilderness & Snake Temple",
+    "subcategory": "Alpine Glade Meadow, Cedar Wilderness & Snake Temple",
+    "tags": [
+      "mini-switzerland",
+      "deodar-meadow",
+      "floating-island",
+      "khajji-nag",
+      "dalhousie-circuit"
+    ],
+    "culturalTags": [
+      "Khajji Nag Serpent God",
+      "Swiss Envoy Willy Blazer Plaque",
+      "Chamba Pahari Art",
+      "Kalatop Sanctuary"
+    ],
+    "audienceTags": [
+      "nature-lovers",
+      "couples",
+      "family",
+      "photographers"
+    ],
+    "description": "Officially christened the 'Mini Switzerland of India' in 1992 by the Swiss Chancery, Khajjiar is a magical saucer-shaped alpine glade perched at 1,920 meters in the Chamba district. Encircled by towering deodar forests and snow-crowned Dhauladhar peaks, the clearing centers around the emerald Khajjiar Lake with its rare floating grass island and the 12th-century wood-carved Khajji Nag Temple featuring golden life-size wooden statues of the Pandavas.",
+    "latitude": 32.5511,
+    "longitude": 76.0656,
+    "locationConfidence": "exact",
+    "city": "Khajjiar",
+    "district": "Chamba",
+    "state": "Himachal Pradesh",
+    "image": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "The idyllic saucer-shaped green meadow and central lake of Khajjiar ringed by dense deodar pine",
+    "imageCredit": {
+      "photographer": "Himanshu Singh",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "March to June & September to November",
+    "timings": "Open daylight hours (06:00 AM - 06:00 PM)",
+    "entryFee": "Free public access to meadow and Khajji Nag Temple",
+    "recommendedDuration": "1 Full Day",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "06:00 AM - 06:00 PM Daily",
+    "verifiedEntryFee": "Free Entry",
+    "officialWebsite": "https://hpchamba.nic.in",
+    "highlights": [
+      "Saucer-Shaped Alpine Glade Surrounded by Giant Deodars",
+      "Rare Floating Grass Island in Emerald Khajjiar Lake",
+      "12th-Century Carved Wood Khajji Nag Snake Temple",
+      "Official Swiss Diplomatic Milestone Signboard (1992)"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Khajji Nag Temple, Meadow Bank",
+      "slug": "khajji-nag-temple-chamba",
+      "distanceKm": 0.1
+    },
+    "provenance": {
+      "sourceType": "tourism",
+      "verifiedDate": "2026-09-01"
+    }
+  },
+  {
+    "id": "dest-gulmarg-meadow-of-flowers",
+    "slug": "gulmarg-meadow-of-flowers-and-apharwat",
+    "name": "Gulmarg (Meadow of Flowers) & Apharwat Peak",
+    "nativeName": "گلمرگ / गुलमर्ग",
+    "category": "HILLS",
+    "primaryCategory": "HILLS",
+    "subtype": "Pir Panjal High Altitude Alpine Meadow & Ski Bowl",
+    "subcategory": "Pir Panjal High Altitude Alpine Meadow & Ski Bowl",
+    "tags": [
+      "gulmarg-gondola",
+      "apharwat-peak",
+      "winter-skiing",
+      "alpather-lake",
+      "flower-meadow"
+    ],
+    "culturalTags": [
+      "Yousuf Shah Chak",
+      "Maharani Temple",
+      "St Mary Church 1915",
+      "Pir Panjal Heights"
+    ],
+    "audienceTags": [
+      "skiers",
+      "couples",
+      "adventure-seekers",
+      "family"
+    ],
+    "description": "Perched at 2,650 meters in the Pir Panjal Range, Gulmarg ('Meadow of Flowers') was named by Sultan Yousuf Shah Chak in the 16th century. Home to the Gulmarg Gondola—the second-highest operating cable car in the world—which whisks visitors to Phase 2 at Apharwat Peak (3,980 m) overlooking the frozen alpine tarn of Alpather Lake. Famous for world-class dry powder snow skiing in winter and blooming lupins and daisies in summer, alongside the historic 1915 Maharani Temple atop its central knoll.",
+    "latitude": 34.0484,
+    "longitude": 74.3805,
+    "locationConfidence": "exact",
+    "city": "Gulmarg",
+    "district": "Baramulla",
+    "state": "Jammu and Kashmir",
+    "image": "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Snow-blanketed slopes and pine forests of Gulmarg with the Apharwat peak cable car in the distance",
+    "imageCredit": {
+      "photographer": "Imad Clicks",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "December to March (Powder Skiing) | May to September (Flower Meadows)",
+    "timings": "Gondola: 09:00 AM - 04:00 PM (Requires advance online booking)",
+    "entryFee": "Phase 1: ₹740; Phase 2 (Apharwat): ₹950 (Official J&K Cable Car portal)",
+    "recommendedDuration": "2 to 3 Days",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "Gondola 09:00 AM - 04:00 PM (Subject to wind/weather)",
+    "verifiedEntryFee": "Phase 1: ₹740; Phase 2: ₹950",
+    "officialWebsite": "https://www.jammukashmircablecar.com",
+    "highlights": [
+      "Gulmarg Gondola (World's 2nd Highest Operating Cable Car at 3,980m)",
+      "Apharwat Peak Snow Bowl & Frozen Alpather Glacial Lake",
+      "Asia's Premier Dry Powder Ski Slopes",
+      "Historic Maharani Shiva Temple atop Gulmarg Central Knoll"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Maharani Temple (Mohineshwar Shivalaya), Gulmarg Knoll",
+      "slug": "maharani-temple-gulmarg",
+      "distanceKm": 0.8
+    },
+    "provenance": {
+      "sourceType": "tourism",
+      "verifiedDate": "2026-09-01"
+    }
+  },
+  {
+    "id": "dest-pahalgam-betaab-valley",
+    "slug": "pahalgam-and-betaab-valley-lidder",
+    "name": "Pahalgam (Valley of Shepherds) & Lidder River",
+    "nativeName": "پہلگام / पहलगाम",
+    "category": "HILLS",
+    "primaryCategory": "HILLS",
+    "subtype": "Confluence Valley, Lidder Gorge & Amarnath Parikrama Base",
+    "subcategory": "Confluence Valley, Lidder Gorge & Amarnath Parikrama Base",
+    "tags": [
+      "valley-of-shepherds",
+      "lidder-river",
+      "betaab-valley",
+      "amarnath-basecamp",
+      "aru-valley"
+    ],
+    "culturalTags": [
+      "Amarnath Yatra Route",
+      "Mamaleshwar 12th Century Temple",
+      "Lidder River",
+      "Shepherd Heritage"
+    ],
+    "audienceTags": [
+      "pilgrims",
+      "nature-lovers",
+      "family",
+      "trekkers"
+    ],
+    "description": "Located at 2,130 meters at the confluence of the Lidder River and Sheshnag streams, Pahalgam ('Valley of Shepherds') serves as the traditional starting basecamp for the annual holy Amarnath Cave Yatra via Chandanwari. Encircled by dense pine forests and snow-capped peaks, it features the picturesque sub-alpine Betaab Valley (named after the Bollywood film shot here), pristine Aru Valley, and the 12th-century stone Mamaleshwar Shiva Temple.",
+    "latitude": 34.015,
+    "longitude": 75.3197,
+    "locationConfidence": "exact",
+    "city": "Pahalgam",
+    "district": "Anantnag",
+    "state": "Jammu and Kashmir",
+    "image": "https://images.unsplash.com/photo-1595815771614-ade9d652a65d?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Turquoise Lidder river rushing through the verdant pine valleys of Pahalgam, Kashmir",
+    "imageCredit": {
+      "photographer": "Wajahat Bhat",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "April to October (Chilly winters with snow)",
+    "timings": "08:00 AM - 06:00 PM (Valleys open daytime)",
+    "entryFee": "Betaab Valley: ₹100 (Adult entry)",
+    "recommendedDuration": "2 to 3 Days",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "08:00 AM - 06:00 PM Daily",
+    "verifiedEntryFee": "₹100 (Betaab Valley Entry)",
+    "officialWebsite": "https://anantnag.nic.in",
+    "highlights": [
+      "Traditional Starting Basecamp for the Holy Amarnath Yatra",
+      "Sub-Alpine Betaab Valley & Aru Valley Meadows",
+      "Crystal-Clear Turquoise Lidder River Trout Waters",
+      "12th-Century Monolithic Stone Mamaleshwar Shiva Temple"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Mamaleshwar Ancient Shiva Temple (12th Century)",
+      "slug": "mamaleshwar-temple-pahalgam",
+      "distanceKm": 1.5
+    },
+    "provenance": {
+      "sourceType": "tourism",
+      "verifiedDate": "2026-09-01"
+    }
+  },
+  {
+    "id": "dest-nubra-valley-ladakh",
+    "slug": "nubra-valley-and-hunder-sand-dunes-ladakh",
+    "name": "Nubra Valley & Hunder Sand Dunes (Diskit Monastery)",
+    "nativeName": "ལྡུམ་ར / नुब्रा घाटी",
+    "category": "MOUNTAINS",
+    "primaryCategory": "MOUNTAINS",
+    "subtype": "High-Altitude Cold Desert & Double-Humped Bactrian Camels",
+    "subcategory": "High-Altitude Cold Desert & Double-Humped Bactrian Camels",
+    "tags": [
+      "cold-desert",
+      "bactrian-camels",
+      "hunder-sand-dunes",
+      "diskit-monastery",
+      "khardung-la"
+    ],
+    "culturalTags": [
+      "Old Silk Route",
+      "106ft Maitreya Buddha",
+      "Gelugpa Monastic Tradition",
+      "Shyok River"
+    ],
+    "audienceTags": [
+      "adventure-seekers",
+      "bikers",
+      "photographers",
+      "spiritual-travelers"
+    ],
+    "description": "Known historically as Ldumra ('Valley of Flowers'), Nubra is a high-altitude cold desert valley at 3,048 meters where the Shyok and Nubra rivers converge beneath the towering Karakoram range. Accessed via the formidable Khardung La pass (17,982 ft). Famed for the surreal white sand dunes of Hunder where shaggy double-humped Bactrian camels roam—living relics of the Old Silk Route trade—and the 14th-century Diskit Monastery crowned by a colossal 106-foot statue of Maitreya Buddha.",
+    "latitude": 34.5804,
+    "longitude": 77.469,
+    "locationConfidence": "exact",
+    "city": "Diskit / Hunder",
+    "district": "Leh",
+    "state": "Ladakh",
+    "image": "https://images.unsplash.com/photo-1581793745862-99fde7fa73d2?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "White sand dunes of Hunder with double-humped Bactrian camels against barren Karakoram mountains",
+    "imageCredit": {
+      "photographer": "Claudio Testa",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "May to September",
+    "timings": "Diskit Monastery: 07:00 AM - 06:00 PM | Sand Dunes: Open daytime",
+    "entryFee": "Ladakh Protected Area Permit (PAP/ILP) required; Diskit Monastery ₹30",
+    "recommendedDuration": "2 Days (Overnight stay in Hunder or Diskit)",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "Daytime exploration (Permit required)",
+    "verifiedEntryFee": "Diskit Monastery ₹30; Camel rides ~₹300-500",
+    "officialWebsite": "https://leh.nic.in",
+    "highlights": [
+      "White Sand Dunes of Hunder Flanked by Snow-Capped Karakoram",
+      "Rare Double-Humped Bactrian Camels of the Ancient Silk Route",
+      "Colossal 106-Foot Maitreya Buddha at Diskit Monastery",
+      "Thrilling Crossing of Khardung La High Motorable Pass"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Diskit Monastery (Lachung Temple & Buddha Sanctum)",
+      "slug": "diskit-monastery-ladakh",
+      "distanceKm": 7
+    },
+    "provenance": {
+      "sourceType": "tourism",
+      "verifiedDate": "2026-09-01"
+    }
+  },
+  {
+    "id": "dest-cellular-jail-port-blair",
+    "slug": "cellular-jail-national-memorial-port-blair",
+    "name": "Cellular Jail (Kala Pani National Memorial)",
+    "nativeName": "सेलुलर जेल राष्ट्रीय स्मारक",
+    "category": "HERITAGE",
+    "primaryCategory": "HERITAGE",
+    "subtype": "Colonial Solitary Confinement Prison & National Shrine",
+    "subcategory": "Colonial Solitary Confinement Prison & National Shrine",
+    "tags": [
+      "national-memorial",
+      "kala-pani",
+      "freedom-struggle",
+      "veer-savarkar",
+      "andaman-islands"
+    ],
+    "culturalTags": [
+      "Veer Savarkar",
+      "Batukeshwar Dutt",
+      "Swatantrya Jyoti",
+      "Panopticon Architecture"
+    ],
+    "audienceTags": [
+      "citizens",
+      "history-buffs",
+      "students",
+      "family"
+    ],
+    "description": "A monumental colonial prison complex constructed between 1896 and 1906 by the British regime to exile Indian freedom fighters and political dissidents to the remote Andaman archipelago (known dreaded as 'Kala Pani'). Built on a panopticon design with seven radiating three-storey wings housing 693 individual solitary confinement cells. Today a revered National Memorial featuring the cell of Veer Savarkar, an eternal flame (Swatantrya Jyoti), and a poignant evening sound and light presentation.",
+    "latitude": 11.6739,
+    "longitude": 92.7479,
+    "locationConfidence": "exact",
+    "city": "Port Blair",
+    "district": "South Andaman",
+    "state": "Andaman and Nicobar Islands",
+    "image": "https://images.unsplash.com/photo-1589308078059-be1415eab4c3?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Central watchtower and radiating brick solitary wings of the historic Cellular Jail, Port Blair",
+    "imageCredit": {
+      "photographer": "Vivek Sharma",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "October to April",
+    "timings": "09:00 AM - 12:30 PM & 01:30 PM - 04:45 PM (Closed Mondays and National Holidays)",
+    "entryFee": "₹30 (Indian citizens & Foreigners); Sound & Light Show: ₹50 - ₹100",
+    "recommendedDuration": "2 to 3 Hours (Plus evening Sound & Light show)",
+    "operationalStatus": "OPEN",
+    "verifiedHours": "09:00-12:30 & 13:30-16:45 (Closed Mondays)",
+    "verifiedEntryFee": "₹30 (Day entry); ₹50 - ₹100 (Sound & Light show)",
+    "officialWebsite": "https://www.andamantourism.gov.in",
+    "highlights": [
+      "Colonial Panopticon Architecture with 7 Radiating Wings",
+      "Historic Solitary Confinement Cell of Veer Savarkar",
+      "Swatantrya Jyoti Eternal Flame of National Freedom",
+      "Moving Evening Sound & Light Narrative on the Freedom Struggle"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Sri Vetrimalai Murugan Temple, Port Blair",
+      "slug": "vetrimalai-murugan-temple-port-blair",
+      "distanceKm": 2.5
+    },
+    "provenance": {
+      "sourceType": "official",
+      "verifiedDate": "2026-09-01"
+    }
+  },
+  {
+    "id": "dest-bangaram-atoll-lakshadweep",
+    "slug": "bangaram-atoll-and-coral-reefs-lakshadweep",
+    "name": "Bangaram Atoll & Coral Reefs (Tear-Drop Lagoon)",
+    "nativeName": "ബംഗാരം ദ്വീപ്",
+    "category": "ISLANDS",
+    "primaryCategory": "ISLANDS",
+    "subtype": "Pristine Uninhabited Coral Atoll & Bioluminescent Lagoon",
+    "subcategory": "Pristine Uninhabited Coral Atoll & Bioluminescent Lagoon",
+    "tags": [
+      "coral-atoll",
+      "bioluminescence",
+      "scuba-diving",
+      "turquoise-lagoon",
+      "arabian-sea-islands"
+    ],
+    "culturalTags": [
+      "Lakshadweep Archipelago",
+      "Coral Reef Conservation",
+      "Agatti Island Connection",
+      "Pelagic Marine Life"
+    ],
+    "audienceTags": [
+      "scuba-divers",
+      "couples",
+      "eco-tourists",
+      "beach-lovers"
+    ],
+    "description": "An idyllic teardrop-shaped uninhabited coral island spanning 0.5 square kilometers in the Union Territory of Lakshadweep, surrounded by an expansive shallow turquoise lagoon enclosed by a living barrier reef. Famed for its powder-soft white coral sands, nocturnal blue bioluminescent phytoplankton blooms that light up the surf, and world-class scuba diving offering encounters with green sea turtles, manta rays, reef sharks, and vibrant coral gardens.",
+    "latitude": 10.9416,
+    "longitude": 72.2891,
+    "locationConfidence": "exact",
+    "city": "Bangaram Island",
+    "district": "Lakshadweep",
+    "state": "Lakshadweep",
+    "image": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Turquoise shallow waters and powder white sands of the coral atoll at Bangaram, Lakshadweep",
+    "imageCredit": {
+      "photographer": "Sean Oulashin",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "October to mid-May (Avoid monsoon choppy seas)",
+    "timings": "Resort access & boat transfers scheduled from Agatti Aerodrome",
+    "entryFee": "Lakshadweep Administration Entry Permit required; package tariffs include permits",
+    "recommendedDuration": "3 to 4 Days",
+    "operationalStatus": "SEASONAL",
+    "verifiedHours": "Regulated tourist entry with administration e-permit",
+    "verifiedEntryFee": "Administration permit required via authorized tour operator",
+    "officialWebsite": "https://lakshadweep.gov.in",
+    "highlights": [
+      "Shallow Turquoise Coral Lagoon Enclosed by Barrier Reef",
+      "Nocturnal Bioluminescent Glowing Surf Phenomenon",
+      "PADI Scuba Diving with Sea Turtles and Manta Rays",
+      "Scenic Boat or Helicopter Transit from Agatti Aerodrome"
+    ],
+    "nearbyTempleAnchor": {
+      "name": "Gokarna Mahabaleshwar Temple (Mainland Sea Gateway)",
+      "slug": "gokarna-mahabaleshwar-temple",
+      "distanceKm": 380
+    },
+    "provenance": {
+      "sourceType": "government",
+      "verifiedDate": "2026-09-01"
+    }
+  },
 ];

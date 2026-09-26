@@ -83,18 +83,19 @@ export default async function PlaceDetailPage({ params }: Props) {
             city: p.city ?? undefined,
             district: p.district || "District",
             state: p.state || "India",
-            image: p.imageReference || "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+            image: p.imageReference || "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1200&q=80",
             imageAlt: p.name,
             imageCredit: {
               photographer: "Official Record",
               source: (p.sourceType === "asi" ? "ASI Official" : "State Tourism") as any,
               license: "Government Open Data",
             },
-            bestTimeToVisit: "October to March",
-            timings: "06:00 AM - 06:00 PM",
-            entryFee: "Standard Entry Fee",
-            recommendedDuration: "Half Day",
-            highlights: [p.subcategory || "Historic site", "Cultural landmark"],
+            bestTimeToVisit: undefined,
+            timings: null,
+            entryFee: null,
+            recommendedDuration: undefined,
+            operationalStatus: "UNVERIFIED",
+            highlights: [p.subcategory || "Heritage Landmark", `${p.district} Point of Interest`],
             nearbyTempleAnchor: linkedTemple
               ? {
                   name: linkedTemple.name,
@@ -105,6 +106,7 @@ export default async function PlaceDetailPage({ params }: Props) {
             provenance: {
               sourceType: (p.sourceType as any) || "curated",
               verifiedDate: p.verifiedAt ? p.verifiedAt.toISOString().split("T")[0] : "2026-09-01",
+              sourceUrl: p.sourceUrl || undefined,
             },
           };
         }
@@ -275,18 +277,20 @@ export default async function PlaceDetailPage({ params }: Props) {
 
               <div className="space-y-4 text-xs font-mono">
                 {/* Best Season */}
-                <div className="flex items-start gap-3">
-                  <Calendar className="h-4 w-4 shrink-0 text-[#C8A24B] mt-0.5" />
-                  <div>
-                    <span className="text-stone-400 block">Best Time to Visit</span>
-                    <span className="text-stone-200 font-sans font-medium text-sm mt-0.5 block">
-                      {destination.bestTimeToVisit}
-                    </span>
+                {destination.bestTimeToVisit && (
+                  <div className="flex items-start gap-3">
+                    <Calendar className="h-4 w-4 shrink-0 text-[#C8A24B] mt-0.5" />
+                    <div>
+                      <span className="text-stone-400 block">Best Time to Visit</span>
+                      <span className="text-stone-200 font-sans font-medium text-sm mt-0.5 block">
+                        {destination.bestTimeToVisit}
+                      </span>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* Timings */}
-                {destination.timings && (
+                {destination.timings ? (
                   <div className="flex items-start gap-3">
                     <Clock className="h-4 w-4 shrink-0 text-[#C8A24B] mt-0.5" />
                     <div>
@@ -296,10 +300,20 @@ export default async function PlaceDetailPage({ params }: Props) {
                       </span>
                     </div>
                   </div>
+                ) : (
+                  <div className="flex items-start gap-3">
+                    <Clock className="h-4 w-4 shrink-0 text-stone-500 mt-0.5" />
+                    <div>
+                      <span className="text-stone-400 block">Timings</span>
+                      <span className="text-stone-400 font-sans text-xs mt-0.5 block italic">
+                        Visiting hours not currently verified
+                      </span>
+                    </div>
+                  </div>
                 )}
 
                 {/* Entry Fee */}
-                {destination.entryFee && (
+                {destination.entryFee ? (
                   <div className="flex items-start gap-3">
                     <Ticket className="h-4 w-4 shrink-0 text-[#C8A24B] mt-0.5" />
                     <div>
@@ -309,18 +323,45 @@ export default async function PlaceDetailPage({ params }: Props) {
                       </span>
                     </div>
                   </div>
+                ) : (
+                  <div className="flex items-start gap-3">
+                    <Ticket className="h-4 w-4 shrink-0 text-stone-500 mt-0.5" />
+                    <div>
+                      <span className="text-stone-400 block">Entry Fee</span>
+                      <span className="text-stone-400 font-sans text-xs mt-0.5 block italic">
+                        Tariffs subject to local authority
+                      </span>
+                    </div>
+                  </div>
                 )}
 
                 {/* Duration */}
-                <div className="flex items-start gap-3">
-                  <Compass className="h-4 w-4 shrink-0 text-[#C8A24B] mt-0.5" />
-                  <div>
-                    <span className="text-stone-400 block">Recommended Duration</span>
-                    <span className="text-stone-200 font-sans font-medium text-sm mt-0.5 block">
-                      {destination.recommendedDuration}
-                    </span>
+                {destination.recommendedDuration && (
+                  <div className="flex items-start gap-3">
+                    <Compass className="h-4 w-4 shrink-0 text-[#C8A24B] mt-0.5" />
+                    <div>
+                      <span className="text-stone-400 block">Recommended Duration</span>
+                      <span className="text-stone-200 font-sans font-medium text-sm mt-0.5 block">
+                        {destination.recommendedDuration}
+                      </span>
+                    </div>
                   </div>
-                </div>
+                )}
+
+                {/* Official Website */}
+                {destination.officialWebsite && (
+                  <div className="pt-2 border-t border-stone-800/60">
+                    <a
+                      href={destination.officialWebsite}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-xs text-[#C8A24B] hover:underline"
+                    >
+                      <ExternalLink className="h-3.5 w-3.5" />
+                      <span>Official Website / ASI Portal</span>
+                    </a>
+                  </div>
+                )}
               </div>
 
               {/* Action Buttons */}
