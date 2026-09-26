@@ -180,5 +180,135 @@ describe("Templeora India Places Master System — Taxonomy & Ingestion Audit", 
     assert.equal(sikhPlace.faith, "SIKH");
     assert.equal(sikhPlace.placeKind, "religious_site");
   });
+
+  describe("India All Places Data Expansion Pipeline (2026)", () => {
+    it("source registry contains foundational statutory authorities", async () => {
+      const { NATIONAL_SOURCE_REGISTRY, getSourceById } = await import("../src/lib/destinations/source-registry.js");
+      assert.ok(NATIONAL_SOURCE_REGISTRY.length >= 10);
+      assert.ok(getSourceById("asi-national"));
+      assert.ok(getSourceById("gsi-geoheritage"));
+      assert.ok(getSourceById("unesco-whc"));
+      assert.ok(getSourceById("ramsar-india"));
+      assert.ok(getSourceById("ntca-india"));
+      assert.ok(getSourceById("dc-handicrafts"));
+    });
+
+    it("discovery pipeline discovers all candidates with full statutory provenance", async () => {
+      const { discoverAllCandidates } = await import("../scripts/pipeline/discover.js");
+      const candidates = discoverAllCandidates();
+      assert.ok(candidates.length >= 180, "Should discover at least 180 canonical places");
+      for (const c of candidates) {
+        assert.ok(c.name, "Place must have a name");
+        assert.ok(c.slug, "Place must have a slug");
+        assert.ok(c.category, "Place must have a category");
+        assert.ok(c.state, "Place must have a state");
+        assert.ok(c.district, "Place must have a district");
+        assert.ok(c.sources.length > 0, "Place must have at least one source");
+      }
+    });
+
+    it("normalization maps states to official 36 sovereign codes", async () => {
+      const { normalizeCandidate } = await import("../scripts/pipeline/normalize.js");
+      const sample = {
+        id: "test-id",
+        slug: "test-place",
+        name: "  Test Sanctuary  ",
+        category: "WILDLIFE" as const,
+        description: "Test description",
+        state: "Tamil Nadu",
+        district: "Coimbatore",
+        latitude: 11.0,
+        longitude: 77.0,
+        coordinateStatus: "VERIFIED" as const,
+        sources: [],
+        provenanceTier: "CURATED_DB" as const,
+        verificationStatus: "VERIFIED_OFFICIAL" as const,
+        pipelineStatus: "DISCOVERED" as const,
+      };
+      const normalized = normalizeCandidate(sample);
+      assert.equal(normalized.name, "Test Sanctuary");
+      assert.equal(normalized.stateCode, "TN");
+      assert.equal(normalized.country, "India");
+    });
+
+    it("validation enforces sovereign envelope (6-37.5 N, 68-97.5 E) and rejects invalid coordinates", async () => {
+      const { validateCandidate } = await import("../scripts/pipeline/validate.js");
+      const validSample = {
+        id: "valid-place",
+        slug: "valid-place",
+        name: "Valid Place",
+        category: "HERITAGE" as const,
+        description: "Description",
+        state: "Kerala",
+        district: "Thrissur",
+        latitude: 10.5,
+        longitude: 76.2,
+        coordinateStatus: "VERIFIED" as const,
+        sources: [{ title: "ASI", publisher: "ASI", url: "https://asi.nic.in", sourceType: "STATUTORY" as const }],
+        provenanceTier: "OFFICIAL_STATUTORY" as const,
+        verificationStatus: "VERIFIED_OFFICIAL" as const,
+        pipelineStatus: "VALIDATED" as const,
+      };
+      const resValid = validateCandidate(validSample);
+      assert.equal(resValid.valid, true);
+
+      // Null Island coordinates
+      const nullIsland = { ...validSample, latitude: 0.0, longitude: 0.0 };
+      assert.equal(validateCandidate(nullIsland).valid, false);
+
+      // Outside India
+      const outsideCoords = { ...validSample, latitude: 50.0, longitude: 10.0 };
+      assert.equal(validateCandidate(outsideCoords).valid, false);
+    });
+
+    it("deduplication detects spatial collisions and merges provenance", async () => {
+      const { deduplicateCandidates } = await import("../scripts/pipeline/dedupe.js");
+      const candA = {
+        id: "p-1",
+        slug: "konark-sun-temple-odisha",
+        name: "Konark Sun Temple",
+        category: "HERITAGE" as const,
+        description: "Black Pagoda",
+        state: "Odisha",
+        district: "Puri",
+        latitude: 19.8876,
+        longitude: 86.0945,
+        coordinateStatus: "VERIFIED" as const,
+        sources: [{ title: "UNESCO", publisher: "UNESCO", url: "https://whc.unesco.org", sourceType: "UNESCO" as const }],
+        provenanceTier: "INTERNATIONAL_INSTITUTIONAL" as const,
+        verificationStatus: "VERIFIED_OFFICIAL" as const,
+        pipelineStatus: "VALIDATED" as const,
+      };
+      const candB = {
+        id: "p-2",
+        slug: "sun-temple-konark-chariot",
+        name: "Sun Temple Konark",
+        category: "HERITAGE" as const,
+        description: "13th century chariot temple",
+        state: "Odisha",
+        district: "Puri",
+        latitude: 19.8878, // ~25m away
+        longitude: 86.0947,
+        coordinateStatus: "VERIFIED" as const,
+        sources: [{ title: "ASI Gazette", publisher: "ASI", url: "https://asi.nic.in", sourceType: "STATUTORY" as const }],
+        provenanceTier: "OFFICIAL_STATUTORY" as const,
+        verificationStatus: "VERIFIED_OFFICIAL" as const,
+        pipelineStatus: "VALIDATED" as const,
+      };
+
+      const result = deduplicateCandidates([candA, candB]);
+      assert.equal(result.unique.length, 1);
+      assert.equal(result.duplicates.length, 1);
+      // Verify merged sources
+      assert.equal(result.unique[0].sources.length, 2, "Sources from duplicate should be merged into primary");
+    });
+
+    it("data QA audit runs and passes with zero critical errors", async () => {
+      const { runDataAudit } = await import("../scripts/pipeline/audit.js");
+      const passed = runDataAudit();
+      assert.equal(passed, true, "Data QA audit must pass cleanly");
+    });
+  });
 });
+
 

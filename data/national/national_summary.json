@@ -1,0 +1,1871 @@
+{
+  "generatedAt": "2026-09-26T19:29:59.069Z",
+  "totalPlaces": 184,
+  "sourcesTracked": 20,
+  "sourceRegistry": [
+    {
+      "id": "asi-national",
+      "name": "Archaeological Survey of India — Centrally Protected Monuments",
+      "shortName": "ASI",
+      "publisher": "Ministry of Culture, Government of India",
+      "authority": "STATUTORY",
+      "tier": 1,
+      "url": "https://asi.nic.in/monuments-of-national-importance/",
+      "scope": [
+        "HERITAGE",
+        "CAVES",
+        "SACRED"
+      ],
+      "description": "Centrally protected monuments, archaeological excavation sites, rock shelters, and ancient forts protected under AMASR Act 1958.",
+      "statutoryMandate": "Ancient Monuments and Archaeological Sites and Remains Act, 1958",
+      "activeStatus": "ACTIVE"
+    },
+    {
+      "id": "gsi-geoheritage",
+      "name": "Geological Survey of India — National Geological Monuments",
+      "shortName": "GSI",
+      "publisher": "Ministry of Mines, Government of India",
+      "authority": "STATUTORY",
+      "tier": 1,
+      "url": "https://www.gsi.gov.in/webcenter/portal/OCBIS/pageGeoheritage",
+      "scope": [
+        "NATURE",
+        "HILLS",
+        "CAVES"
+      ],
+      "description": "Gazetted National Geological Monuments, impact craters, columnar basalt, canyon gorges, natural arches, and fossil parks.",
+      "statutoryMandate": "Mines and Minerals (Development and Regulation) Act, 1957",
+      "activeStatus": "ACTIVE"
+    },
+    {
+      "id": "unesco-whc",
+      "name": "UNESCO World Heritage Centre — India Inscriptions",
+      "shortName": "UNESCO",
+      "publisher": "United Nations Educational, Scientific and Cultural Organization",
+      "authority": "UNESCO",
+      "tier": 1,
+      "url": "https://whc.unesco.org/en/statesparties/in",
+      "scope": [
+        "HERITAGE",
+        "WILDLIFE",
+        "CULTURE"
+      ],
+      "description": "Cultural, natural, and mixed World Heritage Sites inscribed under the 1972 World Heritage Convention.",
+      "statutoryMandate": "Convention Concerning the Protection of the World Cultural and Natural Heritage (1972)",
+      "activeStatus": "ACTIVE"
+    },
+    {
+      "id": "ramsar-india",
+      "name": "Ramsar Convention on Wetlands — India Sites",
+      "shortName": "Ramsar",
+      "publisher": "Ramsar Secretariat & MoEFCC",
+      "authority": "STATUTORY",
+      "tier": 1,
+      "url": "https://rsis.ramsar.org/country-profiles/india",
+      "scope": [
+        "LAKES",
+        "NATURE",
+        "WILDLIFE"
+      ],
+      "description": "Wetlands of International Importance designated under the Ramsar Convention.",
+      "statutoryMandate": "Convention on Wetlands of International Importance (1971)",
+      "activeStatus": "ACTIVE"
+    },
+    {
+      "id": "moefcc-wii",
+      "name": "Wildlife Institute of India & MoEFCC — National Parks and Wildlife Sanctuaries",
+      "shortName": "WII/MoEFCC",
+      "publisher": "Ministry of Environment, Forest and Climate Change",
+      "authority": "STATUTORY",
+      "tier": 1,
+      "url": "https://wii.gov.in/national_wildlife_database",
+      "scope": [
+        "WILDLIFE",
+        "NATURE"
+      ],
+      "description": "Official National Parks, Wildlife Sanctuaries, Biosphere Reserves, and Conservation Reserves of India.",
+      "statutoryMandate": "Wildlife (Protection) Act, 1972",
+      "activeStatus": "ACTIVE"
+    },
+    {
+      "id": "ntca-india",
+      "name": "National Tiger Conservation Authority — Tiger Reserves Database",
+      "shortName": "NTCA",
+      "publisher": "Ministry of Environment, Forest and Climate Change",
+      "authority": "STATUTORY",
+      "tier": 1,
+      "url": "https://ntca.gov.in/",
+      "scope": [
+        "WILDLIFE"
+      ],
+      "description": "Statutory Tiger Reserves of India and core/buffer zone gazettes.",
+      "statutoryMandate": "Section 38-L of Wildlife (Protection) Act, 1972",
+      "activeStatus": "ACTIVE"
+    },
+    {
+      "id": "dc-handicrafts",
+      "name": "Development Commissioner (Handicrafts) — Craft Clusters",
+      "shortName": "DC Handicrafts",
+      "publisher": "Ministry of Textiles, Government of India",
+      "authority": "GOVERNMENT",
+      "tier": 1,
+      "url": "https://handicrafts.nic.in/",
+      "scope": [
+        "SHOPPING",
+        "CULTURE"
+      ],
+      "description": "Artisan villages, craft mega clusters, and GI-certified handicraft hubs across Indian districts.",
+      "activeStatus": "ACTIVE"
+    },
+    {
+      "id": "dc-handlooms",
+      "name": "Development Commissioner (Handlooms) — National Handloom Clusters",
+      "shortName": "DC Handlooms",
+      "publisher": "Ministry of Textiles, Government of India",
+      "authority": "GOVERNMENT",
+      "tier": 1,
+      "url": "https://handlooms.gov.in/",
+      "scope": [
+        "SHOPPING",
+        "CULTURE"
+      ],
+      "description": "Traditional weaving clusters, master weaver guilds, and GI handloom producing centers.",
+      "activeStatus": "ACTIVE"
+    },
+    {
+      "id": "cza-india",
+      "name": "Central Zoo Authority of India",
+      "shortName": "CZA",
+      "publisher": "Ministry of Environment, Forest and Climate Change",
+      "authority": "STATUTORY",
+      "tier": 1,
+      "url": "https://cza.nic.in/",
+      "scope": [
+        "WILDLIFE",
+        "FAMILY"
+      ],
+      "description": "Recognized zoological parks, animal rescue centers, and safari parks across India.",
+      "statutoryMandate": "Section 38-A of Wildlife (Protection) Act, 1972",
+      "activeStatus": "ACTIVE"
+    },
+    {
+      "id": "isro-centres",
+      "name": "Indian Space Research Organisation — Visitor Centres & Space Museums",
+      "shortName": "ISRO",
+      "publisher": "Department of Space, Government of India",
+      "authority": "GOVERNMENT",
+      "tier": 1,
+      "url": "https://www.isro.gov.in/",
+      "scope": [
+        "FAMILY",
+        "CULTURE"
+      ],
+      "description": "Vikram Sarabhai Space Museum, Satish Dhawan Space Centre visitor complexes, and national space exhibitions.",
+      "activeStatus": "ACTIVE"
+    },
+    {
+      "id": "ncsm-india",
+      "name": "National Council of Science Museums — Science Cities & Centres",
+      "shortName": "NCSM",
+      "publisher": "Ministry of Culture, Government of India",
+      "authority": "STATUTORY",
+      "tier": 1,
+      "url": "https://ncsm.gov.in/",
+      "scope": [
+        "FAMILY",
+        "CULTURE"
+      ],
+      "description": "National Science Centre, Birla Industrial & Technological Museum, Science City Kolkata, and provincial science centers.",
+      "activeStatus": "ACTIVE"
+    },
+    {
+      "id": "dgll-india",
+      "name": "Directorate General of Lighthouses and Lightships",
+      "shortName": "DGLL",
+      "publisher": "Ministry of Ports, Shipping and Waterways, Government of India",
+      "authority": "GOVERNMENT",
+      "tier": 1,
+      "url": "http://dgll.nic.in/",
+      "scope": [
+        "HERITAGE",
+        "ADVENTURE"
+      ],
+      "description": "Heritage coastal lighthouses, navigation beacons, and maritime museums open to public tourism.",
+      "activeStatus": "ACTIVE"
+    },
+    {
+      "id": "mot-swadesh-darshan",
+      "name": "Ministry of Tourism — Swadesh Darshan & PRASHAD Circuits",
+      "shortName": "MoT India",
+      "publisher": "Ministry of Tourism, Government of India",
+      "authority": "GOVERNMENT",
+      "tier": 1,
+      "url": "https://tourism.gov.in/",
+      "scope": [
+        "SACRED",
+        "HERITAGE",
+        "CULTURE"
+      ],
+      "description": "Integrated thematic tourist circuits and national pilgrimage rejuvenation destinations.",
+      "activeStatus": "ACTIVE"
+    },
+    {
+      "id": "ap-tourism",
+      "name": "Andhra Pradesh Tourism Development Corporation",
+      "shortName": "APTDC",
+      "publisher": "Government of Andhra Pradesh",
+      "authority": "TOURISM",
+      "tier": 2,
+      "url": "https://tourism.ap.gov.in/",
+      "scope": [
+        "ALL"
+      ],
+      "description": "State-sanctioned pilgrimage, beach, valley, and heritage destinations in Andhra Pradesh.",
+      "activeStatus": "ACTIVE"
+    },
+    {
+      "id": "karnataka-tourism",
+      "name": "Karnataka Tourism Development Corporation",
+      "shortName": "KSTDC",
+      "publisher": "Government of Karnataka",
+      "authority": "TOURISM",
+      "tier": 2,
+      "url": "https://karnatakatourism.org/",
+      "scope": [
+        "ALL"
+      ],
+      "description": "One State Many Worlds official inventory of heritage, coast, hills, and wildlife in Karnataka.",
+      "activeStatus": "ACTIVE"
+    },
+    {
+      "id": "kerala-tourism",
+      "name": "Kerala Tourism Department",
+      "shortName": "Kerala Tourism",
+      "publisher": "Government of Kerala",
+      "authority": "TOURISM",
+      "tier": 2,
+      "url": "https://www.keralatourism.org/",
+      "scope": [
+        "ALL"
+      ],
+      "description": "God's Own Country official directory of backwaters, ayurveda, arts, hill stations, and beaches.",
+      "activeStatus": "ACTIVE"
+    },
+    {
+      "id": "tn-tourism",
+      "name": "Tamil Nadu Tourism Development Corporation",
+      "shortName": "TTDC",
+      "publisher": "Government of Tamil Nadu",
+      "authority": "TOURISM",
+      "tier": 2,
+      "url": "https://www.tamilnadutourism.tn.gov.in/",
+      "scope": [
+        "ALL"
+      ],
+      "description": "Enchanting Tamil Nadu directory covering temples, UNESCO living Chola shrines, Western Ghats, and beaches.",
+      "activeStatus": "ACTIVE"
+    },
+    {
+      "id": "rajasthan-tourism",
+      "name": "Department of Tourism, Government of Rajasthan",
+      "shortName": "RTDC",
+      "publisher": "Government of Rajasthan",
+      "authority": "TOURISM",
+      "tier": 2,
+      "url": "https://www.tourism.rajasthan.gov.in/",
+      "scope": [
+        "ALL"
+      ],
+      "description": "Royal Rajasthan forts, stepwells, palaces, desert reserves, and pilgrimage destinations.",
+      "activeStatus": "ACTIVE"
+    },
+    {
+      "id": "mp-tourism",
+      "name": "Madhya Pradesh Tourism Board",
+      "shortName": "MPTB",
+      "publisher": "Government of Madhya Pradesh",
+      "authority": "TOURISM",
+      "tier": 2,
+      "url": "https://www.mptourism.com/",
+      "scope": [
+        "ALL"
+      ],
+      "description": "Heart of Incredible India national parks, UNESCO heritage sites, caves, and sacred river ghats.",
+      "activeStatus": "ACTIVE"
+    },
+    {
+      "id": "maharashtra-tourism",
+      "name": "Maharashtra Tourism Development Corporation",
+      "shortName": "MTDC",
+      "publisher": "Government of Maharashtra",
+      "authority": "TOURISM",
+      "tier": 2,
+      "url": "https://www.maharashtratourism.gov.in/",
+      "scope": [
+        "ALL"
+      ],
+      "description": "Unlimited Maharashtra fortresses, Ajanta-Ellora caves, Lonar crater, and Western Ghat hill stations.",
+      "activeStatus": "ACTIVE"
+    }
+  ],
+  "candidatesSummary": [
+    {
+      "slug": "ajanta-caves",
+      "name": "Ajanta Caves (UNESCO World Heritage)",
+      "category": "CAVES",
+      "state": "Maharashtra",
+      "district": "Chhatrapati Sambhajinagar",
+      "designations": []
+    },
+    {
+      "slug": "ellora-caves-kailasa-temple",
+      "name": "Ellora Caves & Monolithic Kailasa Temple",
+      "category": "CAVES",
+      "state": "Maharashtra",
+      "district": "Chhatrapati Sambhajinagar",
+      "designations": []
+    },
+    {
+      "slug": "elephanta-caves-mumbai",
+      "name": "Elephanta Caves (Gharapuri)",
+      "category": "CAVES",
+      "state": "Maharashtra",
+      "district": "Raigad",
+      "designations": []
+    },
+    {
+      "slug": "badami-cave-temples",
+      "name": "Badami Cave Temples & Agastya Lake",
+      "category": "CAVES",
+      "state": "Karnataka",
+      "district": "Bagalkot",
+      "designations": []
+    },
+    {
+      "slug": "borra-caves-araku-valley",
+      "name": "Borra Caves, Araku Valley",
+      "category": "CAVES",
+      "state": "Andhra Pradesh",
+      "district": "Alluri Sitharama Raju",
+      "designations": []
+    },
+    {
+      "slug": "belum-caves-kurnool",
+      "name": "Belum Caves (Pathala Ganga)",
+      "category": "CAVES",
+      "state": "Andhra Pradesh",
+      "district": "Nandyal",
+      "designations": []
+    },
+    {
+      "slug": "undavalli-caves-vijayawada",
+      "name": "Undavalli Rock-Cut Caves",
+      "category": "CAVES",
+      "state": "Andhra Pradesh",
+      "district": "Guntur",
+      "designations": []
+    },
+    {
+      "slug": "bhimbetka-rock-shelters",
+      "name": "Bhimbetka Rock Shelters (UNESCO)",
+      "category": "CAVES",
+      "state": "Madhya Pradesh",
+      "district": "Raisen",
+      "designations": []
+    },
+    {
+      "slug": "barabar-caves-bihar",
+      "name": "Barabar Caves (Oldest Rock-Cut Caves in India)",
+      "category": "CAVES",
+      "state": "Bihar",
+      "district": "Jehanabad",
+      "designations": []
+    },
+    {
+      "slug": "mawsmai-cave-cherrapunji",
+      "name": "Mawsmai Cave, Cherrapunji",
+      "category": "CAVES",
+      "state": "Meghalaya",
+      "district": "East Khasi Hills",
+      "designations": []
+    },
+    {
+      "slug": "edakkal-caves-wayanad",
+      "name": "Edakkal Caves, Wayanad",
+      "category": "CAVES",
+      "state": "Kerala",
+      "district": "Wayanad",
+      "designations": []
+    },
+    {
+      "slug": "munnar-tea-gardens-and-anamudi",
+      "name": "Munnar Tea Highlands & Anamudi Peak",
+      "category": "HILLS",
+      "state": "Kerala",
+      "district": "Idukki",
+      "designations": []
+    },
+    {
+      "slug": "ooty-queen-of-hill-stations",
+      "name": "Ooty (Udhagamandalam) & Nilgiri Mountain Railway",
+      "category": "HILLS",
+      "state": "Tamil Nadu",
+      "district": "Nilgiris",
+      "designations": []
+    },
+    {
+      "slug": "kodaikanal-princess-of-hill-stations",
+      "name": "Kodaikanal & Pillar Rocks",
+      "category": "HILLS",
+      "state": "Tamil Nadu",
+      "district": "Dindigul",
+      "designations": []
+    },
+    {
+      "slug": "shimla-ridge-and-kalka-shimla-railway",
+      "name": "Shimla Ridge & UNESCO Kalka-Shimla Railway",
+      "category": "HILLS",
+      "state": "Himachal Pradesh",
+      "district": "Shimla",
+      "designations": []
+    },
+    {
+      "slug": "spiti-valley-and-key-monastery",
+      "name": "Spiti Valley & 1000-Year Key Monastery",
+      "category": "HILLS",
+      "state": "Himachal Pradesh",
+      "district": "Lahaul and Spiti",
+      "designations": []
+    },
+    {
+      "slug": "darjeeling-tiger-hill-and-toy-train",
+      "name": "Darjeeling & UNESCO Himalayan Railway",
+      "category": "HILLS",
+      "state": "West Bengal",
+      "district": "Darjeeling",
+      "designations": []
+    },
+    {
+      "slug": "tawang-monastery-and-sela-pass",
+      "name": "Tawang & Sela Pass High Summit",
+      "category": "HILLS",
+      "state": "Arunachal Pradesh",
+      "district": "Tawang",
+      "designations": []
+    },
+    {
+      "slug": "mahabaleshwar-and-panchgani",
+      "name": "Mahabaleshwar & Arthur's Seat, Western Ghats",
+      "category": "HILLS",
+      "state": "Maharashtra",
+      "district": "Satara",
+      "designations": []
+    },
+    {
+      "slug": "nandi-hills-bangalore",
+      "name": "Nandi Hills (Nandidurga)",
+      "category": "HILLS",
+      "state": "Karnataka",
+      "district": "Chikkaballapur",
+      "designations": []
+    },
+    {
+      "slug": "mount-abu-and-dilwara-temples",
+      "name": "Mount Abu & Dilwara Marble Temples",
+      "category": "HILLS",
+      "state": "Rajasthan",
+      "district": "Sirohi",
+      "designations": []
+    },
+    {
+      "slug": "jog-falls-sharavathi",
+      "name": "Jog Falls (Gerosoppa Falls)",
+      "category": "WATERFALLS",
+      "state": "Karnataka",
+      "district": "Shimoga",
+      "designations": []
+    },
+    {
+      "slug": "dudhsagar-waterfalls",
+      "name": "Dudhsagar Waterfalls (Sea of Milk)",
+      "category": "WATERFALLS",
+      "state": "Goa",
+      "district": "South Goa",
+      "designations": []
+    },
+    {
+      "slug": "athirappilly-waterfalls",
+      "name": "Athirappilly Waterfalls",
+      "category": "WATERFALLS",
+      "state": "Kerala",
+      "district": "Thrissur",
+      "designations": []
+    },
+    {
+      "slug": "hogenakkal-falls-kaveri",
+      "name": "Hogenakkal Falls (Smoking Rocks)",
+      "category": "WATERFALLS",
+      "state": "Tamil Nadu",
+      "district": "Dharmapuri",
+      "designations": []
+    },
+    {
+      "slug": "nohkalikai-falls-cherrapunji",
+      "name": "Nohkalikai Falls (India's Tallest Plunge Waterfall)",
+      "category": "WATERFALLS",
+      "state": "Meghalaya",
+      "district": "East Khasi Hills",
+      "designations": []
+    },
+    {
+      "slug": "chitrakote-waterfall-bastar",
+      "name": "Chitrakote Falls (The Niagara of India)",
+      "category": "WATERFALLS",
+      "state": "Chhattisgarh",
+      "district": "Bastar",
+      "designations": []
+    },
+    {
+      "slug": "dhuandhar-falls-and-bhedaghat-marble-rocks",
+      "name": "Dhuandhar Falls & Bhedaghat Marble Rocks",
+      "category": "WATERFALLS",
+      "state": "Madhya Pradesh",
+      "district": "Jabalpur",
+      "designations": []
+    },
+    {
+      "slug": "pangong-tso-lake-ladakh",
+      "name": "Pangong Tso (High Altitude Endorheic Lake)",
+      "category": "LAKES",
+      "state": "Ladakh",
+      "district": "Leh",
+      "designations": []
+    },
+    {
+      "slug": "dal-lake-and-shikara-srinagar",
+      "name": "Dal Lake & Heritage Shikaras, Srinagar",
+      "category": "LAKES",
+      "state": "Jammu and Kashmir",
+      "district": "Srinagar",
+      "designations": []
+    },
+    {
+      "slug": "loktak-lake-and-keibul-lamjao",
+      "name": "Loktak Lake & Keibul Lamjao (Floating National Park)",
+      "category": "LAKES",
+      "state": "Manipur",
+      "district": "Bishnupur",
+      "designations": []
+    },
+    {
+      "slug": "chilika-lake-and-nalabana",
+      "name": "Chilika Lake & Nalabana Bird Sanctuary",
+      "category": "LAKES",
+      "state": "Odisha",
+      "district": "Puri",
+      "designations": []
+    },
+    {
+      "slug": "hampi-group-of-monuments",
+      "name": "Group of Monuments at Hampi (UNESCO)",
+      "category": "HERITAGE",
+      "state": "Karnataka",
+      "district": "Vijayanagara",
+      "designations": []
+    },
+    {
+      "slug": "khajuraho-group-of-monuments",
+      "name": "Khajuraho Group of Monuments (UNESCO)",
+      "category": "HERITAGE",
+      "state": "Madhya Pradesh",
+      "district": "Chhatarpur",
+      "designations": []
+    },
+    {
+      "slug": "konark-sun-temple",
+      "name": "Konark Sun Temple (Black Pagoda)",
+      "category": "HERITAGE",
+      "state": "Odisha",
+      "district": "Puri",
+      "designations": []
+    },
+    {
+      "slug": "chittorgarh-fort",
+      "name": "Chittorgarh Fort & Vijay Stambha",
+      "category": "HERITAGE",
+      "state": "Rajasthan",
+      "district": "Chittorgarh",
+      "designations": []
+    },
+    {
+      "slug": "mahabalipuram-shore-temple-and-reliefs",
+      "name": "Mahabalipuram Shore Temple & Pancha Rathas",
+      "category": "HERITAGE",
+      "state": "Tamil Nadu",
+      "district": "Chengalpattu",
+      "designations": []
+    },
+    {
+      "slug": "nalanda-mahavihara-university",
+      "name": "Nalanda Mahavihara (Ancient World University)",
+      "category": "HERITAGE",
+      "state": "Bihar",
+      "district": "Nalanda",
+      "designations": []
+    },
+    {
+      "slug": "sanchi-great-stupa",
+      "name": "Great Stupa at Sanchi (UNESCO)",
+      "category": "HERITAGE",
+      "state": "Madhya Pradesh",
+      "district": "Raisen",
+      "designations": []
+    },
+    {
+      "slug": "rani-ki-vav-paten-stepwell",
+      "name": "Rani ki Vav (The Queen's Stepwell)",
+      "category": "HERITAGE",
+      "state": "Gujarat",
+      "district": "Patan",
+      "designations": []
+    },
+    {
+      "slug": "sun-temple-modhera-gujarat",
+      "name": "Sun Temple, Modhera & Surya Kund",
+      "category": "HERITAGE",
+      "state": "Gujarat",
+      "district": "Mehsana",
+      "designations": []
+    },
+    {
+      "slug": "amber-fort-and-palace-jaipur",
+      "name": "Amber Fort & Palace, Jaipur (UNESCO)",
+      "category": "HERITAGE",
+      "state": "Rajasthan",
+      "district": "Jaipur",
+      "designations": []
+    },
+    {
+      "slug": "mehrangarh-fort-jodhpur",
+      "name": "Mehrangarh Fort (Citadel of the Sun)",
+      "category": "HERITAGE",
+      "state": "Rajasthan",
+      "district": "Jodhpur",
+      "designations": []
+    },
+    {
+      "slug": "golconda-fort-and-acoustics",
+      "name": "Golconda Fort & Acoustic Engineering",
+      "category": "HERITAGE",
+      "state": "Telangana",
+      "district": "Hyderabad",
+      "designations": []
+    },
+    {
+      "slug": "ramappa-temple-kakatiya",
+      "name": "Ramappa Temple (Rudreshwara, UNESCO)",
+      "category": "HERITAGE",
+      "state": "Telangana",
+      "district": "Mulugu",
+      "designations": []
+    },
+    {
+      "slug": "red-fort-and-qutub-minar",
+      "name": "Red Fort & Qutub Minar Complex (UNESCO)",
+      "category": "HERITAGE",
+      "state": "Delhi",
+      "district": "South Delhi",
+      "designations": []
+    },
+    {
+      "slug": "radhanagar-beach-havelock",
+      "name": "Radhanagar Beach (Beach No. 7), Havelock",
+      "category": "BEACHES",
+      "state": "Andaman and Nicobar Islands",
+      "district": "South Andaman",
+      "designations": []
+    },
+    {
+      "slug": "dhanushkodi-beach-and-ram-setu-point",
+      "name": "Dhanushkodi Beach & Ram Setu Point",
+      "category": "BEACHES",
+      "state": "Tamil Nadu",
+      "district": "Ramanathapuram",
+      "designations": []
+    },
+    {
+      "slug": "om-beach-and-kudle-gokarna",
+      "name": "Om Beach & Kudle Beach, Gokarna",
+      "category": "BEACHES",
+      "state": "Karnataka",
+      "district": "Uttara Kannada",
+      "designations": []
+    },
+    {
+      "slug": "varkala-cliff-and-papanasam-beach",
+      "name": "Varkala Cliff & Papanasam Beach",
+      "category": "BEACHES",
+      "state": "Kerala",
+      "district": "Thiruvananthapuram",
+      "designations": []
+    },
+    {
+      "slug": "palolem-beach-south-goa",
+      "name": "Palolem Crescent Beach, South Goa",
+      "category": "BEACHES",
+      "state": "Goa",
+      "district": "South Goa",
+      "designations": []
+    },
+    {
+      "slug": "agatti-island-lagoon-lakshadweep",
+      "name": "Agatti Island & Coral Lagoon",
+      "category": "BEACHES",
+      "state": "Lakshadweep",
+      "district": "Lakshadweep",
+      "designations": []
+    },
+    {
+      "slug": "puri-golden-beach-and-swargadwar",
+      "name": "Puri Golden Beach & Swargadwar",
+      "category": "BEACHES",
+      "state": "Odisha",
+      "district": "Puri",
+      "designations": []
+    },
+    {
+      "slug": "promenade-beach-and-french-quarter",
+      "name": "Promenade Beach & French Quarter (White Town)",
+      "category": "BEACHES",
+      "state": "Puducherry",
+      "district": "Puducherry",
+      "designations": []
+    },
+    {
+      "slug": "kaziranga-national-park",
+      "name": "Kaziranga National Park (UNESCO)",
+      "category": "WILDLIFE",
+      "state": "Assam",
+      "district": "Golaghat & Nagaon",
+      "designations": []
+    },
+    {
+      "slug": "ranthambore-tiger-reserve",
+      "name": "Ranthambore National Park & Fort",
+      "category": "WILDLIFE",
+      "state": "Rajasthan",
+      "district": "Sawai Madhopur",
+      "designations": []
+    },
+    {
+      "slug": "gir-national-park-asiatic-lions",
+      "name": "Gir National Park (Sole Asiatic Lion Habitat)",
+      "category": "WILDLIFE",
+      "state": "Gujarat",
+      "district": "Junagadh",
+      "designations": []
+    },
+    {
+      "slug": "jim-corbett-national-park",
+      "name": "Jim Corbett National Park (India's First National Park)",
+      "category": "WILDLIFE",
+      "state": "Uttarakhand",
+      "district": "Nainital",
+      "designations": []
+    },
+    {
+      "slug": "sundarbans-mangrove-tiger-reserve",
+      "name": "Sundarbans National Park (UNESCO)",
+      "category": "WILDLIFE",
+      "state": "West Bengal",
+      "district": "South 24 Parganas",
+      "designations": []
+    },
+    {
+      "slug": "kanha-tiger-reserve-mowgli-land",
+      "name": "Kanha Tiger Reserve (The Land of Mowgli)",
+      "category": "WILDLIFE",
+      "state": "Madhya Pradesh",
+      "district": "Mandla",
+      "designations": []
+    },
+    {
+      "slug": "periyar-national-park-thekkady",
+      "name": "Periyar Tiger Reserve & Sacred Sabarimala Hills",
+      "category": "WILDLIFE",
+      "state": "Kerala",
+      "district": "Idukki",
+      "designations": []
+    },
+    {
+      "slug": "lalbagh-botanical-garden-bangalore",
+      "name": "Lalbagh Botanical Garden & Glass House",
+      "category": "PARKS",
+      "state": "Karnataka",
+      "district": "Bengaluru Urban",
+      "designations": []
+    },
+    {
+      "slug": "lodhi-gardens-and-tombs",
+      "name": "Lodhi Gardens & Historic Tombs",
+      "category": "PARKS",
+      "state": "Delhi",
+      "district": "New Delhi",
+      "designations": []
+    },
+    {
+      "slug": "rock-garden-by-nek-chand-chandigarh",
+      "name": "Rock Garden by Nek Chand",
+      "category": "PARKS",
+      "state": "Chandigarh",
+      "district": "Chandigarh",
+      "designations": []
+    },
+    {
+      "slug": "ramoji-film-city-hyderabad",
+      "name": "Ramoji Film City (World's Largest Film Studio)",
+      "category": "FAMILY",
+      "state": "Telangana",
+      "district": "Ranga Reddy",
+      "designations": []
+    },
+    {
+      "slug": "national-rail-museum-delhi",
+      "name": "National Rail Museum, New Delhi",
+      "category": "FAMILY",
+      "state": "Delhi",
+      "district": "New Delhi",
+      "designations": []
+    },
+    {
+      "slug": "science-city-kolkata",
+      "name": "Science City, Kolkata",
+      "category": "FAMILY",
+      "state": "West Bengal",
+      "district": "Kolkata",
+      "designations": []
+    },
+    {
+      "slug": "valley-of-flowers-national-park",
+      "name": "Valley of Flowers & Hemkund Sahib",
+      "category": "ADVENTURE",
+      "state": "Uttarakhand",
+      "district": "Chamoli",
+      "designations": []
+    },
+    {
+      "slug": "rohtang-pass-and-atal-tunnel",
+      "name": "Rohtang Pass & Atal Tunnel (13,058 ft)",
+      "category": "ADVENTURE",
+      "state": "Himachal Pradesh",
+      "district": "Kullu",
+      "designations": []
+    },
+    {
+      "slug": "rishikesh-white-water-rafting-and-ghats",
+      "name": "Rishikesh White-Water Rafting & Ganga Ghats",
+      "category": "ADVENTURE",
+      "state": "Uttarakhand",
+      "district": "Tehri Garhwal",
+      "designations": []
+    },
+    {
+      "slug": "thirumalai-nayakkar-mahal-madurai",
+      "name": "Thirumalai Nayakkar Mahal",
+      "category": "CULTURE",
+      "state": "Tamil Nadu",
+      "district": "Madurai",
+      "designations": []
+    },
+    {
+      "slug": "city-palace-udaipur-lake-pichola",
+      "name": "City Palace Complex, Udaipur",
+      "category": "CULTURE",
+      "state": "Rajasthan",
+      "district": "Udaipur",
+      "designations": []
+    },
+    {
+      "slug": "mysore-palace-amba-vilas",
+      "name": "Mysore Palace (Amba Vilas)",
+      "category": "CULTURE",
+      "state": "Karnataka",
+      "district": "Mysuru",
+      "designations": []
+    },
+    {
+      "slug": "unakoti-rock-carvings-tripura",
+      "name": "Unakoti Rock-Cut Carvings & Shaivite Pilgrimage",
+      "category": "CULTURE",
+      "state": "Tripura",
+      "district": "Unakoti",
+      "designations": []
+    },
+    {
+      "slug": "majuli-island-neo-vaishnavite-satras",
+      "name": "Majuli Island (World's Largest River Island)",
+      "category": "CULTURE",
+      "state": "Assam",
+      "district": "Majuli",
+      "designations": []
+    },
+    {
+      "slug": "kachori-gali-and-blue-lassi-varanasi",
+      "name": "Kachori Gali & Blue Lassi Chowk, Varanasi",
+      "category": "FOOD",
+      "state": "Uttar Pradesh",
+      "district": "Varanasi",
+      "designations": []
+    },
+    {
+      "slug": "madurai-jigarthanda-and-murugan-idli",
+      "name": "Famous Jigarthanda & Murugan Idli, Madurai",
+      "category": "FOOD",
+      "state": "Tamil Nadu",
+      "district": "Madurai",
+      "designations": []
+    },
+    {
+      "slug": "kesar-da-dhaba-amritsar",
+      "name": "Kesar Da Dhaba, Amritsar",
+      "category": "FOOD",
+      "state": "Punjab",
+      "district": "Amritsar",
+      "designations": []
+    },
+    {
+      "slug": "sarafa-bazaar-and-chappan-dukan-indore",
+      "name": "Sarafa Bazaar & Chappan Dukan, Indore",
+      "category": "FOOD",
+      "state": "Madhya Pradesh",
+      "district": "Indore",
+      "designations": []
+    },
+    {
+      "slug": "manek-chowk-night-food-street-ahmedabad",
+      "name": "Manek Chowk Night Food Market, Ahmedabad",
+      "category": "FOOD",
+      "state": "Gujarat",
+      "district": "Ahmedabad",
+      "designations": []
+    },
+    {
+      "slug": "brahma-sarovar-and-jyotisar-kurukshetra",
+      "name": "Brahma Sarovar & Jyotisar (Gita Birthplace)",
+      "category": "SACRED",
+      "state": "Haryana",
+      "district": "Kurukshetra",
+      "designations": []
+    },
+    {
+      "slug": "parasnath-hill-shikharji-jain-teerth",
+      "name": "Parasnath Hill (Shikharji Jain Maha Teerth)",
+      "category": "SACRED",
+      "state": "Jharkhand",
+      "district": "Giridih",
+      "designations": []
+    },
+    {
+      "slug": "diu-fort-and-naida-caves",
+      "name": "Diu Fort & Monolithic Naida Caves",
+      "category": "HERITAGE",
+      "state": "Dadra and Nagar Haveli and Daman and Diu",
+      "district": "Diu",
+      "designations": []
+    },
+    {
+      "slug": "vantawng-waterfalls-serchhip",
+      "name": "Vantawng Falls (Tallest Waterfall in Mizoram)",
+      "category": "WATERFALLS",
+      "state": "Mizoram",
+      "district": "Serchhip",
+      "designations": []
+    },
+    {
+      "slug": "phawngpui-blue-mountain-peak",
+      "name": "Phawngpui Blue Mountain & National Park",
+      "category": "HILLS",
+      "state": "Mizoram",
+      "district": "Lawngtlai",
+      "designations": []
+    },
+    {
+      "slug": "dzukou-valley-and-lily-sanctuary",
+      "name": "Dzukou Valley & Lily Sanctuary",
+      "category": "NATURE",
+      "state": "Nagaland",
+      "district": "Kohima",
+      "designations": []
+    },
+    {
+      "slug": "kisama-naga-heritage-village-kohima",
+      "name": "Kisama Naga Heritage Village (Hornbill Festival)",
+      "category": "CULTURE",
+      "state": "Nagaland",
+      "district": "Kohima",
+      "designations": []
+    },
+    {
+      "slug": "gurudongmar-sacred-lake-sikkim",
+      "name": "Gurudongmar Sacred Lake (17,800 ft)",
+      "category": "LAKES",
+      "state": "Sikkim",
+      "district": "Mangan",
+      "designations": []
+    },
+    {
+      "slug": "tsomgo-lake-and-nathu-la-pass",
+      "name": "Tsomgo Lake & Nathu La Pass (Old Silk Route)",
+      "category": "LAKES",
+      "state": "Sikkim",
+      "district": "Gangtok",
+      "designations": []
+    },
+    {
+      "slug": "taj-mahal-agra",
+      "name": "Taj Mahal (UNESCO World Heritage)",
+      "category": "HERITAGE",
+      "state": "Uttar Pradesh",
+      "district": "Agra",
+      "designations": [
+        "UNESCO World Heritage",
+        "ASI Protected Monument"
+      ]
+    },
+    {
+      "slug": "itmad-ud-daulah-agra",
+      "name": "Tomb of I'timad-ud-Daulah (Baby Taj)",
+      "category": "HERITAGE",
+      "state": "Uttar Pradesh",
+      "district": "Agra",
+      "designations": [
+        "ASI Protected Monument"
+      ]
+    },
+    {
+      "slug": "agra-fort-unesco",
+      "name": "Agra Fort (UNESCO World Heritage)",
+      "category": "HERITAGE",
+      "state": "Uttar Pradesh",
+      "district": "Agra",
+      "designations": [
+        "UNESCO World Heritage",
+        "ASI Protected Monument"
+      ]
+    },
+    {
+      "slug": "fatehpur-sikri-royal-city",
+      "name": "Fatehpur Sikri Imperial Complex (UNESCO)",
+      "category": "HERITAGE",
+      "state": "Uttar Pradesh",
+      "district": "Agra",
+      "designations": [
+        "UNESCO World Heritage",
+        "ASI Protected Monument"
+      ]
+    },
+    {
+      "slug": "mehtab-bagh-moonlight-garden-agra",
+      "name": "Mehtab Bagh (Moonlight Garden)",
+      "category": "PARKS",
+      "state": "Uttar Pradesh",
+      "district": "Agra",
+      "designations": [
+        "ASI Protected Monument"
+      ]
+    },
+    {
+      "slug": "hawa-mahal-palace-of-winds-jaipur",
+      "name": "Hawa Mahal (Palace of Winds)",
+      "category": "HERITAGE",
+      "state": "Rajasthan",
+      "district": "Jaipur",
+      "designations": []
+    },
+    {
+      "slug": "jantar-mantar-jaipur-unesco",
+      "name": "Jantar Mantar Astronomical Observatory (UNESCO)",
+      "category": "HERITAGE",
+      "state": "Rajasthan",
+      "district": "Jaipur",
+      "designations": [
+        "UNESCO World Heritage"
+      ]
+    },
+    {
+      "slug": "city-palace-jaipur",
+      "name": "City Palace Jaipur (Mubarak Mahal & Chandra Mahal)",
+      "category": "HERITAGE",
+      "state": "Rajasthan",
+      "district": "Jaipur",
+      "designations": []
+    },
+    {
+      "slug": "kumbhalgarh-fort-wall-rajasthan",
+      "name": "Kumbhalgarh Fort & Great Wall of India (UNESCO)",
+      "category": "HERITAGE",
+      "state": "Rajasthan",
+      "district": "Rajsamand",
+      "designations": [
+        "UNESCO World Heritage",
+        "ASI Protected Monument"
+      ]
+    },
+    {
+      "slug": "chand-baori-stepwell-abhaneri",
+      "name": "Chand Baori Stepwell & Harshat Mata Temple",
+      "category": "HERITAGE",
+      "state": "Rajasthan",
+      "district": "Dausa",
+      "designations": [
+        "ASI Protected Monument"
+      ]
+    },
+    {
+      "slug": "india-gate-kartavya-path-delhi",
+      "name": "India Gate & National War Memorial",
+      "category": "HERITAGE",
+      "state": "Delhi",
+      "district": "New Delhi",
+      "designations": []
+    },
+    {
+      "slug": "humayuns-tomb-delhi-unesco",
+      "name": "Humayun's Tomb & Sunder Nursery (UNESCO)",
+      "category": "HERITAGE",
+      "state": "Delhi",
+      "district": "South East Delhi",
+      "designations": [
+        "UNESCO World Heritage",
+        "ASI Protected Monument"
+      ]
+    },
+    {
+      "slug": "gateway-of-india-mumbai",
+      "name": "Gateway of India & Apollo Bunder",
+      "category": "HERITAGE",
+      "state": "Maharashtra",
+      "district": "Mumbai City",
+      "designations": []
+    },
+    {
+      "slug": "victoria-memorial-kolkata",
+      "name": "Victoria Memorial Hall & Maidan Gardens",
+      "category": "HERITAGE",
+      "state": "West Bengal",
+      "district": "Kolkata",
+      "designations": []
+    },
+    {
+      "slug": "charminar-and-laad-bazaar-hyderabad",
+      "name": "Charminar & Laad Bazaar Pearl Quarter",
+      "category": "HERITAGE",
+      "state": "Telangana",
+      "district": "Hyderabad",
+      "designations": [
+        "ASI Protected Monument"
+      ]
+    },
+    {
+      "slug": "statue-of-unity-kevadia",
+      "name": "Statue of Unity (Sardar Vallabhbhai Patel)",
+      "category": "CULTURE",
+      "state": "Gujarat",
+      "district": "Narmada",
+      "designations": []
+    },
+    {
+      "slug": "great-rann-of-kutch-white-desert",
+      "name": "Great Rann of Kutch (White Salt Desert)",
+      "category": "NATURE",
+      "state": "Gujarat",
+      "district": "Kutch",
+      "designations": []
+    },
+    {
+      "slug": "pattadakal-group-of-monuments-unesco",
+      "name": "Pattadakal Badami Chalukya Sanctuary (UNESCO)",
+      "category": "HERITAGE",
+      "state": "Karnataka",
+      "district": "Bagalkot",
+      "designations": [
+        "UNESCO World Heritage",
+        "ASI Protected Monument"
+      ]
+    },
+    {
+      "slug": "aihole-cradle-of-indian-temple-architecture",
+      "name": "Aihole (Cradle of Indian Temple Architecture)",
+      "category": "HERITAGE",
+      "state": "Karnataka",
+      "district": "Bagalkot",
+      "designations": [
+        "ASI Protected Monument"
+      ]
+    },
+    {
+      "slug": "coorg-madikeri-coffee-hills",
+      "name": "Coorg (Madikeri & Talakaveri Coffee Highlands)",
+      "category": "HILLS",
+      "state": "Karnataka",
+      "district": "Kodagu",
+      "designations": []
+    },
+    {
+      "slug": "kanyakumari-triveni-sangam-and-rock-memorial",
+      "name": "Kanyakumari (Triveni Sangam & Vivekananda Rock)",
+      "category": "SACRED",
+      "state": "Tamil Nadu",
+      "district": "Kanniyakumari",
+      "designations": []
+    },
+    {
+      "slug": "alleppey-backwaters-and-vembanad-lake",
+      "name": "Alleppey (Alappuzha) Backwaters & Vembanad Lake",
+      "category": "LAKES",
+      "state": "Kerala",
+      "district": "Alappuzha",
+      "designations": []
+    },
+    {
+      "slug": "basilica-of-bom-jesus-old-goa-unesco",
+      "name": "Basilica of Bom Jesus (UNESCO World Heritage)",
+      "category": "HERITAGE",
+      "state": "Goa",
+      "district": "North Goa",
+      "designations": [
+        "UNESCO World Heritage",
+        "ASI Protected Monument"
+      ]
+    },
+    {
+      "slug": "fort-aguada-and-lighthouse-candolim",
+      "name": "Fort Aguada & 1864 Portuguese Lighthouse",
+      "category": "HERITAGE",
+      "state": "Goa",
+      "district": "North Goa",
+      "designations": [
+        "ASI Protected Monument"
+      ]
+    },
+    {
+      "slug": "bandhavgarh-tiger-reserve-tala",
+      "name": "Bandhavgarh National Park & Ancient Hill Citadel",
+      "category": "WILDLIFE",
+      "state": "Madhya Pradesh",
+      "district": "Umaria",
+      "designations": []
+    },
+    {
+      "slug": "pachmarhi-biosphere-queen-of-satpura",
+      "name": "Pachmarhi (Queen of Satpura) & Dhupgarh Peak",
+      "category": "HILLS",
+      "state": "Madhya Pradesh",
+      "district": "Narmadapuram",
+      "designations": []
+    },
+    {
+      "slug": "auli-bugyal-ski-slopes-chamoli",
+      "name": "Auli Bugyal & Nanda Devi Alpine Meadows (3,050 m)",
+      "category": "HILLS",
+      "state": "Uttarakhand",
+      "district": "Chamoli",
+      "designations": []
+    },
+    {
+      "slug": "nainital-lake-and-naina-peak",
+      "name": "Nainital Lake (Naini Tal) & Naina Devi Teertham",
+      "category": "LAKES",
+      "state": "Uttarakhand",
+      "district": "Nainital",
+      "designations": []
+    },
+    {
+      "slug": "manali-and-solang-valley-kullu",
+      "name": "Manali & Solang Valley (Beas River Gorge)",
+      "category": "HILLS",
+      "state": "Himachal Pradesh",
+      "district": "Kullu",
+      "designations": []
+    },
+    {
+      "slug": "khajjiar-mini-switzerland-chamba",
+      "name": "Khajjiar Plateau & Sacred Khajji Nag Lake",
+      "category": "HILLS",
+      "state": "Himachal Pradesh",
+      "district": "Chamba",
+      "designations": []
+    },
+    {
+      "slug": "gulmarg-meadow-of-flowers-and-apharwat",
+      "name": "Gulmarg (Meadow of Flowers) & Apharwat Peak",
+      "category": "HILLS",
+      "state": "Jammu and Kashmir",
+      "district": "Baramulla",
+      "designations": []
+    },
+    {
+      "slug": "pahalgam-and-betaab-valley-lidder",
+      "name": "Pahalgam (Valley of Shepherds) & Lidder River",
+      "category": "HILLS",
+      "state": "Jammu and Kashmir",
+      "district": "Anantnag",
+      "designations": []
+    },
+    {
+      "slug": "nubra-valley-and-hunder-sand-dunes-ladakh",
+      "name": "Nubra Valley & Hunder Sand Dunes (Diskit Monastery)",
+      "category": "HILLS",
+      "state": "Ladakh",
+      "district": "Leh",
+      "designations": []
+    },
+    {
+      "slug": "cellular-jail-national-memorial-port-blair",
+      "name": "Cellular Jail (Kala Pani National Memorial)",
+      "category": "HERITAGE",
+      "state": "Andaman and Nicobar Islands",
+      "district": "South Andaman",
+      "designations": []
+    },
+    {
+      "slug": "bangaram-atoll-and-coral-reefs-lakshadweep",
+      "name": "Bangaram Atoll & Coral Reefs (Tear-Drop Lagoon)",
+      "category": "BEACHES",
+      "state": "Lakshadweep",
+      "district": "Lakshadweep",
+      "designations": []
+    },
+    {
+      "slug": "dholavira-harappan-city",
+      "name": "Dholavira: A Harappan City (UNESCO)",
+      "category": "HERITAGE",
+      "state": "Gujarat",
+      "district": "Kutch",
+      "designations": [
+        "UNESCO World Heritage",
+        "ASI Protected Monument"
+      ]
+    },
+    {
+      "slug": "sacred-ensembles-hoysalas-belur-halebidu",
+      "name": "Sacred Ensembles of the Hoysalas (UNESCO)",
+      "category": "HERITAGE",
+      "state": "Karnataka",
+      "district": "Hassan",
+      "designations": [
+        "UNESCO World Heritage",
+        "ASI Protected Monument"
+      ]
+    },
+    {
+      "slug": "rock-shelters-of-bhimbetka",
+      "name": "Rock Shelters of Bhimbetka (UNESCO)",
+      "category": "CAVES",
+      "state": "Madhya Pradesh",
+      "district": "Raisen",
+      "designations": [
+        "UNESCO World Heritage",
+        "ASI Protected Monument"
+      ]
+    },
+    {
+      "slug": "santiniketan-visva-bharati",
+      "name": "Santiniketan (UNESCO World Heritage)",
+      "category": "HERITAGE",
+      "state": "West Bengal",
+      "district": "Birbhum",
+      "designations": [
+        "UNESCO World Heritage"
+      ]
+    },
+    {
+      "slug": "moidams-charaideo-ahom-dynasty",
+      "name": "Moidams – Mound-Burial System of the Ahom Dynasty (UNESCO)",
+      "category": "HERITAGE",
+      "state": "Assam",
+      "district": "Charaideo",
+      "designations": [
+        "UNESCO World Heritage",
+        "ASI Protected Monument"
+      ]
+    },
+    {
+      "slug": "mahabodhi-temple-complex-bodhgaya",
+      "name": "Mahabodhi Temple Complex at Bodh Gaya (UNESCO)",
+      "category": "HERITAGE",
+      "state": "Bihar",
+      "district": "Gaya",
+      "designations": [
+        "UNESCO World Heritage",
+        "ASI Protected Monument"
+      ]
+    },
+    {
+      "slug": "great-himalayan-national-park-unesco",
+      "name": "Great Himalayan National Park Conservation Area (UNESCO)",
+      "category": "WILDLIFE",
+      "state": "Himachal Pradesh",
+      "district": "Kullu",
+      "designations": [
+        "UNESCO World Heritage"
+      ]
+    },
+    {
+      "slug": "badami-cave-temples-chalukya",
+      "name": "Badami Cave Temples (ASI Chalukyan Rock Architecture)",
+      "category": "CAVES",
+      "state": "Karnataka",
+      "district": "Bagalkot",
+      "designations": [
+        "ASI Protected Monument"
+      ]
+    },
+    {
+      "slug": "udayagiri-and-khandagiri-caves-bhubaneswar",
+      "name": "Udayagiri and Khandagiri Caves (ASI Jain Monasteries)",
+      "category": "CAVES",
+      "state": "Odisha",
+      "district": "Khordha",
+      "designations": [
+        "ASI Protected Monument"
+      ]
+    },
+    {
+      "slug": "tabo-monastery-and-ancient-meditation-caves",
+      "name": "Tabo Monastery & Ancient Meditation Cliff Caves (ASI)",
+      "category": "CAVES",
+      "state": "Himachal Pradesh",
+      "district": "Lahaul and Spiti",
+      "designations": [
+        "ASI Protected Monument"
+      ]
+    },
+    {
+      "slug": "wular-lake-freshwater-wetland",
+      "name": "Wular Lake (India's Largest Freshwater Lake & Ramsar Site)",
+      "category": "LAKES",
+      "state": "Jammu and Kashmir",
+      "district": "Bandipora",
+      "designations": [
+        "Ramsar Wetland Site"
+      ]
+    },
+    {
+      "slug": "sambhar-salt-lake-rajasthan",
+      "name": "Sambhar Salt Lake (Ramsar Saline Wetland & Flamingo Haven)",
+      "category": "LAKES",
+      "state": "Rajasthan",
+      "district": "Jaipur",
+      "designations": [
+        "Ramsar Wetland Site"
+      ]
+    },
+    {
+      "slug": "keoladeo-ghana-national-park-bharatpur",
+      "name": "Keoladeo Ghana National Park (UNESCO & Ramsar Wetland)",
+      "category": "WILDLIFE",
+      "state": "Rajasthan",
+      "district": "Bharatpur",
+      "designations": [
+        "UNESCO World Heritage",
+        "Ramsar Wetland Site"
+      ]
+    },
+    {
+      "slug": "bhoj-wetland-upper-lake-bhopal",
+      "name": "Bhoj Wetland (Bada Talab & Ramsar Waterbody #1206)",
+      "category": "LAKES",
+      "state": "Madhya Pradesh",
+      "district": "Bhopal",
+      "designations": [
+        "Ramsar Wetland Site"
+      ]
+    },
+    {
+      "slug": "channapatna-toy-craft-cluster",
+      "name": "Channapatna Wooden Toys & Craft Cluster (GI Registered)",
+      "category": "SHOPPING",
+      "state": "Karnataka",
+      "district": "Ramanagara",
+      "designations": []
+    },
+    {
+      "slug": "pochampally-ikat-handloom-weavers-village",
+      "name": "Pochampally Ikat Handloom Village (UNWTO Best Tourism Village)",
+      "category": "SHOPPING",
+      "state": "Telangana",
+      "district": "Yadadri Bhuvanagiri",
+      "designations": []
+    },
+    {
+      "slug": "johari-bazaar-and-bapu-bazaar-jaipur",
+      "name": "Johari Bazaar & Bapu Bazaar (Historic Craft Quarter)",
+      "category": "SHOPPING",
+      "state": "Rajasthan",
+      "district": "Jaipur",
+      "designations": []
+    },
+    {
+      "slug": "varanasi-banarasi-silk-weavers-quarter",
+      "name": "Varanasi Banarasi Silk & Zari Weavers Quarter (GI Certified)",
+      "category": "SHOPPING",
+      "state": "Uttar Pradesh",
+      "district": "Varanasi",
+      "designations": []
+    },
+    {
+      "slug": "aranmula-kannadi-metal-mirror-village",
+      "name": "Aranmula Kannadi Metal Mirror Craft Village (GI Registered)",
+      "category": "SHOPPING",
+      "state": "Kerala",
+      "district": "Pathanamthitta",
+      "designations": []
+    },
+    {
+      "slug": "madhubani-mithila-painting-artisan-village",
+      "name": "Madhubani Mithila Painting Artisan Village (GI Certified)",
+      "category": "SHOPPING",
+      "state": "Bihar",
+      "district": "Madhubani",
+      "designations": []
+    },
+    {
+      "slug": "kanchipuram-silk-weavers-heritage-quarter",
+      "name": "Kanchipuram Silk Weavers Heritage Quarter (GI Registered)",
+      "category": "SHOPPING",
+      "state": "Tamil Nadu",
+      "district": "Kanchipuram",
+      "designations": []
+    },
+    {
+      "slug": "chandni-chowk-paranthe-wali-gali-and-spices",
+      "name": "Chandni Chowk Paranthe Wali Gali & Khari Baoli (Mughal Culinary Street)",
+      "category": "FOOD",
+      "state": "Delhi",
+      "district": "Central Delhi",
+      "designations": []
+    },
+    {
+      "slug": "lucknow-chowk-awadhi-culinary-precinct",
+      "name": "Lucknow Chowk Awadhi Culinary Precinct (Nawabi Heritage Corridor)",
+      "category": "FOOD",
+      "state": "Uttar Pradesh",
+      "district": "Lucknow",
+      "designations": []
+    },
+    {
+      "slug": "hyderabad-charminar-biryani-and-irani-chai-precinct",
+      "name": "Hyderabad Charminar & Laad Bazaar Culinary Trail (GI Haleem & Dum Biryani)",
+      "category": "FOOD",
+      "state": "Telangana",
+      "district": "Hyderabad",
+      "designations": []
+    },
+    {
+      "slug": "dacres-lane-and-college-street-food-trail-kolkata",
+      "name": "Dacres Lane & College Street Coffee House Trail (Colonial Adda)",
+      "category": "FOOD",
+      "state": "West Bengal",
+      "district": "Kolkata",
+      "designations": []
+    },
+    {
+      "slug": "sandakphu-summit-and-singalila-trek",
+      "name": "Sandakphu Summit & Singalila Ridge Trek (Sleeping Buddha View)",
+      "category": "ADVENTURE",
+      "state": "West Bengal",
+      "district": "Darjeeling",
+      "designations": []
+    },
+    {
+      "slug": "chadar-frozen-zanskar-river-trek-ladakh",
+      "name": "Chadar Frozen Zanskar River Trek (Sub-Zero Ice Canyon)",
+      "category": "ADVENTURE",
+      "state": "Ladakh",
+      "district": "Zanskar",
+      "designations": []
+    },
+    {
+      "slug": "kedarkantha-snow-summit-trek",
+      "name": "Kedarkantha Summit Trek (12,500 ft Himalayan Snow Peak)",
+      "category": "ADVENTURE",
+      "state": "Uttarakhand",
+      "district": "Uttarkashi",
+      "designations": []
+    },
+    {
+      "slug": "triund-ridge-and-kangra-valley-trek",
+      "name": "Triund Ridge & Kangra Valley Trek (Dhauladhar Foothills)",
+      "category": "ADVENTURE",
+      "state": "Himachal Pradesh",
+      "district": "Kangra",
+      "designations": []
+    },
+    {
+      "slug": "national-museum-janpath-new-delhi",
+      "name": "National Museum, Janpath (Premier National Repository of Antiquities)",
+      "category": "FAMILY",
+      "state": "Delhi",
+      "district": "New Delhi",
+      "designations": []
+    },
+    {
+      "slug": "chhatrapati-shivaji-maharaj-vastu-sangrahalaya-mumbai",
+      "name": "Chhatrapati Shivaji Maharaj Vastu Sangrahalaya (CSMVS Museum)",
+      "category": "FAMILY",
+      "state": "Maharashtra",
+      "district": "Mumbai",
+      "designations": []
+    },
+    {
+      "slug": "indian-museum-kolkata",
+      "name": "Indian Museum (Asia's Oldest Museum, Founded 1814)",
+      "category": "FAMILY",
+      "state": "West Bengal",
+      "district": "Kolkata",
+      "designations": []
+    },
+    {
+      "slug": "visvesvaraya-industrial-technological-museum-bengaluru",
+      "name": "Visvesvaraya Industrial & Technological Museum (VITM)",
+      "category": "FAMILY",
+      "state": "Karnataka",
+      "district": "Bengaluru Urban",
+      "designations": []
+    },
+    {
+      "slug": "nagarhole-tiger-reserve-kabini",
+      "name": "Nagarhole Tiger Reserve & Kabini River (Nilgiri Biosphere)",
+      "category": "WILDLIFE",
+      "state": "Karnataka",
+      "district": "Kodagu",
+      "designations": []
+    },
+    {
+      "slug": "natural-arch-tirumala-hills-gsi",
+      "name": "Natural Arch, Tirumala Hills (GSI National Geological Monument)",
+      "category": "NATURE",
+      "state": "Andhra Pradesh",
+      "district": "Tirupati",
+      "designations": [
+        "GSI National Geological Monument"
+      ]
+    },
+    {
+      "slug": "st-marys-island-columnar-basalt-malpe",
+      "name": "St. Mary's Island (GSI Columnar Basaltic Lava Monument)",
+      "category": "BEACHES",
+      "state": "Karnataka",
+      "district": "Udupi",
+      "designations": [
+        "GSI National Geological Monument"
+      ]
+    },
+    {
+      "slug": "lonar-meteorite-crater-lake",
+      "name": "Lonar Crater Lake (Hyper-Velocity Meteorite Impact & Ramsar Site)",
+      "category": "LAKES",
+      "state": "Maharashtra",
+      "district": "Buldhana",
+      "designations": [
+        "GSI National Geological Monument",
+        "Ramsar Wetland Site"
+      ]
+    },
+    {
+      "slug": "gandikota-grand-canyon-and-fort",
+      "name": "Gandikota Gorge & Citadel (The Grand Canyon of India)",
+      "category": "HERITAGE",
+      "state": "Andhra Pradesh",
+      "district": "YSR Kadapa",
+      "designations": []
+    },
+    {
+      "slug": "ranganathittu-bird-sanctuary-kaveri",
+      "name": "Ranganathittu Bird Sanctuary (Kaveri River Islets & Ramsar Site)",
+      "category": "WILDLIFE",
+      "state": "Karnataka",
+      "district": "Mandya",
+      "designations": [
+        "Ramsar Wetland Site"
+      ]
+    },
+    {
+      "slug": "vedanthangal-bird-sanctuary-chengalpattu",
+      "name": "Vedanthangal Bird Sanctuary (India's Oldest Water Bird Sanctuary)",
+      "category": "WILDLIFE",
+      "state": "Tamil Nadu",
+      "district": "Chengalpattu",
+      "designations": [
+        "Ramsar Wetland Site"
+      ]
+    },
+    {
+      "slug": "hogenakkal-falls-kaveri-gorge",
+      "name": "Hogenakkal Falls (The Smoking Rocks of Kaveri)",
+      "category": "WATERFALLS",
+      "state": "Tamil Nadu",
+      "district": "Dharmapuri",
+      "designations": []
+    },
+    {
+      "slug": "tehri-dam-and-high-altitude-lake",
+      "name": "Tehri Dam & High Altitude Reservoir (India's Tallest Dam)",
+      "category": "LAKES",
+      "state": "Uttarakhand",
+      "district": "Tehri Garhwal",
+      "designations": []
+    },
+    {
+      "slug": "kerala-kalamandalam-cheruthuruthy",
+      "name": "Kerala Kalamandalam (Deemed University of Performing Arts)",
+      "category": "CULTURE",
+      "state": "Kerala",
+      "district": "Thrissur",
+      "designations": []
+    },
+    {
+      "slug": "raghurajpur-heritage-crafts-village",
+      "name": "Raghurajpur Heritage Crafts Village (Pattachitra & Gotipua)",
+      "category": "SHOPPING",
+      "state": "Odisha",
+      "district": "Puri",
+      "designations": []
+    },
+    {
+      "slug": "sualkuchi-silk-weaving-village-assam",
+      "name": "Sualkuchi Silk Village (Manchester of Assam & Golden Muga Silk)",
+      "category": "SHOPPING",
+      "state": "Assam",
+      "district": "Kamrup",
+      "designations": []
+    },
+    {
+      "slug": "darjeeling-himalayan-railway-toy-train-unesco",
+      "name": "Darjeeling Himalayan Railway & Batasia Loop (UNESCO Toy Train)",
+      "category": "HERITAGE",
+      "state": "West Bengal",
+      "district": "Darjeeling",
+      "designations": [
+        "UNESCO World Heritage"
+      ]
+    },
+    {
+      "slug": "pamban-sea-bridge-and-cantilever-lift",
+      "name": "Pamban Sea Bridge (Historic 1914 Scherzer Cantilever Lift Bridge)",
+      "category": "HERITAGE",
+      "state": "Tamil Nadu",
+      "district": "Ramanathapuram",
+      "designations": []
+    },
+    {
+      "slug": "sri-harmandir-sahib-golden-temple-amritsar",
+      "name": "Sri Harmandir Sahib (The Golden Temple & Supreme Sikh Takht)",
+      "category": "SACRED",
+      "state": "Punjab",
+      "district": "Amritsar",
+      "designations": []
+    },
+    {
+      "slug": "sarnath-dhamek-stupa-and-deer-park",
+      "name": "Sarnath Dhamek Stupa & Deer Park (Dharmachakra Pravartana)",
+      "category": "SACRED",
+      "state": "Uttar Pradesh",
+      "district": "Varanasi",
+      "designations": [
+        "ASI Protected Monument"
+      ]
+    },
+    {
+      "slug": "shravanabelagola-gommateshwara-bahubali",
+      "name": "Gommateshwara Monolithic Bahubali at Shravanabelagola (981 CE)",
+      "category": "SACRED",
+      "state": "Karnataka",
+      "district": "Hassan",
+      "designations": [
+        "ASI Protected Monument"
+      ]
+    },
+    {
+      "slug": "dilwara-marble-jain-temples-mount-abu",
+      "name": "Dilwara Marble Jain Temples (Intricate Solanki Filigree)",
+      "category": "SACRED",
+      "state": "Rajasthan",
+      "district": "Sirohi",
+      "designations": []
+    },
+    {
+      "slug": "dargah-sharif-khwaja-moinuddin-chishti-ajmer",
+      "name": "Dargah Sharif Khwaja Moinuddin Chishti (Gharib Nawaz of Ajmer)",
+      "category": "SACRED",
+      "state": "Rajasthan",
+      "district": "Ajmer",
+      "designations": []
+    },
+    {
+      "slug": "san-thome-cathedral-basilica-mylapore",
+      "name": "San Thome Cathedral Basilica (Apostolic Tomb of St. Thomas)",
+      "category": "SACRED",
+      "state": "Tamil Nadu",
+      "district": "Chennai",
+      "designations": []
+    },
+    {
+      "slug": "paradesi-synagogue-and-jew-town-kochi",
+      "name": "Paradesi Synagogue (Oldest Active Commonwealth Synagogue, 1568 CE)",
+      "category": "SACRED",
+      "state": "Kerala",
+      "district": "Ernakulam",
+      "designations": []
+    },
+    {
+      "slug": "iranshah-atash-behram-udvada-zoroastrian",
+      "name": "Iranshah Atash Behram, Udvada (Supreme Zoroastrian Fire Temple)",
+      "category": "SACRED",
+      "state": "Gujarat",
+      "district": "Valsad",
+      "designations": []
+    },
+    {
+      "slug": "mawlynnong-cleanest-village-and-living-root-bridge",
+      "name": "Mawlynnong Village & Living Root Bridge (God's Own Garden)",
+      "category": "CULTURE",
+      "state": "Meghalaya",
+      "district": "East Khasi Hills",
+      "designations": []
+    },
+    {
+      "slug": "khonoma-green-village-angami-heritage",
+      "name": "Khonoma Green Village (India's First Green Village & Angami Heritage)",
+      "category": "CULTURE",
+      "state": "Nagaland",
+      "district": "Kohima",
+      "designations": []
+    },
+    {
+      "slug": "isro-space-museum-and-thumba-rocket-launch-station",
+      "name": "ISRO Space Museum & Thumba Equatorial Rocket Launch Station",
+      "category": "FAMILY",
+      "state": "Kerala",
+      "district": "Thiruvananthapuram",
+      "designations": []
+    },
+    {
+      "slug": "jallianwala-bagh-national-memorial-amritsar",
+      "name": "Jallianwala Bagh National Memorial (Sacred Freedom Sanctuary)",
+      "category": "HERITAGE",
+      "state": "Punjab",
+      "district": "Amritsar",
+      "designations": []
+    },
+    {
+      "slug": "haldighati-battlefield-and-chetak-smarak",
+      "name": "Haldighati Mountain Pass & Chetak Smarak (1576 CE Battlefield)",
+      "category": "HERITAGE",
+      "state": "Rajasthan",
+      "district": "Rajsamand",
+      "designations": []
+    }
+  ]
+}

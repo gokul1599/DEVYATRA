@@ -1,0 +1,125 @@
+state,district,places_count,categories_list,has_unesco,has_asi,has_gsi,has_ramsar,has_wildlife
+"Maharashtra","Chhatrapati Sambhajinagar",2,"CAVES",false,false,false,false,true
+"Maharashtra","Raigad",1,"CAVES",false,false,false,false,false
+"Karnataka","Bagalkot",3,"CAVES;HERITAGE",true,true,false,false,false
+"Andhra Pradesh","Alluri Sitharama Raju",1,"CAVES",false,false,false,false,false
+"Andhra Pradesh","Nandyal",1,"CAVES",false,false,false,false,false
+"Andhra Pradesh","Guntur",1,"CAVES",false,false,false,false,false
+"Madhya Pradesh","Raisen",2,"CAVES;HERITAGE",false,false,false,false,false
+"Bihar","Jehanabad",1,"CAVES",false,false,false,false,false
+"Meghalaya","East Khasi Hills",3,"CAVES;WATERFALLS;CULTURE",false,false,false,false,false
+"Kerala","Wayanad",1,"CAVES",false,false,false,false,false
+"Kerala","Idukki",2,"HILLS;WILDLIFE",false,false,false,false,true
+"Tamil Nadu","Nilgiris",1,"HILLS",false,false,false,false,false
+"Tamil Nadu","Dindigul",1,"HILLS",false,false,false,false,true
+"Himachal Pradesh","Shimla",1,"HILLS",false,false,false,false,false
+"Himachal Pradesh","Lahaul and Spiti",2,"HILLS;CAVES",false,true,false,false,false
+"West Bengal","Darjeeling",3,"HILLS;ADVENTURE;HERITAGE",true,false,false,false,false
+"Arunachal Pradesh","Tawang",1,"HILLS",false,false,false,false,false
+"Maharashtra","Satara",1,"HILLS",false,false,false,false,false
+"Karnataka","Chikkaballapur",1,"HILLS",false,false,false,false,false
+"Rajasthan","Sirohi",2,"HILLS;SACRED",false,false,false,false,false
+"Karnataka","Shimoga",1,"WATERFALLS",false,false,false,false,false
+"Goa","South Goa",2,"WATERFALLS;BEACHES",false,false,false,false,false
+"Kerala","Thrissur",2,"WATERFALLS;CULTURE",false,false,false,false,true
+"Tamil Nadu","Dharmapuri",1,"WATERFALLS",false,false,false,false,false
+"Chhattisgarh","Bastar",1,"WATERFALLS",false,false,false,false,false
+"Madhya Pradesh","Jabalpur",1,"WATERFALLS",false,false,false,false,false
+"Ladakh","Leh",2,"LAKES;HILLS",false,false,false,false,false
+"Jammu and Kashmir","Srinagar",1,"LAKES",false,false,false,false,false
+"Manipur","Bishnupur",1,"LAKES",false,false,false,false,false
+"Odisha","Puri",4,"LAKES;HERITAGE;BEACHES;SHOPPING",false,false,false,true,false
+"Karnataka","Vijayanagara",1,"HERITAGE",false,false,false,false,false
+"Madhya Pradesh","Chhatarpur",1,"HERITAGE",false,false,false,false,false
+"Rajasthan","Chittorgarh",1,"HERITAGE",false,false,false,false,false
+"Tamil Nadu","Chengalpattu",2,"HERITAGE;WILDLIFE",false,false,false,true,false
+"Bihar","Nalanda",1,"HERITAGE",false,false,false,false,false
+"Gujarat","Patan",1,"HERITAGE",false,false,false,false,false
+"Gujarat","Mehsana",1,"HERITAGE",false,false,false,false,false
+"Rajasthan","Jaipur",6,"HERITAGE;LAKES;SHOPPING",true,false,false,true,false
+"Rajasthan","Jodhpur",1,"HERITAGE",false,false,false,false,false
+"Telangana","Hyderabad",3,"HERITAGE;FOOD",false,true,false,false,false
+"Telangana","Mulugu",1,"HERITAGE",false,false,false,false,false
+"Delhi","South Delhi",1,"HERITAGE",false,false,false,false,false
+"Andaman and Nicobar Islands","South Andaman",2,"BEACHES;HERITAGE",false,false,false,false,false
+"Tamil Nadu","Ramanathapuram",2,"BEACHES;HERITAGE",false,false,false,false,false
+"Karnataka","Uttara Kannada",1,"BEACHES",false,false,false,false,false
+"Kerala","Thiruvananthapuram",2,"BEACHES;FAMILY",false,false,false,false,false
+"Lakshadweep","Lakshadweep",2,"BEACHES",false,false,false,false,false
+"Puducherry","Puducherry",1,"BEACHES",false,false,false,false,false
+"Assam","Golaghat & Nagaon",1,"WILDLIFE",false,false,false,false,false
+"Rajasthan","Sawai Madhopur",1,"WILDLIFE",false,false,false,false,false
+"Gujarat","Junagadh",1,"WILDLIFE",false,false,false,false,true
+"Uttarakhand","Nainital",2,"WILDLIFE;LAKES",false,false,false,false,false
+"West Bengal","South 24 Parganas",1,"WILDLIFE",false,false,false,false,false
+"Madhya Pradesh","Mandla",1,"WILDLIFE",false,false,false,false,true
+"Karnataka","Bengaluru Urban",2,"PARKS;FAMILY",false,false,false,false,true
+"Delhi","New Delhi",4,"PARKS;FAMILY;HERITAGE",false,false,false,false,false
+"Chandigarh","Chandigarh",1,"PARKS",false,false,false,false,true
+"Telangana","Ranga Reddy",1,"FAMILY",false,false,false,false,false
+"West Bengal","Kolkata",4,"FAMILY;HERITAGE;FOOD",false,false,false,false,false
+"Uttarakhand","Chamoli",2,"ADVENTURE;HILLS",false,false,false,false,false
+"Himachal Pradesh","Kullu",3,"ADVENTURE;HILLS;WILDLIFE",true,false,false,false,true
+"Uttarakhand","Tehri Garhwal",2,"ADVENTURE;LAKES",false,false,false,false,false
+"Tamil Nadu","Madurai",2,"CULTURE;FOOD",false,false,false,false,false
+"Rajasthan","Udaipur",1,"CULTURE",false,false,false,false,false
+"Karnataka","Mysuru",1,"CULTURE",false,false,false,false,false
+"Tripura","Unakoti",1,"CULTURE",false,false,false,false,false
+"Assam","Majuli",1,"CULTURE",false,false,false,false,false
+"Uttar Pradesh","Varanasi",3,"FOOD;SHOPPING;SACRED",false,true,false,false,false
+"Punjab","Amritsar",3,"FOOD;SACRED;HERITAGE",false,false,false,false,true
+"Madhya Pradesh","Indore",1,"FOOD",false,false,false,false,false
+"Gujarat","Ahmedabad",1,"FOOD",false,false,false,false,false
+"Haryana","Kurukshetra",1,"SACRED",false,false,false,false,false
+"Jharkhand","Giridih",1,"SACRED",false,false,false,false,false
+"Dadra and Nagar Haveli and Daman and Diu","Diu",1,"HERITAGE",false,false,false,false,false
+"Mizoram","Serchhip",1,"WATERFALLS",false,false,false,false,false
+"Mizoram","Lawngtlai",1,"HILLS",false,false,false,false,false
+"Nagaland","Kohima",3,"NATURE;CULTURE",false,false,false,false,true
+"Sikkim","Mangan",1,"LAKES",false,false,false,false,false
+"Sikkim","Gangtok",1,"LAKES",false,false,false,false,false
+"Uttar Pradesh","Agra",5,"HERITAGE;PARKS",true,true,false,false,false
+"Rajasthan","Rajsamand",2,"HERITAGE",true,true,false,false,false
+"Rajasthan","Dausa",1,"HERITAGE",false,true,false,false,false
+"Delhi","South East Delhi",1,"HERITAGE",true,true,false,false,false
+"Maharashtra","Mumbai City",1,"HERITAGE",false,false,false,false,false
+"Gujarat","Narmada",1,"CULTURE",false,false,false,false,false
+"Gujarat","Kutch",2,"NATURE;HERITAGE",true,true,false,false,false
+"Karnataka","Kodagu",2,"HILLS;WILDLIFE",false,false,false,false,true
+"Tamil Nadu","Kanniyakumari",1,"SACRED",false,false,false,false,false
+"Kerala","Alappuzha",1,"LAKES",false,false,false,true,true
+"Goa","North Goa",2,"HERITAGE",true,true,false,false,false
+"Madhya Pradesh","Umaria",1,"WILDLIFE",false,false,false,false,true
+"Madhya Pradesh","Narmadapuram",1,"HILLS",false,false,false,false,false
+"Himachal Pradesh","Chamba",1,"HILLS",false,false,false,false,false
+"Jammu and Kashmir","Baramulla",1,"HILLS",false,false,false,false,false
+"Jammu and Kashmir","Anantnag",1,"HILLS",false,false,false,false,false
+"Karnataka","Hassan",2,"HERITAGE;SACRED",true,true,false,false,false
+"West Bengal","Birbhum",1,"HERITAGE",true,false,false,false,false
+"Assam","Charaideo",1,"HERITAGE",true,true,false,false,false
+"Bihar","Gaya",1,"HERITAGE",true,true,false,false,true
+"Odisha","Khordha",1,"CAVES",false,true,false,false,false
+"Jammu and Kashmir","Bandipora",1,"LAKES",false,false,false,true,false
+"Rajasthan","Bharatpur",1,"WILDLIFE",true,false,false,true,true
+"Madhya Pradesh","Bhopal",1,"LAKES",false,false,false,true,false
+"Karnataka","Ramanagara",1,"SHOPPING",false,false,false,false,false
+"Telangana","Yadadri Bhuvanagiri",1,"SHOPPING",false,false,false,false,false
+"Kerala","Pathanamthitta",1,"SHOPPING",false,false,false,false,false
+"Bihar","Madhubani",1,"SHOPPING",false,false,false,false,false
+"Tamil Nadu","Kanchipuram",1,"SHOPPING",false,false,false,false,false
+"Delhi","Central Delhi",1,"FOOD",false,false,false,false,false
+"Uttar Pradesh","Lucknow",1,"FOOD",false,false,false,false,false
+"Ladakh","Zanskar",1,"ADVENTURE",false,false,false,false,false
+"Uttarakhand","Uttarkashi",1,"ADVENTURE",false,false,false,false,false
+"Himachal Pradesh","Kangra",1,"ADVENTURE",false,false,false,false,false
+"Maharashtra","Mumbai",1,"FAMILY",false,false,false,false,false
+"Andhra Pradesh","Tirupati",1,"NATURE",false,false,true,false,false
+"Karnataka","Udupi",1,"BEACHES",false,false,true,false,false
+"Maharashtra","Buldhana",1,"LAKES",false,false,true,true,false
+"Andhra Pradesh","YSR Kadapa",1,"HERITAGE",false,false,true,false,false
+"Karnataka","Mandya",1,"WILDLIFE",false,false,false,true,false
+"Assam","Kamrup",1,"SHOPPING",false,false,false,false,false
+"Rajasthan","Ajmer",1,"SACRED",false,false,false,false,false
+"Tamil Nadu","Chennai",1,"SACRED",false,false,false,false,false
+"Kerala","Ernakulam",1,"SACRED",false,false,false,false,false
+"Gujarat","Valsad",1,"SACRED",false,false,false,false,false
