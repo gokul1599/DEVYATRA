@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { getUserByToken, SESSION_COOKIE } from "@/lib/auth";
-import { getNationalCoverageMatrix } from "@/lib/coverage/matrix";
+import { getNationalCoverageMatrix, getPlacesCoverageMatrix } from "@/lib/coverage/matrix";
 
 export const dynamic = "force-dynamic";
 
@@ -12,13 +12,20 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const matrix = await getNationalCoverageMatrix();
-  if (!matrix) {
+  const [matrix, placesCoverage] = await Promise.all([
+    getNationalCoverageMatrix(),
+    getPlacesCoverageMatrix(),
+  ]);
+
+  if (!matrix && !placesCoverage) {
     return NextResponse.json({ error: "Coverage data unavailable" }, { status: 503 });
   }
 
   return NextResponse.json({
     success: true,
-    data: matrix,
+    data: {
+      templesCoverage: matrix,
+      placesCoverage,
+    },
   });
 }

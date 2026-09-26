@@ -194,3 +194,95 @@ export async function getNationalCoverageMatrix(): Promise<NationalCoverageMatri
     states: stateItems,
   };
 }
+
+export interface PlaceCategoryMatrixItem {
+  state: string;
+  stateCode: string;
+  totalPlaces: number;
+  categories: Record<string, number>;
+}
+
+export interface NationalPlacesCoverageReport {
+  totalPlaces: number;
+  totalVerifiedPlaces: number;
+  totalWithCoordinates: number;
+  totalWithOfficialSources: number;
+  totalWithApprovedImages: number;
+  statesCoveredCount: number;
+  totalStatesAndUTs: number;
+  categoryBreakdown: Record<string, number>;
+  matrix: PlaceCategoryMatrixItem[];
+}
+
+export async function getPlacesCoverageMatrix(): Promise<NationalPlacesCoverageReport | null> {
+  const prisma = getPrisma();
+  if (!prisma) return null;
+
+  try {
+    const places = await prisma.place.findMany({
+      select: {
+        id: true,
+        slug: true,
+        state: true,
+        stateCode: true,
+        category: true,
+        categories: true,
+        verificationStatus: true,
+        provenanceTier: true,
+        latitude: true,
+        longitude: true,
+        image: true,
+        sourceName: true,
+      },
+      orderBy: { state: "asc" },
+    });
+
+    const totalPlaces = places.length;
+    const totalVerifiedPlaces = places.filter(p => p.verificationStatus.includes("VERIFIED")).length;
+    const totalWithCoordinates = places.filter(p => p.latitude !== 0 && p.longitude !== 0).length;
+    const totalWithOfficialSources = places.filter(p => p.provenanceTier === "OFFICIAL_STATUTORY" || p.provenanceTier === "STATE_GOVERNMENT").length;
+    const totalWithApprovedImages = places.filter(p => Boolean(p.image)).length;
+
+    const stateMap = new Map<string, PlaceCategoryMatrixItem>();
+    const categoryBreakdown: Record<string, number> = {};
+
+    for (const p of places) {
+      const stateName = p.state;
+      const sCode = p.stateCode || stateName.slice(0, 2).toUpperCase();
+
+      if (!stateMap.has(stateName)) {
+        stateMap.set(stateName, {
+          state: stateName,
+          stateCode: sCode,
+          totalPlaces: 0,
+          categories: {},
+        });
+      }
+
+      const item = stateMap.get(stateName)!;
+      item.totalPlaces++;
+
+      const cats = p.categories && p.categories.length > 0 ? p.categories : [p.category];
+      for (const cat of cats) {
+        item.categories[cat] = (item.categories[cat] || 0) + 1;
+        categoryBreakdown[cat] = (categoryBreakdown[cat] || 0) + 1;
+      }
+    }
+
+    return {
+      totalPlaces,
+      totalVerifiedPlaces,
+      totalWithCoordinates,
+      totalWithOfficialSources,
+      totalWithApprovedImages,
+      statesCoveredCount: stateMap.size,
+      totalStatesAndUTs: 36,
+      categoryBreakdown,
+      matrix: Array.from(stateMap.values()),
+    };
+  } catch (err) {
+    console.error("Error computing places coverage matrix:", err);
+    return null;
+  }
+}
+

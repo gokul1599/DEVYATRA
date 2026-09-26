@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { Container, Breadcrumbs } from "@/components/ui";
 import { getDestinationBySlug, CATEGORY_METADATA } from "@/lib/destinations/registry";
+import { DestinationService } from "@/lib/destinations/service";
 import { getPrisma } from "@/lib/db/client";
 
 interface Props {
@@ -27,7 +28,7 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const destination = getDestinationBySlug(slug);
+  const destination = await DestinationService.getBySlug(slug);
 
   if (!destination) {
     return {
@@ -36,7 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${destination.name} — ${destination.subcategory} | Devyatra`,
+    title: `${destination.name} — ${destination.subcategory || destination.category} | Devyatra`,
     description: destination.description.slice(0, 160),
     openGraph: {
       title: `${destination.name} | Devyatra Sacred & Travel Atlas`,
@@ -48,73 +49,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function PlaceDetailPage({ params }: Props) {
   const { slug } = await params;
-  let destination = getDestinationBySlug(slug);
-
-  // If not found in static registry, query database
-  if (!destination) {
-    const prisma = getPrisma();
-    if (prisma) {
-      try {
-        const p = await prisma.famousPlace.findUnique({
-          where: { slug },
-          include: {
-            templeLinks: {
-              include: {
-                temple: {
-                  select: { name: true, slug: true, state: { select: { slug: true } } },
-                },
-              },
-            },
-          },
-        });
-
-        if (p) {
-          const linkedTemple = p.templeLinks[0]?.temple;
-          destination = {
-            id: p.id,
-            slug: p.slug,
-            name: p.name,
-            nativeName: p.nativeName ?? undefined,
-            category: (p.category.toUpperCase() as any) || "HERITAGE",
-            subcategory: p.subcategory || "Famous Attraction",
-            description: p.description,
-            latitude: p.latitude,
-            longitude: p.longitude,
-            city: p.city ?? undefined,
-            district: p.district || "District",
-            state: p.state || "India",
-            image: p.imageReference || "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1200&q=80",
-            imageAlt: p.name,
-            imageCredit: {
-              photographer: "Official Record",
-              source: (p.sourceType === "asi" ? "ASI Official" : "State Tourism") as any,
-              license: "Government Open Data",
-            },
-            bestTimeToVisit: undefined,
-            timings: null,
-            entryFee: null,
-            recommendedDuration: undefined,
-            operationalStatus: "UNVERIFIED",
-            highlights: [p.subcategory || "Heritage Landmark", `${p.district} Point of Interest`],
-            nearbyTempleAnchor: linkedTemple
-              ? {
-                  name: linkedTemple.name,
-                  slug: linkedTemple.slug,
-                  distanceKm: p.templeLinks[0]?.distanceKm || 5.0,
-                }
-              : undefined,
-            provenance: {
-              sourceType: (p.sourceType as any) || "curated",
-              verifiedDate: p.verifiedAt ? p.verifiedAt.toISOString().split("T")[0] : "2026-09-01",
-              sourceUrl: p.sourceUrl || undefined,
-            },
-          };
-        }
-      } catch (err) {
-        console.warn("[PlacePage] Database fallback lookup failed:", err);
-      }
-    }
-  }
+  const destination = await DestinationService.getBySlug(slug);
 
   if (!destination) {
     notFound();

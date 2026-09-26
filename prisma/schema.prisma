@@ -708,3 +708,162 @@ model JournalEntry {
   @@index([journeyId])
   @@index([templeId])
 }
+
+// ─── Phase V2.5: Canonical National Places Master Architecture ─────────────
+
+model Place {
+  id                    String    @id @default(cuid())
+  slug                  String    @unique
+  name                  String
+  nativeName            String?
+  alternateNames        String[]  @default([])
+  category              String    // Primary category: SACRED | HERITAGE | CAVES | HILLS | WATERFALLS | LAKES | NATURE | BEACHES | WILDLIFE | PARKS | FAMILY | ADVENTURE | CULTURE | FOOD | SHOPPING
+  categories            String[]  @default([]) // Multi-category support
+  subcategory           String?
+  description           String
+
+  // Geolocation & Precision
+  latitude              Float
+  longitude             Float
+  coordinatePrecision   String    @default("EXACT") // EXACT | APPROXIMATE | ESTIMATED | CENTROID | UNKNOWN
+  elevationMeters       Float?
+  address               String?
+  city                  String?
+  district              String
+  state                 String
+  country               String    @default("India")
+  stateCode             String?
+
+  // Lifecycle & Access
+  status                String    @default("ACTIVE") // ACTIVE | SEASONAL | TEMPORARILY_CLOSED | PERMANENTLY_CLOSED | RESTRICTED_ACCESS
+  timings               String?
+  entryFee              String?
+  bestTimeToVisit       String?
+  recommendedDuration   String?
+  facilities            String[]  @default([])
+  accessibilityFeatures String[]  @default([])
+
+  // Statutory & Institutional Designations
+  asiProtected          Boolean   @default(false)
+  asiMonumentId         String?
+  unescoDesignated      Boolean   @default(false)
+  unescoReference       String?
+  ramsarSite            Boolean   @default(false)
+  tigerReserve          Boolean   @default(false)
+  nationalPark          Boolean   @default(false)
+  wildlifeSanctuary     Boolean   @default(false)
+  giProductTag          String?
+
+  // Trust & Verification
+  verificationStatus    String    @default("UNVERIFIED") // VERIFIED_OFFICIAL | VERIFIED_INSTITUTIONAL | VERIFIED_SECONDARY | COMMUNITY_REPORTED | NEEDS_REVIEW | UNVERIFIED | REJECTED
+  provenanceTier        String    @default("CURATED_DB") // OFFICIAL_STATUTORY | INTERNATIONAL_INSTITUTIONAL | STATE_GOVERNMENT | LOCAL_AUTHORITY | REPUTABLE_SECONDARY | COMMUNITY_REPORTED | CURATED_DB
+  sourceName            String?
+  sourceType            String?
+  sourceUrl             String?
+  officialWebsite       String?
+  verifiedAt            DateTime?
+  lastCheckedAt         DateTime? @default(now())
+
+  // Media
+  image                 String?
+  imageAlt              String?
+  imageCreditName       String?
+  imageCreditSource     String?
+  imageLicense          String?
+  isAiGeneratedImage    Boolean   @default(false)
+
+  // Tags & Highlights
+  highlights            String[]  @default([])
+  tags                  String[]  @default([])
+  culturalTags          String[]  @default([])
+  audienceTags          String[]  @default([])
+
+  // Relationships
+  sources               PlaceSource[]
+  media                 PlaceMedia[]
+  categoryRelations     PlaceCategoryRelation[]
+  fromRelations         PlaceRelationship[] @relation("FromPlace")
+  toRelations           PlaceRelationship[] @relation("ToPlace")
+
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([category])
+  @@index([state])
+  @@index([district])
+  @@index([latitude, longitude])
+  @@index([verificationStatus])
+  @@index([provenanceTier])
+  @@index([coordinatePrecision])
+  @@index([status])
+  @@map("places")
+}
+
+model PlaceCategoryRelation {
+  id         String   @id @default(cuid())
+  placeId    String
+  place      Place    @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  category   String
+  isPrimary  Boolean  @default(false)
+
+  @@unique([placeId, category])
+  @@index([category])
+  @@map("place_category_relations")
+}
+
+model PlaceSource {
+  id                 String    @id @default(cuid())
+  placeId            String
+  place              Place     @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  sourceType         String    // TIER1_OFFICIAL | TIER2_UNESCO | TIER3_STATE_DEPT | TIER4_LOCAL_AUTHORITY | TIER5_INSTITUTION | TIER6_SECONDARY | TIER7_COMMUNITY
+  sourceName         String
+  sourceUrl          String?
+  officialRecordId   String?
+  retrievedAt        DateTime  @default(now())
+  lastVerifiedAt     DateTime?
+  verificationMethod String?
+  verificationStatus String    @default("UNVERIFIED")
+  notes              String?
+
+  @@index([placeId])
+  @@index([sourceType])
+  @@map("place_sources")
+}
+
+model PlaceMedia {
+  id                  String    @id @default(cuid())
+  placeId             String
+  place               Place     @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  kind                String    @default("PRIMARY") // PRIMARY | GALLERY | PANORAMA | HISTORIC
+  sourceType          String    @default("VERIFIED_PHOTO") // OFFICIAL | WIKIMEDIA | UNSPLASH | CC | AI_ILLUSTRATION
+  sourceUrl           String?
+  publicUrl           String
+  altText             String?
+  caption             String?
+  authorName          String?
+  licenseType         String?
+  attributionRequired Boolean   @default(false)
+  isAiGenerated       Boolean   @default(false)
+  isApproved          Boolean   @default(true)
+  verificationStatus  String    @default("VERIFIED")
+  createdAt           DateTime  @default(now())
+
+  @@index([placeId])
+  @@map("place_media")
+}
+
+model PlaceRelationship {
+  id               String   @id @default(cuid())
+  fromPlaceId      String
+  fromPlace        Place    @relation("FromPlace", fields: [fromPlaceId], references: [id], onDelete: Cascade)
+  toPlaceId        String
+  toPlace          Place    @relation("ToPlace", fields: [toPlaceId], references: [id], onDelete: Cascade)
+  relationshipType String   // is_near | is_part_of | is_inside | suggested_circuit
+  distanceKm       Float?
+  metadata         Json?
+
+  @@unique([fromPlaceId, toPlaceId, relationshipType])
+  @@index([fromPlaceId])
+  @@index([toPlaceId])
+  @@map("place_relationships")
+}

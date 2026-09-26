@@ -165,15 +165,30 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    // 2. Query Famous Places from Database
+    // 2. Query Canonical Places from Database with multi-category support
     if (prisma && (category !== "TEMPLE" && category !== "SACRED")) {
-      const placesLimit = Math.max(30, limit - features.length);
-      const famousPlaces = await prisma.famousPlace.findMany({
+      const placesLimit = Math.max(50, limit - features.length);
+      const normCat = category !== "ALL" ? category.toUpperCase() : null;
+
+      const canonicalPlaces = await prisma.place.findMany({
         where: {
           latitude: { gte: bbox.minLat, lte: bbox.maxLat },
           longitude: { gte: bbox.minLng, lte: bbox.maxLng },
-          ...(category !== "ALL" ? { category: { equals: category, mode: "insensitive" } } : {}),
-          ...(verifiedOnly ? { verificationStatus: { in: ["VERIFIED_OFFICIAL", "VERIFIED_SOURCE"] } } : {}),
+          ...(normCat
+            ? {
+                OR: [
+                  { category: normCat },
+                  { categories: { has: normCat } },
+                ],
+              }
+            : {}),
+          ...(verifiedOnly
+            ? {
+                verificationStatus: {
+                  in: ["VERIFIED_OFFICIAL", "VERIFIED_SOURCE", "VERIFIED_INSTITUTIONAL"],
+                },
+              }
+            : {}),
         },
         select: {
           id: true,
@@ -189,14 +204,15 @@ export async function GET(req: NextRequest) {
           district: true,
           state: true,
           verificationStatus: true,
+          provenanceTier: true,
           sourceType: true,
-          googlePlaceId: true,
-          imageReference: true,
+          sourceName: true,
+          image: true,
         },
         take: placesLimit,
       });
 
-      for (const p of famousPlaces) {
+      for (const p of canonicalPlaces) {
         if (!isWithinIndiaBounds(p.latitude, p.longitude)) continue;
 
         const quality = assessLocationQuality({
@@ -205,7 +221,7 @@ export async function GET(req: NextRequest) {
           isCentroidFallback: false,
           verificationStatus: p.verificationStatus,
           sourceType: p.sourceType,
-          googlePlaceId: p.googlePlaceId,
+          googlePlaceId: null,
         });
 
         if (quality.accuracy === "EXACT") exactCount++;
@@ -240,13 +256,13 @@ export async function GET(req: NextRequest) {
             qualityScore: quality.qualityScore,
             verificationStatus: p.verificationStatus,
             sourceType: p.sourceType,
-            sourceName: p.sourceType?.toUpperCase() || "Curated Heritage",
+            sourceName: p.sourceName || p.sourceType?.toUpperCase() || "Curated Heritage",
             isVerified: quality.accuracy === "EXACT" || quality.accuracy === "SITE_CENTER",
             openNow: null,
             distanceKm: null,
-            googlePlaceId: p.googlePlaceId,
+            googlePlaceId: null,
             href: `/places/${p.slug}`,
-            imageReference: p.imageReference,
+            imageReference: p.image,
           },
         });
       }

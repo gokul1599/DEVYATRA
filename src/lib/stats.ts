@@ -83,8 +83,8 @@ export async function getPlatformStats(): Promise<PlatformStats> {
       }),
       prisma.state.count(),
       prisma.district.count({ where: { temples: { some: {} } } }),
-      prisma.adminUnit.count(),
-      prisma.famousPlace.count().catch(() => 0),
+      prisma.adminUnit.count().catch(() => 0),
+      prisma.place.count().catch(() => prisma.famousPlace.count().catch(() => 0)),
       prisma.temple.count({ where: { sourceType: "community" } }),
       prisma.userSubmission.count({ where: { status: "SUBMITTED" } }),
     ]);
@@ -102,7 +102,7 @@ export async function getPlatformStats(): Promise<PlatformStats> {
       return PLATFORM_STATS_BASELINE;
     }
 
-    cachedStats = {
+    const result: PlatformStats = {
       totalTemples: totalCount,
       totalVerifiedTemples: verifiedCount,
       totalStates: Math.min(statesCount || 36, 36), // Sovereign India: 28 States + 8 UTs = 36
@@ -122,8 +122,9 @@ export async function getPlatformStats(): Promise<PlatformStats> {
       formattedTotalDestinations: destinationsCount > 0 ? destinationsCount.toLocaleString("en-IN") : "Verified Catalog",
     };
 
+    cachedStats = result;
     lastFetchedTime = now;
-    return cachedStats;
+    return result;
   } catch (err) {
     console.warn("[getPlatformStats] DB query failed, returning fallback:", err);
     return PLATFORM_STATS_BASELINE;

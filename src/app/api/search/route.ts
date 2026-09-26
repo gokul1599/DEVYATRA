@@ -35,12 +35,14 @@ export async function GET(req: NextRequest) {
   const prisma = getPrisma();
   const outputPlaces: Array<{
     id: string;
+    slug?: string;
     name: string;
     category: string;
     city: string | null;
     district: string | null;
     state: string | null;
     sourceType: string | null;
+    href?: string;
   }> = [];
 
   if (prisma) {
@@ -49,7 +51,37 @@ export async function GET(req: NextRequest) {
       const nearMatch = q.match(/(?:temples?\s+(?:near|around)\s+|places?\s+(?:near|around)\s+|near\s+|around\s+)(.+)/i);
       const targetQuery = nearMatch ? nearMatch[1].trim() : q;
 
-      // 2a. Query Famous Places
+      // 2a. Query Canonical Places from Database
+      const canonicalMatches = await prisma.place.findMany({
+        where: {
+          OR: [
+            { name: { contains: targetQuery, mode: "insensitive" } },
+            { nativeName: { contains: targetQuery, mode: "insensitive" } },
+            { category: { contains: targetQuery, mode: "insensitive" } },
+            { subcategory: { contains: targetQuery, mode: "insensitive" } },
+            { city: { contains: targetQuery, mode: "insensitive" } },
+            { district: { contains: targetQuery, mode: "insensitive" } },
+            { state: { contains: targetQuery, mode: "insensitive" } },
+          ],
+        },
+        take: 8,
+      });
+
+      for (const p of canonicalMatches) {
+        outputPlaces.push({
+          id: p.id,
+          slug: p.slug,
+          name: p.name,
+          category: p.category,
+          city: p.city ?? null,
+          district: p.district,
+          state: p.state,
+          sourceType: p.sourceType ?? null,
+          href: `/places/${p.slug}`,
+        });
+      }
+
+      // 2b. Also query Famous Places for linked temples
       const dbPlaces = await prisma.famousPlace.findMany({
         where: {
           OR: [
@@ -83,16 +115,6 @@ export async function GET(req: NextRequest) {
       });
 
       for (const p of dbPlaces) {
-        outputPlaces.push({
-          id: p.id,
-          name: p.name,
-          category: p.category,
-          city: p.city,
-          district: p.district,
-          state: p.state,
-          sourceType: p.sourceType,
-        });
-
         // Boost temples linked to this famous place
         for (const link of p.templeLinks) {
           const d = link.temple;

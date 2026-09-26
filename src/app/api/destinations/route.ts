@@ -58,7 +58,7 @@ export async function GET(req: NextRequest) {
       limit: 100,
     }).items;
 
-    // 2. Query Neon PostgreSQL FamousPlace table if online
+    // 2. Query Neon PostgreSQL Place table if online
     const prisma = getPrisma();
     let dbPlaces: DestinationRecord[] = [];
 
@@ -66,7 +66,11 @@ export async function GET(req: NextRequest) {
       try {
         const whereClause: Record<string, unknown> = {};
         if (category && category.toUpperCase() !== "ALL") {
-          whereClause.category = category.toUpperCase();
+          const normCat = category.toUpperCase();
+          whereClause.OR = [
+            { category: normCat },
+            { categories: { has: normCat } }
+          ];
         }
         if (state) {
           whereClause.state = { contains: state, mode: "insensitive" };
@@ -80,12 +84,13 @@ export async function GET(req: NextRequest) {
             { description: { contains: q, mode: "insensitive" } },
             { district: { contains: q, mode: "insensitive" } },
             { state: { contains: q, mode: "insensitive" } },
+            { subcategory: { contains: q, mode: "insensitive" } },
           ];
         }
 
-        const places = await prisma.famousPlace.findMany({
+        const places = await prisma.place.findMany({
           where: whereClause,
-          take: 50,
+          take: 100,
         });
 
         dbPlaces = places.map((p) => ({
@@ -94,28 +99,41 @@ export async function GET(req: NextRequest) {
           name: p.name,
           nativeName: p.nativeName ?? undefined,
           category: (p.category.toUpperCase() as DestinationCategory) || "HERITAGE",
-          subcategory: p.subcategory || "Famous Attraction",
+          primaryCategory: (p.category.toUpperCase() as DestinationCategory) || "HERITAGE",
+          subtype: p.subcategory || undefined,
+          subcategory: p.subcategory || undefined,
+          tags: p.tags || [],
+          culturalTags: p.culturalTags || [],
+          audienceTags: p.audienceTags || [],
           description: p.description,
           latitude: p.latitude,
           longitude: p.longitude,
+          locationConfidence: p.coordinatePrecision === "APPROXIMATE" ? "approximate" : "exact",
           city: p.city ?? undefined,
           district: p.district || "Unknown District",
           state: p.state || "India",
-          image: p.imageReference || "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
-          imageAlt: p.name,
+          image: p.image || "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1200&q=80",
+          imageAlt: p.imageAlt || p.name,
           imageCredit: {
-            photographer: "Official Source",
-            source: (p.sourceType === "asi" ? "ASI Official" : "State Tourism") as "ASI Official" | "State Tourism",
-            license: "Government Open Data",
+            photographer: p.imageCreditName || "Official Record",
+            source: (p.imageCreditSource as any) || "State Tourism",
+            license: (p.imageLicense as any) || "Government Open Data",
           },
-          bestTimeToVisit: "October to March",
-          timings: "06:00 AM - 06:00 PM",
-          entryFee: "Standard Entry Fee",
-          recommendedDuration: "Half Day",
-          highlights: [p.subcategory || "Historic site", "Living heritage"],
+          bestTimeToVisit: p.bestTimeToVisit || undefined,
+          timings: p.timings || null,
+          entryFee: p.entryFee || null,
+          operationalStatus: (p.status as any) || "OPEN",
+          verifiedHours: p.timings || null,
+          verifiedEntryFee: p.entryFee || null,
+          officialWebsite: p.officialWebsite || null,
+          unescoReference: p.unescoReference || null,
+          asiReference: p.asiMonumentId || null,
+          recommendedDuration: p.recommendedDuration || undefined,
+          highlights: p.highlights && p.highlights.length > 0 ? p.highlights : [p.subcategory || "National Landmark"],
           provenance: {
-            sourceType: (p.sourceType as "asi" | "unesco" | "tourism" | "official" | "curated") || "curated",
+            sourceType: (p.sourceType as any) || "official",
             verifiedDate: p.verifiedAt ? p.verifiedAt.toISOString().split("T")[0] : "2026-09-01",
+            sourceUrl: p.sourceUrl || undefined,
           },
         }));
       } catch (err) {

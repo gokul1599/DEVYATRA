@@ -45,6 +45,58 @@ export const DestinationService = {
     if (!prisma) return null;
 
     try {
+      // 1. Try canonical Place table
+      const canonical = await prisma.place.findUnique({
+        where: { slug },
+        include: { sources: true },
+      });
+
+      if (canonical) {
+        return {
+          id: canonical.id,
+          slug: canonical.slug,
+          name: canonical.name,
+          nativeName: canonical.nativeName || undefined,
+          category: (canonical.category as DestinationCategory) || "HERITAGE",
+          primaryCategory: (canonical.category as DestinationCategory) || "HERITAGE",
+          subtype: canonical.subcategory || undefined,
+          subcategory: canonical.subcategory || undefined,
+          tags: canonical.tags || [],
+          culturalTags: canonical.culturalTags || [],
+          audienceTags: canonical.audienceTags || [],
+          description: canonical.description,
+          latitude: canonical.latitude,
+          longitude: canonical.longitude,
+          locationConfidence: canonical.coordinatePrecision === "APPROXIMATE" ? "approximate" : "exact",
+          city: canonical.city || undefined,
+          district: canonical.district,
+          state: canonical.state,
+          image: canonical.image || "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1200&q=80",
+          imageAlt: canonical.imageAlt || `${canonical.name}, ${canonical.state}`,
+          imageCredit: {
+            photographer: canonical.imageCreditName || "Official Record",
+            source: (canonical.imageCreditSource as any) || "State Tourism",
+            license: (canonical.imageLicense as any) || "Government Open Data",
+          },
+          bestTimeToVisit: canonical.bestTimeToVisit || undefined,
+          timings: canonical.timings || null,
+          entryFee: canonical.entryFee || null,
+          operationalStatus: (canonical.status as any) || "OPEN",
+          verifiedHours: canonical.timings || null,
+          verifiedEntryFee: canonical.entryFee || null,
+          officialWebsite: canonical.officialWebsite || null,
+          unescoReference: canonical.unescoReference || null,
+          asiReference: canonical.asiMonumentId || null,
+          highlights: canonical.highlights.length > 0 ? canonical.highlights : [canonical.subcategory || "National Landmark"],
+          provenance: {
+            sourceType: (canonical.sourceType as any) || "official",
+            verifiedDate: canonical.verifiedAt ? canonical.verifiedAt.toISOString().split("T")[0] : "2026-09-01",
+            sourceUrl: canonical.sourceUrl || undefined,
+          },
+        };
+      }
+
+      // 2. Fall back to DB FamousPlace
       const dbPlace = await prisma.famousPlace.findUnique({
         where: { slug },
       });

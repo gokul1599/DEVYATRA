@@ -1,4 +1,5 @@
 import type { DestinationRecord } from "./registry";
+import { STATUTORY_NATIONAL_DESTINATIONS } from "./national-statutory-places";
 
 /**
  * DEVYATRA / TEMPLEORA — ALL-INDIA DESTINATION DIRECTORY
@@ -18,7 +19,7 @@ import type { DestinationRecord } from "./registry";
  * - Living Sacred Temples & Teerthams
  */
 
-export const ALL_INDIA_DESTINATIONS: DestinationRecord[] = [
+const BASE_ALL_INDIA_DESTINATIONS: DestinationRecord[] = [
   // ==========================================
   // 1. ANCIENT CAVES & ROCK-CUT MONUMENTS
   // ==========================================
@@ -5514,4 +5515,9 @@ export const ALL_INDIA_DESTINATIONS: DestinationRecord[] = [
       "verifiedDate": "2026-09-01"
     }
   },
+];
+
+export const ALL_INDIA_DESTINATIONS: DestinationRecord[] = [
+  ...BASE_ALL_INDIA_DESTINATIONS,
+  ...STATUTORY_NATIONAL_DESTINATIONS,
 ];
