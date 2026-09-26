@@ -32,6 +32,7 @@ export interface DestinationFeatureProperties {
   sourceType?: string | null;
   sourceName?: string | null;
   isVerified: boolean;
+  isInside?: boolean;
   openNow?: boolean | null;
   distanceKm?: number | null;
   googlePlaceId?: string | null;

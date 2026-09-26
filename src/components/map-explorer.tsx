@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
@@ -49,7 +50,9 @@ import {
   BookmarkCheck,
   ChevronUp,
   ChevronDown,
-  ArrowRight,
+  Globe2,
+  Building2,
+  Layers,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
@@ -68,6 +71,11 @@ import {
   type DestinationFeatureCollection,
 } from "@/lib/map/geojson";
 import { resolveDestinationMedia } from "@/lib/images/resolver";
+import {
+  getStateBoundary,
+  getDistrictBoundary,
+  getLocalityBoundary,
+} from "@/lib/map/admin-boundaries";
 
 export interface MapPlaceItem {
   id: string;
@@ -77,11 +85,13 @@ export interface MapPlaceItem {
   latitude: number;
   longitude: number;
   address?: string | null;
+  city?: string | null;
   district?: string | null;
   state?: string | null;
   stateCode?: string | null;
   image?: string | null;
   verified?: boolean;
+  isInside?: boolean;
   source?: string;
   certainty?: string;
   href?: string | null;
@@ -89,16 +99,32 @@ export interface MapPlaceItem {
   googlePlaceId?: string | null;
   accuracy?: string;
   accuracyLabel?: string;
+  distanceKm?: number | null;
+}
+
+export interface ActiveLocationFilter {
+  type: "state" | "district" | "city";
+  name: string;
+  district?: string;
+  state?: string;
+  lat: number;
+  lng: number;
+  zoom?: number;
 }
 
 interface Suggestion {
-  type: "temple" | "location" | "heritage" | "query";
+  type: "destination" | "locality" | "district" | "state" | "temple" | "location";
   title: string;
   subtitle?: string;
+  category?: string;
   slug?: string;
+  id?: string;
   lat?: number;
   lng?: number;
-  id?: string;
+  zoom?: number;
+  district?: string;
+  state?: string;
+  city?: string;
 }
 
 import {
@@ -123,6 +149,9 @@ const ICON_MAP: Record<string, LucideIcon> = {
   UtensilsCrossed,
   ShoppingBag,
   ShieldCheck,
+  Building2,
+  Globe2,
+  Layers,
 };
 
 function isWebGLSupported(): boolean {
@@ -140,6 +169,9 @@ function isWebGLSupported(): boolean {
 
 export function MapExplorer() {
   const { t } = useApp();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const userMarkerRef = useRef<maplibregl.Marker | null>(null);
@@ -183,13 +215,15 @@ export function MapExplorer() {
   const [savedStatus, setSavedStatus] = useState(false);
   const [saveBusy, setSaveBusy] = useState(false);
 
-  // Category Filter
+  // Canonical Filters: Category & Administrative Location
   const [filterCategory, setFilterCategory] = useState<string>("all");
+  const [activeLocation, setActiveLocation] = useState<ActiveLocationFilter | null>(null);
   const [showAreaSearchPill, setShowAreaSearchPill] = useState(false);
 
   const viewportAbortRef = useRef<AbortController | null>(null);
   const viewportTimerRef = useRef<NodeJS.Timeout | null>(null);
   const searchAbortRef = useRef<AbortController | null>(null);
+  const initialParamsHandledRef = useRef(false);
 
   // Search state
   const [q, setQ] = useState("");
@@ -198,111 +232,82 @@ export function MapExplorer() {
   const [suggestOpen, setSuggestOpen] = useState(false);
   const [suggestIdx, setSuggestIdx] = useState(-1);
 
-  // Filter items in memory
-  const filteredItems = (Array.isArray(items) ? items : []).filter((p) => {
-    if ((p as unknown as { isCentroidFallback?: boolean }).isCentroidFallback) return false;
-    if (filterCategory === "verified") return p.verified || p.source === "verified";
-    if (filterCategory === "open") return p.openNow === true;
-    if (filterCategory === "sacred") {
-      return p.category === "TEMPLE" || p.category === "SACRED" || p.category === "PILGRIMAGE";
+  // Update canonical URL search query without full navigation reload
+  const updateUrlParams = useCallback(
+    (paramsToUpdate: Record<string, string | null | undefined>) => {
+      if (typeof window === "undefined") return;
+      const current = new URLSearchParams(window.location.search);
+      for (const [key, val] of Object.entries(paramsToUpdate)) {
+        if (
+          val === null ||
+          val === undefined ||
+          val === "" ||
+          (key === "category" && val === "all")
+        ) {
+          current.delete(key);
+        } else {
+          current.set(key, val);
+        }
+      }
+      const search = current.toString();
+      const query = search ? `?${search}` : "";
+      window.history.replaceState(null, "", `${pathname}${query}`);
+    },
+    [pathname]
+  );
+
+  // Parse initial query params on mount
+  useEffect(() => {
+    if (initialParamsHandledRef.current || typeof window === "undefined") return;
+    initialParamsHandledRef.current = true;
+
+    const sp = new URLSearchParams(window.location.search);
+    const cat = sp.get("category");
+    const dist = sp.get("district");
+    const st = sp.get("state");
+    const city = sp.get("city");
+    const qParam = sp.get("q");
+    const selId = sp.get("selectedId") || sp.get("place") || sp.get("temple");
+
+    if (cat && (cat === "all" || MAP_CATEGORIES.some((c) => c.id === cat.toLowerCase()))) {
+      setFilterCategory(cat.toLowerCase());
     }
-    if (filterCategory === "heritage") {
-      const txt = `${p.name} ${p.subcategory || ""} ${p.address || ""}`.toLowerCase();
-      return (
-        p.category === "HERITAGE" ||
-        p.certainty === "religious_site" ||
-        txt.includes("fort") ||
-        txt.includes("palace") ||
-        txt.includes("heritage") ||
-        txt.includes("asi") ||
-        txt.includes("monument") ||
-        txt.includes("cave")
-      );
+
+    if (city) {
+      const bound = getLocalityBoundary(city);
+      setActiveLocation({
+        type: "city",
+        name: city,
+        district: dist || undefined,
+        state: st || bound?.parent?.split(",")?.[1]?.trim(),
+        lat: bound?.center.lat || 15.335,
+        lng: bound?.center.lng || 76.46,
+        zoom: bound?.recommendedZoom || 13.5,
+      });
+    } else if (dist) {
+      const bound = getDistrictBoundary(dist);
+      setActiveLocation({
+        type: "district",
+        name: dist,
+        state: st || bound?.parent,
+        lat: bound?.center.lat || 13.9299,
+        lng: bound?.center.lng || 75.5681,
+        zoom: bound?.recommendedZoom || 10.2,
+      });
+    } else if (st) {
+      const bound = getStateBoundary(st);
+      setActiveLocation({
+        type: "state",
+        name: bound?.name || st,
+        lat: bound?.center.lat || 20.5937,
+        lng: bound?.center.lng || 78.9629,
+        zoom: bound?.recommendedZoom || 7,
+      });
     }
-    if (filterCategory === "nature") {
-      const txt = `${p.name} ${p.subcategory || ""} ${p.address || ""}`.toLowerCase();
-      return (
-        p.category === "NATURE" ||
-        txt.includes("ghat") ||
-        txt.includes("river") ||
-        txt.includes("ganga") ||
-        txt.includes("kund") ||
-        txt.includes("lake") ||
-        txt.includes("hills") ||
-        txt.includes("teerth") ||
-        txt.includes("waterfall") ||
-        txt.includes("falls")
-      );
-    }
-    if (filterCategory === "beaches") {
-      const txt = `${p.name} ${p.subcategory || ""} ${p.address || ""}`.toLowerCase();
-      return (
-        p.category === "BEACHES" ||
-        p.category === "BEACH" ||
-        txt.includes("beach") ||
-        txt.includes("coast") ||
-        txt.includes("sea") ||
-        txt.includes("ocean")
-      );
-    }
-    if (filterCategory === "wildlife") {
-      const txt = `${p.name} ${p.subcategory || ""} ${p.address || ""}`.toLowerCase();
-      return (
-        p.category === "WILDLIFE" ||
-        p.category === "PARKS" ||
-        txt.includes("national park") ||
-        txt.includes("sanctuary") ||
-        txt.includes("tiger") ||
-        txt.includes("wildlife")
-      );
-    }
-    if (filterCategory === "culture") {
-      const txt = `${p.name} ${p.subcategory || ""} ${p.address || ""}`.toLowerCase();
-      return (
-        p.category === "CULTURE" ||
-        txt.includes("museum") ||
-        txt.includes("palace") ||
-        txt.includes("mahal") ||
-        txt.includes("art") ||
-        txt.includes("theatre")
-      );
-    }
-    if (filterCategory === "food") {
-      const txt = `${p.name} ${p.subcategory || ""} ${p.address || ""}`.toLowerCase();
-      return (
-        p.category === "FOOD" ||
-        txt.includes("dhaba") ||
-        txt.includes("gali") ||
-        txt.includes("bazaar") ||
-        txt.includes("sweets") ||
-        txt.includes("lassi") ||
-        txt.includes("prasadam") ||
-        txt.includes("kachori")
-      );
-    }
-    if (filterCategory === "adventure") {
-      const txt = `${p.name} ${p.subcategory || ""} ${p.address || ""}`.toLowerCase();
-      return (
-        p.category === "ADVENTURE" ||
-        txt.includes("trek") ||
-        txt.includes("climb") ||
-        txt.includes("camp") ||
-        txt.includes("rafting")
-      );
-    }
-    if (filterCategory === "shopping") {
-      const txt = `${p.name} ${p.subcategory || ""} ${p.address || ""}`.toLowerCase();
-      return (
-        p.category === "SHOPPING" ||
-        txt.includes("bazaar") ||
-        txt.includes("market") ||
-        txt.includes("craft") ||
-        txt.includes("sari") ||
-        txt.includes("silk")
-      );
-    }
-    return true;
-  });
+
+    if (qParam) setQ(qParam);
+    if (selId) setSelectedId(selId);
+  }, []);
 
   const selected = (Array.isArray(items) ? items : []).find((i) => i.id === selectedId) ?? null;
 
@@ -350,7 +355,6 @@ export function MapExplorer() {
     setSaveBusy(true);
 
     try {
-      // Local Storage Update
       const raw = localStorage.getItem("tem_saved");
       const list: string[] = raw ? JSON.parse(raw) : [];
       const updated = nextSaved
@@ -359,7 +363,6 @@ export function MapExplorer() {
       localStorage.setItem("tem_saved", JSON.stringify(updated));
       setSavedStatus(nextSaved);
 
-      // Async sync to backend
       await fetch("/api/saved", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -376,11 +379,12 @@ export function MapExplorer() {
       if (e.key === "Escape") {
         setSelectedId(null);
         setSuggestOpen(false);
+        updateUrlParams({ selectedId: null });
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [updateUrlParams]);
 
   // Map ↔ List Synchronization: scroll matching list item into view when marker selected
   useEffect(() => {
@@ -589,6 +593,7 @@ export function MapExplorer() {
         const geom = feature.geometry as GeoJSON.Point;
         if (typeof props?.id === "string") {
           setSelectedId(props.id);
+          updateUrlParams({ selectedId: props.id });
           setMobileSheetExpanded(false);
         }
         const prefersReduced = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -618,7 +623,7 @@ export function MapExplorer() {
     } catch (err) {
       console.warn("[MapExplorer] setupLayers caught error:", err);
     }
-  }, [currentStyle, selectedId]);
+  }, [currentStyle, selectedId, updateUrlParams]);
 
   // Update layer styles & halo whenever selectedId changes
   useEffect(() => {
@@ -626,7 +631,6 @@ export function MapExplorer() {
     if (!map || !map.getLayer("unclustered-point")) return;
 
     try {
-      // Update selected halo layer filter
       if (map.getLayer("selected-point-halo")) {
         map.setFilter("selected-point-halo", [
           "all",
@@ -635,7 +639,6 @@ export function MapExplorer() {
         ]);
       }
 
-      // Update point radius & stroke
       map.setPaintProperty("unclustered-point", "circle-radius", [
         "case",
         ["==", ["get", "id"], selectedId || ""],
@@ -659,89 +662,125 @@ export function MapExplorer() {
     }
   }, [selectedId]);
 
-  // Viewport Data Engine
-  const fetchViewportTemples = useCallback(async (mapInstance?: maplibregl.Map) => {
-    const map = mapInstance || mapRef.current;
-    if (!map) return;
+  // Viewport Data Engine with Category and Administrative Filters
+  const fetchViewportTemples = useCallback(
+    async (
+      mapInstance?: maplibregl.Map,
+      overrideCategory?: string,
+      overrideLocation?: ActiveLocationFilter | null
+    ) => {
+      const map = mapInstance || mapRef.current;
+      if (!map) return;
 
-    viewportAbortRef.current?.abort();
-    const controller = new AbortController();
-    viewportAbortRef.current = controller;
+      viewportAbortRef.current?.abort();
+      const controller = new AbortController();
+      viewportAbortRef.current = controller;
 
-    try {
-      const bounds = map.getBounds();
-      if (!bounds) return;
-
-      const sw = bounds.getSouthWest();
-      const ne = bounds.getNorthEast();
-
-      const bbox = [
-        sw.lng.toFixed(4),
-        sw.lat.toFixed(4),
-        ne.lng.toFixed(4),
-        ne.lat.toFixed(4),
-      ].join(",");
-
-      const response = await fetch(`/api/map/viewport?bbox=${bbox}&category=${filterCategory}&limit=200`, {
-        signal: controller.signal,
-        cache: "no-store",
-      });
-
-      if (!response.ok) {
-        throw new Error(`Viewport query responded with ${response.status}`);
-      }
-
-      const collection = (await response.json()) as DestinationFeatureCollection;
-      setDataError(null);
-      activeGeoJsonRef.current = collection;
-
-      // Update GeoJSON source
       try {
-        const source = map.getSource("temples") as maplibregl.GeoJSONSource | undefined;
-        if (source && map.isStyleLoaded()) {
-          source.setData(collection);
-        } else if (map.isStyleLoaded()) {
-          setupLayers(map, collection);
+        const bounds = map.getBounds();
+        if (!bounds) return;
+
+        const sw = bounds.getSouthWest();
+        const ne = bounds.getNorthEast();
+
+        const bbox = [
+          sw.lng.toFixed(4),
+          sw.lat.toFixed(4),
+          ne.lng.toFixed(4),
+          ne.lat.toFixed(4),
+        ].join(",");
+
+        const cat = overrideCategory !== undefined ? overrideCategory : filterCategory;
+        const loc = overrideLocation !== undefined ? overrideLocation : activeLocation;
+
+        const params = new URLSearchParams({
+          bbox,
+          category: cat,
+          limit: "250",
+        });
+
+        if (cat === "verified") {
+          params.set("verifiedOnly", "true");
+          params.set("category", "ALL");
         }
-      } catch (err) {
-        console.warn("[MapExplorer] Source data update error:", err);
+
+        if (loc) {
+          if (loc.type === "district") {
+            params.set("district", loc.name);
+          } else if (loc.type === "city") {
+            params.set("city", loc.name);
+          } else if (loc.type === "state") {
+            params.set("state", loc.name);
+          }
+          if (loc.state && loc.type !== "state") {
+            params.set("state", loc.state);
+          }
+        }
+
+        const response = await fetch(`/api/map/viewport?${params.toString()}`, {
+          signal: controller.signal,
+          cache: "no-store",
+        });
+
+        if (!response.ok) {
+          throw new Error(`Viewport query responded with ${response.status}`);
+        }
+
+        const collection = (await response.json()) as DestinationFeatureCollection;
+        setDataError(null);
+        activeGeoJsonRef.current = collection;
+
+        // Update GeoJSON source
+        try {
+          const source = map.getSource("temples") as maplibregl.GeoJSONSource | undefined;
+          if (source && map.isStyleLoaded()) {
+            source.setData(collection);
+          } else if (map.isStyleLoaded()) {
+            setupLayers(map, collection);
+          }
+        } catch (err) {
+          console.warn("[MapExplorer] Source data update error:", err);
+        }
+
+        // Transform features to MapPlaceItems
+        const mappedItems: MapPlaceItem[] = collection.features.map((f: DestinationGeoJSONFeature) => {
+          const props = f.properties;
+          const [lng, lat] = f.geometry.coordinates;
+          return {
+            id: props.id,
+            name: props.name,
+            category: props.category,
+            subcategory: props.subcategory,
+            latitude: lat,
+            longitude: lng,
+            address: props.address,
+            city: props.city,
+            district: props.district || props.city,
+            state: props.state,
+            stateCode: props.stateCode,
+            image: props.imageReference,
+            verified: props.isVerified,
+            isInside: props.isInside,
+            source: props.sourceType || "CURATED",
+            href: props.href,
+            accuracy: props.accuracy,
+            accuracyLabel: props.accuracyLabel,
+            googlePlaceId: props.googlePlaceId,
+          };
+        });
+
+        setItems(mappedItems);
+        setShowAreaSearchPill(false);
+      } catch (err: unknown) {
+        if ((err as Error)?.name === "AbortError") return;
+        console.warn("[MapExplorer] Viewport data fetch warning:", err);
+        setDataError("Geospatial data temporarily unavailable");
+      } finally {
+        setLoading(false);
       }
-
-      // Transform features to MapPlaceItems
-      const mappedItems: MapPlaceItem[] = collection.features.map((f: DestinationGeoJSONFeature) => {
-        const props = f.properties;
-        const [lng, lat] = f.geometry.coordinates;
-        return {
-          id: props.id,
-          name: props.name,
-          category: props.category,
-          subcategory: props.subcategory,
-          latitude: lat,
-          longitude: lng,
-          address: props.address,
-          district: props.district || props.city,
-          state: props.state,
-          stateCode: props.stateCode,
-          image: props.imageReference,
-          verified: props.isVerified,
-          source: props.sourceType || "CURATED",
-          href: props.href,
-          accuracy: props.accuracy,
-          accuracyLabel: props.accuracyLabel,
-          googlePlaceId: props.googlePlaceId,
-        };
-      });
-
-      setItems(mappedItems);
-      setShowAreaSearchPill(false);
-    } catch (err: unknown) {
-      if ((err as Error)?.name === "AbortError") return;
-      console.warn("[MapExplorer] Viewport data fetch warning:", err);
-      setDataError("Geospatial data temporarily unavailable");
-    } finally {
-      setLoading(false);
-    }
-  }, [filterCategory, setupLayers]);
+    },
+    [filterCategory, activeLocation, setupLayers]
+  );
 
   // MapLibre Initialization & Lifecycle
   useEffect(() => {
@@ -766,11 +805,16 @@ export function MapExplorer() {
 
     let map: maplibregl.Map;
     try {
+      const initCenter: [number, number] = activeLocation
+        ? [activeLocation.lng, activeLocation.lat]
+        : [DEFAULT_MAP_CENTER.lng, DEFAULT_MAP_CENTER.lat];
+      const initZoom = activeLocation?.zoom || DEFAULT_MAP_CENTER.zoom;
+
       map = new maplibregl.Map({
         container,
         style: styleUrl,
-        center: [DEFAULT_MAP_CENTER.lng, DEFAULT_MAP_CENTER.lat],
-        zoom: DEFAULT_MAP_CENTER.zoom,
+        center: initCenter,
+        zoom: initZoom,
         minZoom: 3.5,
         maxZoom: 18,
         attributionControl: false,
@@ -839,7 +883,6 @@ export function MapExplorer() {
       triggerMapReady();
     }
 
-    // Safety fallback
     const safetyTimer = setTimeout(() => {
       if (!cancelled && !isReadyTriggered) {
         triggerMapReady();
@@ -872,7 +915,6 @@ export function MapExplorer() {
       }, 700);
     });
 
-    // ResizeObserver
     const ro = new ResizeObserver(() => {
       map.resize();
     });
@@ -890,7 +932,7 @@ export function MapExplorer() {
       map.remove();
       mapRef.current = null;
     };
-  }, [mapRetryCount, currentStyle, fetchViewportTemples, setupLayers]);
+  }, [mapRetryCount, currentStyle]); // intentionally minimal to avoid map recreation
 
   // Handle Style Switching
   const handleToggleStyle = (newStyle: "liberty" | "dark") => {
@@ -911,6 +953,65 @@ export function MapExplorer() {
     map.once("style.load", () => {
       setupLayers(map, activeGeoJsonRef.current);
     });
+  };
+
+  // Category Switch Handler with Canonical URL State
+  const handleSelectCategory = (catId: string) => {
+    setFilterCategory(catId);
+    updateUrlParams({ category: catId === "all" ? null : catId });
+    if (mapRef.current) {
+      void fetchViewportTemples(mapRef.current, catId, activeLocation);
+    }
+  };
+
+  // Location Clear Handler
+  const handleClearLocation = () => {
+    setActiveLocation(null);
+    updateUrlParams({ district: null, state: null, city: null });
+    if (mapRef.current) {
+      void fetchViewportTemples(mapRef.current, filterCategory, null);
+    }
+  };
+
+  // Clear All Filters Handler
+  const handleClearAllFilters = () => {
+    setFilterCategory("all");
+    setActiveLocation(null);
+    setSelectedId(null);
+    setQ("");
+    updateUrlParams({
+      category: null,
+      district: null,
+      state: null,
+      city: null,
+      q: null,
+      selectedId: null,
+    });
+    if (mapRef.current) {
+      void fetchViewportTemples(mapRef.current, "all", null);
+    }
+  };
+
+  // Reset to National Map of India
+  const handleResetToIndia = () => {
+    const map = mapRef.current;
+    if (!map) return;
+    handleClearLocation();
+    map.flyTo({
+      center: [DEFAULT_MAP_CENTER.lng, DEFAULT_MAP_CENTER.lat],
+      zoom: DEFAULT_MAP_CENTER.zoom,
+      bearing: 0,
+      pitch: 0,
+      speed: 1.2,
+      essential: true,
+    });
+  };
+
+  // Reset Orientation (North Up)
+  const handleResetOrientation = () => {
+    const map = mapRef.current;
+    if (!map) return;
+    map.easeTo({ bearing: 0, pitch: 0, duration: 350 });
   };
 
   // User Geolocation Handler
@@ -949,9 +1050,9 @@ export function MapExplorer() {
             const el = document.createElement("div");
             el.className = "templeora-user-pin";
             el.innerHTML = `
-              <div style="position:relative;width:24px;height:24px;display:flex;align-items:center;justify-content:center;">
-                <div style="position:absolute;width:100%;height:100%;border-radius:50%;background:#38bdf8;opacity:0.6;animation:ping 1.5s cubic-bezier(0,0,0.2,1) infinite;"></div>
-                <div style="position:relative;width:14px;height:14px;border-radius:50%;background:#0284c7;border:2.5px solid #ffffff;box-shadow:0 2px 6px rgba(0,0,0,0.35);"></div>
+              <div class="relative flex h-6 w-6 items-center justify-center">
+                <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75"></span>
+                <span class="relative inline-flex h-3.5 w-3.5 rounded-full border-2 border-white bg-sky-500 shadow-md"></span>
               </div>
             `;
             userMarkerRef.current = new maplibregl.Marker({ element: el })
@@ -966,222 +1067,18 @@ export function MapExplorer() {
       },
       (err) => {
         setLocating(false);
-        setUserLocationMessage(
-          err.code === 1
-            ? "Location permission was denied. Enable permission to center on your position."
-            : "Location signal unavailable."
-        );
-        setTimeout(() => setUserLocationMessage(null), 4500);
+        setUserLocationMessage(err.message || "Unable to acquire location.");
       },
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+      { timeout: 10000, enableHighAccuracy: true }
     );
   };
 
-  // Reset to National India View
-  const handleResetToIndia = () => {
-    const map = mapRef.current;
-    if (!map) return;
-    const prefersReduced = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    map.flyTo({
-      center: [DEFAULT_MAP_CENTER.lng, DEFAULT_MAP_CENTER.lat],
-      zoom: DEFAULT_MAP_CENTER.zoom,
-      bearing: 0,
-      pitch: 0,
-      speed: prefersReduced ? 5.0 : 1.2,
-      essential: true,
-    });
-    setSelectedId(null);
-  };
-
-  // Reset Orientation / Compass
-  const handleResetOrientation = () => {
-    const map = mapRef.current;
-    if (!map) return;
-    map.resetNorthPitch({ duration: 400 });
-  };
-
-  // Deep-linking URL handler for ?temple=slug, ?place=slug, ?lat=&lng=, ?category=
-  const deepLinkHandledRef = useRef(false);
-  useEffect(() => {
-    if (!mapReady || deepLinkHandledRef.current || typeof window === "undefined") return;
-    deepLinkHandledRef.current = true;
-
-    const sp = new URLSearchParams(window.location.search);
-    const templeSlug = sp.get("temple");
-    const placeSlug = sp.get("place");
-    const latStr = sp.get("lat");
-    const lngStr = sp.get("lng");
-    const zoomStr = sp.get("zoom");
-    const catStr = sp.get("category");
-
-    if (catStr && MAP_CATEGORIES.some((c) => c.id === catStr.toLowerCase())) {
-      setFilterCategory(catStr.toLowerCase());
-    }
-
-    if (templeSlug) {
-      void fetch(`/api/v1/temples/${templeSlug}`)
-        .then((r) => (r.ok ? r.json() : null))
-        .then((t) => {
-          if (t && t.latitude && t.longitude) {
-            setSelectedId(t.id);
-            setItems((prev) => {
-              if (prev.some((p) => p.id === t.id)) return prev;
-              const newItem: MapPlaceItem = {
-                id: t.id,
-                name: t.name,
-                category: "TEMPLE",
-                subcategory: t.mainDeity,
-                latitude: t.latitude,
-                longitude: t.longitude,
-                address: t.address,
-                district: t.district?.name,
-                state: t.state?.name,
-                image: t.images?.[0] || null,
-                verified: true,
-                href: `/temples/${t.state?.slug || "india"}/${t.slug}`,
-              };
-              return [newItem, ...prev];
-            });
-
-            if (mapRef.current) {
-              const prefersReduced = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-              mapRef.current.flyTo({
-                center: [t.longitude, t.latitude],
-                zoom: 15.5,
-                speed: prefersReduced ? 5.0 : 1.4,
-                curve: prefersReduced ? 1.0 : 1.42,
-                essential: true,
-              });
-            }
-          }
-        })
-        .catch(() => {});
-    } else if (placeSlug) {
-      void fetch(`/api/destinations?q=${encodeURIComponent(placeSlug)}`)
-        .then((r) => (r.ok ? r.json() : null))
-        .then((d) => {
-          if (d && Array.isArray(d.items) && d.items.length > 0) {
-            const first = d.items[0];
-            setSelectedId(first.id);
-            setItems((prev) => {
-              if (prev.some((p) => p.id === first.id)) return prev;
-              const newItem: MapPlaceItem = {
-                id: first.id,
-                name: first.name,
-                category: first.category,
-                subcategory: first.subcategory,
-                latitude: first.latitude,
-                longitude: first.longitude,
-                address: [first.city, first.district, first.state].filter(Boolean).join(", "),
-                district: first.district,
-                state: first.state,
-                image: first.image,
-                verified: true,
-                href: `/places/${first.slug}`,
-              };
-              return [newItem, ...prev];
-            });
-
-            if (mapRef.current) {
-              const prefersReduced = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-              mapRef.current.flyTo({
-                center: [first.longitude, first.latitude],
-                zoom: 15,
-                speed: prefersReduced ? 5.0 : 1.4,
-                curve: prefersReduced ? 1.0 : 1.42,
-                essential: true,
-              });
-            }
-          }
-        })
-        .catch(() => {});
-    } else if (latStr && lngStr) {
-      const lat = parseFloat(latStr);
-      const lng = parseFloat(lngStr);
-      const zoom = zoomStr ? parseFloat(zoomStr) : 14;
-      if (!isNaN(lat) && !isNaN(lng) && isValidCoordinate(lat, lng)) {
-        if (mapRef.current) {
-          mapRef.current.flyTo({
-            center: [lng, lat],
-            zoom,
-            speed: 1.4,
-            essential: true,
-          });
-        }
-      }
-    }
-  }, [mapReady]);
-
-  // Synchronize URL query params with selection and active category
-  useEffect(() => {
-    if (typeof window === "undefined" || !mapReady) return;
-    const url = new URL(window.location.href);
-
-    if (selected) {
-      const slug = selected.href?.split("/").pop();
-      if ((selected.category === "TEMPLE" || selected.category === "SACRED") && slug) {
-        url.searchParams.set("temple", slug);
-        url.searchParams.delete("place");
-      } else if (slug) {
-        url.searchParams.set("place", slug);
-        url.searchParams.delete("temple");
-      } else {
-        url.searchParams.set("place", selected.id);
-        url.searchParams.delete("temple");
-      }
-    } else {
-      url.searchParams.delete("temple");
-      url.searchParams.delete("place");
-    }
-
-    if (filterCategory && filterCategory !== "all") {
-      url.searchParams.set("category", filterCategory);
-    } else {
-      url.searchParams.delete("category");
-    }
-
-    window.history.replaceState(null, "", url.toString());
-  }, [selectedId, selected, filterCategory, mapReady]);
-
-  // Browser back / forward (popstate) handling
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const onPopState = () => {
-      const sp = new URLSearchParams(window.location.search);
-      const templeSlug = sp.get("temple");
-      const placeSlug = sp.get("place");
-      const target = templeSlug || placeSlug;
-
-      if (!target) {
-        setSelectedId(null);
-      } else {
-        const found = items.find((i) => i.id === target || i.href?.endsWith(`/${target}`));
-        if (found) {
-          setSelectedId(found.id);
-          mapRef.current?.flyTo({
-            center: [found.longitude, found.latitude],
-            zoom: 15,
-            speed: 1.2,
-          });
-        }
-      }
-    };
-
-    window.addEventListener("popstate", onPopState);
-    return () => window.removeEventListener("popstate", onPopState);
-  }, [items]);
-
-  // Refetch viewport items when filterCategory changes
-  useEffect(() => {
-    if (mapRef.current && mapReady) {
-      void fetchViewportTemples(mapRef.current);
-    }
-  }, [filterCategory, fetchViewportTemples, mapReady]);
-
-  // Search input handler with debounce
+  // Hierarchical Search Autocomplete (Destinations, Localities, Districts, States)
   useEffect(() => {
     const query = q.trim();
     if (query.length < 2) {
+      setSuggestions([]);
+      setSuggestOpen(false);
       return;
     }
 
@@ -1192,7 +1089,7 @@ export function MapExplorer() {
     const timer = setTimeout(async () => {
       setIsSearching(true);
       try {
-        const res = await fetch(`/api/search?q=${encodeURIComponent(query)}&limit=6`, {
+        const res = await fetch(`/api/search?q=${encodeURIComponent(query)}&limit=10`, {
           signal: controller.signal,
         });
         if (!res.ok) throw new Error("Search failed");
@@ -1200,30 +1097,63 @@ export function MapExplorer() {
 
         const results: Suggestion[] = [];
 
-        // 1. Temples from internal registry/catalog
-        if (Array.isArray(data.temples)) {
-          for (const t of data.temples.slice(0, 5)) {
+        // 1. States / UTs
+        if (Array.isArray(data.states)) {
+          for (const s of data.states) {
             results.push({
-              type: "temple",
-              title: t.name,
-              subtitle: [t.location || t.district, t.stateSlug].filter(Boolean).join(", "),
-              slug: t.slug,
-              lat: t.latitude,
-              lng: t.longitude,
-              id: t.id,
+              type: "state",
+              title: s.name,
+              subtitle: `State · Republic of India`,
+              lat: s.latitude,
+              lng: s.longitude,
+              zoom: s.zoom || 7,
             });
           }
         }
 
-        // 2. Geographic Locations / Districts / States
-        if (Array.isArray(data.locations)) {
-          for (const loc of data.locations.slice(0, 2)) {
+        // 2. Districts
+        if (Array.isArray(data.districts)) {
+          for (const d of data.districts) {
             results.push({
-              type: "location",
+              type: "district",
+              title: d.name,
+              subtitle: `District · ${d.state}`,
+              state: d.state,
+              lat: d.latitude,
+              lng: d.longitude,
+              zoom: d.zoom || 10.2,
+            });
+          }
+        }
+
+        // 3. Localities / Cities
+        if (Array.isArray(data.localities)) {
+          for (const loc of data.localities) {
+            results.push({
+              type: "locality",
               title: loc.name,
-              subtitle: loc.type ? `${loc.type} · ${loc.parent || "India"}` : loc.parent,
+              subtitle: `Locality · ${loc.parent}`,
               lat: loc.latitude,
               lng: loc.longitude,
+              zoom: loc.zoom || 13.5,
+            });
+          }
+        }
+
+        // 4. Exact Destinations (Places & Temples)
+        if (Array.isArray(data.destinations)) {
+          for (const dest of data.destinations.slice(0, 6)) {
+            const visual = getCategoryVisual(dest.category);
+            results.push({
+              type: "destination",
+              title: dest.name,
+              subtitle: `${visual.label} · ${[dest.district, dest.state].filter(Boolean).join(", ")}`,
+              category: dest.category,
+              slug: dest.slug,
+              id: dest.id,
+              lat: dest.latitude,
+              lng: dest.longitude,
+              zoom: 15.5,
             });
           }
         }
@@ -1246,6 +1176,7 @@ export function MapExplorer() {
     };
   }, [q]);
 
+  // Handle Suggestion Selection with Zoom & Boundary Animation
   const handleSelectSuggestion = async (s: Suggestion) => {
     setSuggestOpen(false);
     setQ(s.title);
@@ -1253,39 +1184,100 @@ export function MapExplorer() {
     const map = mapRef.current;
     if (!map) return;
 
-    if (s.lat && s.lng) {
-      if (s.id) setSelectedId(s.id);
-      const prefersReduced = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      map.flyTo({
-        center: [s.lng, s.lat],
-        zoom: s.type === "temple" ? 15.5 : 12,
-        speed: prefersReduced ? 5.0 : 1.4,
-        essential: true,
-      });
-      void fetchViewportTemples(map);
-    } else if (s.slug) {
-      try {
-        setLoading(true);
-        const res = await fetch(`/api/v1/temples/${s.slug}`);
-        if (res.ok) {
-          const temple = await res.json();
-          if (temple && temple.latitude && temple.longitude) {
-            setSelectedId(temple.id);
-            const prefersReduced = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-            map.flyTo({
-              center: [temple.longitude, temple.latitude],
-              zoom: 15.5,
-              speed: prefersReduced ? 5.0 : 1.3,
-              essential: true,
-            });
-            void fetchViewportTemples(map);
-          }
-        }
-      } catch {
-        /* ignore */
-      } finally {
-        setLoading(false);
+    const prefersReduced =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (s.type === "destination") {
+      if (s.id) {
+        setSelectedId(s.id);
+        updateUrlParams({ selectedId: s.id, q: null });
       }
+      if (s.lat && s.lng) {
+        map.flyTo({
+          center: [s.lng, s.lat],
+          zoom: s.zoom || 15.5,
+          speed: prefersReduced ? 5.0 : 1.3,
+          essential: true,
+        });
+        void fetchViewportTemples(map);
+      }
+    } else if (s.type === "district") {
+      const newLoc: ActiveLocationFilter = {
+        type: "district",
+        name: s.title,
+        state: s.state,
+        lat: s.lat || 13.9299,
+        lng: s.lng || 75.5681,
+        zoom: s.zoom || 10.2,
+      };
+      setActiveLocation(newLoc);
+      updateUrlParams({
+        district: s.title,
+        state: s.state || null,
+        city: null,
+        q: null,
+      });
+
+      if (s.lat && s.lng) {
+        map.flyTo({
+          center: [s.lng, s.lat],
+          zoom: s.zoom || 10.2,
+          speed: prefersReduced ? 5.0 : 1.2,
+          essential: true,
+        });
+      }
+      void fetchViewportTemples(map, filterCategory, newLoc);
+    } else if (s.type === "locality") {
+      const newLoc: ActiveLocationFilter = {
+        type: "city",
+        name: s.title,
+        lat: s.lat || 15.335,
+        lng: s.lng || 76.46,
+        zoom: s.zoom || 13.5,
+      };
+      setActiveLocation(newLoc);
+      updateUrlParams({
+        city: s.title,
+        district: null,
+        state: null,
+        q: null,
+      });
+
+      if (s.lat && s.lng) {
+        map.flyTo({
+          center: [s.lng, s.lat],
+          zoom: s.zoom || 13.5,
+          speed: prefersReduced ? 5.0 : 1.3,
+          essential: true,
+        });
+      }
+      void fetchViewportTemples(map, filterCategory, newLoc);
+    } else if (s.type === "state") {
+      const newLoc: ActiveLocationFilter = {
+        type: "state",
+        name: s.title,
+        lat: s.lat || 20.5937,
+        lng: s.lng || 78.9629,
+        zoom: s.zoom || 7,
+      };
+      setActiveLocation(newLoc);
+      updateUrlParams({
+        state: s.title,
+        district: null,
+        city: null,
+        q: null,
+      });
+
+      if (s.lat && s.lng) {
+        map.flyTo({
+          center: [s.lng, s.lat],
+          zoom: s.zoom || 7,
+          speed: prefersReduced ? 5.0 : 1.2,
+          essential: true,
+        });
+      }
+      void fetchViewportTemples(map, filterCategory, newLoc);
     }
   };
 
@@ -1295,7 +1287,9 @@ export function MapExplorer() {
       if (suggestOpen && suggestIdx >= 0 && suggestions[suggestIdx]) {
         void handleSelectSuggestion(suggestions[suggestIdx]);
       } else if (q.trim()) {
-        void handleSelectSuggestion({ type: "query", title: q.trim() });
+        updateUrlParams({ q: q.trim() });
+        setSuggestOpen(false);
+        if (mapRef.current) void fetchViewportTemples(mapRef.current);
       }
     } else if (e.key === "ArrowDown") {
       e.preventDefault();
@@ -1308,8 +1302,16 @@ export function MapExplorer() {
     }
   };
 
+  // Group items by "Inside Selected Location" vs "Nearby in Viewport"
+  const hasActiveLoc = Boolean(activeLocation);
+  const insideItems = hasActiveLoc ? items.filter((p) => p.isInside) : items;
+  const nearbyItems = hasActiveLoc ? items.filter((p) => !p.isInside) : [];
+
   const selectedCatVisual = getCategoryVisual(selected?.category);
   const SelectedCatIcon = ICON_MAP[selectedCatVisual.iconName] || Compass;
+
+  const hasAnyFilter =
+    filterCategory !== "all" || activeLocation !== null || Boolean(q.trim());
 
   return (
     <div className="relative flex h-[calc(100vh-4rem)] lg:h-[calc(100vh-4.5rem)] w-full flex-col lg:flex-row overflow-hidden bg-obsidian">
@@ -1333,7 +1335,11 @@ export function MapExplorer() {
                 }}
                 onKeyDown={handleSearchKeyDown}
                 onFocus={() => suggestions.length > 0 && setSuggestOpen(true)}
-                placeholder={t("map_search") || "Search temples, heritage forts, ghats, beaches, or food…"}
+                placeholder={
+                  activeLocation
+                    ? `Search within ${activeLocation.name}…`
+                    : t("map_search") || "Search destinations, cities, districts, or states…"
+                }
                 className="w-full bg-transparent text-[13.5px] text-ivory placeholder-ivory-dim/60 outline-none"
                 aria-label={t("map_search") || "Search map"}
               />
@@ -1346,6 +1352,7 @@ export function MapExplorer() {
                     setQ("");
                     setSuggestions([]);
                     setSuggestOpen(false);
+                    updateUrlParams({ q: null });
                   }}
                   className="rounded-full p-0.5 text-ivory-dim hover:text-ivory"
                   aria-label="Clear search"
@@ -1355,31 +1362,56 @@ export function MapExplorer() {
               )}
             </div>
 
-            {/* Suggestions Dropdown */}
+            {/* Suggestions Dropdown with Distinct Badges */}
             {suggestOpen && suggestions.length > 0 && (
-              <div className="absolute left-0 right-0 top-full mt-2 max-h-72 overflow-y-auto rounded-2xl border border-line bg-obsidian-2/95 p-1.5 shadow-2xl backdrop-blur-xl">
-                {suggestions.map((s, idx) => (
-                  <button
-                    key={`${s.type}-${s.title}-${idx}`}
-                    onClick={() => void handleSelectSuggestion(s)}
-                    className={cn(
-                      "flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-left transition-colors",
-                      suggestIdx === idx
-                        ? "bg-gold/15 text-gold-bright"
-                        : "text-ivory hover:bg-obsidian-3 hover:text-gold-bright"
-                    )}
-                  >
-                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-gold/10 text-gold-bright">
-                      {s.type === "temple" ? <Sparkles className="h-3.5 w-3.5" /> : <MapPin className="h-3.5 w-3.5" />}
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <div className="truncate text-xs font-semibold">{s.title}</div>
-                      {s.subtitle && (
-                        <div className="truncate text-[10px] text-ivory-dim">{s.subtitle}</div>
+              <div className="absolute left-0 right-0 top-full mt-2 max-h-80 overflow-y-auto rounded-2xl border border-line bg-obsidian-2/95 p-1.5 shadow-2xl backdrop-blur-xl">
+                {suggestions.map((s, idx) => {
+                  const isDestination = s.type === "destination";
+                  const isDistrict = s.type === "district";
+                  const isLocality = s.type === "locality";
+                  const isState = s.type === "state";
+                  const catVisual = getCategoryVisual(s.category);
+                  const CatIcon = ICON_MAP[catVisual.iconName] || Compass;
+
+                  return (
+                    <button
+                      key={`${s.type}-${s.title}-${idx}`}
+                      onClick={() => void handleSelectSuggestion(s)}
+                      className={cn(
+                        "flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-left transition-colors",
+                        suggestIdx === idx
+                          ? "bg-gold/15 text-gold-bright"
+                          : "text-ivory hover:bg-obsidian-3 hover:text-gold-bright"
                       )}
-                    </div>
-                  </button>
-                ))}
+                    >
+                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-gold/10 text-gold-bright">
+                        {isDestination && <CatIcon className="h-3.5 w-3.5" />}
+                        {isDistrict && <Compass className="h-3.5 w-3.5 text-amber-400" />}
+                        {isLocality && <Building2 className="h-3.5 w-3.5 text-cyan-400" />}
+                        {isState && <Globe2 className="h-3.5 w-3.5 text-emerald-400" />}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <span className="truncate text-xs font-semibold">{s.title}</span>
+                          <span
+                            className={cn(
+                              "rounded px-1.5 py-0.2 text-[9px] font-mono uppercase tracking-wider",
+                              isDestination && "bg-amber-500/15 text-amber-300",
+                              isDistrict && "bg-amber-600/20 text-amber-400",
+                              isLocality && "bg-cyan-500/15 text-cyan-300",
+                              isState && "bg-emerald-500/15 text-emerald-300"
+                            )}
+                          >
+                            {s.type}
+                          </span>
+                        </div>
+                        {s.subtitle && (
+                          <div className="truncate text-[10.5px] text-ivory-dim">{s.subtitle}</div>
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             )}
           </div>
@@ -1408,20 +1440,20 @@ export function MapExplorer() {
               )}
             >
               <List className="h-3.5 w-3.5" />
-              <span>List ({filteredItems.length})</span>
+              <span>List ({items.length})</span>
             </button>
           </div>
         </div>
 
-        {/* Quick Filter Chips (Lucide Icons, No Emojis) */}
-        <div className="pointer-events-auto mx-auto flex w-full max-w-2xl items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+        {/* Quick Filter Chips (15 Categories + All) */}
+        <div className="pointer-events-auto mx-auto flex w-full max-w-3xl items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
           {MAP_CATEGORIES.map((chip) => {
             const Icon = ICON_MAP[chip.iconName] || Compass;
             const isActive = filterCategory === chip.id;
             return (
               <button
                 key={chip.id}
-                onClick={() => setFilterCategory(chip.id)}
+                onClick={() => handleSelectCategory(chip.id)}
                 className={cn(
                   "flex items-center gap-1.5 shrink-0 rounded-full border px-3 py-1 text-[11px] font-medium shadow-md backdrop-blur-md transition-all active:scale-95",
                   isActive
@@ -1435,11 +1467,53 @@ export function MapExplorer() {
             );
           })}
         </div>
+
+        {/* Active Filter Chips & Clear Strip */}
+        {hasAnyFilter && (
+          <div className="pointer-events-auto mx-auto flex w-full max-w-xl items-center gap-1.5 flex-wrap justify-center pt-0.5">
+            {filterCategory !== "all" && (
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-gold/40 bg-gold/15 px-2.5 py-0.5 text-[10.5px] font-medium text-gold-bright backdrop-blur-md">
+                <span>{MAP_CATEGORIES.find((c) => c.id === filterCategory)?.label || filterCategory}</span>
+                <button
+                  onClick={() => handleSelectCategory("all")}
+                  className="rounded-full p-0.5 hover:bg-gold/20"
+                  aria-label="Remove category filter"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </div>
+            )}
+
+            {activeLocation && (
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-cyan-500/40 bg-cyan-500/15 px-2.5 py-0.5 text-[10.5px] font-medium text-cyan-300 backdrop-blur-md">
+                <MapPin className="h-3 w-3 text-cyan-400" />
+                <span>
+                  {activeLocation.name}
+                  {activeLocation.state ? `, ${activeLocation.state}` : ""}
+                </span>
+                <button
+                  onClick={handleClearLocation}
+                  className="rounded-full p-0.5 hover:bg-cyan-500/20"
+                  aria-label="Remove location filter"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </div>
+            )}
+
+            <button
+              onClick={handleClearAllFilters}
+              className="text-[10px] text-ivory-dim/80 hover:text-gold-bright underline transition-colors px-1"
+            >
+              Clear all
+            </button>
+          </div>
+        )}
       </div>
 
       {/* "Search This Area" Floating Pill */}
       {showAreaSearchPill && !loading && (
-        <div className="pointer-events-none absolute inset-x-0 top-24 z-20 flex justify-center">
+        <div className="pointer-events-none absolute inset-x-0 top-28 z-20 flex justify-center">
           <button
             onClick={() => void fetchViewportTemples()}
             disabled={loading}
@@ -1499,295 +1573,91 @@ export function MapExplorer() {
               </button>
               <button
                 onClick={() => setActiveTab("list")}
-                className="rounded-xl border border-line bg-obsidian-3 px-4 py-2 text-xs font-medium text-ivory hover:border-gold transition-colors"
+                className="rounded-xl border border-line bg-obsidian-3 px-4 py-2 text-xs font-semibold text-ivory hover:border-gold transition-colors"
               >
-                Open List View ({filteredItems.length})
+                Open List View
               </button>
             </div>
           </div>
         )}
 
-        {/* Geolocation feedback toast */}
+        {/* User Location Error Message */}
         {userLocationMessage && (
-          <div className="pointer-events-none absolute inset-x-0 bottom-24 z-30 flex justify-center px-4">
-            <div className="pointer-events-auto rounded-full border border-sky-500/40 bg-obsidian-2/95 px-4 py-2 text-xs text-sky-200 shadow-2xl backdrop-blur-md">
+          <div className="pointer-events-none absolute bottom-20 left-1/2 -translate-x-1/2 z-20">
+            <div className="pointer-events-auto rounded-xl border border-amber-500/40 bg-obsidian-2/95 px-3.5 py-2 text-xs text-amber-300 shadow-xl backdrop-blur-md">
               {userLocationMessage}
             </div>
           </div>
         )}
 
-        {/* Subtle Data Error Toast */}
-        {dataError && !mapError && (
-          <div className="pointer-events-none absolute inset-x-0 bottom-24 z-20 flex justify-center px-4">
-            <div className="pointer-events-auto rounded-full border border-amber-500/30 bg-obsidian-3/95 px-4 py-2 text-[11px] text-amber-200 shadow-2xl backdrop-blur-xl">
-              {dataError}
-            </div>
-          </div>
-        )}
-
-        {/* ------------------------------------------------------------- */}
-        {/* DESKTOP INTEGRATED RIGHT-SIDE DESTINATION CARD (Section 7)   */}
-        {/* ------------------------------------------------------------- */}
+        {/* Selected Destination Card (Desktop Floating Bottom-Left / Mobile Drawer) */}
         {selected && (
-          <div className="pointer-events-none absolute top-20 right-4 w-96 max-h-[calc(100vh-10rem)] z-30 hidden sm:block">
-            <div className="pointer-events-auto rounded-3xl border border-gold/40 bg-obsidian-2/95 p-4 shadow-2xl backdrop-blur-xl space-y-3.5 max-h-[82vh] overflow-y-auto">
-              {/* Header Image with Real Photography & Rights Attribution */}
-              {resolvedMedia?.src ? (
-                <div className="relative h-40 w-full overflow-hidden rounded-2xl border border-line bg-black">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={resolvedMedia.src}
-                    alt={resolvedMedia.alt || selected.name}
-                    className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-obsidian/95 via-transparent to-transparent" />
-
-                  {/* Category Pill */}
-                  <div className={cn("absolute top-2.5 left-2.5 flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10.5px] font-mono border backdrop-blur-md", selectedCatVisual.bgClass, selectedCatVisual.textClass, selectedCatVisual.borderClass)}>
-                    <SelectedCatIcon className="h-3 w-3" />
-                    <span>{selected.category || "SANCTUARY"}</span>
-                  </div>
-
-                  {/* Close Button */}
-                  <button
-                    onClick={() => setSelectedId(null)}
-                    aria-label="Close destination card"
-                    className="absolute top-2.5 right-2.5 rounded-full bg-black/70 p-1 text-ivory-dim hover:text-ivory transition-colors backdrop-blur-sm"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-
-                  {/* Rights & Provenance Ribbon */}
-                  <div className="absolute bottom-2 left-2.5 right-2.5 flex items-center justify-between text-[9.5px] font-mono text-stone-300">
-                    <span className="truncate max-w-[200px]">{resolvedMedia.credit}</span>
-                    <span className="shrink-0 rounded bg-black/60 px-1.5 py-0.5 border border-white/10">
-                      {resolvedMedia.rights === "UNSPLASH_LICENSE"
-                        ? "Unsplash"
-                        : resolvedMedia.rights === "GOOGLE_PLACES_ATTRIBUTION"
-                        ? "Google Places"
-                        : resolvedMedia.rights === "PUBLIC_DOMAIN"
-                        ? "Public Domain"
-                        : "Verified"}
-                    </span>
-                  </div>
-                </div>
-              ) : (
-                /* Dignified Non-Photo Placeholder (No lone emoji) */
-                <div className="relative flex flex-col justify-between rounded-2xl border border-gold/30 bg-gradient-to-br from-stone-900 to-obsidian p-4">
-                  <div className="flex items-center justify-between">
-                    <div className={cn("flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10.5px] font-mono border", selectedCatVisual.bgClass, selectedCatVisual.textClass, selectedCatVisual.borderClass)}>
-                      <SelectedCatIcon className="h-3 w-3" />
-                      <span>{selected.category || "SANCTUARY"}</span>
-                    </div>
-                    <button
-                      onClick={() => setSelectedId(null)}
-                      aria-label="Close destination card"
-                      className="rounded-full p-1 text-ivory-dim hover:text-ivory transition-colors"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  </div>
-                  <div className="my-2 text-center">
-                    <p className="text-xs font-mono text-gold-bright">Photography Verification in Progress</p>
-                    <p className="text-[10.5px] text-stone-400 mt-0.5">Exact geodetic ground coordinates verified</p>
-                  </div>
-                </div>
-              )}
-
-              {/* Identity & Location Title */}
-              <div className="space-y-1">
-                <div className="flex items-center gap-1.5">
-                  <h4 className="font-serif text-lg font-semibold text-ivory truncate">
-                    {selected.name}
-                  </h4>
-                  {selected.verified && (
-                    <span title="Verified Sovereign Coordinates">
-                      <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-400" />
-                    </span>
-                  )}
-                </div>
-                <p className="flex items-center gap-1 text-xs text-ivory-dim truncate">
-                  <MapPin className="h-3 w-3 text-gold shrink-0" />
-                  <span>{selected.address || [selected.district, selected.state].filter(Boolean).join(", ")}</span>
-                </p>
-              </div>
-
-              {/* Quality & Distance Badges */}
-              <div className="flex flex-wrap items-center gap-2 text-[10.5px]">
-                {selectedQuality && (
-                  <span className="rounded-full bg-gold/15 px-2.5 py-0.5 font-semibold text-gold-bright border border-gold/30">
-                    {selectedQuality.accuracyLabel}
-                  </span>
-                )}
-                <span className="rounded-full bg-stone-800/80 px-2 py-0.5 text-stone-300 border border-stone-700/60 font-mono text-[10px]">
-                  {selected.subcategory || selected.category || "Sanctuary"}
-                </span>
-                {userLocation && (
-                  <span className="text-ivory-dim font-mono text-[10.5px]">
-                    ~{calculateHaversineKm(userLocation.lat, userLocation.lng, selected.latitude, selected.longitude).toFixed(1)} km (~{Math.round(calculateHaversineKm(userLocation.lat, userLocation.lng, selected.latitude, selected.longitude) * 1.8)} min drive)
-                  </span>
-                )}
-              </div>
-
-              {/* Action Buttons: Explore / Directions / Save / Plan Visit */}
-              <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-line/60">
-                {selected.href && (
-                  <Link
-                    href={selected.href}
-                    className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-gold px-3.5 py-2 text-xs font-semibold text-obsidian shadow-md hover:bg-gold-bright transition-colors"
-                  >
-                    <span>{selected.category === "TEMPLE" ? "Explore Sanctuary" : "Explore"}</span>
-                    <ExternalLink className="h-3.5 w-3.5" />
-                  </Link>
-                )}
-                <a
-                  href={`https://www.google.com/maps/dir/?api=1&destination=${selected.latitude},${selected.longitude}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-1.5 rounded-xl border border-line bg-obsidian-3 px-3 py-2 text-xs font-medium text-ivory hover:border-gold transition-colors"
-                  title="Open Driving Navigation"
-                >
-                  <Car className="h-3.5 w-3.5 text-gold" />
-                  <span>Directions</span>
-                </a>
-                <button
-                  onClick={handleToggleSave}
-                  disabled={saveBusy}
-                  className={cn(
-                    "flex items-center justify-center gap-1 rounded-xl border px-3 py-2 text-xs font-medium transition-colors",
-                    savedStatus
-                      ? "border-emerald-500/50 bg-emerald-500/20 text-emerald-300"
-                      : "border-line bg-obsidian-3 text-ivory hover:border-gold"
-                  )}
-                  title={savedStatus ? "Saved in Journey" : "Save to Journey"}
-                >
-                  {savedStatus ? <BookmarkCheck className="h-3.5 w-3.5" /> : <Bookmark className="h-3.5 w-3.5" />}
-                  <span>{savedStatus ? "Saved" : "Save"}</span>
-                </button>
-                <Link
-                  href={`/plan?destination=${encodeURIComponent(selected.name)}`}
-                  className="flex items-center justify-center gap-1 rounded-xl border border-line bg-obsidian-3 px-3 py-2 text-xs font-medium text-ivory hover:border-gold transition-colors"
-                  title="Plan Visit in Yatra Planner"
-                >
-                  <span>Plan</span>
-                  <ArrowRight className="h-3 w-3 text-gold" />
-                </Link>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ------------------------------------------------------------- */}
-        {/* MOBILE RESPONSIVE BOTTOM SHEET (Section 8)                   */}
-        {/* ------------------------------------------------------------- */}
-        {selected && (
-          <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 sm:hidden">
-            <div className={cn(
-              "pointer-events-auto rounded-t-3xl border-t border-gold/40 bg-obsidian-2/95 p-4 shadow-2xl backdrop-blur-xl transition-all duration-300",
-              mobileSheetExpanded ? "max-h-[85vh] overflow-y-auto" : "max-h-[220px]"
-            )}>
-              {/* Drag Handle & Toggle Pill */}
-              <div
-                onClick={() => setMobileSheetExpanded(!mobileSheetExpanded)}
-                className="flex flex-col items-center cursor-pointer pb-2"
-              >
-                <div className="h-1.5 w-12 rounded-full bg-stone-600 mb-1" />
-                <span className="text-[9.5px] font-mono text-stone-400 flex items-center gap-0.5">
-                  {mobileSheetExpanded ? (
-                    <><span>Collapse</span><ChevronDown className="h-2.5 w-2.5" /></>
-                  ) : (
-                    <><span>Swipe or Tap to Expand</span><ChevronUp className="h-2.5 w-2.5" /></>
-                  )}
-                </span>
-              </div>
-
-              {/* Compact Header for Mobile */}
+          <div className="pointer-events-none absolute bottom-4 left-4 right-4 z-20 flex justify-center sm:justify-start lg:right-auto">
+            <div className="pointer-events-auto w-full max-w-md rounded-3xl border border-line bg-obsidian-2/95 p-4 shadow-2xl backdrop-blur-xl transition-all">
               <div className="flex items-start justify-between gap-3">
-                <div className="flex items-center gap-3 min-w-0">
+                <div className="flex items-start gap-3">
+                  {/* Photo Thumbnail */}
                   {resolvedMedia?.src ? (
-                    <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-line bg-black">
+                    <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-2xl border border-line bg-black">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={resolvedMedia.src}
                         alt={selected.name}
                         className="h-full w-full object-cover"
-                        loading="lazy"
                       />
                     </div>
                   ) : (
-                    <div className={cn("flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border", selectedCatVisual.bgClass, selectedCatVisual.borderClass)}>
-                      <SelectedCatIcon className={cn("h-6 w-6", selectedCatVisual.textClass)} />
+                    <div className={cn("flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border", selectedCatVisual.bgClass, selectedCatVisual.borderClass)}>
+                      <SelectedCatIcon className={cn("h-7 w-7", selectedCatVisual.textClass)} />
                     </div>
                   )}
 
                   <div className="min-w-0">
-                    <div className="flex items-center gap-1.5">
-                      <h4 className="font-serif text-base font-semibold text-ivory truncate">
-                        {selected.name}
-                      </h4>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-semibold border", selectedCatVisual.bgClass, selectedCatVisual.textClass, selectedCatVisual.borderClass)}>
+                        {selected.category || "SANCTUARY"}
+                      </span>
                       {selected.verified && (
-                        <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-emerald-400" />
+                        <span className="flex items-center gap-0.5 rounded-full border border-emerald-500/40 bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
+                          <ShieldCheck className="h-3 w-3" />
+                          <span>Verified</span>
+                        </span>
+                      )}
+                      {selected.isInside && activeLocation && (
+                        <span className="rounded-full border border-cyan-500/40 bg-cyan-500/15 px-2 py-0.5 text-[9.5px] font-medium text-cyan-300">
+                          Inside {activeLocation.name}
+                        </span>
                       )}
                     </div>
-                    <p className="text-[11.5px] text-ivory-dim truncate">
-                      {selected.address || [selected.district, selected.state].filter(Boolean).join(", ")}
+                    <h3 className="mt-1 font-serif text-base font-semibold text-ivory truncate">
+                      {selected.name}
+                    </h3>
+                    <p className="text-xs text-ivory-dim truncate">
+                      {[selected.district, selected.state].filter(Boolean).join(", ")}
                     </p>
-                    {userLocation && (
-                      <p className="text-[10px] font-mono text-gold-bright mt-0.5">
-                        ~{calculateHaversineKm(userLocation.lat, userLocation.lng, selected.latitude, selected.longitude).toFixed(1)} km away
-                      </p>
-                    )}
                   </div>
                 </div>
 
                 <button
-                  onClick={() => setSelectedId(null)}
-                  aria-label="Close destination card"
-                  className="rounded-full p-1 text-ivory-dim hover:text-ivory transition-colors shrink-0"
+                  onClick={() => {
+                    setSelectedId(null);
+                    updateUrlParams({ selectedId: null });
+                  }}
+                  className="rounded-full p-1 text-ivory-dim hover:bg-obsidian-3 hover:text-ivory"
+                  aria-label="Close card"
                 >
                   <X className="h-4 w-4" />
                 </button>
               </div>
 
-              {/* Expanded details on mobile */}
-              {mobileSheetExpanded && (
-                <div className="mt-4 pt-3 border-t border-line/60 space-y-3">
-                  {resolvedMedia?.src && (
-                    <div className="relative h-36 w-full overflow-hidden rounded-2xl border border-line bg-black">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={resolvedMedia.src}
-                        alt={selected.name}
-                        className="h-full w-full object-cover"
-                      />
-                      <div className="absolute bottom-2 left-2.5 rounded bg-black/60 px-2 py-0.5 text-[9px] font-mono text-stone-300">
-                        {resolvedMedia.credit}
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="flex flex-wrap items-center gap-2 text-[10.5px]">
-                    {selectedQuality && (
-                      <span className="rounded-full bg-gold/15 px-2.5 py-0.5 font-semibold text-gold-bright border border-gold/30">
-                        {selectedQuality.accuracyLabel}
-                      </span>
-                    )}
-                    <span className="rounded-full bg-stone-800/80 px-2 py-0.5 text-stone-300 border border-stone-700/60 font-mono text-[10px]">
-                      {selected.subcategory || selected.category || "Sanctuary"}
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              {/* Mobile Action Buttons */}
-              <div className="flex items-center gap-2 pt-3 mt-2 border-t border-line/50">
+              {/* Expanded details */}
+              <div className="mt-3 flex items-center gap-2 pt-2 border-t border-line/50">
                 {selected.href && (
                   <Link
                     href={selected.href}
-                    className="flex flex-1 items-center justify-center gap-1 rounded-xl bg-gold px-3 py-2 text-xs font-semibold text-obsidian shadow-md hover:bg-gold-bright transition-colors"
+                    className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-gold px-3.5 py-2 text-xs font-semibold text-obsidian shadow-md hover:bg-gold-bright transition-colors"
                   >
-                    <span>{selected.category === "TEMPLE" ? "Explore" : "Visit"}</span>
+                    <span>View Full Details</span>
                     <ExternalLink className="h-3 w-3" />
                   </Link>
                 )}
@@ -1809,6 +1679,7 @@ export function MapExplorer() {
                       ? "border-emerald-500/50 bg-emerald-500/20 text-emerald-300"
                       : "border-line bg-obsidian-3 text-ivory hover:border-gold"
                   )}
+                  aria-label={savedStatus ? "Saved" : "Save destination"}
                 >
                   {savedStatus ? <BookmarkCheck className="h-3.5 w-3.5" /> : <Bookmark className="h-3.5 w-3.5" />}
                 </button>
@@ -1849,7 +1720,6 @@ export function MapExplorer() {
 
           {/* Action Button Stack */}
           <div className="pointer-events-auto flex flex-col overflow-hidden rounded-2xl border border-line bg-obsidian-2/95 shadow-2xl backdrop-blur-md">
-            {/* Zoom In */}
             <button
               onClick={() => mapRef.current?.zoomIn()}
               title="Zoom In"
@@ -1860,7 +1730,6 @@ export function MapExplorer() {
             </button>
             <div className="h-[1px] w-full bg-line" />
 
-            {/* Zoom Out */}
             <button
               onClick={() => mapRef.current?.zoomOut()}
               title="Zoom Out"
@@ -1871,7 +1740,6 @@ export function MapExplorer() {
             </button>
             <div className="h-[1px] w-full bg-line" />
 
-            {/* Compass / Reset Orientation */}
             <button
               onClick={handleResetOrientation}
               title="Reset Orientation (North Up)"
@@ -1885,7 +1753,6 @@ export function MapExplorer() {
             </button>
             <div className="h-[1px] w-full bg-line" />
 
-            {/* Locate Me */}
             <button
               onClick={handleLocateMe}
               disabled={locating}
@@ -1897,7 +1764,6 @@ export function MapExplorer() {
             </button>
             <div className="h-[1px] w-full bg-line" />
 
-            {/* Reset to India */}
             <button
               onClick={handleResetToIndia}
               title="Reset to National Map of India"
@@ -1919,7 +1785,7 @@ export function MapExplorer() {
               className="pointer-events-auto flex items-center gap-1.5 rounded-2xl border border-line bg-obsidian-2/95 px-3.5 py-2 text-xs font-semibold text-gold-bright shadow-2xl backdrop-blur-md transition-all hover:border-gold hover:scale-105 active:scale-95"
             >
               <ChevronLeft className="h-4 w-4" />
-              <span>Destinations ({filteredItems.length})</span>
+              <span>Destinations ({items.length})</span>
             </button>
           </div>
         )}
@@ -1928,129 +1794,89 @@ export function MapExplorer() {
       {/* Side Sanctuary Drawer (Desktop 28% / Mobile Full List) */}
       <aside
         className={cn(
-          "flex flex-col border-line bg-obsidian-2 lg:w-[390px] lg:border-l shrink-0 transition-all",
+          "flex flex-col border-line bg-obsidian-2 lg:w-[400px] lg:border-l shrink-0 transition-all",
           activeTab === "map" && (sidebarOpen ? "hidden lg:flex" : "hidden"),
           activeTab === "list" && "flex flex-1"
         )}
       >
         {/* Header summary */}
-        <div className="flex items-center justify-between border-b border-line px-4 py-3.5">
-          <div>
-            <h2 className="font-serif text-sm font-semibold text-ivory">
-              {MAP_CATEGORIES.find((c) => c.id === filterCategory)?.label || "Sacred Atlas"}
-            </h2>
-            <p className="text-[11px] text-ivory-dim">
-              {loading
-                ? "Querying verified geospatial nodes…"
-                : `${filteredItems.length} verified destinations in view`}
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="rounded-full px-2.5 py-0.5 text-[10px] font-semibold border border-gold/30 bg-gold/10 text-gold-bright">
-              Verified Atlas
-            </span>
-            <button
-              onClick={() => setSidebarOpen(false)}
-              title="Collapse list"
-              aria-label="Collapse list"
-              className="hidden lg:flex h-7 w-7 items-center justify-center rounded-lg text-ivory-dim hover:text-ivory hover:bg-obsidian-3 transition-colors"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </button>
+        <div className="border-b border-line px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="font-serif text-sm font-semibold text-ivory flex items-center gap-1.5">
+                <span>{MAP_CATEGORIES.find((c) => c.id === filterCategory)?.label || "Sacred Atlas"}</span>
+                {activeLocation && (
+                  <span className="text-gold-bright font-normal text-xs">
+                    · {activeLocation.name}
+                  </span>
+                )}
+              </h2>
+              <p className="text-[11px] text-ivory-dim">
+                {loading
+                  ? "Querying verified geospatial nodes…"
+                  : `${items.length} verified destinations in view`}
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="rounded-full px-2.5 py-0.5 text-[10px] font-semibold border border-gold/30 bg-gold/10 text-gold-bright">
+                Verified Atlas
+              </span>
+              <button
+                onClick={() => setSidebarOpen(false)}
+                title="Collapse list"
+                aria-label="Collapse list"
+                className="hidden lg:flex h-7 w-7 items-center justify-center rounded-lg text-ivory-dim hover:text-ivory hover:bg-obsidian-3 transition-colors"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Sanctuary Cards List */}
-        <div className="flex-1 overflow-y-auto p-3 space-y-2.5">
-          {!loading && filteredItems.length === 0 && (
+        {/* Sanctuary Cards List with Inside vs Nearby Sectioning */}
+        <div className="flex-1 overflow-y-auto p-3 space-y-3">
+          {!loading && items.length === 0 && (
             <div className="flex flex-col items-center justify-center py-12 text-center text-ivory-dim">
               <MapPin className="h-8 w-8 text-gold/30 mb-2" />
               <p className="text-xs">No destinations found in this view.</p>
               <p className="text-[10px] text-ivory-dim/60 mt-1">
-                Try zooming out, panning along the corridor, or selecting All Destinations.
+                Try zooming out, clearing location filters, or selecting All Destinations.
               </p>
             </div>
           )}
 
-          {filteredItems.map((p) => {
-            const isSel = p.id === selectedId;
-            const pCatVisual = getCategoryVisual(p.category);
-            const PCatIcon = ICON_MAP[pCatVisual.iconName] || Compass;
+          {/* If Active Location is set, render "Inside" section first */}
+          {hasActiveLoc && insideItems.length > 0 && (
+            <div>
+              <div className="flex items-center gap-1.5 mb-2 px-1 text-[11px] font-semibold uppercase tracking-wider text-cyan-400">
+                <MapPin className="h-3 w-3" />
+                <span>Inside {activeLocation?.name} ({insideItems.length})</span>
+              </div>
+              <div className="space-y-2">
+                {insideItems.map((p) => renderCard(p))}
+              </div>
+            </div>
+          )}
 
-            return (
-              <button
-                key={p.id}
-                ref={(el) => {
-                  itemRefs.current[p.id] = el;
-                }}
-                onClick={() => {
-                  setSelectedId(p.id);
-                  const map = mapRef.current;
-                  if (map) {
-                    const prefersReduced = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-                    map.flyTo({
-                      center: [p.longitude, p.latitude],
-                      zoom: 15.5,
-                      speed: prefersReduced ? 5.0 : 1.4,
-                      curve: prefersReduced ? 1.0 : 1.42,
-                      essential: true,
-                    });
-                  }
-                  if (activeTab === "list") {
-                    setActiveTab("map");
-                  }
-                }}
-                className={cn(
-                  "flex w-full items-start gap-3 rounded-2xl border p-3.5 text-left transition-all",
-                  isSel
-                    ? "border-gold bg-gold/10 shadow-lg shadow-gold/10 ring-1 ring-gold/40"
-                    : "border-line bg-obsidian-3/60 hover:border-gold/30 hover:bg-obsidian-3"
-                )}
-              >
-                {/* Photo thumbnail or Category visual */}
-                {p.image ? (
-                  <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-line bg-black">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={p.image}
-                      alt={p.name}
-                      className="h-full w-full object-cover"
-                      loading="lazy"
-                    />
-                  </div>
-                ) : (
-                  <div className={cn("flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border", pCatVisual.bgClass, pCatVisual.borderClass)}>
-                    <PCatIcon className={cn("h-6 w-6", pCatVisual.textClass)} />
-                  </div>
-                )}
+          {/* Nearby Section when Active Location is set */}
+          {hasActiveLoc && nearbyItems.length > 0 && (
+            <div className="pt-2">
+              <div className="flex items-center gap-1.5 mb-2 px-1 text-[11px] font-semibold uppercase tracking-wider text-gold-dim">
+                <Compass className="h-3 w-3" />
+                <span>Nearby in Viewport ({nearbyItems.length})</span>
+              </div>
+              <div className="space-y-2">
+                {nearbyItems.map((p) => renderCard(p))}
+              </div>
+            </div>
+          )}
 
-                {/* Content */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1.5">
-                    <h3 className="truncate font-serif text-[13.5px] font-semibold text-ivory">
-                      {p.name}
-                    </h3>
-                    {p.verified && (
-                      <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-emerald-400" />
-                    )}
-                  </div>
-                  <p className="truncate text-[11px] text-ivory-dim">
-                    {[p.district, p.state].filter(Boolean).join(", ") || "India"}
-                  </p>
-                  <div className="mt-1.5 flex items-center gap-2 text-[10px]">
-                    <span className={cn("font-medium", pCatVisual.textClass)}>
-                      {p.subcategory || p.category || "Sanctuary"}
-                    </span>
-                    {p.accuracyLabel && (
-                      <span className="rounded bg-gold/15 px-1.5 py-0.2 text-[9px] font-semibold text-gold-bright">
-                        {p.accuracyLabel}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </button>
-            );
-          })}
+          {/* Unified list if no active location is set */}
+          {!hasActiveLoc && (
+            <div className="space-y-2">
+              {items.map((p) => renderCard(p))}
+            </div>
+          )}
         </div>
 
         {/* Footer Attribution Bar */}
@@ -2062,4 +1888,87 @@ export function MapExplorer() {
       </aside>
     </div>
   );
+
+  function renderCard(p: MapPlaceItem) {
+    const isSel = p.id === selectedId;
+    const pCatVisual = getCategoryVisual(p.category);
+    const PCatIcon = ICON_MAP[pCatVisual.iconName] || Compass;
+
+    return (
+      <button
+        key={p.id}
+        ref={(el) => {
+          itemRefs.current[p.id] = el;
+        }}
+        onClick={() => {
+          setSelectedId(p.id);
+          updateUrlParams({ selectedId: p.id });
+          const map = mapRef.current;
+          if (map) {
+            const prefersReduced =
+              typeof window !== "undefined" &&
+              window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            map.flyTo({
+              center: [p.longitude, p.latitude],
+              zoom: 15.5,
+              speed: prefersReduced ? 5.0 : 1.4,
+              curve: prefersReduced ? 1.0 : 1.42,
+              essential: true,
+            });
+          }
+          if (activeTab === "list") {
+            setActiveTab("map");
+          }
+        }}
+        className={cn(
+          "flex w-full items-start gap-3 rounded-2xl border p-3 text-left transition-all",
+          isSel
+            ? "border-gold bg-gold/10 shadow-lg shadow-gold/10 ring-1 ring-gold/40"
+            : "border-line bg-obsidian-3/60 hover:border-gold/30 hover:bg-obsidian-3"
+        )}
+      >
+        {/* Photo thumbnail or Category visual */}
+        {p.image ? (
+          <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-line bg-black">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={p.image}
+              alt={p.name}
+              className="h-full w-full object-cover"
+              loading="lazy"
+            />
+          </div>
+        ) : (
+          <div className={cn("flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border", pCatVisual.bgClass, pCatVisual.borderClass)}>
+            <PCatIcon className={cn("h-6 w-6", pCatVisual.textClass)} />
+          </div>
+        )}
+
+        {/* Content */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-1.5">
+            <h3 className="truncate font-serif text-[13.5px] font-semibold text-ivory">
+              {p.name}
+            </h3>
+            {p.verified && (
+              <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-emerald-400" />
+            )}
+          </div>
+          <p className="truncate text-[11px] text-ivory-dim">
+            {[p.district, p.state].filter(Boolean).join(", ") || "India"}
+          </p>
+          <div className="mt-1.5 flex items-center gap-2 text-[10px]">
+            <span className={cn("font-medium", pCatVisual.textClass)}>
+              {p.subcategory || p.category || "Sanctuary"}
+            </span>
+            {p.accuracyLabel && (
+              <span className="rounded bg-gold/15 px-1.5 py-0.2 text-[9px] font-semibold text-gold-bright">
+                {p.accuracyLabel}
+              </span>
+            )}
+          </div>
+        </div>
+      </button>
+    );
+  }
 }

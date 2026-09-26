@@ -84,7 +84,9 @@ class MapErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState>
 export function MapClientShell() {
   return (
     <MapErrorBoundary>
-      <MapExplorer />
+      <React.Suspense fallback={<MapLoadingSkeleton />}>
+        <MapExplorer />
+      </React.Suspense>
     </MapErrorBoundary>
   );
 }
