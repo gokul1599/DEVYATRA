@@ -142,4 +142,43 @@ describe("Templeora India Places Master System — Taxonomy & Ingestion Audit", 
     assert.equal(normalizeNameForMatch("Ajanta Caves (UNESCO World Heritage)"), "ajanta caves unesco world heritage");
     assert.equal(normalizeNameForMatch("Kailasa  Temple - Cave 16"), "kailasa temple cave 16");
   });
+
+  it("correctly models supplemental place classes, multi-faith attributes, and geo-heritage", () => {
+    const geoPlace: RawPlaceInput = {
+      slug: "st-marys-island-columnar-basalt-malpe",
+      name: "St. Mary's Island (GSI Columnar Basaltic Lava Monument)",
+      description: "National Geological Monument of columnar basaltic lava.",
+      category: "NATURE",
+      latitude: 13.3800,
+      longitude: 74.6733,
+      district: "Udupi",
+      state: "Karnataka",
+      sourceName: "Geological Survey of India",
+      sourceType: "official",
+      gsiProtected: true,
+      placeKind: "geographic_feature",
+      designations: ["GSI National Geological Monument"],
+    };
+
+    const sikhPlace: RawPlaceInput = {
+      slug: "sri-harmandir-sahib-golden-temple-amritsar",
+      name: "Sri Harmandir Sahib",
+      description: "Supreme spiritual sanctuary of Sikhism in Amritsar.",
+      category: "SACRED",
+      latitude: 31.6200,
+      longitude: 74.8765,
+      district: "Amritsar",
+      state: "Punjab",
+      sourceName: "SGPC Official",
+      sourceType: "official",
+      faith: "SIKH",
+      placeKind: "religious_site",
+    };
+
+    assert.equal(geoPlace.gsiProtected, true);
+    assert.equal(geoPlace.placeKind, "geographic_feature");
+    assert.equal(sikhPlace.faith, "SIKH");
+    assert.equal(sikhPlace.placeKind, "religious_site");
+  });
 });
+

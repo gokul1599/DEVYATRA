@@ -752,7 +752,24 @@ model Place {
   tigerReserve          Boolean   @default(false)
   nationalPark          Boolean   @default(false)
   wildlifeSanctuary     Boolean   @default(false)
+  elephantReserve       Boolean   @default(false)
+  biosphereReserve      Boolean   @default(false)
+  communityReserve      Boolean   @default(false)
+  marineProtectedArea   Boolean   @default(false)
+  importantBirdArea     Boolean   @default(false)
+  gsiProtected          Boolean   @default(false)
+  gsiMonumentId         String?
   giProductTag          String?
+
+  // Supplemental Place Classification (Missing Places Spec)
+  placeKind             String?   @default("point_of_interest")
+  subtypes              String[]  @default([])
+  activities            String[]  @default([])
+  designations          String[]  @default([])
+  faith                 String?
+  religiousTradition    String?
+  accessType            String?   @default("PUBLIC")
+  accessRestrictions    String?
 
   // Trust & Verification
   verificationStatus    String    @default("UNVERIFIED") // VERIFIED_OFFICIAL | VERIFIED_INSTITUTIONAL | VERIFIED_SECONDARY | COMMUNITY_REPORTED | NEEDS_REVIEW | UNVERIFIED | REJECTED

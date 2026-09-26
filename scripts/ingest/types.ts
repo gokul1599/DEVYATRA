@@ -59,7 +59,24 @@ export interface RawPlaceInput {
   tigerReserve?: boolean;
   nationalPark?: boolean;
   wildlifeSanctuary?: boolean;
+  elephantReserve?: boolean;
+  biosphereReserve?: boolean;
+  communityReserve?: boolean;
+  marineProtectedArea?: boolean;
+  importantBirdArea?: boolean;
+  gsiProtected?: boolean;
+  gsiMonumentId?: string;
   giProductTag?: string;
+
+  // Supplemental Classifications
+  placeKind?: string;
+  subtypes?: string[];
+  activities?: string[];
+  designations?: string[];
+  faith?: string;
+  religiousTradition?: string;
+  accessType?: string;
+  accessRestrictions?: string;
 
   // Provenance & Source
   verificationStatus?: VerificationStatus;

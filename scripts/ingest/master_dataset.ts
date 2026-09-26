@@ -80,6 +80,47 @@ export function loadAllIndiaRawPlaces(): RawPlaceInput[] {
       tigerReserve: d.category === "WILDLIFE" && (d.description.toLowerCase().includes("tiger") || (d.tags && d.tags.includes("tiger"))),
       nationalPark: d.category === "WILDLIFE" && (d.subcategory?.toLowerCase().includes("national park") || d.description.toLowerCase().includes("national park")),
       wildlifeSanctuary: d.category === "WILDLIFE" && (d.subcategory?.toLowerCase().includes("sanctuary") || d.description.toLowerCase().includes("sanctuary")),
+      gsiProtected: !!d.tags?.includes("geo-heritage") || !!d.tags?.includes("gsi"),
+      gsiMonumentId: d.subcategory?.includes("GSI") ? d.subcategory : undefined,
+      elephantReserve: !!d.tags?.includes("elephant-reserve") || d.description.toLowerCase().includes("elephant reserve"),
+      biosphereReserve: !!d.tags?.includes("biosphere") || d.description.toLowerCase().includes("biosphere reserve"),
+      marineProtectedArea: !!d.tags?.includes("marine") || !!d.subcategory?.toLowerCase().includes("marine"),
+      importantBirdArea: !!d.tags?.includes("birding"),
+      placeKind: d.tags?.includes("geo-heritage")
+        ? "geographic_feature"
+        : d.tags?.includes("unesco") || d.tags?.includes("asi")
+        ? "heritage_structure"
+        : d.category === "SACRED"
+        ? "religious_site"
+        : d.category === "WILDLIFE" || d.category === "LAKES"
+        ? "protected_area"
+        : "point_of_interest",
+      subtypes: [d.subcategory || d.subtype || d.category],
+      activities: d.category === "ADVENTURE" ? ["Trekking", "Expedition", "Sightseeing"] : ["Sightseeing", "Cultural Exploration"],
+      designations: [
+        ...(d.unescoReference ? ["UNESCO World Heritage"] : []),
+        ...(d.asiReference ? ["ASI Centrally Protected"] : []),
+        ...(d.tags?.includes("ramsar") ? ["Ramsar Wetland"] : []),
+        ...(d.tags?.includes("gsi") ? ["GSI National Geological Monument"] : []),
+        ...(d.tags?.includes("gi-tag") ? ["GI Tag Registered Origin"] : [])
+      ],
+      faith: d.tags?.includes("buddhist")
+        ? "BUDDHIST"
+        : d.tags?.includes("jain")
+        ? "JAIN"
+        : d.tags?.includes("sikh")
+        ? "SIKH"
+        : d.tags?.includes("sufi") || d.tags?.includes("islamic")
+        ? "ISLAMIC"
+        : d.tags?.includes("christian")
+        ? "CHRISTIAN"
+        : d.tags?.includes("jewish")
+        ? "JEWISH"
+        : d.tags?.includes("zoroastrian")
+        ? "ZOROASTRIAN"
+        : d.category === "SACRED"
+        ? "HINDU"
+        : undefined,
       verificationStatus: "VERIFIED_OFFICIAL",
       provenanceTier: d.provenance.sourceType === "unesco" || d.provenance.sourceType === "asi" || d.provenance.sourceType === "official" ? "OFFICIAL_STATUTORY" : "STATE_GOVERNMENT",
       sourceName: d.provenance.sourceType === "unesco" 
