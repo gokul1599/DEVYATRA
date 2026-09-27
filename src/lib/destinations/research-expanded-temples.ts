@@ -10345,5 +10345,250 @@ export const RESEARCH_EXPANDED_TEMPLES: DestinationRecord[] = [
       "benchmark",
       "templeora-research"
     ]
-  }
+  },
+  {
+    "id": "dest-res-arulmigu-varadaraja-perumal-temple-kanchipuram-tamil-nadu",
+    "slug": "arulmigu-varadaraja-perumal-temple-kanchipuram-tamil-nadu",
+    "name": "Arulmigu Varadaraja Perumal Temple",
+    "category": "SACRED",
+    "subcategory": "Lord",
+    "description": "One of the 108 Divya Desams and the primary Vishnu temple of Kanchipuram, celebrated for its 100-pillared hall carved from single stones and the sacred 40-year Athi Varadar festival.",
+    "latitude": 12.8193,
+    "longitude": 79.7246,
+    "locationConfidence": "exact",
+    "city": "Vishnu Kanchi",
+    "district": "Kanchipuram",
+    "state": "Tamil Nadu",
+    "image": "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Arulmigu Varadaraja Perumal Temple in Kanchipuram, Tamil Nadu",
+    "imageCredit": {
+      "photographer": "Official Record",
+      "source": "Official Record",
+      "license": "Government Open Data"
+    },
+    "bestTimeToVisit": "October to March",
+    "highlights": ["108 Divya Desam","Athi Varadar Manifestation","Ancient Sacred Shrine"],
+    "provenance": {
+      "sourceType": "official",
+      "verifiedDate": "2026-09-27",
+      "sourceUrl": "https://kanchivaradarajartemple.hrce.tn.gov.in/"
+    },
+    "tags": [
+      "sacred",
+      "tn",
+      "kanchipuram",
+      "canonical-famous-temple",
+      "templeora-research"
+    ]
+  },
+  {
+    "id": "dest-res-arulmigu-kamakshi-amman-temple-kanchipuram-tamil-nadu",
+    "slug": "arulmigu-kamakshi-amman-temple-kanchipuram-tamil-nadu",
+    "name": "Arulmigu Kamakshi Amman Temple",
+    "category": "SACRED",
+    "subcategory": "Goddess",
+    "description": "The supreme Shakthi Peetham of Kanchipuram where the Goddess is seated in Padmasana posture before the sacred Sri Chakra consecrated by Adi Shankaracharya.",
+    "latitude": 12.8412,
+    "longitude": 79.7032,
+    "locationConfidence": "exact",
+    "city": "Kamakshi Amman Sannadhi Street",
+    "district": "Kanchipuram",
+    "state": "Tamil Nadu",
+    "image": "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Arulmigu Kamakshi Amman Temple in Kanchipuram, Tamil Nadu",
+    "imageCredit": {
+      "photographer": "Official Record",
+      "source": "Official Record",
+      "license": "Government Open Data"
+    },
+    "bestTimeToVisit": "October to March",
+    "highlights": ["51 Shakti Peetha","Sri Chakra Consecration","Adi Shankara Sthalam"],
+    "provenance": {
+      "sourceType": "official",
+      "verifiedDate": "2026-09-27",
+      "sourceUrl": "https://www.srikanchikamakshi.org/"
+    },
+    "tags": [
+      "sacred",
+      "tn",
+      "kanchipuram",
+      "canonical-famous-temple",
+      "templeora-research"
+    ]
+  },
+  {
+    "id": "dest-res-swayambhu-ganpati-temple-ganpatipule-ratnagiri-maharashtra",
+    "slug": "swayambhu-ganpati-temple-ganpatipule-ratnagiri-maharashtra",
+    "name": "Swayambhu Ganpati Temple, Ganpatipule",
+    "category": "SACRED",
+    "subcategory": "Swayambhu",
+    "description": "A 400-year-old self-manifested (Swayambhu) monolithic Ganesha deity facing west on the Arabian Sea shores of Ganpatipule, revered as the Western Guardian Deity (Paschim Dwardevata).",
+    "latitude": 17.1458,
+    "longitude": 73.2667,
+    "locationConfidence": "exact",
+    "city": "Ganpatipule Seashore",
+    "district": "Ratnagiri",
+    "state": "Maharashtra",
+    "image": "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Swayambhu Ganpati Temple, Ganpatipule in Ratnagiri, Maharashtra",
+    "imageCredit": {
+      "photographer": "Official Record",
+      "source": "Official Record",
+      "license": "Government Open Data"
+    },
+    "bestTimeToVisit": "October to March",
+    "highlights": ["Paschim Dwarpalak","Swayambhu Monolith","Oceanfront Sacred Shrine"],
+    "provenance": {
+      "sourceType": "official",
+      "verifiedDate": "2026-09-27",
+      "sourceUrl": "https://ganpatipulesansthan.org/"
+    },
+    "tags": [
+      "sacred",
+      "mh",
+      "ratnagiri",
+      "canonical-famous-temple",
+      "templeora-research"
+    ]
+  },
+  {
+    "id": "dest-res-bhadrakali-temple-warangal-hanamkonda-telangana",
+    "slug": "bhadrakali-temple-warangal-hanamkonda-telangana",
+    "name": "Bhadrakali Temple, Warangal",
+    "category": "SACRED",
+    "subcategory": "Goddess",
+    "description": "Ancient 7th-century CE Shakthi temple on the banks of Bhadrakali Lake, built by King Pulakeshin II and lavishly expanded by the Kakatiya rulers who worshiped the Mother as their guardian.",
+    "latitude": 17.9944,
+    "longitude": 79.5858,
+    "locationConfidence": "exact",
+    "city": "Bhadrakali Lake Bund",
+    "district": "Warangal",
+    "state": "Telangana",
+    "image": "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Bhadrakali Temple, Warangal in Warangal, Telangana",
+    "imageCredit": {
+      "photographer": "Official Record",
+      "source": "Official Record",
+      "license": "Government Open Data"
+    },
+    "bestTimeToVisit": "October to March",
+    "highlights": ["Kakatiya Patronage","Sacred Lake Shrine","Ancient Shakthi Kshetra"],
+    "provenance": {
+      "sourceType": "official",
+      "verifiedDate": "2026-09-27",
+      "sourceUrl": "https://endowments.telangana.gov.in/"
+    },
+    "tags": [
+      "sacred",
+      "ts",
+      "warangal",
+      "canonical-famous-temple",
+      "templeora-research"
+    ]
+  },
+  {
+    "id": "dest-res-prem-mandir-vrindavan-mathura-uttar-pradesh",
+    "slug": "prem-mandir-vrindavan-mathura-uttar-pradesh",
+    "name": "Prem Mandir (Temple of Divine Love)",
+    "category": "SACRED",
+    "subcategory": "Radha",
+    "description": "Magnificent 54-acre spiritual monument constructed from 30,000 tons of pure Italian white Carrara marble, depicting pastimes of Sri Radha Krishna and Sri Sita Rama.",
+    "latitude": 27.5722,
+    "longitude": 77.6744,
+    "locationConfidence": "exact",
+    "city": "Chhatikara Road",
+    "district": "Mathura",
+    "state": "Uttar Pradesh",
+    "image": "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Prem Mandir (Temple of Divine Love) in Mathura, Uttar Pradesh",
+    "imageCredit": {
+      "photographer": "Official Record",
+      "source": "Official Record",
+      "license": "Government Open Data"
+    },
+    "bestTimeToVisit": "October to March",
+    "highlights": ["Italian Carrara Marble","Musical Water Fountain","Modern Monumental Heritage"],
+    "provenance": {
+      "sourceType": "official",
+      "verifiedDate": "2026-09-27",
+      "sourceUrl": "https://www.jkp.org.in/"
+    },
+    "tags": [
+      "sacred",
+      "up",
+      "mathura",
+      "canonical-famous-temple",
+      "templeora-research"
+    ]
+  },
+  {
+    "id": "dest-res-kaal-bhairav-temple-kotwal-of-varanasi-uttar-pradesh",
+    "slug": "kaal-bhairav-temple-kotwal-of-varanasi-uttar-pradesh",
+    "name": "Kaal Bhairav Temple (Kotwal of Varanasi)",
+    "category": "SACRED",
+    "subcategory": "Lord",
+    "description": "Revered as the Kotwal (Supreme Police Chief and Spiritual Guardian) of Varanasi; Hindu tradition requires all pilgrims to obtain Kaal Bhairav's permission before entering or leaving the Holy City.",
+    "latitude": 25.3183,
+    "longitude": 83.0142,
+    "locationConfidence": "exact",
+    "city": "Bharonath",
+    "district": "Varanasi",
+    "state": "Uttar Pradesh",
+    "image": "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Kaal Bhairav Temple (Kotwal of Varanasi) in Varanasi, Uttar Pradesh",
+    "imageCredit": {
+      "photographer": "Official Record",
+      "source": "Official Record",
+      "license": "Government Open Data"
+    },
+    "bestTimeToVisit": "October to March",
+    "highlights": ["Kotwal of Kashi","Guardian of Varanasi","Mandatory Kashi Yatra Stop"],
+    "provenance": {
+      "sourceType": "official",
+      "verifiedDate": "2026-09-27",
+      "sourceUrl": "https://varanasi.nic.in/"
+    },
+    "tags": [
+      "sacred",
+      "up",
+      "varanasi",
+      "canonical-famous-temple",
+      "templeora-research"
+    ]
+  },
+  {
+    "id": "dest-res-shri-shantadurga-temple-kavlem-ponda-south-goa",
+    "slug": "shri-shantadurga-temple-kavlem-ponda-south-goa",
+    "name": "Shri Shantadurga Temple, Kavlem",
+    "category": "SACRED",
+    "subcategory": "Goddess",
+    "description": "The principal seat of Goddess Shantadurga built during the Maratha era in 1738 CE under Chhatrapati Shahu Maharaj, featuring distinctive pyramidical roofs, Roman arched stained-glass windows, and an octagonal seven-storey Deepastambha.",
+    "latitude": 15.3622,
+    "longitude": 73.9856,
+    "locationConfidence": "exact",
+    "city": "Kavlem",
+    "district": "South Goa",
+    "state": "Goa",
+    "image": "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Shri Shantadurga Temple, Kavlem in South Goa, Goa",
+    "imageCredit": {
+      "photographer": "Official Record",
+      "source": "Official Record",
+      "license": "Government Open Data"
+    },
+    "bestTimeToVisit": "October to March",
+    "highlights": ["Indo-Portuguese Architecture","Deepastambha","Major Goan Devi Shrine"],
+    "provenance": {
+      "sourceType": "official",
+      "verifiedDate": "2026-09-27",
+      "sourceUrl": "https://shrishantadurga.com/"
+    },
+    "tags": [
+      "sacred",
+      "ga",
+      "south goa",
+      "canonical-famous-temple",
+      "templeora-research"
+    ]
+  },
 ];
