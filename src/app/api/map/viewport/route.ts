@@ -7,6 +7,8 @@ import { rateLimit } from "@/lib/rate-limit";
 import { getTempleImage } from "@/lib/images/registry";
 import { VERIFIED_DESTINATIONS } from "@/lib/destinations/registry";
 import { normalizeCategory } from "@/lib/destinations/categories";
+import { TEMPLES } from "@/lib/data/temples";
+import { getState } from "@/lib/registry";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -39,12 +41,14 @@ export async function GET(req: NextRequest) {
   const qFilter = searchParams.get("q")?.trim() || null;
 
   const isAllIndia = searchParams.get("allIndia") === "true" || searchParams.get("scope") === "all";
-  let bbox = (isAllIndia || (rawCategory !== "ALL" && !stateFilter && !districtFilter && !cityFilter && searchParams.get("scope") !== "bbox"))
+  const isBboxScope = searchParams.get("scope") === "bbox";
+  const hasFilter = Boolean(stateFilter || districtFilter || cityFilter || qFilter);
+  let bbox = (isAllIndia || (hasFilter && !isBboxScope) || (rawCategory !== "ALL" && !isBboxScope))
     ? INDIA_BOUNDS
     : parseBoundingBox(bboxStr);
 
   if (!bbox) {
-    if (stateFilter || districtFilter || cityFilter || qFilter || rawCategory !== "ALL" || isAllIndia) {
+    if (hasFilter || rawCategory !== "ALL" || isAllIndia) {
       bbox = INDIA_BOUNDS;
     } else {
       return NextResponse.json(
@@ -77,31 +81,57 @@ export async function GET(req: NextRequest) {
         longitude: { gte: bbox.minLng, lte: bbox.maxLng },
       };
 
+      const templeConditions: Array<Record<string, unknown>> = [];
+
       if (districtFilter) {
-        templeWhere.district = { name: { contains: districtFilter, mode: "insensitive" } };
+        templeConditions.push({
+          OR: [
+            { district: { name: { contains: districtFilter, mode: "insensitive" } } },
+            { address: { contains: districtFilter, mode: "insensitive" } },
+          ],
+        });
       }
       if (stateFilter) {
-        templeWhere.state = { name: { contains: stateFilter, mode: "insensitive" } };
+        templeConditions.push({
+          state: { name: { contains: stateFilter, mode: "insensitive" } },
+        });
       }
       if (cityFilter) {
-        templeWhere.address = { contains: cityFilter, mode: "insensitive" };
+        templeConditions.push({
+          OR: [
+            { address: { contains: cityFilter, mode: "insensitive" } },
+            { district: { name: { contains: cityFilter, mode: "insensitive" } } },
+            { adminUnit: { name: { contains: cityFilter, mode: "insensitive" } } },
+            { locality: { name: { contains: cityFilter, mode: "insensitive" } } },
+            { name: { contains: cityFilter, mode: "insensitive" } },
+          ],
+        });
       }
       if (qFilter) {
-        templeWhere.OR = [
-          { name: { contains: qFilter, mode: "insensitive" } },
-          { nameLocal: { contains: qFilter, mode: "insensitive" } },
-          { mainDeity: { contains: qFilter, mode: "insensitive" } },
-        ];
+        templeConditions.push({
+          OR: [
+            { name: { contains: qFilter, mode: "insensitive" } },
+            { nameLocal: { contains: qFilter, mode: "insensitive" } },
+            { mainDeity: { contains: qFilter, mode: "insensitive" } },
+            { address: { contains: qFilter, mode: "insensitive" } },
+            { district: { name: { contains: qFilter, mode: "insensitive" } } },
+            { adminUnit: { name: { contains: qFilter, mode: "insensitive" } } },
+            { locality: { name: { contains: qFilter, mode: "insensitive" } } },
+          ],
+        });
       }
+
       if (verifiedOnly) {
-        templeWhere.AND = [
-          {
-            OR: [
-              { verificationStatus: { in: ["VERIFIED_OFFICIAL", "VERIFIED_SOURCE"] } },
-              { sourceType: { in: ["official", "asi", "unesco", "devasthanam"] } },
-            ],
-          },
-        ];
+        templeConditions.push({
+          OR: [
+            { verificationStatus: { in: ["VERIFIED_OFFICIAL", "VERIFIED_SOURCE"] } },
+            { sourceType: { in: ["official", "asi", "unesco", "devasthanam"] } },
+          ],
+        });
+      }
+
+      if (templeConditions.length > 0) {
+        templeWhere.AND = templeConditions;
       }
 
       const temples = await prisma.temple.findMany({
@@ -122,6 +152,8 @@ export async function GET(req: NextRequest) {
           dataConfidence: true,
           images: true,
           district: { select: { name: true } },
+          adminUnit: { select: { name: true } },
+          locality: { select: { name: true } },
           state: { select: { name: true, slug: true } },
           media: {
             where: {
@@ -162,10 +194,25 @@ export async function GET(req: NextRequest) {
           t.images?.[0] ||
           null;
 
+        const matchesLoc = (text: string | null | undefined) => {
+          if (!text) return false;
+          const lower = text.toLowerCase();
+          if (cityFilter && lower.includes(cityFilter.toLowerCase())) return true;
+          if (districtFilter && lower.includes(districtFilter.toLowerCase())) return true;
+          if (stateFilter && lower.includes(stateFilter.toLowerCase())) return true;
+          if (qFilter && lower.includes(qFilter.toLowerCase())) return true;
+          return false;
+        };
+
         const isInside = Boolean(
-          (cityFilter && t.address?.toLowerCase().includes(cityFilter.toLowerCase())) ||
-          (districtFilter && t.district?.name.toLowerCase().includes(districtFilter.toLowerCase())) ||
-          (stateFilter && t.state?.name.toLowerCase().includes(stateFilter.toLowerCase()))
+          matchesLoc(t.name) ||
+          matchesLoc(t.nameLocal) ||
+          matchesLoc(t.address) ||
+          matchesLoc(t.district?.name) ||
+          matchesLoc(t.locality?.name) ||
+          matchesLoc(t.adminUnit?.name) ||
+          matchesLoc(t.state?.name) ||
+          (stateFilter && t.stateCode.toLowerCase() === stateFilter.toLowerCase())
         );
 
         features.push({
@@ -183,7 +230,7 @@ export async function GET(req: NextRequest) {
             subcategory: t.mainDeity || "Sanatan Shrine",
             mainDeity: t.mainDeity,
             address: t.address,
-            city: t.district?.name || null,
+            city: t.locality?.name || t.adminUnit?.name || t.district?.name || null,
             district: t.district?.name || null,
             state: t.state?.name || t.stateCode,
             stateCode: t.stateCode,
@@ -229,26 +276,47 @@ export async function GET(req: NextRequest) {
         ];
       }
 
+      const placeConditions: Array<Record<string, unknown>> = [];
+
       if (districtFilter) {
-        placeWhere.district = { contains: districtFilter, mode: "insensitive" };
+        placeConditions.push({
+          OR: [
+            { district: { contains: districtFilter, mode: "insensitive" } },
+            { address: { contains: districtFilter, mode: "insensitive" } },
+          ],
+        });
       }
       if (stateFilter) {
-        placeWhere.state = { contains: stateFilter, mode: "insensitive" };
+        placeConditions.push({
+          state: { contains: stateFilter, mode: "insensitive" },
+        });
       }
       if (cityFilter) {
-        placeWhere.city = { contains: cityFilter, mode: "insensitive" };
+        placeConditions.push({
+          OR: [
+            { city: { contains: cityFilter, mode: "insensitive" } },
+            { district: { contains: cityFilter, mode: "insensitive" } },
+            { address: { contains: cityFilter, mode: "insensitive" } },
+            { name: { contains: cityFilter, mode: "insensitive" } },
+          ],
+        });
       }
       if (qFilter) {
-        placeWhere.AND = [
-          {
-            OR: [
-              { name: { contains: qFilter, mode: "insensitive" } },
-              { nativeName: { contains: qFilter, mode: "insensitive" } },
-              { subcategory: { contains: qFilter, mode: "insensitive" } },
-              { description: { contains: qFilter, mode: "insensitive" } },
-            ],
-          },
-        ];
+        placeConditions.push({
+          OR: [
+            { name: { contains: qFilter, mode: "insensitive" } },
+            { nativeName: { contains: qFilter, mode: "insensitive" } },
+            { subcategory: { contains: qFilter, mode: "insensitive" } },
+            { description: { contains: qFilter, mode: "insensitive" } },
+            { city: { contains: qFilter, mode: "insensitive" } },
+            { district: { contains: qFilter, mode: "insensitive" } },
+            { address: { contains: qFilter, mode: "insensitive" } },
+          ],
+        });
+      }
+
+      if (placeConditions.length > 0) {
+        placeWhere.AND = placeConditions;
       }
       if (verifiedOnly) {
         placeWhere.verificationStatus = {
@@ -296,10 +364,23 @@ export async function GET(req: NextRequest) {
         else if (quality.accuracy === "SITE_CENTER") siteCenterCount++;
         else approximateCount++;
 
+        const matchesPlaceLoc = (text: string | null | undefined) => {
+          if (!text) return false;
+          const lower = text.toLowerCase();
+          if (cityFilter && lower.includes(cityFilter.toLowerCase())) return true;
+          if (districtFilter && lower.includes(districtFilter.toLowerCase())) return true;
+          if (stateFilter && lower.includes(stateFilter.toLowerCase())) return true;
+          if (qFilter && lower.includes(qFilter.toLowerCase())) return true;
+          return false;
+        };
+
         const isInside = Boolean(
-          (cityFilter && (p.city?.toLowerCase().includes(cityFilter.toLowerCase()) || p.address?.toLowerCase().includes(cityFilter.toLowerCase()))) ||
-          (districtFilter && p.district?.toLowerCase().includes(districtFilter.toLowerCase())) ||
-          (stateFilter && p.state?.toLowerCase().includes(stateFilter.toLowerCase()))
+          matchesPlaceLoc(p.name) ||
+          matchesPlaceLoc(p.nativeName) ||
+          matchesPlaceLoc(p.city) ||
+          matchesPlaceLoc(p.district) ||
+          matchesPlaceLoc(p.state) ||
+          matchesPlaceLoc(p.address)
         );
 
         features.push({
@@ -346,21 +427,51 @@ export async function GET(req: NextRequest) {
     // 3. Include Static Verified Destinations within bounding box & filter criteria
     const seenIds = new Set(features.map((f) => f.properties.id || f.properties.slug));
     const matchingRegistryDestinations = VERIFIED_DESTINATIONS.filter((d) => {
-      if (d.latitude < bbox.minLat || d.latitude > bbox.maxLat) return false;
-      if (d.longitude < bbox.minLng || d.longitude > bbox.maxLng) return false;
+      if (isBboxScope && bbox) {
+        if (d.latitude < bbox.minLat || d.latitude > bbox.maxLat) return false;
+        if (d.longitude < bbox.minLng || d.longitude > bbox.maxLng) return false;
+      }
       if (normCat && normalizeCategory(d.category) !== normCat) return false;
       if (districtFilter && !d.district.toLowerCase().includes(districtFilter.toLowerCase())) return false;
       if (stateFilter && !d.state.toLowerCase().includes(stateFilter.toLowerCase())) return false;
-      if (cityFilter && d.city && !d.city.toLowerCase().includes(cityFilter.toLowerCase())) return false;
-      if (qFilter && !d.name.toLowerCase().includes(qFilter.toLowerCase())) return false;
+      if (cityFilter) {
+        const cLower = cityFilter.toLowerCase();
+        const matchesCity =
+          (d.city && d.city.toLowerCase().includes(cLower)) ||
+          d.district.toLowerCase().includes(cLower) ||
+          d.name.toLowerCase().includes(cLower);
+        if (!matchesCity) return false;
+      }
+      if (qFilter) {
+        const qLower = qFilter.toLowerCase();
+        const matchesQ =
+          d.name.toLowerCase().includes(qLower) ||
+          (d.city && d.city.toLowerCase().includes(qLower)) ||
+          d.district.toLowerCase().includes(qLower) ||
+          d.state.toLowerCase().includes(qLower) ||
+          (d.subcategory && d.subcategory.toLowerCase().includes(qLower));
+        if (!matchesQ) return false;
+      }
       return !seenIds.has(d.id) && !seenIds.has(d.slug);
     });
 
     for (const d of matchingRegistryDestinations) {
       const isInside = Boolean(
-        (cityFilter && d.city?.toLowerCase().includes(cityFilter.toLowerCase())) ||
-        (districtFilter && d.district.toLowerCase().includes(districtFilter.toLowerCase())) ||
-        (stateFilter && d.state.toLowerCase().includes(stateFilter.toLowerCase()))
+        (cityFilter && (
+          (d.city && d.city.toLowerCase().includes(cityFilter.toLowerCase())) ||
+          d.district.toLowerCase().includes(cityFilter.toLowerCase()) ||
+          d.name.toLowerCase().includes(cityFilter.toLowerCase())
+        )) ||
+        (districtFilter && (
+          d.district.toLowerCase().includes(districtFilter.toLowerCase()) ||
+          (d.city && d.city.toLowerCase().includes(districtFilter.toLowerCase()))
+        )) ||
+        (stateFilter && d.state.toLowerCase().includes(stateFilter.toLowerCase())) ||
+        (qFilter && (
+          d.name.toLowerCase().includes(qFilter.toLowerCase()) ||
+          (d.city && d.city.toLowerCase().includes(qFilter.toLowerCase())) ||
+          d.district.toLowerCase().includes(qFilter.toLowerCase())
+        ))
       );
 
       features.push({
@@ -402,6 +513,112 @@ export async function GET(req: NextRequest) {
         },
       });
       exactCount++;
+    }
+
+    // 4. Include Static Temples Catalog if category includes sacred / all
+    if (isSacredCategory) {
+      const matchingStaticTemples = TEMPLES.filter((t) => {
+        if (!isWithinIndiaBounds(t.latitude, t.longitude)) return false;
+        if (isBboxScope && bbox) {
+          if (t.latitude < bbox.minLat || t.latitude > bbox.maxLat) return false;
+          if (t.longitude < bbox.minLng || t.longitude > bbox.maxLng) return false;
+        }
+        if (stateFilter) {
+          const st = getState(t.stateCode);
+          const stateMatch =
+            t.stateCode.toLowerCase() === stateFilter.toLowerCase() ||
+            Boolean(st && st.name.toLowerCase().includes(stateFilter.toLowerCase()));
+          if (!stateMatch) return false;
+        }
+        if (districtFilter && !t.district.toLowerCase().includes(districtFilter.toLowerCase())) {
+          return false;
+        }
+        if (cityFilter) {
+          const cLower = cityFilter.toLowerCase();
+          const matchesCity =
+            Boolean(t.location && t.location.toLowerCase().includes(cLower)) ||
+            t.district.toLowerCase().includes(cLower) ||
+            t.name.toLowerCase().includes(cLower);
+          if (!matchesCity) return false;
+        }
+        if (qFilter) {
+          const qLower = qFilter.toLowerCase();
+          const matchesQ =
+            t.name.toLowerCase().includes(qLower) ||
+            Boolean(t.location && t.location.toLowerCase().includes(qLower)) ||
+            t.district.toLowerCase().includes(qLower) ||
+            Boolean(t.mainDeity && t.mainDeity.toLowerCase().includes(qLower));
+          if (!matchesQ) return false;
+        }
+        return !seenIds.has(t.id) && !seenIds.has(t.slug);
+      });
+
+      for (const t of matchingStaticTemples) {
+        seenIds.add(t.id);
+        seenIds.add(t.slug);
+        const st = getState(t.stateCode);
+        const stateSlug = st?.slug || t.stateCode.toLowerCase();
+        const isInside = Boolean(
+          (cityFilter && (
+            Boolean(t.location && t.location.toLowerCase().includes(cityFilter.toLowerCase())) ||
+            t.district.toLowerCase().includes(cityFilter.toLowerCase()) ||
+            t.name.toLowerCase().includes(cityFilter.toLowerCase())
+          )) ||
+          (districtFilter && (
+            t.district.toLowerCase().includes(districtFilter.toLowerCase()) ||
+            Boolean(t.location && t.location.toLowerCase().includes(districtFilter.toLowerCase()))
+          )) ||
+          (stateFilter && (
+            t.stateCode.toLowerCase() === stateFilter.toLowerCase() ||
+            Boolean(st && st.name.toLowerCase().includes(stateFilter.toLowerCase()))
+          )) ||
+          (qFilter && (
+            t.name.toLowerCase().includes(qFilter.toLowerCase()) ||
+            Boolean(t.location && t.location.toLowerCase().includes(qFilter.toLowerCase())) ||
+            t.district.toLowerCase().includes(qFilter.toLowerCase())
+          ))
+        );
+
+        features.push({
+          type: "Feature",
+          id: t.id,
+          geometry: {
+            type: "Point",
+            coordinates: [t.longitude, t.latitude],
+          },
+          properties: {
+            id: t.id,
+            name: t.name,
+            slug: t.slug,
+            category: "SACRED",
+            subcategory: t.mainDeity || "Sanatan Shrine",
+            mainDeity: t.mainDeity,
+            address: t.location,
+            city: t.location,
+            district: t.district,
+            state: st?.name || t.stateCode,
+            stateCode: t.stateCode,
+            latitude: t.latitude,
+            longitude: t.longitude,
+            accuracy: "EXACT",
+            accuracyLabel: "Exact Coordinates",
+            accuracyDescription: "Verified temple geodetic coordinates",
+            badgeVariant: "gold",
+            qualityScore: 95,
+            verificationStatus: "VERIFIED_OFFICIAL",
+            sourceType: "official",
+            sourceName: "Templeora Sacred Catalog",
+            isVerified: true,
+            isInside,
+            openNow: null,
+            distanceKm: null,
+            googlePlaceId: null,
+            href: `/temples/${stateSlug}/${t.slug}`,
+            imageReference: t.images?.[0] || getTempleImage(t.slug)?.src || null,
+          },
+        });
+        exactCount++;
+      }
     }
 
     let minLng = Infinity;

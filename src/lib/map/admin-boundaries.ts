@@ -665,6 +665,517 @@ export const POPULAR_LOCALITIES: Record<string, GeoBoundary> = {
     center: { lat: 13.6288, lng: 79.4192 },
     recommendedZoom: 13,
   },
+  kanchipuram: {
+    name: "Kanchipuram",
+    type: "locality",
+    parent: "Kanchipuram, Tamil Nadu",
+    center: { lat: 12.8342, lng: 79.7036 },
+    recommendedZoom: 13.5,
+  },
+  udupi: {
+    name: "Udupi",
+    type: "locality",
+    parent: "Udupi, Karnataka",
+    center: { lat: 13.3409, lng: 74.7421 },
+    recommendedZoom: 13.5,
+  },
+  madurai: {
+    name: "Madurai",
+    type: "locality",
+    parent: "Madurai, Tamil Nadu",
+    center: { lat: 9.9195, lng: 78.1198 },
+    recommendedZoom: 13.5,
+  },
+  varanasi: {
+    name: "Varanasi",
+    type: "locality",
+    parent: "Varanasi, Uttar Pradesh",
+    center: { lat: 25.3176, lng: 82.9739 },
+    recommendedZoom: 13.5,
+  },
+  puri: {
+    name: "Puri",
+    type: "locality",
+    parent: "Puri, Odisha",
+    center: { lat: 19.8135, lng: 85.8312 },
+    recommendedZoom: 13.5,
+  },
+  ganpatipule: {
+    name: "Ganpatipule",
+    type: "locality",
+    parent: "Ratnagiri, Maharashtra",
+    center: { lat: 17.1438, lng: 73.2687 },
+    recommendedZoom: 14,
+  },
+  srirangam: {
+    name: "Srirangam",
+    type: "locality",
+    parent: "Tiruchirappalli, Tamil Nadu",
+    center: { lat: 10.8624, lng: 78.6908 },
+    recommendedZoom: 14,
+  },
+  alampur: {
+    name: "Alampur",
+    type: "locality",
+    parent: "Jogulamba Gadwal, Telangana",
+    center: { lat: 15.8778, lng: 78.1293 },
+    recommendedZoom: 14,
+  },
+  chidambaram: {
+    name: "Chidambaram",
+    type: "locality",
+    parent: "Cuddalore, Tamil Nadu",
+    center: { lat: 11.3992, lng: 79.6934 },
+    recommendedZoom: 14,
+  },
+  palani: {
+    name: "Palani",
+    type: "locality",
+    parent: "Dindigul, Tamil Nadu",
+    center: { lat: 10.45, lng: 77.5167 },
+    recommendedZoom: 13.8,
+  },
+  thanjavur: {
+    name: "Thanjavur",
+    type: "locality",
+    parent: "Thanjavur, Tamil Nadu",
+    center: { lat: 10.787, lng: 79.1378 },
+    recommendedZoom: 13.5,
+  },
+  kumbakonam: {
+    name: "Kumbakonam",
+    type: "locality",
+    parent: "Thanjavur, Tamil Nadu",
+    center: { lat: 10.9602, lng: 79.3845 },
+    recommendedZoom: 13.8,
+  },
+  tiruvannamalai: {
+    name: "Tiruvannamalai",
+    type: "locality",
+    parent: "Tiruvannamalai, Tamil Nadu",
+    center: { lat: 12.2253, lng: 79.0747 },
+    recommendedZoom: 13.8,
+  },
+  guruvayur: {
+    name: "Guruvayur",
+    type: "locality",
+    parent: "Thrissur, Kerala",
+    center: { lat: 10.5946, lng: 76.0416 },
+    recommendedZoom: 14,
+  },
+  dharmasthala: {
+    name: "Dharmasthala",
+    type: "locality",
+    parent: "Dakshina Kannada, Karnataka",
+    center: { lat: 12.9567, lng: 75.3789 },
+    recommendedZoom: 14,
+  },
+  kollur: {
+    name: "Kollur",
+    type: "locality",
+    parent: "Udupi, Karnataka",
+    center: { lat: 13.8647, lng: 74.8142 },
+    recommendedZoom: 14,
+  },
+  murudeshwar: {
+    name: "Murudeshwar",
+    type: "locality",
+    parent: "Uttara Kannada, Karnataka",
+    center: { lat: 14.0941, lng: 74.4899 },
+    recommendedZoom: 14,
+  },
+  sringeri: {
+    name: "Sringeri",
+    type: "locality",
+    parent: "Chikkamagaluru, Karnataka",
+    center: { lat: 13.4194, lng: 75.2575 },
+    recommendedZoom: 14,
+  },
+  belur: {
+    name: "Belur",
+    type: "locality",
+    parent: "Hassan, Karnataka",
+    center: { lat: 13.1623, lng: 75.8647 },
+    recommendedZoom: 14,
+  },
+  halebidu: {
+    name: "Halebidu",
+    type: "locality",
+    parent: "Hassan, Karnataka",
+    center: { lat: 13.2167, lng: 75.9934 },
+    recommendedZoom: 14,
+  },
+  badami: {
+    name: "Badami",
+    type: "locality",
+    parent: "Bagalkote, Karnataka",
+    center: { lat: 15.9187, lng: 75.6766 },
+    recommendedZoom: 14,
+  },
+  pattadakal: {
+    name: "Pattadakal",
+    type: "locality",
+    parent: "Bagalkote, Karnataka",
+    center: { lat: 15.9485, lng: 75.8163 },
+    recommendedZoom: 14,
+  },
+  aihole: {
+    name: "Aihole",
+    type: "locality",
+    parent: "Bagalkote, Karnataka",
+    center: { lat: 16.0211, lng: 75.8821 },
+    recommendedZoom: 14,
+  },
+  lepakshi: {
+    name: "Lepakshi",
+    type: "locality",
+    parent: "Sri Sathya Sai, Andhra Pradesh",
+    center: { lat: 13.8041, lng: 77.6075 },
+    recommendedZoom: 14,
+  },
+  srisailam: {
+    name: "Srisailam",
+    type: "locality",
+    parent: "Nandyal, Andhra Pradesh",
+    center: { lat: 16.0744, lng: 78.8681 },
+    recommendedZoom: 13.8,
+  },
+  simhachalam: {
+    name: "Simhachalam",
+    type: "locality",
+    parent: "Visakhapatnam, Andhra Pradesh",
+    center: { lat: 17.7664, lng: 83.2504 },
+    recommendedZoom: 14,
+  },
+  kalahasti: {
+    name: "Srikalahasti",
+    type: "locality",
+    parent: "Tirupati, Andhra Pradesh",
+    center: { lat: 13.7498, lng: 79.6984 },
+    recommendedZoom: 13.8,
+  },
+  shirdi: {
+    name: "Shirdi",
+    type: "locality",
+    parent: "Ahmednagar, Maharashtra",
+    center: { lat: 19.7667, lng: 74.4766 },
+    recommendedZoom: 13.8,
+  },
+  trimbakeshwar: {
+    name: "Trimbakeshwar",
+    type: "locality",
+    parent: "Nashik, Maharashtra",
+    center: { lat: 19.9328, lng: 73.5306 },
+    recommendedZoom: 14,
+  },
+  bhimashankar: {
+    name: "Bhimashankar",
+    type: "locality",
+    parent: "Pune, Maharashtra",
+    center: { lat: 19.0721, lng: 73.5354 },
+    recommendedZoom: 14,
+  },
+  pandharpur: {
+    name: "Pandharpur",
+    type: "locality",
+    parent: "Solapur, Maharashtra",
+    center: { lat: 17.6775, lng: 75.3267 },
+    recommendedZoom: 13.8,
+  },
+  kolhapur: {
+    name: "Kolhapur",
+    type: "locality",
+    parent: "Kolhapur, Maharashtra",
+    center: { lat: 16.705, lng: 74.2433 },
+    recommendedZoom: 13.5,
+  },
+  tuljapur: {
+    name: "Tuljapur",
+    type: "locality",
+    parent: "Dharashiv, Maharashtra",
+    center: { lat: 18.0069, lng: 76.0747 },
+    recommendedZoom: 14,
+  },
+  shegaon: {
+    name: "Shegaon",
+    type: "locality",
+    parent: "Buldhana, Maharashtra",
+    center: { lat: 20.7933, lng: 76.6936 },
+    recommendedZoom: 14,
+  },
+  akkalkot: {
+    name: "Akkalkot",
+    type: "locality",
+    parent: "Solapur, Maharashtra",
+    center: { lat: 17.5256, lng: 76.2045 },
+    recommendedZoom: 14,
+  },
+  somnath: {
+    name: "Somnath",
+    type: "locality",
+    parent: "Gir Somnath, Gujarat",
+    center: { lat: 20.888, lng: 70.4012 },
+    recommendedZoom: 14,
+  },
+  dwarka: {
+    name: "Dwarka",
+    type: "locality",
+    parent: "Devbhumi Dwarka, Gujarat",
+    center: { lat: 22.2442, lng: 68.9685 },
+    recommendedZoom: 13.8,
+  },
+  palitana: {
+    name: "Palitana",
+    type: "locality",
+    parent: "Bhavnagar, Gujarat",
+    center: { lat: 21.5233, lng: 71.8267 },
+    recommendedZoom: 13.8,
+  },
+  ambaji: {
+    name: "Ambaji",
+    type: "locality",
+    parent: "Banaskantha, Gujarat",
+    center: { lat: 24.3314, lng: 72.8517 },
+    recommendedZoom: 14,
+  },
+  modhera: {
+    name: "Modhera",
+    type: "locality",
+    parent: "Mehsana, Gujarat",
+    center: { lat: 23.5836, lng: 72.1333 },
+    recommendedZoom: 14.2,
+  },
+  dakshineswar: {
+    name: "Dakshineswar",
+    type: "locality",
+    parent: "Kolkata, West Bengal",
+    center: { lat: 22.655, lng: 88.3575 },
+    recommendedZoom: 14,
+  },
+  kalighat: {
+    name: "Kalighat",
+    type: "locality",
+    parent: "Kolkata, West Bengal",
+    center: { lat: 22.5204, lng: 88.3426 },
+    recommendedZoom: 14.5,
+  },
+  tarapith: {
+    name: "Tarapith",
+    type: "locality",
+    parent: "Birbhum, West Bengal",
+    center: { lat: 24.1136, lng: 87.7981 },
+    recommendedZoom: 14,
+  },
+  bishnupur: {
+    name: "Bishnupur",
+    type: "locality",
+    parent: "Bankura, West Bengal",
+    center: { lat: 23.0763, lng: 87.3195 },
+    recommendedZoom: 13.8,
+  },
+  kamakhya: {
+    name: "Kamakhya (Guwahati)",
+    type: "locality",
+    parent: "Kamrup Metropolitan, Assam",
+    center: { lat: 26.1664, lng: 91.7054 },
+    recommendedZoom: 14,
+  },
+  baidyanath: {
+    name: "Deoghar (Baidyanath Dham)",
+    type: "locality",
+    parent: "Deoghar, Jharkhand",
+    center: { lat: 24.4924, lng: 86.7001 },
+    recommendedZoom: 13.8,
+  },
+  pushkar: {
+    name: "Pushkar",
+    type: "locality",
+    parent: "Ajmer, Rajasthan",
+    center: { lat: 26.4897, lng: 74.5511 },
+    recommendedZoom: 13.8,
+  },
+  nathdwara: {
+    name: "Nathdwara",
+    type: "locality",
+    parent: "Rajsamand, Rajasthan",
+    center: { lat: 24.9317, lng: 73.8183 },
+    recommendedZoom: 14,
+  },
+  ranakpur: {
+    name: "Ranakpur",
+    type: "locality",
+    parent: "Pali, Rajasthan",
+    center: { lat: 25.1158, lng: 73.4731 },
+    recommendedZoom: 14.2,
+  },
+  khatu: {
+    name: "Khatu Shyam",
+    type: "locality",
+    parent: "Sikar, Rajasthan",
+    center: { lat: 27.3667, lng: 75.4 },
+    recommendedZoom: 14,
+  },
+  ayodhya: {
+    name: "Ayodhya",
+    type: "locality",
+    parent: "Ayodhya, Uttar Pradesh",
+    center: { lat: 26.7922, lng: 82.1998 },
+    recommendedZoom: 13.5,
+  },
+  mathura: {
+    name: "Mathura",
+    type: "locality",
+    parent: "Mathura, Uttar Pradesh",
+    center: { lat: 27.4924, lng: 77.6737 },
+    recommendedZoom: 13.5,
+  },
+  ujjain: {
+    name: "Ujjain",
+    type: "locality",
+    parent: "Ujjain, Madhya Pradesh",
+    center: { lat: 23.1765, lng: 75.7885 },
+    recommendedZoom: 13.5,
+  },
+  omkareshwar: {
+    name: "Omkareshwar",
+    type: "locality",
+    parent: "Khandwa, Madhya Pradesh",
+    center: { lat: 22.2464, lng: 76.1517 },
+    recommendedZoom: 14,
+  },
+  maheshwar: {
+    name: "Maheshwar",
+    type: "locality",
+    parent: "Khargone, Madhya Pradesh",
+    center: { lat: 22.1764, lng: 75.5847 },
+    recommendedZoom: 14,
+  },
+  amarkantak: {
+    name: "Amarkantak",
+    type: "locality",
+    parent: "Anuppur, Madhya Pradesh",
+    center: { lat: 22.6734, lng: 81.7584 },
+    recommendedZoom: 14,
+  },
+  orchha: {
+    name: "Orchha",
+    type: "locality",
+    parent: "Niwari, Madhya Pradesh",
+    center: { lat: 25.3514, lng: 78.6417 },
+    recommendedZoom: 14,
+  },
+  haridwar: {
+    name: "Haridwar",
+    type: "locality",
+    parent: "Haridwar, Uttarakhand",
+    center: { lat: 29.9457, lng: 78.1642 },
+    recommendedZoom: 13.5,
+  },
+  gangotri: {
+    name: "Gangotri",
+    type: "locality",
+    parent: "Uttarkashi, Uttarakhand",
+    center: { lat: 30.9947, lng: 78.9398 },
+    recommendedZoom: 14.5,
+  },
+  yamunotri: {
+    name: "Yamunotri",
+    type: "locality",
+    parent: "Uttarkashi, Uttarakhand",
+    center: { lat: 31.014, lng: 78.46 },
+    recommendedZoom: 14.5,
+  },
+  joshimath: {
+    name: "Joshimath",
+    type: "locality",
+    parent: "Chamoli, Uttarakhand",
+    center: { lat: 30.5564, lng: 79.5665 },
+    recommendedZoom: 14,
+  },
+  jageshwar: {
+    name: "Jageshwar",
+    type: "locality",
+    parent: "Almora, Uttarakhand",
+    center: { lat: 29.6389, lng: 79.8517 },
+    recommendedZoom: 14.2,
+  },
+  baijnath: {
+    name: "Baijnath",
+    type: "locality",
+    parent: "Kangra, Himachal Pradesh",
+    center: { lat: 32.0528, lng: 76.6478 },
+    recommendedZoom: 14,
+  },
+  jwalamukhi: {
+    name: "Jwalamukhi",
+    type: "locality",
+    parent: "Kangra, Himachal Pradesh",
+    center: { lat: 31.8744, lng: 76.3242 },
+    recommendedZoom: 14,
+  },
+  chamba: {
+    name: "Chamba",
+    type: "locality",
+    parent: "Chamba, Himachal Pradesh",
+    center: { lat: 32.5534, lng: 76.1258 },
+    recommendedZoom: 13.8,
+  },
+  amritsar: {
+    name: "Amritsar",
+    type: "locality",
+    parent: "Amritsar, Punjab",
+    center: { lat: 31.634, lng: 74.8723 },
+    recommendedZoom: 13.5,
+  },
+  kurukshetra: {
+    name: "Kurukshetra",
+    type: "locality",
+    parent: "Kurukshetra, Haryana",
+    center: { lat: 29.9695, lng: 76.8783 },
+    recommendedZoom: 13.5,
+  },
+  ponda: {
+    name: "Ponda",
+    type: "locality",
+    parent: "South Goa, Goa",
+    center: { lat: 15.4026, lng: 74.0086 },
+    recommendedZoom: 13.8,
+  },
+  kavlem: {
+    name: "Kavlem",
+    type: "locality",
+    parent: "South Goa, Goa",
+    center: { lat: 15.3975, lng: 73.9922 },
+    recommendedZoom: 14.5,
+  },
+  "old-goa": {
+    name: "Old Goa (Velha Goa)",
+    type: "locality",
+    parent: "North Goa, Goa",
+    center: { lat: 15.5038, lng: 73.9118 },
+    recommendedZoom: 14,
+  },
+  warangal: {
+    name: "Warangal",
+    type: "locality",
+    parent: "Warangal, Telangana",
+    center: { lat: 17.9689, lng: 79.5941 },
+    recommendedZoom: 13.5,
+  },
+  bhadrachalam: {
+    name: "Bhadrachalam",
+    type: "locality",
+    parent: "Bhadradri Kothagudem, Telangana",
+    center: { lat: 17.6689, lng: 80.8936 },
+    recommendedZoom: 14,
+  },
+  yadagirigutta: {
+    name: "Yadagirigutta",
+    type: "locality",
+    parent: "Yadadri Bhuvanagiri, Telangana",
+    center: { lat: 17.5878, lng: 78.9489 },
+    recommendedZoom: 14,
+  },
 };
 
 /**
@@ -710,5 +1221,48 @@ export function getLocalityBoundary(query: string): GeoBoundary | null {
   for (const b of Object.values(POPULAR_LOCALITIES)) {
     if (b.name.toLowerCase() === query.trim().toLowerCase()) return b;
   }
+  return null;
+}
+
+/**
+ * Global location finder that checks:
+ * 1. Locality boundary (exact match)
+ * 2. District boundary (exact match)
+ * 3. State boundary (exact match)
+ * 4. Fuzzy / substring match in localities
+ * 5. Fuzzy / substring match in districts
+ */
+export function findLocationBoundary(query: string): GeoBoundary | null {
+  const q = query.trim().toLowerCase();
+  if (!q) return null;
+
+  // 1. Locality exact
+  const loc = getLocalityBoundary(q);
+  if (loc) return loc;
+
+  // 2. District exact
+  const dist = getDistrictBoundary(q);
+  if (dist) return dist;
+
+  // 3. State exact
+  const st = getStateBoundary(q);
+  if (st) return st;
+
+  // 4. Locality fuzzy / substring match
+  for (const b of Object.values(POPULAR_LOCALITIES)) {
+    const nameLower = b.name.toLowerCase();
+    if (nameLower.includes(q) || q.includes(nameLower)) {
+      return b;
+    }
+  }
+
+  // 5. District fuzzy / substring match
+  for (const d of Object.values(POPULAR_DISTRICTS)) {
+    const nameLower = d.name.toLowerCase();
+    if (nameLower.includes(q) || q.includes(nameLower)) {
+      return d;
+    }
+  }
+
   return null;
 }

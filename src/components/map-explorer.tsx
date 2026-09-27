@@ -75,6 +75,7 @@ import {
   getStateBoundary,
   getDistrictBoundary,
   getLocalityBoundary,
+  findLocationBoundary,
 } from "@/lib/map/admin-boundaries";
 
 export interface MapPlaceItem {
@@ -679,7 +680,8 @@ export function MapExplorer() {
       overrideCategory?: string,
       overrideLocation?: ActiveLocationFilter | null,
       shouldFitBounds = false,
-      isBboxScope = false
+      isBboxScope = false,
+      overrideQuery?: string
     ) => {
       const map = mapInstance || mapRef.current;
       if (!map) return;
@@ -704,6 +706,7 @@ export function MapExplorer() {
 
         const cat = overrideCategory !== undefined ? overrideCategory : filterCategory;
         const loc = overrideLocation !== undefined ? overrideLocation : activeLocation;
+        const queryStr = overrideQuery !== undefined ? overrideQuery.trim() : q.trim();
 
         const params = new URLSearchParams({
           bbox,
@@ -729,6 +732,20 @@ export function MapExplorer() {
           if (loc.state && loc.type !== "state") {
             params.set("state", loc.state);
           }
+          if (!isBboxScope) {
+            params.set("allIndia", "true");
+          }
+        }
+
+        if (queryStr) {
+          params.set("q", queryStr);
+          if (!isBboxScope) {
+            params.set("allIndia", "true");
+          }
+        }
+
+        if (isBboxScope) {
+          params.set("scope", "bbox");
         }
 
         const response = await fetch(`/api/map/viewport?${params.toString()}`, {
@@ -790,7 +807,7 @@ export function MapExplorer() {
                   left: leftPanelOpen ? 340 : 80,
                   right: sidebarOpen ? 400 : 80,
                 },
-                maxZoom: 12,
+                maxZoom: 14.5,
                 duration: prefersReduced ? 100 : 900,
               }
             );
@@ -798,10 +815,16 @@ export function MapExplorer() {
             const [lng, lat] = collection.features[0].geometry.coordinates;
             map.flyTo({
               center: [lng, lat],
-              zoom: 12,
+              zoom: 14.5,
               duration: 800,
             });
           }
+        } else if (shouldFitBounds && collection.features.length === 0 && loc && loc.lat && loc.lng) {
+          map.flyTo({
+            center: [loc.lng, loc.lat],
+            zoom: loc.zoom || 13.5,
+            duration: 800,
+          });
         }
 
         // Transform features to MapPlaceItems
@@ -841,7 +864,7 @@ export function MapExplorer() {
         setLoading(false);
       }
     },
-    [filterCategory, activeLocation, leftPanelOpen, sidebarOpen, setupLayers]
+    [filterCategory, activeLocation, leftPanelOpen, sidebarOpen, setupLayers, q]
   );
 
   // Synchronize category filter with Next.js navigation and URL searchParams
@@ -1276,7 +1299,7 @@ export function MapExplorer() {
           speed: prefersReduced ? 5.0 : 1.3,
           essential: true,
         });
-        void fetchViewportTemples(map);
+        void fetchViewportTemples(map, filterCategory, null, false);
       }
     } else if (s.type === "district") {
       const newLoc: ActiveLocationFilter = {
@@ -1303,11 +1326,12 @@ export function MapExplorer() {
           essential: true,
         });
       }
-      void fetchViewportTemples(map, filterCategory, newLoc);
+      void fetchViewportTemples(map, filterCategory, newLoc, true);
     } else if (s.type === "locality") {
       const newLoc: ActiveLocationFilter = {
         type: "city",
         name: s.title,
+        state: s.state,
         lat: s.lat || 15.335,
         lng: s.lng || 76.46,
         zoom: s.zoom || 13.5,
@@ -1316,7 +1340,7 @@ export function MapExplorer() {
       updateUrlParams({
         city: s.title,
         district: null,
-        state: null,
+        state: s.state || null,
         q: null,
       });
 
@@ -1328,7 +1352,7 @@ export function MapExplorer() {
           essential: true,
         });
       }
-      void fetchViewportTemples(map, filterCategory, newLoc);
+      void fetchViewportTemples(map, filterCategory, newLoc, true);
     } else if (s.type === "state") {
       const newLoc: ActiveLocationFilter = {
         type: "state",
@@ -1353,19 +1377,101 @@ export function MapExplorer() {
           essential: true,
         });
       }
-      void fetchViewportTemples(map, filterCategory, newLoc);
+      void fetchViewportTemples(map, filterCategory, newLoc, true);
     }
   };
 
-  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleSearchKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
+      // 1. Keyboard-selected suggestion
       if (suggestOpen && suggestIdx >= 0 && suggestions[suggestIdx]) {
         void handleSelectSuggestion(suggestions[suggestIdx]);
-      } else if (q.trim()) {
-        updateUrlParams({ q: q.trim() });
-        setSuggestOpen(false);
-        if (mapRef.current) void fetchViewportTemples(mapRef.current);
+        return;
+      }
+
+      // 2. Top suggestion from open list
+      if (suggestions.length > 0) {
+        void handleSelectSuggestion(suggestions[0]);
+        return;
+      }
+
+      const query = q.trim();
+      if (!query) return;
+
+      setSuggestOpen(false);
+
+      // 3. Instant local check against boundary registry
+      const locBoundary = findLocationBoundary(query);
+      if (locBoundary) {
+        void handleSelectSuggestion({
+          type: locBoundary.type === "district" ? "district" : locBoundary.type === "state" ? "state" : "locality",
+          title: locBoundary.name,
+          subtitle: locBoundary.parent || "Republic of India",
+          state: locBoundary.parent?.split(",")?.[1]?.trim(),
+          lat: locBoundary.center.lat,
+          lng: locBoundary.center.lng,
+          zoom: locBoundary.recommendedZoom,
+        });
+        return;
+      }
+
+      // 4. API Search fallback to find village, town, or city
+      try {
+        setIsSearching(true);
+        const res = await fetch(`/api/search?q=${encodeURIComponent(query)}&limit=5`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.localities && data.localities.length > 0) {
+            const loc = data.localities[0];
+            void handleSelectSuggestion({
+              type: "locality",
+              title: loc.name,
+              subtitle: `Locality · ${loc.parent}`,
+              lat: loc.latitude,
+              lng: loc.longitude,
+              zoom: loc.zoom || 13.5,
+            });
+            return;
+          }
+          if (data.districts && data.districts.length > 0) {
+            const dist = data.districts[0];
+            void handleSelectSuggestion({
+              type: "district",
+              title: dist.name,
+              subtitle: `District · ${dist.state}`,
+              state: dist.state,
+              lat: dist.latitude,
+              lng: dist.longitude,
+              zoom: dist.zoom || 10.2,
+            });
+            return;
+          }
+          if (data.destinations && data.destinations.length > 0) {
+            const dest = data.destinations[0];
+            void handleSelectSuggestion({
+              type: "destination",
+              title: dest.name,
+              subtitle: dest.subcategory || dest.category,
+              id: dest.id,
+              slug: dest.slug,
+              lat: dest.latitude,
+              lng: dest.longitude,
+              zoom: 15.5,
+            });
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn("[MapExplorer] Search fallback warning:", err);
+      } finally {
+        setIsSearching(false);
+      }
+
+      // 5. Query-based viewport fetch
+      updateUrlParams({ q: query });
+      if (mapRef.current) {
+        void fetchViewportTemples(mapRef.current, filterCategory, null, true, false, query);
       }
     } else if (e.key === "ArrowDown") {
       e.preventDefault();
@@ -1380,8 +1486,20 @@ export function MapExplorer() {
 
   // Group items by "Inside Selected Location" vs "Nearby in Viewport"
   const hasActiveLoc = Boolean(activeLocation);
-  const insideItems = hasActiveLoc ? items.filter((p) => p.isInside) : items;
-  const nearbyItems = hasActiveLoc ? items.filter((p) => !p.isInside) : [];
+  const insideItems = hasActiveLoc
+    ? items.filter((p) => {
+        if (p.isInside) return true;
+        if (!activeLocation) return false;
+        const locLower = activeLocation.name.toLowerCase();
+        return (
+          p.name.toLowerCase().includes(locLower) ||
+          Boolean(p.city && p.city.toLowerCase().includes(locLower)) ||
+          Boolean(p.district && p.district.toLowerCase().includes(locLower)) ||
+          Boolean(p.address && p.address.toLowerCase().includes(locLower))
+        );
+      })
+    : items;
+  const nearbyItems = hasActiveLoc ? items.filter((p) => !insideItems.includes(p)) : [];
 
   const selectedCatVisual = getCategoryVisual(selected?.category);
   const SelectedCatIcon = ICON_MAP[selectedCatVisual.iconName] || Compass;
@@ -2049,6 +2167,12 @@ export function MapExplorer() {
           {/* Unified list if no active location is set */}
           {!hasActiveLoc && (
             <div className="space-y-2">
+              {q.trim() && items.length > 0 && (
+                <div className="flex items-center gap-1.5 mb-2 px-1 text-[11px] font-semibold uppercase tracking-wider text-gold-bright">
+                  <Search className="h-3 w-3" />
+                  <span>Places &amp; Temples matching &quot;{q.trim()}&quot; ({items.length})</span>
+                </div>
+              )}
               {items.map((p) => renderCard(p))}
             </div>
           )}

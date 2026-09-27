@@ -10356,7 +10356,7 @@ export const RESEARCH_EXPANDED_TEMPLES: DestinationRecord[] = [
     "latitude": 12.8193,
     "longitude": 79.7246,
     "locationConfidence": "exact",
-    "city": "Vishnu Kanchi",
+    "city": "Kanchipuram",
     "district": "Kanchipuram",
     "state": "Tamil Nadu",
     "image": "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80",
@@ -10391,7 +10391,7 @@ export const RESEARCH_EXPANDED_TEMPLES: DestinationRecord[] = [
     "latitude": 12.8412,
     "longitude": 79.7032,
     "locationConfidence": "exact",
-    "city": "Kamakshi Amman Sannadhi Street",
+    "city": "Kanchipuram",
     "district": "Kanchipuram",
     "state": "Tamil Nadu",
     "image": "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80",
@@ -10426,7 +10426,7 @@ export const RESEARCH_EXPANDED_TEMPLES: DestinationRecord[] = [
     "latitude": 17.1458,
     "longitude": 73.2667,
     "locationConfidence": "exact",
-    "city": "Ganpatipule Seashore",
+    "city": "Ganpatipule",
     "district": "Ratnagiri",
     "state": "Maharashtra",
     "image": "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80",
@@ -10461,7 +10461,7 @@ export const RESEARCH_EXPANDED_TEMPLES: DestinationRecord[] = [
     "latitude": 17.9944,
     "longitude": 79.5858,
     "locationConfidence": "exact",
-    "city": "Bhadrakali Lake Bund",
+    "city": "Warangal",
     "district": "Warangal",
     "state": "Telangana",
     "image": "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80",
@@ -10496,7 +10496,7 @@ export const RESEARCH_EXPANDED_TEMPLES: DestinationRecord[] = [
     "latitude": 27.5722,
     "longitude": 77.6744,
     "locationConfidence": "exact",
-    "city": "Chhatikara Road",
+    "city": "Vrindavan",
     "district": "Mathura",
     "state": "Uttar Pradesh",
     "image": "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80",
@@ -10516,6 +10516,7 @@ export const RESEARCH_EXPANDED_TEMPLES: DestinationRecord[] = [
     "tags": [
       "sacred",
       "up",
+      "vrindavan",
       "mathura",
       "canonical-famous-temple",
       "templeora-research"
@@ -10531,7 +10532,7 @@ export const RESEARCH_EXPANDED_TEMPLES: DestinationRecord[] = [
     "latitude": 25.3183,
     "longitude": 83.0142,
     "locationConfidence": "exact",
-    "city": "Bharonath",
+    "city": "Varanasi",
     "district": "Varanasi",
     "state": "Uttar Pradesh",
     "image": "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80",
@@ -10587,6 +10588,156 @@ export const RESEARCH_EXPANDED_TEMPLES: DestinationRecord[] = [
       "sacred",
       "ga",
       "south goa",
+      "canonical-famous-temple",
+      "templeora-research"
+    ]
+  },
+  {
+    "id": "dest-res-arulmigu-ekambareswarar-temple-kanchipuram-tamil-nadu",
+    "slug": "arulmigu-ekambareswarar-temple-kanchipuram-tamil-nadu",
+    "name": "Arulmigu Ekambareswarar Temple",
+    "category": "SACRED",
+    "subcategory": "Shiva",
+    "description": "One of the Pancha Bhoota Sthalams representing Prithvi (Earth), famed for its sacred 3,500-year-old mango tree whose four branches yield four varieties of fruit symbolizing the four Vedas, and a towering 59-meter Raja Gopuram built by Krishnadevaraya.",
+    "latitude": 12.8475,
+    "longitude": 79.7000,
+    "locationConfidence": "exact",
+    "city": "Kanchipuram",
+    "district": "Kanchipuram",
+    "state": "Tamil Nadu",
+    "image": "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Arulmigu Ekambareswarar Temple in Kanchipuram, Tamil Nadu",
+    "imageCredit": {
+      "photographer": "Official Record",
+      "source": "Official Record",
+      "license": "Government Open Data"
+    },
+    "bestTimeToVisit": "October to March",
+    "highlights": ["Pancha Bhoota Stalam (Earth)", "Prithvi Lingam sculpted by Parvati", "3,500-Year-Old Sacred Mango Tree", "59m Raja Gopuram by Krishnadevaraya"],
+    "provenance": {
+      "sourceType": "official",
+      "verifiedDate": "2026-09-27",
+      "sourceUrl": "https://ekambaranathartemple.hrce.tn.gov.in/"
+    },
+    "tags": [
+      "sacred",
+      "tn",
+      "kanchipuram",
+      "shiva",
+      "pancha-bhoota",
+      "canonical-famous-temple",
+      "templeora-research"
+    ]
+  },
+  {
+    "id": "dest-res-udupi-sri-krishna-matha-karnataka",
+    "slug": "udupi-sri-krishna-matha-karnataka",
+    "name": "Udupi Sri Krishna Matha",
+    "category": "SACRED",
+    "subcategory": "Krishna",
+    "description": "Historic 13th-century CE shrine established by Dvaita philosopher Jagadguru Sri Madhvacharya. Celebrated worldwide for the sacred Kanakana Kindi (carved silver nine-hole window) through which Lord Krishna turned westward to give darshan to saint Kanakadasa.",
+    "latitude": 13.3409,
+    "longitude": 74.7547,
+    "locationConfidence": "exact",
+    "city": "Udupi",
+    "district": "Udupi",
+    "state": "Karnataka",
+    "image": "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Udupi Sri Krishna Matha in Udupi, Karnataka",
+    "imageCredit": {
+      "photographer": "Official Record",
+      "source": "Official Record",
+      "license": "Government Open Data"
+    },
+    "bestTimeToVisit": "October to March; Paryaya Festival in January (biennial)",
+    "highlights": ["Kanakana Kindi (Nine-Hole Silver Window)", "Madhvacharya Consecration", "Ashta Matha Paryaya System", "Madhva Sarovara Holy Tank"],
+    "provenance": {
+      "sourceType": "official",
+      "verifiedDate": "2026-09-27",
+      "sourceUrl": "https://karnatakatourism.org/tour-item/udupi-sri-krishna-temple/"
+    },
+    "tags": [
+      "sacred",
+      "ka",
+      "udupi",
+      "krishna",
+      "paryaya",
+      "canonical-famous-temple",
+      "templeora-research"
+    ]
+  },
+  {
+    "id": "dest-res-banke-bihari-temple-vrindavan-mathura-uttar-pradesh",
+    "slug": "banke-bihari-temple-vrindavan-mathura-uttar-pradesh",
+    "name": "Banke Bihari Temple, Vrindavan",
+    "category": "SACRED",
+    "subcategory": "Krishna",
+    "description": "One of the holiest and most celebrated temples of Vrindavan, consecrated by Swami Haridas in the sacred Nidhivan grove. The beloved deity of Shri Krishna stands in the classic Tribhanga posture and darshan is intermittently opened and closed with velvet curtains.",
+    "latitude": 27.5818,
+    "longitude": 77.7011,
+    "locationConfidence": "exact",
+    "city": "Vrindavan",
+    "district": "Mathura",
+    "state": "Uttar Pradesh",
+    "image": "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Banke Bihari Temple in Vrindavan, Mathura, Uttar Pradesh",
+    "imageCredit": {
+      "photographer": "Official Record",
+      "source": "Official Record",
+      "license": "Government Open Data"
+    },
+    "bestTimeToVisit": "October to March; Janmashtami & Holi",
+    "highlights": ["Swami Haridas Nidhivan Manifestation", "Tribhanga Murti of Lord Krishna", "Curtain Darshan (Parda) Tradition", "Epicenter of Braj Dham Pilgrimage"],
+    "provenance": {
+      "sourceType": "official",
+      "verifiedDate": "2026-09-27",
+      "sourceUrl": "https://uptourism.gov.in/"
+    },
+    "tags": [
+      "sacred",
+      "up",
+      "vrindavan",
+      "mathura",
+      "krishna",
+      "braj",
+      "canonical-famous-temple",
+      "templeora-research"
+    ]
+  },
+  {
+    "id": "dest-res-virupaksha-temple-hampi-vijayanagara-karnataka",
+    "slug": "virupaksha-temple-hampi-vijayanagara-karnataka",
+    "name": "Virupaksha Temple, Hampi",
+    "category": "SACRED",
+    "subcategory": "Shiva",
+    "description": "The living, uninterrupted 7th-century CE spiritual core of the UNESCO World Heritage Group of Monuments at Hampi on the banks of the Tungabhadra River, crowned by an imposing 50-meter tiered eastern Rajagopuram and famed for its inverted shadow optical phenomenon.",
+    "latitude": 15.3353,
+    "longitude": 76.4602,
+    "locationConfidence": "exact",
+    "city": "Hampi",
+    "district": "Vijayanagara",
+    "state": "Karnataka",
+    "image": "https://images.unsplash.com/photo-1600100397608-f010f4439c27?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Virupaksha Temple Rajagopuram rising over Hampi boulder landscape",
+    "imageCredit": {
+      "photographer": "Official Record",
+      "source": "Official Record",
+      "license": "Government Open Data"
+    },
+    "bestTimeToVisit": "October to March; Hampi Utsav",
+    "highlights": ["Living 7th-Century CE Shrine", "50-meter Eastern Gopuram", "Inverted Shadow Camera Obscura Phenomenon", "Consecrated to Lord Virupaksha and Pampa Devi"],
+    "provenance": {
+      "sourceType": "unesco",
+      "verifiedDate": "2026-09-27",
+      "sourceUrl": "https://whc.unesco.org/en/list/241/"
+    },
+    "tags": [
+      "sacred",
+      "ka",
+      "hampi",
+      "vijayanagara",
+      "unesco",
+      "shiva",
       "canonical-famous-temple",
       "templeora-research"
     ]

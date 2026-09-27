@@ -8,6 +8,7 @@ import {
   POPULAR_LOCALITIES,
 } from "@/lib/map/admin-boundaries";
 import { VERIFIED_DESTINATIONS } from "@/lib/destinations/registry";
+import { TEMPLES } from "@/lib/data/temples";
 
 export const runtime = "nodejs";
 
@@ -148,8 +149,11 @@ export async function GET(req: NextRequest) {
     type: "locality";
   }> = [];
 
+  const seenLocalities = new Set<string>();
+
   for (const [key, loc] of Object.entries(POPULAR_LOCALITIES)) {
     if (loc.name.toLowerCase().includes(queryLower) || key.includes(queryLower)) {
+      seenLocalities.add(loc.name.toLowerCase());
       matchedLocalities.push({
         name: loc.name,
         parent: loc.parent || "India",
@@ -158,7 +162,44 @@ export async function GET(req: NextRequest) {
         zoom: loc.recommendedZoom,
         type: "locality",
       });
-      if (matchedLocalities.length >= 4) break;
+      if (matchedLocalities.length >= 6) break;
+    }
+  }
+
+  // Also match cities from verified destinations
+  if (matchedLocalities.length < 6) {
+    for (const vd of VERIFIED_DESTINATIONS) {
+      if (vd.city && vd.city.toLowerCase().includes(queryLower) && !seenLocalities.has(vd.city.toLowerCase())) {
+        seenLocalities.add(vd.city.toLowerCase());
+        matchedLocalities.push({
+          name: vd.city,
+          parent: [vd.district, vd.state].filter(Boolean).join(", "),
+          latitude: vd.latitude,
+          longitude: vd.longitude,
+          zoom: 13.5,
+          type: "locality",
+        });
+        if (matchedLocalities.length >= 6) break;
+      }
+    }
+  }
+
+  // Also match locations from static temples catalog
+  if (matchedLocalities.length < 6) {
+    for (const t of TEMPLES) {
+      if (t.location && t.location.toLowerCase().includes(queryLower) && !seenLocalities.has(t.location.toLowerCase())) {
+        seenLocalities.add(t.location.toLowerCase());
+        const st = getState(t.stateCode);
+        matchedLocalities.push({
+          name: t.location,
+          parent: [t.district, st?.name || t.stateCode].filter(Boolean).join(", "),
+          latitude: t.latitude,
+          longitude: t.longitude,
+          zoom: 13.5,
+          type: "locality",
+        });
+        if (matchedLocalities.length >= 6) break;
+      }
     }
   }
 
@@ -199,8 +240,44 @@ export async function GET(req: NextRequest) {
             { state: { contains: targetQuery, mode: "insensitive" } },
           ],
         },
-        take: 8,
       });
+
+      // 3a-2. Localities (villages, towns, cities) from Database
+      if (matchedLocalities.length < 6) {
+        try {
+          const dbLocs = await prisma.locality.findMany({
+            where: {
+              name: { contains: targetQuery, mode: "insensitive" },
+              latitude: { not: null },
+              longitude: { not: null },
+            },
+            take: 6 - matchedLocalities.length,
+            select: {
+              name: true,
+              kind: true,
+              latitude: true,
+              longitude: true,
+              district: { select: { name: true } },
+              state: { select: { name: true } },
+            },
+          });
+          for (const l of dbLocs) {
+            if (l.latitude && l.longitude && !seenLocalities.has(l.name.toLowerCase())) {
+              seenLocalities.add(l.name.toLowerCase());
+              matchedLocalities.push({
+                name: l.name,
+                parent: [l.district?.name, l.state?.name].filter(Boolean).join(", "),
+                latitude: l.latitude,
+                longitude: l.longitude,
+                zoom: l.kind === "city" ? 13 : l.kind === "village" ? 14.5 : 13.5,
+                type: "locality",
+              });
+            }
+          }
+        } catch {
+          // ignore if locality table query fails
+        }
+      }
 
       for (const p of canonicalMatches) {
         outputPlaces.push({
@@ -230,6 +307,9 @@ export async function GET(req: NextRequest) {
               { nameLocal: { contains: targetQuery, mode: "insensitive" } },
               { mainDeity: { contains: targetQuery, mode: "insensitive" } },
               { address: { contains: targetQuery, mode: "insensitive" } },
+              { district: { name: { contains: targetQuery, mode: "insensitive" } } },
+              { adminUnit: { name: { contains: targetQuery, mode: "insensitive" } } },
+              { locality: { name: { contains: targetQuery, mode: "insensitive" } } },
             ],
           },
           take: limit - outputTemples.length,
