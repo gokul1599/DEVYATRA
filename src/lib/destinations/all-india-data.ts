@@ -2,6 +2,7 @@ import type { DestinationRecord } from "./registry";
 import { STATUTORY_NATIONAL_DESTINATIONS } from "./national-statutory-places";
 import { SUPPLEMENTAL_NATIONAL_DESTINATIONS } from "./national-supplemental-places";
 import { RESEARCH_EXPANDED_TEMPLES } from "./research-expanded-temples";
+import { BENCHMARK_FAMOUS_PLACES } from "./benchmark-famous-places";
 
 /**
  * DEVYATRA / TEMPLEORA — ALL-INDIA DESTINATION DIRECTORY
@@ -5524,5 +5525,6 @@ export const ALL_INDIA_DESTINATIONS: DestinationRecord[] = [
   ...STATUTORY_NATIONAL_DESTINATIONS,
   ...SUPPLEMENTAL_NATIONAL_DESTINATIONS,
   ...RESEARCH_EXPANDED_TEMPLES,
+  ...BENCHMARK_FAMOUS_PLACES,
 ];
 

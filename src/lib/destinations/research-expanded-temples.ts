@@ -10178,5 +10178,172 @@ export const RESEARCH_EXPANDED_TEMPLES: DestinationRecord[] = [
       "verified-coordinates",
       "cultural"
     ]
+  },
+  {
+    "id": "dest-res-dagdusheth-halwai-ganpati-pune",
+    "slug": "dagdusheth-halwai-ganpati-pune",
+    "name": "Shreemant Dagdusheth Halwai Ganpati Temple",
+    "category": "SACRED",
+    "subcategory": "Ganesha",
+    "description": "World-renowned Ganesha temple situated in Budhwar Peth, Pune, Maharashtra. Established in 1893 by Dagdusheth Gadve and Lakshmibai, it is the epicenter of Maharashtra's Ganeshotsav festivities.",
+    "latitude": 18.5165,
+    "longitude": 73.8561,
+    "locationConfidence": "exact",
+    "city": "Pune",
+    "district": "Pune",
+    "state": "Maharashtra",
+    "image": "https://images.unsplash.com/photo-1567157577867-05ccb1388e66?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Shreemant Dagdusheth Halwai Ganpati Temple in Pune, Maharashtra",
+    "imageCredit": {
+      "photographer": "Templeora Archive",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "August to September (Ganesh Chaturthi) & November to February",
+    "highlights": [
+      "Famous Shreemant Dagdusheth Ganpati idol adorned with gold ornaments",
+      "Historic center of Lokmanya Tilak's public Ganeshotsav movement",
+      "Budhwar Peth, Pune cultural epicenter",
+      "Continuous philanthropic trust activities"
+    ],
+    "provenance": {
+      "sourceType": "official",
+      "verifiedDate": "2026-09-27",
+      "sourceUrl": "https://www.dagdushethganpati.com/"
+    },
+    "tags": [
+      "sacred",
+      "ganesha",
+      "pune",
+      "maharashtra",
+      "benchmark",
+      "templeora-research"
+    ]
+  },
+  {
+    "id": "dest-res-sakshigopal-temple-puri",
+    "slug": "sakshigopal-temple-puri",
+    "name": "Sakshigopal Temple",
+    "category": "SACRED",
+    "subcategory": "Krishna",
+    "description": "Medieval temple dedicated to Lord Gopinatha (Krishna) located in Satyabadi near Puri, Odisha. Known as 'Sakshi Gopal' (Witness Gopal), tradition holds that a pilgrimage to Jagannath Puri is incomplete without offering worship here.",
+    "latitude": 19.9536,
+    "longitude": 85.8239,
+    "locationConfidence": "exact",
+    "city": "Satyabadi",
+    "district": "Puri",
+    "state": "Odisha",
+    "image": "https://images.unsplash.com/photo-1600100397608-f010f4439c27?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Sakshigopal Temple in Satyabadi, Puri, Odisha",
+    "imageCredit": {
+      "photographer": "Templeora Archive",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "October to March & Amla Navami during Kartika",
+    "highlights": [
+      "Sacred deity of Lord Krishna brought from Vidyanagar by King Purushottama Deva",
+      "Crucial counterpart shrine to Jagannath Puri pilgrimage circuit",
+      "Kalinga style architecture (Vimana and Jagamohana)",
+      "Famous Radhapada darshan on Amla Navami"
+    ],
+    "provenance": {
+      "sourceType": "government",
+      "verifiedDate": "2026-09-27",
+      "sourceUrl": "https://puri.nic.in/tourist-place/sakshigopal-temple/"
+    },
+    "tags": [
+      "sacred",
+      "krishna",
+      "puri",
+      "odisha",
+      "benchmark",
+      "kalinga-architecture"
+    ]
+  },
+  {
+    "id": "dest-res-airavatesvara-temple-darasuram",
+    "slug": "airavatesvara-temple-darasuram",
+    "name": "Airavatesvara Temple",
+    "category": "SACRED",
+    "subcategory": "Shiva",
+    "description": "12th-century Dravidian architectural masterpiece built by Rajaraja Chola II in Darasuram near Kumbakonam. Inscribed as a UNESCO World Heritage Site as part of the Great Living Chola Temples.",
+    "latitude": 10.9189,
+    "longitude": 79.3562,
+    "locationConfidence": "exact",
+    "city": "Darasuram",
+    "district": "Thanjavur",
+    "state": "Tamil Nadu",
+    "image": "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Airavatesvara Temple in Darasuram, Thanjavur, Tamil Nadu",
+    "imageCredit": {
+      "photographer": "Templeora Heritage Archive",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "November to February (Cooler winter season)",
+    "highlights": [
+      "UNESCO World Heritage Site (Great Living Chola Temples)",
+      "Ratha (chariot) design mandapam with stone wheels pulled by horses",
+      "Intricate miniature stone carvings depicting the 63 Nayanmars",
+      "Singing musical steps at the entrance balustrade"
+    ],
+    "provenance": {
+      "sourceType": "unesco",
+      "verifiedDate": "2026-09-27",
+      "sourceUrl": "https://whc.unesco.org/en/list/250/"
+    },
+    "tags": [
+      "sacred",
+      "shiva",
+      "unesco",
+      "chola",
+      "thanjavur",
+      "tamil-nadu",
+      "heritage",
+      "benchmark"
+    ]
+  },
+  {
+    "id": "dest-res-thillai-nataraja-temple-chidambaram",
+    "slug": "thillai-nataraja-temple-chidambaram",
+    "name": "Thillai Nataraja Temple, Chidambaram",
+    "category": "SACRED",
+    "subcategory": "Shiva",
+    "description": "Ancient temple complex dedicated to Lord Nataraja (the cosmic dancer) and Sivakami Amman in Chidambaram, Tamil Nadu. Represents Akasha (Ether/Sky), the formless space, among the Pancha Bhoota Sthalams.",
+    "latitude": 11.3992,
+    "longitude": 79.6934,
+    "locationConfidence": "exact",
+    "city": "Chidambaram",
+    "district": "Cuddalore",
+    "state": "Tamil Nadu",
+    "image": "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80",
+    "imageAlt": "Thillai Nataraja Temple in Chidambaram, Cuddalore, Tamil Nadu",
+    "imageCredit": {
+      "photographer": "Templeora Archive",
+      "source": "Unsplash",
+      "license": "Unsplash License"
+    },
+    "bestTimeToVisit": "October to March; Marghazhi Thiruvaadhirai & Aani Thirumanjanam",
+    "highlights": [
+      "Pancha Bhoota Stalam representing Akasha (Space/Ether)",
+      "Chidambara Rahasya - the esoteric secret representing infinite formless divinity",
+      "Gilded Kanaka Sabha (Golden Roof sanctum)",
+      "Four towering gopurams depicting all 108 Bharatanatyam Karanas"
+    ],
+    "provenance": {
+      "sourceType": "official",
+      "verifiedDate": "2026-09-27",
+      "sourceUrl": "https://hrce.tn.gov.in/"
+    },
+    "tags": [
+      "sacred",
+      "shiva",
+      "pancha-bhoota",
+      "chidambaram",
+      "tamil-nadu",
+      "benchmark",
+      "templeora-research"
+    ]
   }
 ];

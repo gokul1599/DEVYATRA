@@ -1,6 +1,7 @@
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync } from "node:fs";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../../src/generated/prisma/client";
+import { RESEARCH_EXPANDED_TEMPLES } from "../../src/lib/destinations/research-expanded-temples";
 
 if (existsSync(".env.local")) process.loadEnvFile(".env.local");
 if (existsSync(".env")) process.loadEnvFile(".env");
@@ -53,10 +54,7 @@ async function seed() {
 
   const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString }) });
   
-  const recData = JSON.parse(readFileSync("scripts/templeora_master_reconciliation.json", "utf-8"));
-  const newItems = recData.new_to_include;
-
-  console.log(`Seeding ${newItems.length} research temples into database...`);
+  console.log(`Seeding ${RESEARCH_EXPANDED_TEMPLES.length} research temples into database...`);
 
   // Cache states and districts
   const allStates = await prisma.state.findMany({ select: { id: true, code: true, name: true } });
@@ -67,7 +65,7 @@ async function seed() {
   let inserted = 0;
   let skipped = 0;
 
-  for (const item of newItems) {
+  for (const item of RESEARCH_EXPANDED_TEMPLES) {
     if (!item.latitude || !item.longitude) {
       skipped++;
       continue;
@@ -99,12 +97,7 @@ async function seed() {
       continue;
     }
 
-    const slug = (item.name + "-" + (item.locality || item.district || ""))
-      .toLowerCase()
-      .replace(/&/g, "and")
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-
+    const slug = item.slug;
     const templeId = `t-res-${slug.slice(0, 32)}`;
     const identifier = `TEMPLE-RES-${stateCode}-${slug.slice(0, 20).toUpperCase()}`;
 
@@ -114,10 +107,10 @@ async function seed() {
         update: {
           latitude: item.latitude,
           longitude: item.longitude,
-          verificationStatus: "VERIFIED_SOURCE",
-          source: item.source,
-          sourceType: "government",
-          sourceUrl: item.source_url || undefined,
+          verificationStatus: "VERIFIED_OFFICIAL",
+          source: item.provenance.sourceUrl,
+          sourceType: item.provenance.sourceType || "official",
+          sourceUrl: item.provenance.sourceUrl || undefined,
         },
         create: {
           id: templeId,
@@ -128,21 +121,22 @@ async function seed() {
           districtId: district.id,
           latitude: item.latitude,
           longitude: item.longitude,
-          address: `${item.locality || item.district}, ${item.state}`,
-          mainDeity: item.temple_type || "Sanatan Shrine",
-          templeType: item.temple_type,
-          verificationStatus: "VERIFIED_SOURCE",
-          source: item.source,
-          sourceType: "government",
-          sourceUrl: item.source_url || undefined,
+          address: `${item.city || item.district}, ${item.state}`,
+          mainDeity: item.subcategory || "Sanatan Shrine",
+          templeType: item.subcategory,
+          verificationStatus: "VERIFIED_OFFICIAL",
+          source: item.provenance.sourceUrl,
+          sourceType: item.provenance.sourceType || "official",
+          sourceUrl: item.provenance.sourceUrl || undefined,
           isCentroidFallback: false,
-          dataConfidence: 90,
-          description: `Historic ${item.temple_type || 'sacred'} shrine in ${item.district}, ${item.state}. Documented in official cultural inventories under ${item.source}.`,
+          dataConfidence: 95,
+          description: item.description,
+          images: item.image ? [item.image] : [],
         },
       });
       inserted++;
-    } catch (e: any) {
-      // ignore individual upsert errors if duplicate id/identifier
+    } catch {
+      // ignore individual upsert errors
     }
   }
 
