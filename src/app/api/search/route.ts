@@ -143,6 +143,8 @@ export async function GET(req: NextRequest) {
   const matchedLocalities: Array<{
     name: string;
     parent: string;
+    district?: string;
+    state?: string;
     latitude: number;
     longitude: number;
     zoom: number;
@@ -151,59 +153,7 @@ export async function GET(req: NextRequest) {
 
   const seenLocalities = new Set<string>();
 
-  for (const [key, loc] of Object.entries(POPULAR_LOCALITIES)) {
-    if (loc.name.toLowerCase().includes(queryLower) || key.includes(queryLower)) {
-      seenLocalities.add(loc.name.toLowerCase());
-      matchedLocalities.push({
-        name: loc.name,
-        parent: loc.parent || "India",
-        latitude: loc.center.lat,
-        longitude: loc.center.lng,
-        zoom: loc.recommendedZoom,
-        type: "locality",
-      });
-      if (matchedLocalities.length >= 6) break;
-    }
-  }
-
-  // Also match cities from verified destinations
-  if (matchedLocalities.length < 6) {
-    for (const vd of VERIFIED_DESTINATIONS) {
-      if (vd.city && vd.city.toLowerCase().includes(queryLower) && !seenLocalities.has(vd.city.toLowerCase())) {
-        seenLocalities.add(vd.city.toLowerCase());
-        matchedLocalities.push({
-          name: vd.city,
-          parent: [vd.district, vd.state].filter(Boolean).join(", "),
-          latitude: vd.latitude,
-          longitude: vd.longitude,
-          zoom: 13.5,
-          type: "locality",
-        });
-        if (matchedLocalities.length >= 6) break;
-      }
-    }
-  }
-
-  // Also match locations from static temples catalog
-  if (matchedLocalities.length < 6) {
-    for (const t of TEMPLES) {
-      if (t.location && t.location.toLowerCase().includes(queryLower) && !seenLocalities.has(t.location.toLowerCase())) {
-        seenLocalities.add(t.location.toLowerCase());
-        const st = getState(t.stateCode);
-        matchedLocalities.push({
-          name: t.location,
-          parent: [t.district, st?.name || t.stateCode].filter(Boolean).join(", "),
-          latitude: t.latitude,
-          longitude: t.longitude,
-          zoom: 13.5,
-          type: "locality",
-        });
-        if (matchedLocalities.length >= 6) break;
-      }
-    }
-  }
-
-  // 3. Query Neon PostgreSQL for Places & Temples
+  // 2. Query Neon PostgreSQL for Places & Temples (always query DB for rich national coverage)
   const prisma = getPrisma();
   const outputPlaces: Array<{
     id: string;
@@ -222,12 +172,81 @@ export async function GET(req: NextRequest) {
     type: "destination";
   }> = [];
 
+  const nearMatch = q.match(/(?:temples?\s+(?:near|around|in|at|of)\s+|places?\s+(?:near|around|in|at|of)\s+|near\s+|around\s+|in\s+)(.+)/i);
+  const targetQuery = nearMatch ? nearMatch[1].trim() : q;
+  const targetLower = targetQuery.toLowerCase();
+
+  // Localities from POPULAR_LOCALITIES (matching query or targetQuery)
+  for (const [key, loc] of Object.entries(POPULAR_LOCALITIES)) {
+    if (
+      loc.name.toLowerCase().includes(queryLower) ||
+      loc.name.toLowerCase().includes(targetLower) ||
+      key.includes(queryLower) ||
+      key.includes(targetLower)
+    ) {
+      if (!seenLocalities.has(loc.name.toLowerCase())) {
+        seenLocalities.add(loc.name.toLowerCase());
+        const parts = (loc.parent || "").split(",").map((s) => s.trim());
+        const locDistrict = parts[0] || undefined;
+        const locState = parts[1] || undefined;
+        matchedLocalities.push({
+          name: loc.name,
+          parent: loc.parent || "India",
+          district: locDistrict,
+          state: locState,
+          latitude: loc.center.lat,
+          longitude: loc.center.lng,
+          zoom: loc.recommendedZoom,
+          type: "locality",
+        });
+        if (matchedLocalities.length >= 8) break;
+      }
+    }
+  }
+
   if (prisma) {
     try {
-      const nearMatch = q.match(/(?:temples?\s+(?:near|around)\s+|places?\s+(?:near|around)\s+|near\s+|around\s+)(.+)/i);
-      const targetQuery = nearMatch ? nearMatch[1].trim() : q;
+      // 2a. Localities (villages, towns, cities) from Database
+      if (matchedLocalities.length < 8) {
+        try {
+          const dbLocs = await prisma.locality.findMany({
+            where: {
+              name: { contains: targetQuery, mode: "insensitive" },
+            },
+            take: 8 - matchedLocalities.length,
+            select: {
+              name: true,
+              kind: true,
+              latitude: true,
+              longitude: true,
+              district: { select: { name: true, latitude: true, longitude: true } },
+              state: { select: { name: true } },
+            },
+          });
+          for (const l of dbLocs) {
+            const locNameLower = l.name.toLowerCase();
+            if (!seenLocalities.has(locNameLower)) {
+              seenLocalities.add(locNameLower);
+              const lat = l.latitude ?? l.district?.latitude ?? 20.5937;
+              const lng = l.longitude ?? l.district?.longitude ?? 78.9629;
+              matchedLocalities.push({
+                name: l.name,
+                parent: [l.district?.name, l.state?.name].filter(Boolean).join(", "),
+                district: l.district?.name,
+                state: l.state?.name,
+                latitude: lat,
+                longitude: lng,
+                zoom: l.kind === "city" ? 13 : l.kind === "village" ? 14.5 : 13.5,
+                type: "locality",
+              });
+            }
+          }
+        } catch {
+          // ignore if locality query fails
+        }
+      }
 
-      // 3a. Canonical Places from Database
+      // 2b. Canonical Places from Database (by name, city, district, address)
       const canonicalMatches = await prisma.place.findMany({
         where: {
           OR: [
@@ -237,47 +256,12 @@ export async function GET(req: NextRequest) {
             { subcategory: { contains: targetQuery, mode: "insensitive" } },
             { city: { contains: targetQuery, mode: "insensitive" } },
             { district: { contains: targetQuery, mode: "insensitive" } },
+            { address: { contains: targetQuery, mode: "insensitive" } },
             { state: { contains: targetQuery, mode: "insensitive" } },
           ],
         },
+        take: 20,
       });
-
-      // 3a-2. Localities (villages, towns, cities) from Database
-      if (matchedLocalities.length < 6) {
-        try {
-          const dbLocs = await prisma.locality.findMany({
-            where: {
-              name: { contains: targetQuery, mode: "insensitive" },
-              latitude: { not: null },
-              longitude: { not: null },
-            },
-            take: 6 - matchedLocalities.length,
-            select: {
-              name: true,
-              kind: true,
-              latitude: true,
-              longitude: true,
-              district: { select: { name: true } },
-              state: { select: { name: true } },
-            },
-          });
-          for (const l of dbLocs) {
-            if (l.latitude && l.longitude && !seenLocalities.has(l.name.toLowerCase())) {
-              seenLocalities.add(l.name.toLowerCase());
-              matchedLocalities.push({
-                name: l.name,
-                parent: [l.district?.name, l.state?.name].filter(Boolean).join(", "),
-                latitude: l.latitude,
-                longitude: l.longitude,
-                zoom: l.kind === "city" ? 13 : l.kind === "village" ? 14.5 : 13.5,
-                type: "locality",
-              });
-            }
-          }
-        } catch {
-          // ignore if locality table query fails
-        }
-      }
 
       for (const p of canonicalMatches) {
         outputPlaces.push({
@@ -298,55 +282,78 @@ export async function GET(req: NextRequest) {
         });
       }
 
-      // 3b. Additional Temples from Database
-      if (outputTemples.length < limit) {
-        const dbMatches = await prisma.temple.findMany({
-          where: {
-            OR: [
-              { name: { contains: targetQuery, mode: "insensitive" } },
-              { nameLocal: { contains: targetQuery, mode: "insensitive" } },
-              { mainDeity: { contains: targetQuery, mode: "insensitive" } },
-              { address: { contains: targetQuery, mode: "insensitive" } },
-              { district: { name: { contains: targetQuery, mode: "insensitive" } } },
-              { adminUnit: { name: { contains: targetQuery, mode: "insensitive" } } },
-              { locality: { name: { contains: targetQuery, mode: "insensitive" } } },
-            ],
-          },
-          take: limit - outputTemples.length,
-          select: {
-            id: true,
-            slug: true,
-            name: true,
-            nameLocal: true,
-            mainDeity: true,
-            stateCode: true,
-            address: true,
-            latitude: true,
-            longitude: true,
-            district: { select: { name: true } },
-            state: { select: { name: true, slug: true } },
-          },
-        });
+      // 2c. National Temples from Database (always search to find temples in village/town/city/district)
+      const dbMatches = await prisma.temple.findMany({
+        where: {
+          OR: [
+            { name: { contains: targetQuery, mode: "insensitive" } },
+            { nameLocal: { contains: targetQuery, mode: "insensitive" } },
+            { mainDeity: { contains: targetQuery, mode: "insensitive" } },
+            { address: { contains: targetQuery, mode: "insensitive" } },
+            { district: { name: { contains: targetQuery, mode: "insensitive" } } },
+            { adminUnit: { name: { contains: targetQuery, mode: "insensitive" } } },
+            { locality: { name: { contains: targetQuery, mode: "insensitive" } } },
+          ],
+        },
+        take: 40,
+        select: {
+          id: true,
+          slug: true,
+          name: true,
+          nameLocal: true,
+          mainDeity: true,
+          stateCode: true,
+          address: true,
+          latitude: true,
+          longitude: true,
+          district: { select: { name: true } },
+          adminUnit: { select: { name: true } },
+          locality: { select: { name: true } },
+          state: { select: { name: true, slug: true } },
+        },
+      });
 
-        for (const d of dbMatches) {
-          if (!matchedSlugs.has(d.slug)) {
-            matchedSlugs.add(d.slug);
-            const stateSlug = d.state?.slug || getState(d.stateCode)?.slug || d.stateCode.toLowerCase();
-            outputTemples.push({
-              id: d.id,
-              slug: d.slug,
-              name: d.name,
-              nameLocal: d.nameLocal,
-              stateSlug,
-              location: d.address || d.district?.name || "",
-              district: d.district?.name || "",
-              state: d.state?.name || d.stateCode,
-              latitude: d.latitude,
-              longitude: d.longitude,
-              href: `/temples/${stateSlug}/${d.slug}`,
-              category: "SACRED",
-            });
-          }
+      // Sort DB matches so that exact location or name matches rank highest
+      const scoredDbMatches = dbMatches.map((d) => {
+        let score = 0;
+        const nameLower = d.name.toLowerCase();
+        const addrLower = (d.address || "").toLowerCase();
+        const distLower = (d.district?.name || "").toLowerCase();
+        const locLower = (d.locality?.name || "").toLowerCase();
+        const adminLower = (d.adminUnit?.name || "").toLowerCase();
+
+        if (nameLower === targetLower) score += 100;
+        else if (nameLower.startsWith(targetLower)) score += 60;
+        else if (nameLower.includes(targetLower)) score += 40;
+
+        // If targetQuery matches a village/town/city in address, locality, or district:
+        if (locLower.includes(targetLower) || adminLower.includes(targetLower)) score += 80;
+        if (addrLower.includes(targetLower)) score += 70;
+        if (distLower.includes(targetLower)) score += 50;
+
+        return { d, score };
+      });
+
+      scoredDbMatches.sort((a, b) => b.score - a.score);
+
+      for (const { d } of scoredDbMatches) {
+        if (!matchedSlugs.has(d.slug)) {
+          matchedSlugs.add(d.slug);
+          const stateSlug = d.state?.slug || getState(d.stateCode)?.slug || d.stateCode.toLowerCase();
+          outputTemples.push({
+            id: d.id,
+            slug: d.slug,
+            name: d.name,
+            nameLocal: d.nameLocal,
+            stateSlug,
+            location: d.locality?.name || d.address || d.district?.name || "",
+            district: d.district?.name || "",
+            state: d.state?.name || d.stateCode,
+            latitude: d.latitude,
+            longitude: d.longitude,
+            href: `/temples/${stateSlug}/${d.slug}`,
+            category: "SACRED",
+          });
         }
       }
     } catch {
@@ -406,7 +413,7 @@ export async function GET(req: NextRequest) {
   ].slice(0, 10);
 
   return NextResponse.json({
-    temples: outputTemples.slice(0, limit),
+    temples: outputTemples.slice(0, Math.max(limit, 15)),
     locations: localRes.locations,
     deities: localRes.deities,
     festivals: localRes.festivals,

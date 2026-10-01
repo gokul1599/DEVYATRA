@@ -770,6 +770,13 @@ export const POPULAR_LOCALITIES: Record<string, GeoBoundary> = {
     center: { lat: 12.9567, lng: 75.3789 },
     recommendedZoom: 14,
   },
+  kukke: {
+    name: "Kukke Subramanya",
+    type: "locality",
+    parent: "Dakshina Kannada, Karnataka",
+    center: { lat: 12.6644, lng: 75.6158 },
+    recommendedZoom: 14.2,
+  },
   kollur: {
     name: "Kollur",
     type: "locality",

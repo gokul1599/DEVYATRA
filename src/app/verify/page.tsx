@@ -8,6 +8,9 @@ import { Container, SectionHeading } from "@/components/ui";
 import { DevyatraArt } from "@/components/devyatra-art";
 import { cn } from "@/lib/cn";
 
+import { getTempleCatalogStats } from "@/lib/data/catalog-stats";
+import { getPrisma } from "@/lib/db/client";
+
 export const metadata: Metadata = { title: "Verification status" };
 
 const STATUS_META = [
@@ -51,9 +54,65 @@ const STATUS_META = [
 const STATUS_KEYS = ["VERIFIED_OFFICIAL", "GOVERNMENT_SOURCE", "TRUSTED_SOURCE", "COMMUNITY_REPORTED", "UNVERIFIED"] as const;
 
 export default async function VerifyPage() {
-  const counts = Object.fromEntries(
-    STATUS_KEYS.map((s) => [s, TEMPLES.filter((t) => (t.booking?.verification?.status ?? "UNVERIFIED") === s).length])
-  );
+  const stats = await getTempleCatalogStats();
+  const prisma = getPrisma();
+
+  const counts: Record<string, number> = {
+    VERIFIED_OFFICIAL: stats.verificationBreakdown.official,
+    GOVERNMENT_SOURCE: stats.verificationBreakdown.government,
+    TRUSTED_SOURCE: stats.verificationBreakdown.trusted,
+    COMMUNITY_REPORTED: stats.verificationBreakdown.community,
+    UNVERIFIED: stats.verificationBreakdown.unverified,
+  };
+
+  let displayTemples: Array<{
+    slug: string;
+    name: string;
+    location: string;
+    status: string;
+    href: string;
+  }> = [];
+
+  if (prisma) {
+    try {
+      const dbTemples = await prisma.temple.findMany({
+        take: 60,
+        orderBy: [{ dataConfidence: "desc" }, { name: "asc" }],
+        select: {
+          slug: true,
+          name: true,
+          address: true,
+          verificationStatus: true,
+          district: { select: { name: true } },
+          state: { select: { name: true, slug: true } },
+          stateCode: true,
+        },
+      });
+
+      displayTemples = dbTemples.map((t) => {
+        const stateSlug = t.state?.slug || t.stateCode.toLowerCase();
+        return {
+          slug: t.slug,
+          name: t.name,
+          location: t.address || t.district?.name || t.state?.name || "",
+          status: t.verificationStatus || "UNVERIFIED",
+          href: `/temples/${stateSlug}/${t.slug}`,
+        };
+      });
+    } catch {
+      // Fallback to static
+    }
+  }
+
+  if (displayTemples.length === 0) {
+    displayTemples = TEMPLES.map((t) => ({
+      slug: t.slug,
+      name: t.name,
+      location: t.location,
+      status: t.booking?.verification?.status ?? "UNVERIFIED",
+      href: templeUrl(t),
+    }));
+  }
 
   return (
     <>
@@ -88,11 +147,11 @@ export default async function VerifyPage() {
         </div>
         <div className="overflow-hidden rounded-2xl border border-line">
           <div className="grid grid-cols-1 gap-px bg-line sm:grid-cols-2">
-            {TEMPLES.map((t) => {
-              const status = t.booking?.verification?.status ?? "UNVERIFIED";
-              const color = VERIFY_COLOR[status] ?? "text-ivory-dim";
+            {displayTemples.map((t) => {
+              const statusKey = (t.status in VERIFY_COLOR ? t.status : "UNVERIFIED") as keyof typeof VERIFY_COLOR;
+              const color = VERIFY_COLOR[statusKey] ?? "text-ivory-dim";
               return (
-                <Link key={t.slug} href={templeUrl(t)} className="group flex items-center justify-between gap-3 bg-obsidian-2 px-4 py-3.5 transition-colors hover:bg-obsidian-3">
+                <Link key={t.slug} href={t.href} className="group flex items-center justify-between gap-3 bg-obsidian-2 px-4 py-3.5 transition-colors hover:bg-obsidian-3">
                   <div className="flex items-center gap-3">
                     <Landmark className="h-4 w-4 shrink-0 text-gold-dim" />
                     <div>
@@ -101,7 +160,7 @@ export default async function VerifyPage() {
                     </div>
                   </div>
                   <span className={cn("shrink-0 rounded-full bg-white/[0.05] px-2.5 py-1 text-[10.5px] font-medium", color)}>
-                    {VERIFY_LABEL[status]}
+                    {VERIFY_LABEL[statusKey as keyof typeof VERIFY_LABEL] || statusKey}
                   </span>
                 </Link>
               );

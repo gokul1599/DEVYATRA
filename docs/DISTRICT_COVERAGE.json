@@ -1,0 +1,8255 @@
+[
+  {
+    "id": "cmubieqbm009fh8ffylpr4udw",
+    "name": "Daman",
+    "slug": "daman",
+    "stateCode": "AN",
+    "stateName": "Andaman and Nicobar Islands",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblulx00lgosff7t24lqak",
+    "name": "Nicobar",
+    "slug": "nicobar",
+    "stateCode": "AN",
+    "stateName": "Andaman and Nicobar Islands",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblvni00liosffonmpia16",
+    "name": "North & Middle Andaman",
+    "slug": "north-and-middle-andaman",
+    "stateCode": "AN",
+    "stateName": "Andaman and Nicobar Islands",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblvh600lhosff78yibnsg",
+    "name": "South Andaman",
+    "slug": "south-andaman",
+    "stateCode": "AN",
+    "stateName": "Andaman and Nicobar Islands",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbhyxp0006osffivlgxja1",
+    "name": "Alluri Sitharama Raju",
+    "slug": "alluri-sitharama-raju",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbhzaz0008osff4kegb9yc",
+    "name": "Anakapalli",
+    "slug": "anakapalli",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi2p4000rosffrfqzlfdy",
+    "name": "Anantapur",
+    "slug": "anantapur",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidd7m0028h8ff49fd2hiy",
+    "name": "Andhra Pradesh Central",
+    "slug": "andhra-pradesh-central",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbi1z1000nosffzcmz0dy6",
+    "name": "Annamayya",
+    "slug": "annamayya",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 10,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi12z000iosffb8dieivu",
+    "name": "Bapatla",
+    "slug": "bapatla",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi1sm000mosffjxisa3so",
+    "name": "Chittoor",
+    "slug": "chittoor",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 15,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbhzuc000bosfff9gf8niw",
+    "name": "Dr. B.R. Ambedkar Konaseema",
+    "slug": "dr-b-r-ambedkar-konaseema",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbhznv000aosff4dki65lt",
+    "name": "East Godavari",
+    "slug": "east-godavari",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi073000dosffpnmq9mz3",
+    "name": "Eluru",
+    "slug": "eluru",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi0q8000gosffa6lhfwvf",
+    "name": "Guntur",
+    "slug": "guntur",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubieufw00a0h8ffh5sehxpp",
+    "name": "Guntur district",
+    "slug": "guntur-district",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubieuol00a1h8ff04hum4g9",
+    "name": "Kadapa YSR",
+    "slug": "kadapa-ysr",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 8,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbhzhg0009osffcbupu2m9",
+    "name": "Kakinada",
+    "slug": "kakinada",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 12,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubietwh009xh8ffud8xaw1p",
+    "name": "Konaseema",
+    "slug": "konaseema",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi0dg000eosff1o61xco2",
+    "name": "Krishna",
+    "slug": "krishna",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi2br000posffbgt9xxhm",
+    "name": "Kurnool",
+    "slug": "kurnool",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubideap002eh8ff4quwqhoz",
+    "name": "Mandi",
+    "slug": "mandi",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiddec0029h8ff6esfld6h",
+    "name": "Markapuram",
+    "slug": "markapuram",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi0jt000fosff4dh3crh2",
+    "name": "NTR",
+    "slug": "ntr",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 7,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubid59m0013h8ffe8xrwx7w",
+    "name": "NTR District (Vijayawada)",
+    "slug": "ntr-district-vijayawada",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi2ir000qosffqffqw82d",
+    "name": "Nandyal",
+    "slug": "nandyal",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 7,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi0wl000hosffwz97hv6o",
+    "name": "Palnadu",
+    "slug": "palnadu",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbhykp0004osfflep67958",
+    "name": "Parvathipuram Manyam",
+    "slug": "parvathipuram-manyam",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 14,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi19d000josff6l9md3on",
+    "name": "Prakasam",
+    "slug": "prakasam",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi1fq000kosffir6pusmd",
+    "name": "SPS Nellore",
+    "slug": "sps-nellore",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubiev8a00a4h8ffqxwrfdrg",
+    "name": "SPSR Nellore",
+    "slug": "spsr-nellore",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi2vh000sosff67u0q7p8",
+    "name": "Sri Sathya Sai",
+    "slug": "sri-sathya-sai",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 12,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbhye60003osffyf79gwur",
+    "name": "Srikakulam",
+    "slug": "srikakulam",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 7,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi1m5000losffziqz9ll8",
+    "name": "Tirupati",
+    "slug": "tirupati",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 19,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbhz4k0007osffclfbq291",
+    "name": "Visakhapatnam",
+    "slug": "visakhapatnam",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbhyr80005osffjdmd5w8o",
+    "name": "Vizianagaram",
+    "slug": "vizianagaram",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi00q000cosffitjd0479",
+    "name": "West Godavari",
+    "slug": "west-godavari",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi25e000oosffxsaxoop0",
+    "name": "YSR Kadapa",
+    "slug": "ysr-kadapa",
+    "stateCode": "AP",
+    "stateName": "Andhra Pradesh",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblenj00izosfft8az3ygz",
+    "name": "Anjaw",
+    "slug": "anjaw",
+    "stateCode": "AR",
+    "stateName": "Arunachal Pradesh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblf0800j1osfftflwzbxb",
+    "name": "Changlang",
+    "slug": "changlang",
+    "stateCode": "AR",
+    "stateName": "Arunachal Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbleap00ixosffxchu1p81",
+    "name": "Dibang Valley",
+    "slug": "dibang-valley",
+    "stateCode": "AR",
+    "stateName": "Arunachal Pradesh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblcbw00imosfftls1rwjg",
+    "name": "East Kameng",
+    "slug": "east-kameng",
+    "stateCode": "AR",
+    "stateName": "Arunachal Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbldl500itosffaw3mw454",
+    "name": "East Siang",
+    "slug": "east-siang",
+    "stateCode": "AR",
+    "stateName": "Arunachal Pradesh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblfjc00j4osfffaanuebi",
+    "name": "Kamle",
+    "slug": "kamle",
+    "stateCode": "AR",
+    "stateName": "Arunachal Pradesh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblcon00ioosffd53u4a1v",
+    "name": "Kra Daadi",
+    "slug": "kra-daadi",
+    "stateCode": "AR",
+    "stateName": "Arunachal Pradesh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblcuy00iposff9d77ccxm",
+    "name": "Kurung Kumey",
+    "slug": "kurung-kumey",
+    "stateCode": "AR",
+    "stateName": "Arunachal Pradesh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblfw400j6osffc8b9i01i",
+    "name": "Lepa Rada",
+    "slug": "lepa-rada",
+    "stateCode": "AR",
+    "stateName": "Arunachal Pradesh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbleh100iyosffgui5og74",
+    "name": "Lohit",
+    "slug": "lohit",
+    "stateCode": "AR",
+    "stateName": "Arunachal Pradesh",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblfcy00j3osff6z2ix8pb",
+    "name": "Longding",
+    "slug": "longding",
+    "stateCode": "AR",
+    "stateName": "Arunachal Pradesh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubble4d00iwosffw9iyiqdy",
+    "name": "Lower Dibang Valley",
+    "slug": "lower-dibang-valley",
+    "stateCode": "AR",
+    "stateName": "Arunachal Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbld1x00iqosfffoju2m1o",
+    "name": "Lower Subansiri",
+    "slug": "lower-subansiri",
+    "stateCode": "AR",
+    "stateName": "Arunachal Pradesh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbletw00j0osffzkys8m5f",
+    "name": "Namsai",
+    "slug": "namsai",
+    "stateCode": "AR",
+    "stateName": "Arunachal Pradesh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblfps00j5osff39hs3c20",
+    "name": "Pakke Kessang",
+    "slug": "pakke-kessang",
+    "stateCode": "AR",
+    "stateName": "Arunachal Pradesh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblci700inosffgj4sey9f",
+    "name": "Papum Pare",
+    "slug": "papum-pare",
+    "stateCode": "AR",
+    "stateName": "Arunachal Pradesh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblg2g00j7osffhwwsnie2",
+    "name": "Shi Yomi",
+    "slug": "shi-yomi",
+    "stateCode": "AR",
+    "stateName": "Arunachal Pradesh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbldrh00iuosffgcgd9mte",
+    "name": "Siang",
+    "slug": "siang",
+    "stateCode": "AR",
+    "stateName": "Arunachal Pradesh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblbz700ikosff43com4c4",
+    "name": "Tawang",
+    "slug": "tawang",
+    "stateCode": "AR",
+    "stateName": "Arunachal Pradesh",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblf6m00j2osff0ugurfrx",
+    "name": "Tirap",
+    "slug": "tirap",
+    "stateCode": "AR",
+    "stateName": "Arunachal Pradesh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubiep7r0099h8ffcg6jqx2p",
+    "name": "Una",
+    "slug": "una",
+    "stateCode": "AR",
+    "stateName": "Arunachal Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbldxt00ivosffrkd2skwx",
+    "name": "Upper Siang",
+    "slug": "upper-siang",
+    "stateCode": "AR",
+    "stateName": "Arunachal Pradesh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbld8900irosffad8x1nnz",
+    "name": "Upper Subansiri",
+    "slug": "upper-subansiri",
+    "stateCode": "AR",
+    "stateName": "Arunachal Pradesh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblc5j00ilosffk6mvgerg",
+    "name": "West Kameng",
+    "slug": "west-kameng",
+    "stateCode": "AR",
+    "stateName": "Arunachal Pradesh",
+    "templeCount": 9,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbldem00isosff5fgq31ok",
+    "name": "West Siang",
+    "slug": "west-siang",
+    "stateCode": "AR",
+    "stateName": "Arunachal Pradesh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubiemos008wh8ffztmjzj4g",
+    "name": "Assam Central",
+    "slug": "assam-central",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbknex00esosff0gxpdh9h",
+    "name": "Baksa",
+    "slug": "baksa",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkoau00exosffp4au3aib",
+    "name": "Barpeta",
+    "slug": "barpeta",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbklbt00ehosffzhgk1e7z",
+    "name": "Biswanath",
+    "slug": "biswanath",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkoh700eyosffe8vcxe3s",
+    "name": "Bongaigaon",
+    "slug": "bongaigaon",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkpw900f6osffdeu6gu1e",
+    "name": "Cachar",
+    "slug": "cachar",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkli500eiosffi5z50gdv",
+    "name": "Charaideo",
+    "slug": "charaideo",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkonl00ezosffjpy6ctlb",
+    "name": "Chirang",
+    "slug": "chirang",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbknrk00euosffzwzr56je",
+    "name": "Darrang",
+    "slug": "darrang",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkkz200efosff8a1i2l1y",
+    "name": "Dhemaji",
+    "slug": "dhemaji",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkp0c00f1osff4qbssgzx",
+    "name": "Dhubri",
+    "slug": "dhubri",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkk9o00ebosffby8i52kp",
+    "name": "Dibrugarh",
+    "slug": "dibrugarh",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkmol00eoosff0vfa32bk",
+    "name": "Dima Hasao",
+    "slug": "dima-hasao",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkpd000f3osffenxu28ci",
+    "name": "Goalpara",
+    "slug": "goalpara",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkm3u00elosffvxu3m2l0",
+    "name": "Golaghat",
+    "slug": "golaghat",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkppx00f5osffa50uxy07",
+    "name": "Hailakandi",
+    "slug": "hailakandi",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkmv000eposff2au3rtsh",
+    "name": "Hojai",
+    "slug": "hojai",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkkmf00edosff5f26sx7o",
+    "name": "Jorhat",
+    "slug": "jorhat",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbknxw00evosfffsl5t3in",
+    "name": "Kamrup",
+    "slug": "kamrup",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 12,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbko4800ewosffhmcqyrbw",
+    "name": "Kamrup Metropolitan",
+    "slug": "kamrup-metropolitan",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 9,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkmag00emosffxk3puzdm",
+    "name": "Karbi Anglong",
+    "slug": "karbi-anglong",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkpjj00f4osffbw43dve1",
+    "name": "Karimganj",
+    "slug": "karimganj",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkotz00f0osffuotwmv7x",
+    "name": "Kokrajhar",
+    "slug": "kokrajhar",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubienvs0092h8ffbctfqqc9",
+    "name": "Krishna",
+    "slug": "krishna",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 10,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkksq00eeosffs7u48jc9",
+    "name": "Lakhimpur",
+    "slug": "lakhimpur",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubienoa0091h8ffuge6xxko",
+    "name": "Leh",
+    "slug": "leh",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkloi00ejosff6sd6i06f",
+    "name": "Majuli",
+    "slug": "majuli",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiemva008xh8ffqdivqee1",
+    "name": "Mandi",
+    "slug": "mandi",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkn2800eqosffzc8rujn8",
+    "name": "Morigaon",
+    "slug": "morigaon",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbklwg00ekosffy275o858",
+    "name": "Nagaon",
+    "slug": "nagaon",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkn8l00erosff4m4kyxfg",
+    "name": "Nalbari",
+    "slug": "nalbari",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubienhs0090h8ffssywim5b",
+    "name": "Pune",
+    "slug": "pune",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkkg000ecosffa31nd47n",
+    "name": "Sivasagar",
+    "slug": "sivasagar",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 12,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkl5e00egosffluvyypb2",
+    "name": "Sonitpur",
+    "slug": "sonitpur",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 7,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkp6o00f2osff3qm9hp04",
+    "name": "South Salmara Mankachar",
+    "slug": "south-salmara-mankachar",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbkk3c00eaosffi0ivzry9",
+    "name": "Tinsukia",
+    "slug": "tinsukia",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbknl900etosffpfiolmuw",
+    "name": "Udalguri",
+    "slug": "udalguri",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkmi700enosff65720h98",
+    "name": "West Karbi Anglong",
+    "slug": "west-karbi-anglong",
+    "stateCode": "AS",
+    "stateName": "Assam",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbk4se00bzosffduneliq0",
+    "name": "Araria",
+    "slug": "araria",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkadz00cuosffs9lecqs0",
+    "name": "Arwal",
+    "slug": "arwal",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk9ny00cqosffoxhx6z82",
+    "name": "Aurangabad",
+    "slug": "aurangabad",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk7q300cfosffaj4md3ve",
+    "name": "Banka",
+    "slug": "banka",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk76y00ccosffl6cwqw3w",
+    "name": "Begusarai",
+    "slug": "begusarai",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk7jq00ceosffahssufow",
+    "name": "Bhagalpur",
+    "slug": "bhagalpur",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk8yk00cmosff2dlp1ukz",
+    "name": "Bhojpur",
+    "slug": "bhojpur",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiejj0008fh8ffx69abtnk",
+    "name": "Bihar Central",
+    "slug": "bihar-central",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbk94x00cnosffrz2kjnza",
+    "name": "Buxar",
+    "slug": "buxar",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk5v900c5osff209lu560",
+    "name": "Darbhanga",
+    "slug": "darbhanga",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiekfl008kh8ffvg7ajxm2",
+    "name": "Deoghar",
+    "slug": "deoghar",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk9ua00crosffpwb8ip82",
+    "name": "Gaya",
+    "slug": "gaya",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk6ax00c7osffv0ayzc6j",
+    "name": "Gopalganj",
+    "slug": "gopalganj",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk89600ciosff1ktez7d5",
+    "name": "Jamui",
+    "slug": "jamui",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbka7000ctosff8kj14249",
+    "name": "Jehanabad",
+    "slug": "jehanabad",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk9ba00coosffz2ditdg1",
+    "name": "Kaimur",
+    "slug": "kaimur",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk5c600c2osffd6v8eggj",
+    "name": "Katihar",
+    "slug": "katihar",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk7dc00cdosffb628umfi",
+    "name": "Khagaria",
+    "slug": "khagaria",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk4z400c0osffiexp9frr",
+    "name": "Kishanganj",
+    "slug": "kishanganj",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiejw0008hh8ffw5vnx56y",
+    "name": "Krishna",
+    "slug": "krishna",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk82u00chosffmd3pay0r",
+    "name": "Lakhisarai",
+    "slug": "lakhisarai",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk5ii00c3osffqc78ad62",
+    "name": "Madhepura",
+    "slug": "madhepura",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk4fc00bxosffpqs2075t",
+    "name": "Madhubani",
+    "slug": "madhubani",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiejpj008gh8ffjl6787kp",
+    "name": "Mandi",
+    "slug": "mandi",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk7wi00cgosff2vl7w42f",
+    "name": "Munger",
+    "slug": "munger",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk61p00c6osffxsb777c8",
+    "name": "Muzaffarpur",
+    "slug": "muzaffarpur",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiek90008jh8ff8y983z1f",
+    "name": "NTR",
+    "slug": "ntr",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk8lt00ckosff6ssqsxbt",
+    "name": "Nalanda",
+    "slug": "nalanda",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 8,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbka0o00csosff2jp9csar",
+    "name": "Nawada",
+    "slug": "nawada",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk3pp00btosffb6z15mm2",
+    "name": "Pashchim Champaran",
+    "slug": "pashchim-champaran",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk8s800closffz12h3zqc",
+    "name": "Patna",
+    "slug": "patna",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk3w300buosffn7ljns80",
+    "name": "Purba Champaran",
+    "slug": "purba-champaran",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk55h00c1osfft91rg8f5",
+    "name": "Purnia",
+    "slug": "purnia",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk9hn00cposffu8xh4df0",
+    "name": "Rohtas",
+    "slug": "rohtas",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk5ow00c4osffjk1y1re3",
+    "name": "Saharsa",
+    "slug": "saharsa",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk70k00cbosffvxcyf1po",
+    "name": "Samastipur",
+    "slug": "samastipur",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk6nl00c9osffiik1wczf",
+    "name": "Saran",
+    "slug": "saran",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk8fi00cjosffrfq8qg60",
+    "name": "Sheikhpura",
+    "slug": "sheikhpura",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk42k00bvosff3ss1bq1i",
+    "name": "Sheohar",
+    "slug": "sheohar",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk49000bwosff6s5qkgpc",
+    "name": "Sitamarhi",
+    "slug": "sitamarhi",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk6h900c8osffi75cqhzk",
+    "name": "Siwan",
+    "slug": "siwan",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk4lp00byosffr0q2cfnt",
+    "name": "Supaul",
+    "slug": "supaul",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk6tx00caosff0yr7lwvr",
+    "name": "Vaishali",
+    "slug": "vaishali",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiejce008eh8ff85l9hl3i",
+    "name": "Varanasi",
+    "slug": "varanasi",
+    "stateCode": "BR",
+    "stateName": "Bihar",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblu9800leosff77mkqr22",
+    "name": "Chandigarh",
+    "slug": "chandigarh",
+    "stateCode": "CH",
+    "stateName": "Chandigarh",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl16400gwosffm1av7asb",
+    "name": "Baloda Bazar",
+    "slug": "baloda-bazar",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkzkw00gnosff8c5v80fe",
+    "name": "Balrampur",
+    "slug": "balrampur",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl22a00h1osff7ta4q4gv",
+    "name": "Bastar",
+    "slug": "bastar",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl3ey00h8osffljyyho7m",
+    "name": "Bemetara",
+    "slug": "bemetara",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl2fv00h3osffidliitnn",
+    "name": "Bijapur",
+    "slug": "bijapur",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl0n400gtosff02w2upnd",
+    "name": "Bilaspur",
+    "slug": "bilaspur",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidzv5005jh8ffds1eypx9",
+    "name": "Chhattisgarh Central",
+    "slug": "chhattisgarh-central",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbl29j00h2osff8hp921n0",
+    "name": "Dantewada",
+    "slug": "dantewada",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl31r00h6osff4dqx2cs0",
+    "name": "Dhamtari",
+    "slug": "dhamtari",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl1ck00gxosff68yxodh4",
+    "name": "Gariaband",
+    "slug": "gariaband",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbl44q00hcosffigtgcnnm",
+    "name": "Gaurella Pendra Marwahi",
+    "slug": "gaurella-pendra-marwahi",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl0gs00gsosffu4b2ff3d",
+    "name": "Janjgir Champa",
+    "slug": "janjgir-champa",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkzxj00gposff4ot832i8",
+    "name": "Jashpur",
+    "slug": "jashpur",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl38l00h7osffb47kluz7",
+    "name": "Kabirdham",
+    "slug": "kabirdham",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl2vf00h5osffqsoakan4",
+    "name": "Kanker",
+    "slug": "kanker",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl3y200hbosff5ej14ot1",
+    "name": "Khairgarh Chhuikhadan",
+    "slug": "khairgarh-chhuikhadan",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl1pl00gzosffoauk4cm9",
+    "name": "Kondagaon",
+    "slug": "kondagaon",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl0a900grosffa39jcvo4",
+    "name": "Korba",
+    "slug": "korba",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkz8800glosff30cnj8ks",
+    "name": "Koriya",
+    "slug": "koriya",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl1iz00gyosff987l1crd",
+    "name": "Mahasamund",
+    "slug": "mahasamund",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl4o600hfosff4db91l9w",
+    "name": "Manendragarh",
+    "slug": "manendragarh",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl3rp00haosffbmspm445",
+    "name": "Mohla Manpur",
+    "slug": "mohla-manpur",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl0tg00guosffq0367byk",
+    "name": "Mungeli",
+    "slug": "mungeli",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubie0l5005nh8fffpzyszhc",
+    "name": "NTR",
+    "slug": "ntr",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubie087005lh8ffo6mqi3ir",
+    "name": "Nagpur",
+    "slug": "nagpur",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl1vy00h0osfffltcyxpu",
+    "name": "Narayanpur",
+    "slug": "narayanpur",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl03w00gqosffdxas6xey",
+    "name": "Raigarh",
+    "slug": "raigarh",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl0zt00gvosffsywsdqjv",
+    "name": "Raipur",
+    "slug": "raipur",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl3la00h9osffaz4t7mcb",
+    "name": "Rajnandgaon",
+    "slug": "rajnandgaon",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl4hu00heosff6olm31vv",
+    "name": "Sakti",
+    "slug": "sakti",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl4bd00hdosff8gqmqzfm",
+    "name": "Sarangarh Bilaigarh",
+    "slug": "sarangarh-bilaigarh",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl2p300h4osffet0o9b8f",
+    "name": "Sukma",
+    "slug": "sukma",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkzr700goosffo5h38k0h",
+    "name": "Surajpur",
+    "slug": "surajpur",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkzej00gmosffc889t9gd",
+    "name": "Surguja",
+    "slug": "surguja",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubie0eo005mh8ffrwrw4ksj",
+    "name": "Una",
+    "slug": "una",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl4uh00hgosffjsb03u1m",
+    "name": "Vishrampur",
+    "slug": "vishrampur",
+    "stateCode": "CG",
+    "stateName": "Chhattisgarh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblwda00lmosff06p10hxm",
+    "name": "Dadra and Nagar Haveli",
+    "slug": "dadra-and-nagar-haveli",
+    "stateCode": "DN",
+    "stateName": "Dadra & Nagar Haveli and Daman & Diu",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblwjp00lnosffg945mzsl",
+    "name": "Daman",
+    "slug": "daman",
+    "stateCode": "DN",
+    "stateName": "Dadra & Nagar Haveli and Daman & Diu",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblwq400loosffi6z29ojy",
+    "name": "Diu",
+    "slug": "diu",
+    "stateCode": "DN",
+    "stateName": "Dadra & Nagar Haveli and Daman & Diu",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubidca70023h8ffxgjaecg6",
+    "name": "Diu",
+    "slug": "diu",
+    "stateCode": "DH",
+    "stateName": "Dadra and Nagar Haveli and Daman and Diu",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblrcx00kyosffel2j04vo",
+    "name": "Central Delhi",
+    "slug": "central-delhi",
+    "stateCode": "DL",
+    "stateName": "Delhi",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubieddg007ih8ffuwgj95mn",
+    "name": "Chhatarpur",
+    "slug": "chhatarpur",
+    "stateCode": "DL",
+    "stateName": "Delhi",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiedwz007lh8ffm7lywb6j",
+    "name": "Delhi Central",
+    "slug": "delhi-central",
+    "stateCode": "DL",
+    "stateName": "Delhi",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblsf200l4osffs93m5yzg",
+    "name": "East Delhi",
+    "slug": "east-delhi",
+    "stateCode": "DL",
+    "stateName": "Delhi",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiedjz007jh8ffyihisrf8",
+    "name": "Krishna",
+    "slug": "krishna",
+    "stateCode": "DL",
+    "stateName": "Delhi",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiee3f007mh8ffggd5frs8",
+    "name": "Mandi",
+    "slug": "mandi",
+    "stateCode": "DL",
+    "stateName": "Delhi",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblr6h00kxosfflzup6ekt",
+    "name": "New Delhi",
+    "slug": "new-delhi",
+    "stateCode": "DL",
+    "stateName": "Delhi",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblrjb00kzosffp9o9ocks",
+    "name": "North Delhi",
+    "slug": "north-delhi",
+    "stateCode": "DL",
+    "stateName": "Delhi",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblrpo00l0osff8enlln2d",
+    "name": "North East Delhi",
+    "slug": "north-east-delhi",
+    "stateCode": "DL",
+    "stateName": "Delhi",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblssh00l6osff8uk935f0",
+    "name": "North West Delhi",
+    "slug": "north-west-delhi",
+    "stateCode": "DL",
+    "stateName": "Delhi",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblsm400l5osfflb6qfifm",
+    "name": "Shahdara",
+    "slug": "shahdara",
+    "stateCode": "DL",
+    "stateName": "Delhi",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbls2d00l2osff5t110287",
+    "name": "South Delhi",
+    "slug": "south-delhi",
+    "stateCode": "DL",
+    "stateName": "Delhi",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblt0i00l7osfff5goex3l",
+    "name": "South East Delhi",
+    "slug": "south-east-delhi",
+    "stateCode": "DL",
+    "stateName": "Delhi",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbls8p00l3osffxdaj8v6q",
+    "name": "South West Delhi",
+    "slug": "south-west-delhi",
+    "stateCode": "DL",
+    "stateName": "Delhi",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubieeaa007nh8ffzes2exx9",
+    "name": "Una",
+    "slug": "una",
+    "stateCode": "DL",
+    "stateName": "Delhi",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblrw100l1osffs51s9trz",
+    "name": "West Delhi",
+    "slug": "west-delhi",
+    "stateCode": "DL",
+    "stateName": "Delhi",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubidx1l0054h8ffb531kqk5",
+    "name": "Goa Central",
+    "slug": "goa-central",
+    "stateCode": "GA",
+    "stateName": "Goa",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubidxfr0056h8fftb2kf38g",
+    "name": "Krishna",
+    "slug": "krishna",
+    "stateCode": "GA",
+    "stateName": "Goa",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidx8w0055h8ffboys5o0c",
+    "name": "NTR",
+    "slug": "ntr",
+    "stateCode": "GA",
+    "stateName": "Goa",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkq8y00f8osffwb7x0hi7",
+    "name": "North Goa",
+    "slug": "north-goa",
+    "stateCode": "GA",
+    "stateName": "Goa",
+    "templeCount": 16,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkqfu00f9osffsdau8tux",
+    "name": "South Goa",
+    "slug": "south-goa",
+    "stateCode": "GA",
+    "stateName": "Goa",
+    "templeCount": 11,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiwms005eosfff72tfwyl",
+    "name": "Ahmedabad",
+    "slug": "ahmedabad",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbizgu005uosff0o1o9poh",
+    "name": "Amreli",
+    "slug": "amreli",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiwgh005dosfflqs6vvh4",
+    "name": "Aravalli",
+    "slug": "aravalli",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbivk70058osffy3vp2npa",
+    "name": "Banaskantha",
+    "slug": "banaskantha",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiyeb005oosff1w8r055o",
+    "name": "Bharuch",
+    "slug": "bharuch",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbizn6005vosfffm6dck0f",
+    "name": "Bhavnagar",
+    "slug": "bhavnagar",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiwzi005gosff5r5wicik",
+    "name": "Botad",
+    "slug": "botad",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbixva005losffuz319dxj",
+    "name": "Chhota Udepur",
+    "slug": "chhota-udepur",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbixox005kosffr80y16vy",
+    "name": "Dahod",
+    "slug": "dahod",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiyxg005rosffmt0k4zt9",
+    "name": "Dang",
+    "slug": "dang",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbj0vy0062osffz1mcj8id",
+    "name": "Devbhoomi Dwarka",
+    "slug": "devbhoomi-dwarka",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubid9p8001qh8ffrw8v3of1",
+    "name": "Devbhumi Dwarka",
+    "slug": "devbhumi-dwarka",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiwa5005cosffozy6qw46",
+    "name": "Gandhinagar",
+    "slug": "gandhinagar",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiztj005wosffvsfw4fym",
+    "name": "Gir Somnath",
+    "slug": "gir-somnath",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidvg4004wh8ffzhi1n7sl",
+    "name": "Gujarat Central",
+    "slug": "gujarat-central",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbj0pg0061osff4kdz20rk",
+    "name": "Jamnagar",
+    "slug": "jamnagar",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidw0s004zh8ffz22dy60l",
+    "name": "Jodhpur",
+    "slug": "jodhpur",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbizzx005xosffbobjipn6",
+    "name": "Junagadh",
+    "slug": "junagadh",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbivdm0057osff90q5gqn2",
+    "name": "Kachchh",
+    "slug": "kachchh",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbix5u005hosffzfv3q4d8",
+    "name": "Kheda",
+    "slug": "kheda",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidwv10053h8ffu8hmswke",
+    "name": "Krishna",
+    "slug": "krishna",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiw3s005bosffsw161xkh",
+    "name": "Mahesana",
+    "slug": "mahesana",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbixc7005iosffryutt7z4",
+    "name": "Mahisagar",
+    "slug": "mahisagar",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubidvni004xh8ffqo9weql6",
+    "name": "Mandi",
+    "slug": "mandi",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidv9n004vh8ff4eab1pj8",
+    "name": "Mehsana",
+    "slug": "mehsana",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 8,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj06b005yosff4tmwtas0",
+    "name": "Morbi",
+    "slug": "morbi",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiduwl004th8ffetfnfc1t",
+    "name": "NTR",
+    "slug": "ntr",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiy7z005nosffpp3xrrvj",
+    "name": "Narmada",
+    "slug": "narmada",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiz3s005sosffl2bhpg22",
+    "name": "Navsari",
+    "slug": "navsari",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbixij005josff5o5hk23f",
+    "name": "Panch Mahals",
+    "slug": "panch-mahals",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiey6800akh8ffjpohvzzb",
+    "name": "Panchmahal",
+    "slug": "panchmahal",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbivr30059osffi1z65680",
+    "name": "Patan",
+    "slug": "patan",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 8,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj0j40060osff4wxnyxlh",
+    "name": "Porbandar",
+    "slug": "porbandar",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj0cr005zosffu34j8jis",
+    "name": "Rajkot",
+    "slug": "rajkot",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbivxf005aosffo7nmqxks",
+    "name": "Sabarkantha",
+    "slug": "sabarkantha",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiykq005posffdmm0fhax",
+    "name": "Surat",
+    "slug": "surat",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbiwt5005fosffwwr19wgl",
+    "name": "Surendranagar",
+    "slug": "surendranagar",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiyr3005qosff9p7gupnf",
+    "name": "Tapi",
+    "slug": "tapi",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbiy1m005mosffvpi9k25n",
+    "name": "Vadodara",
+    "slug": "vadodara",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiza6005tosffysauguwb",
+    "name": "Valsad",
+    "slug": "valsad",
+    "stateCode": "GJ",
+    "stateName": "Gujarat",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbkqyv00fcosff9zcg6ok4",
+    "name": "Ambala",
+    "slug": "ambala",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkt1400fnosffg66pqnh6",
+    "name": "Bhiwani",
+    "slug": "bhiwani",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiebxf007ah8ffnipbk791",
+    "name": "Bilaspur",
+    "slug": "bilaspur",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiecne007eh8fffv47lk55",
+    "name": "Chandigarh",
+    "slug": "chandigarh",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkt7i00foosffqm6j0nhi",
+    "name": "Charkhi Dadri",
+    "slug": "charkhi-dadri",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbku9y00fuosffqina2t7l",
+    "name": "Faridabad",
+    "slug": "faridabad",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbksi300fkosfff9n8ti13",
+    "name": "Fatehabad",
+    "slug": "fatehabad",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubied70007hh8ffk1ltrfxj",
+    "name": "Gurgaon",
+    "slug": "gurgaon",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbku3g00ftosff2n1c0948",
+    "name": "Gurugram",
+    "slug": "gurugram",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiebdh0077h8ff8esq4d0m",
+    "name": "Haryana Central",
+    "slug": "haryana-central",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbksut00fmosffu92bsulf",
+    "name": "Hisar",
+    "slug": "hisar",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiecai007ch8ffk5t2io1o",
+    "name": "Jaipur",
+    "slug": "jaipur",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbktkd00fqosffw0q8d6d7",
+    "name": "Jhajjar",
+    "slug": "jhajjar",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbksbr00fjosffwp7nt9ay",
+    "name": "Jind",
+    "slug": "jind",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbkrl000ffosffozol8ztq",
+    "name": "Kaithal",
+    "slug": "kaithal",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkrsr00fgosff55o3xoqt",
+    "name": "Karnal",
+    "slug": "karnal",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiebjy0078h8ffkrw0st8w",
+    "name": "Krishna",
+    "slug": "krishna",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkrej00feosff44pbvmcl",
+    "name": "Kurukshetra",
+    "slug": "kurukshetra",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbktqs00frosff1k281zfq",
+    "name": "Mahendragarh",
+    "slug": "mahendragarh",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubiec3v007bh8ff1ly2c7p9",
+    "name": "Mandi",
+    "slug": "mandi",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiebqf0079h8ffkq24mas0",
+    "name": "NTR",
+    "slug": "ntr",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkupj00fwosffj5ijb08m",
+    "name": "Nuh",
+    "slug": "nuh",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbkuhp00fvosffbi4p76ks",
+    "name": "Palwal",
+    "slug": "palwal",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbkqsj00fbosffzgvhmir1",
+    "name": "Panchkula",
+    "slug": "panchkula",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkrz300fhosff0w5425c0",
+    "name": "Panipat",
+    "slug": "panipat",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbktx400fsosffnx27zbrc",
+    "name": "Rewari",
+    "slug": "rewari",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbkte100fposfff1i61gej",
+    "name": "Rohtak",
+    "slug": "rohtak",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbksoh00flosffm589evh4",
+    "name": "Sirsa",
+    "slug": "sirsa",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbks5g00fiosffjmlqbbwd",
+    "name": "Sonipat",
+    "slug": "sonipat",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubieb640076h8ff0bjf0eqz",
+    "name": "Una",
+    "slug": "una",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkr7500fdosffhn218zo3",
+    "name": "Yamunanagar",
+    "slug": "yamunanagar",
+    "stateCode": "HR",
+    "stateName": "Haryana",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubie9po006yh8ffs5ehe0ic",
+    "name": "Bilaspur",
+    "slug": "bilaspur",
+    "stateCode": "HP",
+    "stateName": "Himachal Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubif22700b5h8ffr8754xqx",
+    "name": "Chamba",
+    "slug": "chamba",
+    "stateCode": "HP",
+    "stateName": "Himachal Pradesh",
+    "templeCount": 8,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubif28q00b6h8ff8behvl6x",
+    "name": "Hamirpur",
+    "slug": "hamirpur",
+    "stateCode": "HP",
+    "stateName": "Himachal Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubie8mb006sh8ff9yp5yeqb",
+    "name": "Himachal Pradesh Central",
+    "slug": "himachal-pradesh-central",
+    "stateCode": "HP",
+    "stateName": "Himachal Pradesh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubid7z4001hh8ffdpefcwst",
+    "name": "Kangra",
+    "slug": "kangra",
+    "stateCode": "HP",
+    "stateName": "Himachal Pradesh",
+    "templeCount": 15,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubie8zk006uh8ffovmm996p",
+    "name": "Kullu",
+    "slug": "kullu",
+    "stateCode": "HP",
+    "stateName": "Himachal Pradesh",
+    "templeCount": 9,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubif2fe00b7h8ffq40fzdmk",
+    "name": "Lahaul &amp; Spiti",
+    "slug": "lahaul-amp-spiti",
+    "stateCode": "HP",
+    "stateName": "Himachal Pradesh",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubie962006vh8ff4brpazgy",
+    "name": "Mandi",
+    "slug": "mandi",
+    "stateCode": "HP",
+    "stateName": "Himachal Pradesh",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubie9ci006wh8ffqbb3726j",
+    "name": "NTR",
+    "slug": "ntr",
+    "stateCode": "HP",
+    "stateName": "Himachal Pradesh",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubie8ss006th8ffj2pyjqf8",
+    "name": "Shimla",
+    "slug": "shimla",
+    "stateCode": "HP",
+    "stateName": "Himachal Pradesh",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubif2mb00b8h8ffenhb8jbt",
+    "name": "Sirmaur",
+    "slug": "sirmaur",
+    "stateCode": "HP",
+    "stateName": "Himachal Pradesh",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubie9j1006xh8ffgwwzkogo",
+    "name": "Una",
+    "slug": "una",
+    "stateCode": "HP",
+    "stateName": "Himachal Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbloiw00kiosffv006pa4y",
+    "name": "Anantnag",
+    "slug": "anantnag",
+    "stateCode": "JK",
+    "stateName": "Jammu and Kashmir",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbln8q00kbosff4ry6dwi1",
+    "name": "Bandipora",
+    "slug": "bandipora",
+    "stateCode": "JK",
+    "stateName": "Jammu and Kashmir",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbln1h00kaosffdp6bdndj",
+    "name": "Baramulla",
+    "slug": "baramulla",
+    "stateCode": "JK",
+    "stateName": "Jammu and Kashmir",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblntg00keosffm1xxur8d",
+    "name": "Budgam",
+    "slug": "budgam",
+    "stateCode": "JK",
+    "stateName": "Jammu and Kashmir",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblovj00kkosff2edpexkc",
+    "name": "Doda",
+    "slug": "doda",
+    "stateCode": "JK",
+    "stateName": "Jammu and Kashmir",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblnf300kcosffzwyc1pa9",
+    "name": "Ganderbal",
+    "slug": "ganderbal",
+    "stateCode": "JK",
+    "stateName": "Jammu and Kashmir",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblqak00ksosffl4icbjbd",
+    "name": "Jammu",
+    "slug": "jammu",
+    "stateCode": "JK",
+    "stateName": "Jammu and Kashmir",
+    "templeCount": 13,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubief9m007sh8fffrohe8za",
+    "name": "Jammu and Kashmir Central",
+    "slug": "jammu-and-kashmir-central",
+    "stateCode": "JK",
+    "stateName": "Jammu and Kashmir",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblpxr00kqosffgmidt8j9",
+    "name": "Kathua",
+    "slug": "kathua",
+    "stateCode": "JK",
+    "stateName": "Jammu and Kashmir",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblp1w00klosffd3j02fhz",
+    "name": "Kishtwar",
+    "slug": "kishtwar",
+    "stateCode": "JK",
+    "stateName": "Jammu and Kashmir",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblocj00khosffxvat1mcy",
+    "name": "Kulgam",
+    "slug": "kulgam",
+    "stateCode": "JK",
+    "stateName": "Jammu and Kashmir",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblmtn00k9osff5rv5nk0y",
+    "name": "Kupwara",
+    "slug": "kupwara",
+    "stateCode": "JK",
+    "stateName": "Jammu and Kashmir",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubieev8007qh8ffvgbjq2n3",
+    "name": "Mandi",
+    "slug": "mandi",
+    "stateCode": "JK",
+    "stateName": "Jammu and Kashmir",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubieenb007ph8ffj9ne6vhl",
+    "name": "NTR",
+    "slug": "ntr",
+    "stateCode": "JK",
+    "stateName": "Jammu and Kashmir",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblprd00kposff5dwil0az",
+    "name": "Poonch",
+    "slug": "poonch",
+    "stateCode": "JK",
+    "stateName": "Jammu and Kashmir",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblnzt00kfosff72l22cb8",
+    "name": "Pulwama",
+    "slug": "pulwama",
+    "stateCode": "JK",
+    "stateName": "Jammu and Kashmir",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblpl000koosffgm436jai",
+    "name": "Rajouri",
+    "slug": "rajouri",
+    "stateCode": "JK",
+    "stateName": "Jammu and Kashmir",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblop800kjosffznlm2plo",
+    "name": "Ramban",
+    "slug": "ramban",
+    "stateCode": "JK",
+    "stateName": "Jammu and Kashmir",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblpeo00knosffzs2e5ccb",
+    "name": "Reasi",
+    "slug": "reasi",
+    "stateCode": "JK",
+    "stateName": "Jammu and Kashmir",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblq4600krosffsbal0hkr",
+    "name": "Samba",
+    "slug": "samba",
+    "stateCode": "JK",
+    "stateName": "Jammu and Kashmir",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblo6500kgosffzeochxhw",
+    "name": "Shopian",
+    "slug": "shopian",
+    "stateCode": "JK",
+    "stateName": "Jammu and Kashmir",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblnn400kdosffs35bx2ic",
+    "name": "Srinagar",
+    "slug": "srinagar",
+    "stateCode": "JK",
+    "stateName": "Jammu and Kashmir",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblp8c00kmosffgd85dcgt",
+    "name": "Udhampur",
+    "slug": "udhampur",
+    "stateCode": "JK",
+    "stateName": "Jammu and Kashmir",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubief29007rh8ffc6bm0th4",
+    "name": "Una",
+    "slug": "una",
+    "stateCode": "JK",
+    "stateName": "Jammu and Kashmir",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkci700d4osff2sjjf642",
+    "name": "Bokaro",
+    "slug": "bokaro",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkbmg00czosff8jm7yi5h",
+    "name": "Chatra",
+    "slug": "chatra",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkd7p00d8osff4uet0rti",
+    "name": "Deoghar",
+    "slug": "deoghar",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkcok00d5osff83bm9s94",
+    "name": "Dhanbad",
+    "slug": "dhanbad",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiem4u008th8ffd61tqx39",
+    "name": "Diu",
+    "slug": "diu",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkcuw00d6osff88ytjk10",
+    "name": "Dumka",
+    "slug": "dumka",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkdxa00dcosff91f9wo22",
+    "name": "East Singhbhum",
+    "slug": "east-singhbhum",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkb3g00cxosff87psukel",
+    "name": "Garhwa",
+    "slug": "garhwa",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkc5h00d2osffh5ughc2v",
+    "name": "Giridih",
+    "slug": "giridih",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkde200d9osff41a1bjqy",
+    "name": "Godda",
+    "slug": "godda",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkemt00dgosffk76ood52",
+    "name": "Gumla",
+    "slug": "gumla",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkbst00d0osffh4xda26h",
+    "name": "Hazaribagh",
+    "slug": "hazaribagh",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkd1800d7osff5po3lbir",
+    "name": "Jamtara",
+    "slug": "jamtara",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiellc008qh8ff7jjnv3pf",
+    "name": "Jharkhand Central",
+    "slug": "jharkhand-central",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbkf5v00djosff7s100vdn",
+    "name": "Khunti",
+    "slug": "khunti",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkbz500d1osffonej2vze",
+    "name": "Koderma",
+    "slug": "koderma",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiemi9008vh8ffizxzvvy6",
+    "name": "Krishna",
+    "slug": "krishna",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkbfn00cyosffajcxslip",
+    "name": "Latehar",
+    "slug": "latehar",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbket500dhosffzb95s1eq",
+    "name": "Lohardaga",
+    "slug": "lohardaga",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubielev008ph8ffr832wfbl",
+    "name": "Mandi",
+    "slug": "mandi",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiel7j008oh8ffe31pevbz",
+    "name": "NTR",
+    "slug": "ntr",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiemba008uh8ff1q5lag4b",
+    "name": "Nagpur",
+    "slug": "nagpur",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkdqq00dbosffajxp4o8b",
+    "name": "Pakur",
+    "slug": "pakur",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkav000cwosffecym1fru",
+    "name": "Palamu",
+    "slug": "palamu",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubielru008rh8ffg82416av",
+    "name": "Puri",
+    "slug": "puri",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkcbt00d3osffzzulyqce",
+    "name": "Ramgarh",
+    "slug": "ramgarh",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkezh00diosff8whkk9ea",
+    "name": "Ranchi",
+    "slug": "ranchi",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 7,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkdke00daosffe73g9ckr",
+    "name": "Sahebganj",
+    "slug": "sahebganj",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbke3m00ddosffw8lw23jp",
+    "name": "Seraikela Kharsawan",
+    "slug": "seraikela-kharsawan",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkegg00dfosffe97oluj6",
+    "name": "Simdega",
+    "slug": "simdega",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkea000deosff9jig7dz1",
+    "name": "West Singhbhum",
+    "slug": "west-singhbhum",
+    "stateCode": "JH",
+    "stateName": "Jharkhand",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbigpb002xosff70h2j0bz",
+    "name": "Bagalkot",
+    "slug": "bagalkot",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbig4z002uosff0q72tesb",
+    "name": "Ballari",
+    "slug": "ballari",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubieqi3009gh8ffeezdd4bx",
+    "name": "Ballary",
+    "slug": "ballary",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbifym002tosffyr9mleef",
+    "name": "Belagavi",
+    "slug": "belagavi",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbikg0003iosff5kv5sw2q",
+    "name": "Bengaluru Rural",
+    "slug": "bengaluru-rural",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbik9o003hosffgmj9614q",
+    "name": "Bengaluru Urban",
+    "slug": "bengaluru-urban",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbigvn002yosffgnxnec4e",
+    "name": "Bidar",
+    "slug": "bidar",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubieqou009hh8ffv07yu1m2",
+    "name": "Chamarajanagar",
+    "slug": "chamarajanagar",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbil6h003mosff6dyoegho",
+    "name": "Chamarajanagara",
+    "slug": "chamarajanagara",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbikmd003josffkt56wno0",
+    "name": "Chikballapura",
+    "slug": "chikballapura",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 13,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbij7h003bosff1bsfp191",
+    "name": "Chikkamagaluru",
+    "slug": "chikkamagaluru",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubieqvb009ih8ff6u9gjny7",
+    "name": "Chikmagalur",
+    "slug": "chikmagalur",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiiu80039osffcwqnztns",
+    "name": "Chitradurga",
+    "slug": "chitradurga",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubier8i009kh8ffw87n18b4",
+    "name": "Coorg-Kodagu",
+    "slug": "coorg-kodagu",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbijqm003eosffkbxnbq1s",
+    "name": "Dakshina Kannada",
+    "slug": "dakshina-kannada",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiihj0037osffy7nybo2q",
+    "name": "Davanagere",
+    "slug": "davanagere",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubierf0009lh8ff4j24kxq5",
+    "name": "Davangere",
+    "slug": "davangere",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 7,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbihxz0034osffwympkhvz",
+    "name": "Dharwad",
+    "slug": "dharwad",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbihrn0033osffk8y9d091",
+    "name": "Gadag",
+    "slug": "gadag",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbijk7003dosffr3gl5v08",
+    "name": "Hassan",
+    "slug": "hassan",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 11,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiiar0036osffcm2fzhb2",
+    "name": "Haveri",
+    "slug": "haveri",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbih20002zosff6t3yyhp5",
+    "name": "Kalaburagi",
+    "slug": "kalaburagi",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidle4003fh8fflkfl0cu6",
+    "name": "Kanyakumari",
+    "slug": "kanyakumari",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidkeo003ah8ffwl5il2qg",
+    "name": "Karnataka Central",
+    "slug": "karnataka-central",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbijdv003cosff2u89z8gr",
+    "name": "Kodagu",
+    "slug": "kodagu",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiksp003kosff5m5yh6p1",
+    "name": "Kolar",
+    "slug": "kolar",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbilj7003oosffik4aj98x",
+    "name": "Kolar Gold Fields",
+    "slug": "kolar-gold-fields",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbihl80032osffyhhzdibb",
+    "name": "Koppala",
+    "slug": "koppala",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidkld003bh8ffcqhauhbl",
+    "name": "Krishna",
+    "slug": "krishna",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbikz2003losffi8zv2hb7",
+    "name": "Mandya",
+    "slug": "mandya",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 12,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubierys009nh8ff92q16mih",
+    "name": "Mysore",
+    "slug": "mysore",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbilcu003nosfflccnrof1",
+    "name": "Mysuru",
+    "slug": "mysuru",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidkye003dh8ffcx5jih9e",
+    "name": "NTR",
+    "slug": "ntr",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 7,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidncg003ph8ff2wta4tu6",
+    "name": "Puri",
+    "slug": "puri",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbihet0031osffx3vs5hbq",
+    "name": "Raichur",
+    "slug": "raichur",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbik3c003gosffaj21vkoe",
+    "name": "Ramanagara",
+    "slug": "ramanagara",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubies7o009oh8ff2sd583ih",
+    "name": "Shimoga",
+    "slug": "shimoga",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 13,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiinw0038osffwz0gtxto",
+    "name": "Shivamogga",
+    "slug": "shivamogga",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbij12003aosffdy2sq9hg",
+    "name": "Tumakuru",
+    "slug": "tumakuru",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidm92003jh8ffl5igh0pt",
+    "name": "Tumkur",
+    "slug": "tumkur",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbijwy003fosffasqvihnp",
+    "name": "Udupi",
+    "slug": "udupi",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 8,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidniy003qh8ffzysxd1p9",
+    "name": "Una",
+    "slug": "una",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbii4c0035osff2tnw68ej",
+    "name": "Uttara Kannada",
+    "slug": "uttara-kannada",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbigbc002vosff9hprfxwx",
+    "name": "Vijayanagara",
+    "slug": "vijayanagara",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 25,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbigiy002wosff0jrzh9w1",
+    "name": "Vijayapura",
+    "slug": "vijayapura",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 10,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbih8g0030osff09x6p1xq",
+    "name": "Yadgiri",
+    "slug": "yadgiri",
+    "stateCode": "KA",
+    "stateName": "Karnataka",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbinoj0040osffyxj032hv",
+    "name": "Alappuzha",
+    "slug": "alappuzha",
+    "stateCode": "KL",
+    "stateName": "Kerala",
+    "templeCount": 11,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidqs00047h8ff6lvdizkg",
+    "name": "Coimbatore",
+    "slug": "coimbatore",
+    "stateCode": "KL",
+    "stateName": "Kerala",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbin5c003xosffpf86jab2",
+    "name": "Ernakulam",
+    "slug": "ernakulam",
+    "stateCode": "KL",
+    "stateName": "Kerala",
+    "templeCount": 7,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidpew0040h8ffm7ebx8q7",
+    "name": "Gaya",
+    "slug": "gaya",
+    "stateCode": "KL",
+    "stateName": "Kerala",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbinbp003yosffvbw10zxb",
+    "name": "Idukki",
+    "slug": "idukki",
+    "stateCode": "KL",
+    "stateName": "Kerala",
+    "templeCount": 10,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbim2a003rosffapepilmp",
+    "name": "Kannur",
+    "slug": "kannur",
+    "stateCode": "KL",
+    "stateName": "Kerala",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidpyn0043h8ffoua9w15u",
+    "name": "Kanyakumari",
+    "slug": "kanyakumari",
+    "stateCode": "KL",
+    "stateName": "Kerala",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbilvw003qosffmqvhegt2",
+    "name": "Kasaragod",
+    "slug": "kasaragod",
+    "stateCode": "KL",
+    "stateName": "Kerala",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidnw2003sh8ffuz9be8se",
+    "name": "Kerala Central",
+    "slug": "kerala-central",
+    "stateCode": "KL",
+    "stateName": "Kerala",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbio170042osffpdlasc5a",
+    "name": "Kollam",
+    "slug": "kollam",
+    "stateCode": "KL",
+    "stateName": "Kerala",
+    "templeCount": 8,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbini2003zosff2zuzveeo",
+    "name": "Kottayam",
+    "slug": "kottayam",
+    "stateCode": "KL",
+    "stateName": "Kerala",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbimfq003tosff8w1su6mc",
+    "name": "Kozhikode",
+    "slug": "kozhikode",
+    "stateCode": "KL",
+    "stateName": "Kerala",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidogb003vh8ffgryetblw",
+    "name": "Krishna",
+    "slug": "krishna",
+    "stateCode": "KL",
+    "stateName": "Kerala",
+    "templeCount": 13,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbimm3003uosffz9zmukwh",
+    "name": "Malappuram",
+    "slug": "malappuram",
+    "stateCode": "KL",
+    "stateName": "Kerala",
+    "templeCount": 12,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidqzd0048h8ff598kry3s",
+    "name": "Munnar in Idukki",
+    "slug": "munnar-in-idukki",
+    "stateCode": "KL",
+    "stateName": "Kerala",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidotd003xh8ff2vh2d7dl",
+    "name": "NTR",
+    "slug": "ntr",
+    "stateCode": "KL",
+    "stateName": "Kerala",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbimsn003vosff3qkxepx9",
+    "name": "Palakkad",
+    "slug": "palakkad",
+    "stateCode": "KL",
+    "stateName": "Kerala",
+    "templeCount": 18,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbinuv0041osffskgco3uj",
+    "name": "Pathanamthitta",
+    "slug": "pathanamthitta",
+    "stateCode": "KL",
+    "stateName": "Kerala",
+    "templeCount": 13,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbio7m0043osffsvybe0gc",
+    "name": "Thiruvananthapuram",
+    "slug": "thiruvananthapuram",
+    "stateCode": "KL",
+    "stateName": "Kerala",
+    "templeCount": 15,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbimyz003wosffqc010sxq",
+    "name": "Thrissur",
+    "slug": "thrissur",
+    "stateCode": "KL",
+    "stateName": "Kerala",
+    "templeCount": 21,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbim8p003sosffwet1lbsj",
+    "name": "Wayanad",
+    "slug": "wayanad",
+    "stateCode": "KL",
+    "stateName": "Kerala",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblqtq00kvosffkwdqhawx",
+    "name": "Kargil",
+    "slug": "kargil",
+    "stateCode": "LA",
+    "stateName": "Ladakh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblqnc00kuosff5ayjbcdm",
+    "name": "Leh",
+    "slug": "leh",
+    "stateCode": "LA",
+    "stateName": "Ladakh",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblw0g00lkosffap59o8r4",
+    "name": "Lakshadweep",
+    "slug": "lakshadweep",
+    "stateCode": "LD",
+    "stateName": "Lakshadweep",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjvbl00ajosffs6wbputv",
+    "name": "Agar Malwa",
+    "slug": "agar-malwa",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjwqj00arosffng653ysw",
+    "name": "Alirajpur",
+    "slug": "alirajpur",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjq06009posff5k0gt6vg",
+    "name": "Ashoknagar",
+    "slug": "ashoknagar",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjtdi00a8osffq26yw27c",
+    "name": "Balaghat",
+    "slug": "balaghat",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbjxsn00axosfffe2na6j7",
+    "name": "Barwani",
+    "slug": "barwani",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjtqc00aaosfff423tzv0",
+    "name": "Betul",
+    "slug": "betul",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjp4g009kosffcgrwizsx",
+    "name": "Bhind",
+    "slug": "bhind",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjusl00agosffxv7erdru",
+    "name": "Bhopal",
+    "slug": "bhopal",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjx9i00auosffluinv0sc",
+    "name": "Burhanpur",
+    "slug": "burhanpur",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjqjl009sosfffrcf9m9p",
+    "name": "Chhatarpur",
+    "slug": "chhatarpur",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjtjw00a9osffl9oxoxwn",
+    "name": "Chhindwara",
+    "slug": "chhindwara",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjqwc009uosffkoupqodr",
+    "name": "Damoh",
+    "slug": "damoh",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjph5009mosffhaww6it0",
+    "name": "Datia",
+    "slug": "datia",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjvo900alosffzsyxk74y",
+    "name": "Dewas",
+    "slug": "dewas",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjwwv00asosffwqooxz0s",
+    "name": "Dhar",
+    "slug": "dhar",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjsbd00a2osffs9dyszso",
+    "name": "Dindori",
+    "slug": "dindori",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjptt009oosff9ncqoo72",
+    "name": "Guna",
+    "slug": "guna",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjpat009losffhprmcb5j",
+    "name": "Gwalior",
+    "slug": "gwalior",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 8,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjtwn00abosff1fbh38au",
+    "name": "Harda",
+    "slug": "harda",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbju3300acosff74qykt7p",
+    "name": "Hoshangabad",
+    "slug": "hoshangabad",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbjx3700atosffq8ohw73v",
+    "name": "Indore",
+    "slug": "indore",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjshq00a3osfftmj5rb3p",
+    "name": "Jabalpur",
+    "slug": "jabalpur",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjwk700aqosfft6lz7fd9",
+    "name": "Jhabua",
+    "slug": "jhabua",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjso300a4osffkcv8se5s",
+    "name": "Katni",
+    "slug": "katni",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjxfv00avosffucv3zmbr",
+    "name": "Khandwa",
+    "slug": "khandwa",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjxma00awosffvmfo0dvw",
+    "name": "Khargone",
+    "slug": "khargone",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidyei005bh8ff5n97nxif",
+    "name": "Krishna",
+    "slug": "krishna",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidy80005ah8ffbig8xlya",
+    "name": "Madhya Pradesh Central",
+    "slug": "madhya-pradesh-central",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbjt0t00a6osffffnwdajq",
+    "name": "Mandla",
+    "slug": "mandla",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjvum00amosff4h2g65jr",
+    "name": "Mandsaur",
+    "slug": "mandsaur",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjoy4009josff92hisogq",
+    "name": "Morena",
+    "slug": "morena",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidxue0058h8ff6qlp0f4h",
+    "name": "NTR",
+    "slug": "ntr",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbju9h00adosffu938obci",
+    "name": "Narmadapuram",
+    "slug": "narmadapuram",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjsuh00a5osffbe6nhetn",
+    "name": "Narsinghpur",
+    "slug": "narsinghpur",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjw1400anosffbidgu0ra",
+    "name": "Neemuch",
+    "slug": "neemuch",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjr2s009vosff2jtpwxnf",
+    "name": "Niwar",
+    "slug": "niwar",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbjqpz009tosff0rlnnb3y",
+    "name": "Panna",
+    "slug": "panna",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjufu00aeosfffmvkm0dr",
+    "name": "Raisen",
+    "slug": "raisen",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjv5800aiosffgba7p1ua",
+    "name": "Rajgarh",
+    "slug": "rajgarh",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjw7g00aoosff7k3db3yg",
+    "name": "Ratlam",
+    "slug": "ratlam",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjrfg009xosfff8dsygdg",
+    "name": "Rewa",
+    "slug": "rewa",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjq6k009qosffeudr4p21",
+    "name": "Sagar",
+    "slug": "sagar",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjr95009wosffez0zg8l7",
+    "name": "Satna",
+    "slug": "satna",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjuyx00ahosfflj1ia377",
+    "name": "Sehore",
+    "slug": "sehore",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjt7600a7osffu70rehrw",
+    "name": "Seoni",
+    "slug": "seoni",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbjryi00a0osffa82jl8iw",
+    "name": "Shahdol",
+    "slug": "shahdol",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjvhx00akosffpbz40leh",
+    "name": "Shajapur",
+    "slug": "shajapur",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjorr009iosffrn4vz6wm",
+    "name": "Sheopur",
+    "slug": "sheopur",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjpnh009nosff3rxfjr82",
+    "name": "Shivpuri",
+    "slug": "shivpuri",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjrs4009zosffepm05jay",
+    "name": "Sidhi",
+    "slug": "sidhi",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjrls009yosffaic2d3tb",
+    "name": "Singrauli",
+    "slug": "singrauli",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjqcx009rosffj4ybq3he",
+    "name": "Tikamgarh",
+    "slug": "tikamgarh",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjwdu00aposffk9sg4czc",
+    "name": "Ujjain",
+    "slug": "ujjain",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 7,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjs5100a1osfflakksduj",
+    "name": "Umaria",
+    "slug": "umaria",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjum900afosffhbf0oxhq",
+    "name": "Vidisha",
+    "slug": "vidisha",
+    "stateCode": "MP",
+    "stateName": "Madhya Pradesh",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubievzf00a8h8ffpagj98up",
+    "name": "Ahilyanagar",
+    "slug": "ahilyanagar",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 11,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubid8xp001mh8ff8y9rk4wy",
+    "name": "Ahilyanagar (Ahmednagar)",
+    "slug": "ahilyanagar-ahmednagar",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiqkq004gosff06v6hn8k",
+    "name": "Ahmednagar",
+    "slug": "ahmednagar",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbitek004wosffbl0oao7s",
+    "name": "Akola",
+    "slug": "akola",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubieww900adh8ffavd49l79",
+    "name": "Amaravati",
+    "slug": "amaravati",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbitkz004xosffrpoaa962",
+    "name": "Amravati",
+    "slug": "amravati",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbirmy004mosffqmppqzbq",
+    "name": "Aurangabad",
+    "slug": "aurangabad",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbit1v004uosffdqoe5opo",
+    "name": "Beed",
+    "slug": "beed",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiv0e0055osff0pibfucy",
+    "name": "Bhandara",
+    "slug": "bhandara",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbit87004vosffb8ff2vyk",
+    "name": "Buldhana",
+    "slug": "buldhana",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 11,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiuhe0052osffm6j4x2xe",
+    "name": "Chandrapur",
+    "slug": "chandrapur",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 14,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbirtb004nosff8viz9j94",
+    "name": "Chhatrapati Sambhajinagar",
+    "slug": "chhatrapati-sambhajinagar",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiq0l004dosfftcmn27os",
+    "name": "Dhule",
+    "slug": "dhule",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiunq0053osffzrg9s9yb",
+    "name": "Gadchiroli",
+    "slug": "gadchiroli",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiuu20054osffa7j1kbka",
+    "name": "Gondia",
+    "slug": "gondia",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbisce004qosffe3d3kspv",
+    "name": "Hingoli",
+    "slug": "hingoli",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiqe8004fosffflz3mang",
+    "name": "Jalgaon",
+    "slug": "jalgaon",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 10,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbirzo004oosffkc1vjiuk",
+    "name": "Jalna",
+    "slug": "jalna",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbira9004kosffntm3xfeo",
+    "name": "Kolhapur",
+    "slug": "kolhapur",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidu5r004ph8ffl2fn6zic",
+    "name": "Krishna",
+    "slug": "krishna",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbisp5004sosffpjxl61u3",
+    "name": "Latur",
+    "slug": "latur",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubids50004eh8ffjy9s8ss0",
+    "name": "Maharashtra Central",
+    "slug": "maharashtra-central",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubidtz9004oh8ff9xmqq7ts",
+    "name": "Mandi",
+    "slug": "mandi",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiol40045osffra4hc3vq",
+    "name": "Mumbai City",
+    "slug": "mumbai-city",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 8,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiorm0046osff6zy9s9nz",
+    "name": "Mumbai Suburban",
+    "slug": "mumbai-suburban",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidsc4004fh8ffl1r4af90",
+    "name": "NTR",
+    "slug": "ntr",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 9,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiu490050osffeojjz1er",
+    "name": "Nagpur",
+    "slug": "nagpur",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbisis004rosffxawgjm0t",
+    "name": "Nanded",
+    "slug": "nanded",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiq70004eosff0s7yrhh6",
+    "name": "Nandurbar",
+    "slug": "nandurbar",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbipu6004cosff3grdwz2g",
+    "name": "Nashik",
+    "slug": "nashik",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 8,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbisvi004tosff0e7qo48q",
+    "name": "Osmanabad",
+    "slug": "osmanabad",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbip4p0048osfft330301i",
+    "name": "Palghar",
+    "slug": "palghar",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 7,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbis60004posffmnba1hle",
+    "name": "Parbhani",
+    "slug": "parbhani",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbiqr6004hosff22bz3p39",
+    "name": "Pune",
+    "slug": "pune",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 12,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidtm1004mh8ffxj8xxo9k",
+    "name": "Puri",
+    "slug": "puri",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbipb20049osffyyxfo0tt",
+    "name": "Raigad",
+    "slug": "raigad",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiphf004aosff94hiy7ge",
+    "name": "Ratnagiri",
+    "slug": "ratnagiri",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 7,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbir3x004josffhikh6lb6",
+    "name": "Sangli",
+    "slug": "sangli",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiqxk004iosffyayg1jrh",
+    "name": "Satara",
+    "slug": "satara",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbipnt004bosff2j4h5vh8",
+    "name": "Sindhudurg",
+    "slug": "sindhudurg",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbirgm004losfftqjdefos",
+    "name": "Solapur",
+    "slug": "solapur",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbioyd0047osffgponmy1g",
+    "name": "Thane",
+    "slug": "thane",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidujj004rh8ffxkpzpxlr",
+    "name": "Udaipur",
+    "slug": "udaipur",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiuao0051osff709opjp3",
+    "name": "Wardha",
+    "slug": "wardha",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbitrc004yosffquaxy1li",
+    "name": "Washim",
+    "slug": "washim",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbitxw004zosffxv7c6xug",
+    "name": "Yavatmal",
+    "slug": "yavatmal",
+    "stateCode": "MH",
+    "stateName": "Maharashtra",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl7cy00huosff2hylmmny",
+    "name": "Bishnupur",
+    "slug": "bishnupur",
+    "stateCode": "MN",
+    "stateName": "Manipur",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl70b00hsosffhvwvhkpn",
+    "name": "Chandel",
+    "slug": "chandel",
+    "stateCode": "MN",
+    "stateName": "Manipur",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbl76m00htosff98k74eat",
+    "name": "Churachandpur",
+    "slug": "churachandpur",
+    "stateCode": "MN",
+    "stateName": "Manipur",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbl7pt00hwosffnhhixa0o",
+    "name": "Imphal East",
+    "slug": "imphal-east",
+    "stateCode": "MN",
+    "stateName": "Manipur",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl7w600hxosffczeqn9cb",
+    "name": "Imphal West",
+    "slug": "imphal-west",
+    "stateCode": "MN",
+    "stateName": "Manipur",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl94r00i4osff2s665d9o",
+    "name": "Jiribam",
+    "slug": "jiribam",
+    "stateCode": "MN",
+    "stateName": "Manipur",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbl9bk00i5osffv6w3hh6f",
+    "name": "Kakching",
+    "slug": "kakching",
+    "stateCode": "MN",
+    "stateName": "Manipur",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbl8lo00i1osffrcvsvihc",
+    "name": "Kamjong",
+    "slug": "kamjong",
+    "stateCode": "MN",
+    "stateName": "Manipur",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbl82i00hyosfflctxk42i",
+    "name": "Kangpokpi",
+    "slug": "kangpokpi",
+    "stateCode": "MN",
+    "stateName": "Manipur",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubiepr6009ch8ffzge4xqa6",
+    "name": "Krishna",
+    "slug": "krishna",
+    "stateCode": "MN",
+    "stateName": "Manipur",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiepkp009bh8ffkjf9eo0x",
+    "name": "Manipur Central",
+    "slug": "manipur-central",
+    "stateCode": "MN",
+    "stateName": "Manipur",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubiepe9009ah8ff08ail6tx",
+    "name": "NTR",
+    "slug": "ntr",
+    "stateCode": "MN",
+    "stateName": "Manipur",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl8yf00i3osffksnxl57l",
+    "name": "Noney",
+    "slug": "noney",
+    "stateCode": "MN",
+    "stateName": "Manipur",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbl8s000i2osff9zd8qtgn",
+    "name": "Pherzawl",
+    "slug": "pherzawl",
+    "stateCode": "MN",
+    "stateName": "Manipur",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbl88u00hzosfffwdaf3wh",
+    "name": "Senapati",
+    "slug": "senapati",
+    "stateCode": "MN",
+    "stateName": "Manipur",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbl9hw00i6osffz073dgke",
+    "name": "Tamenglong",
+    "slug": "tamenglong",
+    "stateCode": "MN",
+    "stateName": "Manipur",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbl6tr00hrosff6ejnd41o",
+    "name": "Tengnoupal",
+    "slug": "tengnoupal",
+    "stateCode": "MN",
+    "stateName": "Manipur",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbl7jb00hvosffy2wr2va7",
+    "name": "Thoubal",
+    "slug": "thoubal",
+    "stateCode": "MN",
+    "stateName": "Manipur",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl8f600i0osffi5c4b8vh",
+    "name": "Ukhrul",
+    "slug": "ukhrul",
+    "stateCode": "MN",
+    "stateName": "Manipur",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbla7r00iaosffj2obsc5i",
+    "name": "East Garo Hills",
+    "slug": "east-garo-hills",
+    "stateCode": "ML",
+    "stateName": "Meghalaya",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblax400ieosff4y0n97y7",
+    "name": "East Khasi Hills",
+    "slug": "east-khasi-hills",
+    "stateCode": "ML",
+    "stateName": "Meghalaya",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblbmj00iiosffxz0t0xuy",
+    "name": "Eastern West Khasi Hills",
+    "slug": "eastern-west-khasi-hills",
+    "stateCode": "ML",
+    "stateName": "Meghalaya",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblbg500ihosffut3ergux",
+    "name": "Jaintia Hills",
+    "slug": "jaintia-hills",
+    "stateCode": "ML",
+    "stateName": "Meghalaya",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiepxn009dh8ff439wnho7",
+    "name": "NTR",
+    "slug": "ntr",
+    "stateCode": "ML",
+    "stateName": "Meghalaya",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblae500ibosffdyst32hn",
+    "name": "North Garo Hills",
+    "slug": "north-garo-hills",
+    "stateCode": "ML",
+    "stateName": "Meghalaya",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblb3h00ifosffdeu4hrha",
+    "name": "Ri Bhoi",
+    "slug": "ri-bhoi",
+    "stateCode": "ML",
+    "stateName": "Meghalaya",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbla1f00i9osff7lztolib",
+    "name": "South Garo Hills",
+    "slug": "south-garo-hills",
+    "stateCode": "ML",
+    "stateName": "Meghalaya",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblakg00icosffn7r2ygyi",
+    "name": "South West Garo Hills",
+    "slug": "south-west-garo-hills",
+    "stateCode": "ML",
+    "stateName": "Meghalaya",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblb9t00igosffxbiwj65h",
+    "name": "South West Khasi Hills",
+    "slug": "south-west-khasi-hills",
+    "stateCode": "ML",
+    "stateName": "Meghalaya",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbl9ul00i8osffpmpe28k4",
+    "name": "West Garo Hills",
+    "slug": "west-garo-hills",
+    "stateCode": "ML",
+    "stateName": "Meghalaya",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblaqs00idosffobftd884",
+    "name": "West Khasi Hills",
+    "slug": "west-khasi-hills",
+    "stateCode": "ML",
+    "stateName": "Meghalaya",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbljth00jsosffsk4nwyww",
+    "name": "Aizawl",
+    "slug": "aizawl",
+    "stateCode": "MZ",
+    "stateName": "Mizoram",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbljzu00jtosff4ahzq5v0",
+    "name": "Champhai",
+    "slug": "champhai",
+    "stateCode": "MZ",
+    "stateName": "Mizoram",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbll8j00k0osffgews73op",
+    "name": "Hnahthial",
+    "slug": "hnahthial",
+    "stateCode": "MZ",
+    "stateName": "Mizoram",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbll2600jzosff3l3ykkj4",
+    "name": "Khawzawl",
+    "slug": "khawzawl",
+    "stateCode": "MZ",
+    "stateName": "Mizoram",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbljn500jrosffovx2zseg",
+    "name": "Kolasib",
+    "slug": "kolasib",
+    "stateCode": "MZ",
+    "stateName": "Mizoram",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblkpe00jxosff1slvbzy9",
+    "name": "Lawngtlai",
+    "slug": "lawngtlai",
+    "stateCode": "MZ",
+    "stateName": "Mizoram",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblkiw00jwosff6c218e5h",
+    "name": "Lunglei",
+    "slug": "lunglei",
+    "stateCode": "MZ",
+    "stateName": "Mizoram",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbljgt00jqosffcsg1zk7e",
+    "name": "Mamit",
+    "slug": "mamit",
+    "stateCode": "MZ",
+    "stateName": "Mizoram",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblk6800juosff4di8z7b5",
+    "name": "Saitual",
+    "slug": "saitual",
+    "stateCode": "MZ",
+    "stateName": "Mizoram",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblkck00jvosff1o0uq3zh",
+    "name": "Serchhip",
+    "slug": "serchhip",
+    "stateCode": "MZ",
+    "stateName": "Mizoram",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblkvs00jyosfff6jgl0y1",
+    "name": "Siaha",
+    "slug": "siaha",
+    "stateCode": "MZ",
+    "stateName": "Mizoram",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblik500jlosffyavyjmwy",
+    "name": "Chümoukedima",
+    "slug": "ch-moukedima",
+    "stateCode": "NL",
+    "stateName": "Nagaland",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbli7700jjosff34d4jhey",
+    "name": "Dimapur",
+    "slug": "dimapur",
+    "stateCode": "NL",
+    "stateName": "Nagaland",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblh4x00jdosffkz3u1zhf",
+    "name": "Kiphire",
+    "slug": "kiphire",
+    "stateCode": "NL",
+    "stateName": "Nagaland",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblidj00jkosffwtege9uf",
+    "name": "Kohima",
+    "slug": "kohima",
+    "stateCode": "NL",
+    "stateName": "Nagaland",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblgyl00jcosff8d2qa393",
+    "name": "Longleng",
+    "slug": "longleng",
+    "stateCode": "NL",
+    "stateName": "Nagaland",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblhuh00jhosffsr1qpyzr",
+    "name": "Mokokchung",
+    "slug": "mokokchung",
+    "stateCode": "NL",
+    "stateName": "Nagaland",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblgsa00jbosffo6xhgvf3",
+    "name": "Mon",
+    "slug": "mon",
+    "stateCode": "NL",
+    "stateName": "Nagaland",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbliqh00jmosffqm7n3n3j",
+    "name": "Niuland",
+    "slug": "niuland",
+    "stateCode": "NL",
+    "stateName": "Nagaland",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblgfm00j9osff824jxiio",
+    "name": "Noklak",
+    "slug": "noklak",
+    "stateCode": "NL",
+    "stateName": "Nagaland",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbli0v00jiosffwdxjqf47",
+    "name": "Peren",
+    "slug": "peren",
+    "stateCode": "NL",
+    "stateName": "Nagaland",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblhb900jeosffemy9bt0d",
+    "name": "Phek",
+    "slug": "phek",
+    "stateCode": "NL",
+    "stateName": "Nagaland",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblj3600joosffj1p1o218",
+    "name": "Shamator",
+    "slug": "shamator",
+    "stateCode": "NL",
+    "stateName": "Nagaland",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbliws00jnosfft02uwupf",
+    "name": "Tseminyü",
+    "slug": "tseminy",
+    "stateCode": "NL",
+    "stateName": "Nagaland",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblgly00jaosffyjy6t0k2",
+    "name": "Tuensang",
+    "slug": "tuensang",
+    "stateCode": "NL",
+    "stateName": "Nagaland",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblhny00jgosffu9pbf0m0",
+    "name": "Wokha",
+    "slug": "wokha",
+    "stateCode": "NL",
+    "stateName": "Nagaland",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblhhm00jfosffx7m47vh2",
+    "name": "Zunheboto",
+    "slug": "zunheboto",
+    "stateCode": "NL",
+    "stateName": "Nagaland",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbk0id00bbosffpyv1g3ip",
+    "name": "Angul",
+    "slug": "angul",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiegqf0080h8ffayarjmuu",
+    "name": "Balangir",
+    "slug": "balangir",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjzmm00b6osffulaidk1i",
+    "name": "Balasore",
+    "slug": "balasore",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjyax00azosffzbqn17tc",
+    "name": "Bargarh",
+    "slug": "bargarh",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 38,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjzsy00b7osfffjnhxbza",
+    "name": "Bhadrak",
+    "slug": "bhadrak",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk05n00b9osffqbgpb3xc",
+    "name": "Boudh",
+    "slug": "boudh",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 7,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk0v200bdosffed54gjwv",
+    "name": "Cuttack",
+    "slug": "cuttack",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 11,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjyuy00b2osff2gzsa2sy",
+    "name": "Deogarh",
+    "slug": "deogarh",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbk0op00bcosffs8csf96t",
+    "name": "Dhenkanal",
+    "slug": "dhenkanal",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk1xt00bjosffhivgchsi",
+    "name": "Gajapati",
+    "slug": "gajapati",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk1rh00biosffgbagzeai",
+    "name": "Ganjam",
+    "slug": "ganjam",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk18b00bfosffcepq9l71",
+    "name": "Jagatsinghpur",
+    "slug": "jagatsinghpur",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjzza00b8osff2suo6sl1",
+    "name": "Jajpur",
+    "slug": "jajpur",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 7,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjyh900b0osffgs083frt",
+    "name": "Jharsuguda",
+    "slug": "jharsuguda",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk2gy00bmosffpn4ha7xd",
+    "name": "Kalahandi",
+    "slug": "kalahandi",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk3cv00brosffcxu92inh",
+    "name": "Kandhamal",
+    "slug": "kandhamal",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbk1ep00bgosff1wi2i1ya",
+    "name": "Kendrapara",
+    "slug": "kendrapara",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbjz9o00b4osffp8mhq1bx",
+    "name": "Kendujhar",
+    "slug": "kendujhar",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk11j00beosffy87e2ifn",
+    "name": "Khordha",
+    "slug": "khordha",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 14,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk2tm00boosff3dqk59ex",
+    "name": "Koraput",
+    "slug": "koraput",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk2zz00bposffpjresptq",
+    "name": "Malkangiri",
+    "slug": "malkangiri",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubiegx00081h8ffyi8mzk3i",
+    "name": "Mandi",
+    "slug": "mandi",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjzg200b5osffwbz2u5e2",
+    "name": "Mayurbhanj",
+    "slug": "mayurbhanj",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiefmw007uh8ffwtxpum9n",
+    "name": "NTR",
+    "slug": "ntr",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 8,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk2am00blosffbumu4h53",
+    "name": "Nabarangpur",
+    "slug": "nabarangpur",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbk36b00bqosff5stwb7ex",
+    "name": "Nayagarh",
+    "slug": "nayagarh",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbk2na00bnosffihzv4o8j",
+    "name": "Nuapada",
+    "slug": "nuapada",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubiefg4007th8ff6m3u9z1q",
+    "name": "Odisha Central",
+    "slug": "odisha-central",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbk1l400bhosff5ylx361j",
+    "name": "Puri",
+    "slug": "puri",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiefzz007wh8fff3p3zaqj",
+    "name": "Ranchi",
+    "slug": "ranchi",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 10,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk24a00bkosff1o2ct4sc",
+    "name": "Rayagada",
+    "slug": "rayagada",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbjyns00b1osff6y1px8lk",
+    "name": "Sambalpur",
+    "slug": "sambalpur",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbk0c000baosffooojakxg",
+    "name": "Subarnapur",
+    "slug": "subarnapur",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbjz3b00b3osffzjusznwc",
+    "name": "Sundargarh",
+    "slug": "sundargarh",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiegcz007yh8fff24k6vpd",
+    "name": "Una",
+    "slug": "una",
+    "stateCode": "OD",
+    "stateName": "Odisha",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbltjo00laosffha68vdlo",
+    "name": "Karaikal",
+    "slug": "karaikal",
+    "stateCode": "PY",
+    "stateName": "Puducherry",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbltq000lbosffxii6frqn",
+    "name": "Mahe",
+    "slug": "mahe",
+    "stateCode": "PY",
+    "stateName": "Puducherry",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidrkr004bh8ffbho2cc2v",
+    "name": "NTR",
+    "slug": "ntr",
+    "stateCode": "PY",
+    "stateName": "Puducherry",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbltdb00l9osffxcyiba33",
+    "name": "Puducherry",
+    "slug": "puducherry",
+    "stateCode": "PY",
+    "stateName": "Puducherry",
+    "templeCount": 12,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidre6004ah8ffh09qgwwl",
+    "name": "Puducherry Central",
+    "slug": "puducherry-central",
+    "stateCode": "PY",
+    "stateName": "Puducherry",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubidrrw004ch8ffm8co1gd2",
+    "name": "Viluppuram",
+    "slug": "viluppuram",
+    "stateCode": "PY",
+    "stateName": "Puducherry",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbltwc00lcosffyp8uktoh",
+    "name": "Yanam",
+    "slug": "yanam",
+    "stateCode": "PY",
+    "stateName": "Puducherry",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbkvft00g0osffrabv95st",
+    "name": "Amritsar",
+    "slug": "amritsar",
+    "stateCode": "PB",
+    "stateName": "Punjab",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkyvb00gjosffs0gfp0d9",
+    "name": "Barnala",
+    "slug": "barnala",
+    "stateCode": "PB",
+    "stateName": "Punjab",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbky5e00gfosffl9euebwg",
+    "name": "Bathinda",
+    "slug": "bathinda",
+    "stateCode": "PB",
+    "stateName": "Punjab",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubieafu0072h8ff8vfsos80",
+    "name": "Chandigarh",
+    "slug": "chandigarh",
+    "stateCode": "PB",
+    "stateName": "Punjab",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkxsq00gdosff7yqfpo40",
+    "name": "Faridkot",
+    "slug": "faridkot",
+    "stateCode": "PB",
+    "stateName": "Punjab",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbkx3e00g9osff5aalb1n8",
+    "name": "Fatehgarh Sahib",
+    "slug": "fatehgarh-sahib",
+    "stateCode": "PB",
+    "stateName": "Punjab",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbkxg200gbosffnet1qu35",
+    "name": "Fazilka",
+    "slug": "fazilka",
+    "stateCode": "PB",
+    "stateName": "Punjab",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbkxmd00gcosffyr2x4w4q",
+    "name": "Ferozepur",
+    "slug": "ferozepur",
+    "stateCode": "PB",
+    "stateName": "Punjab",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbkv8o00fzosffsvp6d5ku",
+    "name": "Gurdaspur",
+    "slug": "gurdaspur",
+    "stateCode": "PB",
+    "stateName": "Punjab",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkwbm00g5osff1z1ambs4",
+    "name": "Hoshiarpur",
+    "slug": "hoshiarpur",
+    "stateCode": "PB",
+    "stateName": "Punjab",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkvyy00g3osffadvc55ud",
+    "name": "Jalandhar",
+    "slug": "jalandhar",
+    "stateCode": "PB",
+    "stateName": "Punjab",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkvsj00g2osffrf75zltx",
+    "name": "Kapurthala",
+    "slug": "kapurthala",
+    "stateCode": "PB",
+    "stateName": "Punjab",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiea9e0071h8ffq06lh3s5",
+    "name": "Krishna",
+    "slug": "krishna",
+    "stateCode": "PB",
+    "stateName": "Punjab",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkwvi00g8osffeqpyr240",
+    "name": "Ludhiana",
+    "slug": "ludhiana",
+    "stateCode": "PB",
+    "stateName": "Punjab",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiea2m0070h8ffg0fw2nhg",
+    "name": "Mandi",
+    "slug": "mandi",
+    "stateCode": "PB",
+    "stateName": "Punjab",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkyc300ggosffpcxdqqo7",
+    "name": "Mansa",
+    "slug": "mansa",
+    "stateCode": "PB",
+    "stateName": "Punjab",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbkx9q00gaosffvevy1off",
+    "name": "Moga",
+    "slug": "moga",
+    "stateCode": "PB",
+    "stateName": "Punjab",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubie9w5006zh8ff8f739nke",
+    "name": "NTR",
+    "slug": "ntr",
+    "stateCode": "PB",
+    "stateName": "Punjab",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkv2b00fyosffg9lbfpqf",
+    "name": "Pathankot",
+    "slug": "pathankot",
+    "stateCode": "PB",
+    "stateName": "Punjab",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkyov00giosfflwyb3tmk",
+    "name": "Patiala",
+    "slug": "patiala",
+    "stateCode": "PB",
+    "stateName": "Punjab",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkwhy00g6osff3xn3aw6o",
+    "name": "Rupnagar",
+    "slug": "rupnagar",
+    "stateCode": "PB",
+    "stateName": "Punjab",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkwp400g7osff5bhm6ixc",
+    "name": "SAS Nagar",
+    "slug": "sas-nagar",
+    "stateCode": "PB",
+    "stateName": "Punjab",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbkw5a00g4osffucq991wi",
+    "name": "SBS Nagar",
+    "slug": "sbs-nagar",
+    "stateCode": "PB",
+    "stateName": "Punjab",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbkyih00ghosffiigsejy6",
+    "name": "Sangrur",
+    "slug": "sangrur",
+    "stateCode": "PB",
+    "stateName": "Punjab",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbkxz200geosffmttzmvdj",
+    "name": "Sri Muktsar Sahib",
+    "slug": "sri-muktsar-sahib",
+    "stateCode": "PB",
+    "stateName": "Punjab",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbkvm600g1osffr9k5xo20",
+    "name": "Tarn Taran",
+    "slug": "tarn-taran",
+    "stateCode": "PB",
+    "stateName": "Punjab",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubieat60074h8ffpwyjmhjz",
+    "name": "Una",
+    "slug": "una",
+    "stateCode": "PB",
+    "stateName": "Punjab",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj3jj006hosffo42up7ig",
+    "name": "Ajmer",
+    "slug": "ajmer",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj2h8006bosffv546hwod",
+    "name": "Alwar",
+    "slug": "alwar",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubie46f0065h8ffm5pbo0sv",
+    "name": "Balotra",
+    "slug": "balotra",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj4x6006oosff6msqbd36",
+    "name": "Banswara",
+    "slug": "banswara",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj6qe006wosffyra5eq1o",
+    "name": "Baran",
+    "slug": "baran",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj4ia006mosffsbk6wr5j",
+    "name": "Barmer",
+    "slug": "barmer",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj2nl006cosff7al6u04a",
+    "name": "Bharatpur",
+    "slug": "bharatpur",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbj60r006tosff0murlc1n",
+    "name": "Bhilwara",
+    "slug": "bhilwara",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubie253005uh8fffoh8guyr",
+    "name": "Bhopal",
+    "slug": "bhopal",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj1lg0066osfft7e4bqfm",
+    "name": "Bikaner",
+    "slug": "bikaner",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 9,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj68w006uosff8o3erly2",
+    "name": "Bundi",
+    "slug": "bundi",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubieznx00ash8ffg1judo0r",
+    "name": "Chittaurgarh",
+    "slug": "chittaurgarh",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj5sk006sosffx05v61r2",
+    "name": "Chittorgarh",
+    "slug": "chittorgarh",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj1rs0067osffla85n998",
+    "name": "Churu",
+    "slug": "churu",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj3d5006gosffz4h8712s",
+    "name": "Dausa",
+    "slug": "dausa",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj2tx006dosffxvm2q03b",
+    "name": "Dholpur",
+    "slug": "dholpur",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj554006posffa1pdp5t2",
+    "name": "Dungarpur",
+    "slug": "dungarpur",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj18n0064osfftwgdra7h",
+    "name": "Ganganagar",
+    "slug": "ganganagar",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj1ez0065osffnh00hwfn",
+    "name": "Hanumangarh",
+    "slug": "hanumangarh",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj2aw006aosff639796uy",
+    "name": "Jaipur",
+    "slug": "jaipur",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 7,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj4qt006nosffk4ltwics",
+    "name": "Jaisalmer",
+    "slug": "jaisalmer",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj7k00070osffu7by9aq2",
+    "name": "Jalore",
+    "slug": "jalore",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbj6yj006xosff285u8a3m",
+    "name": "Jhalawar",
+    "slug": "jhalawar",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbj1y50068osffjh7tzu3j",
+    "name": "Jhunjhunu",
+    "slug": "jhunjhunu",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbj49y006losffuebzlglr",
+    "name": "Jodhpur",
+    "slug": "jodhpur",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj30e006eosffd5krgj7i",
+    "name": "Karauli",
+    "slug": "karauli",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbj6hg006vosffgfig4qvw",
+    "name": "Kota",
+    "slug": "kota",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubie2bl005vh8ffplh5o6m7",
+    "name": "Krishna",
+    "slug": "krishna",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubie3zt0064h8ff4omy8shh",
+    "name": "Mandi",
+    "slug": "mandi",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubie1ym005th8ff01nl3c8d",
+    "name": "NTR",
+    "slug": "ntr",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj3wc006josffsgr7z0mk",
+    "name": "Nagaur",
+    "slug": "nagaur",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj42p006kosffpprfextv",
+    "name": "Pali",
+    "slug": "pali",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubie4pv0068h8ffqd7ih0bh",
+    "name": "Patan",
+    "slug": "patan",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj773006yosffojh3u2db",
+    "name": "Pratapgarh",
+    "slug": "pratapgarh",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubie1ru005sh8ffptxwz1z5",
+    "name": "Rajasthan Central",
+    "slug": "rajasthan-central",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbj5m8006rosffrjuswlf6",
+    "name": "Rajsamand",
+    "slug": "rajsamand",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj36s006fosffm7q60clx",
+    "name": "Sawai Madhopur",
+    "slug": "sawai-madhopur",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj24j0069osffkg72uus3",
+    "name": "Sikar",
+    "slug": "sikar",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj7dg006zosffuei0jlyj",
+    "name": "Sirohi",
+    "slug": "sirohi",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj3pz006iosffgyvlgmcw",
+    "name": "Tonk",
+    "slug": "tonk",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj5ds006qosff8htfta0c",
+    "name": "Udaipur",
+    "slug": "udaipur",
+    "stateCode": "RJ",
+    "stateName": "Rajasthan",
+    "templeCount": 15,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbllrq00k3osffqp7duwiz",
+    "name": "Gangtok",
+    "slug": "gangtok",
+    "stateCode": "SK",
+    "stateName": "Sikkim",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblm4e00k5osff3k5sa660",
+    "name": "Gyalshing",
+    "slug": "gyalshing",
+    "stateCode": "SK",
+    "stateName": "Sikkim",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubieotj0097h8ffq6nl1uib",
+    "name": "Mandi",
+    "slug": "mandi",
+    "stateCode": "SK",
+    "stateName": "Sikkim",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbllle00k2osffoc6ot7vr",
+    "name": "Mangan",
+    "slug": "mangan",
+    "stateCode": "SK",
+    "stateName": "Sikkim",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiep000098h8ffmfxj6do3",
+    "name": "NTR",
+    "slug": "ntr",
+    "stateCode": "SK",
+    "stateName": "Sikkim",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubblly200k4osff3fzhn4qe",
+    "name": "Namchi",
+    "slug": "namchi",
+    "stateCode": "SK",
+    "stateName": "Sikkim",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblmh200k7osffqk2ltew5",
+    "name": "Pakyong",
+    "slug": "pakyong",
+    "stateCode": "SK",
+    "stateName": "Sikkim",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubblmaq00k6osffvz22ez88",
+    "name": "Soreng",
+    "slug": "soreng",
+    "stateCode": "SK",
+    "stateName": "Sikkim",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbid9l002eosfffdat6kw2",
+    "name": "Ariyalur",
+    "slug": "ariyalur",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi9hj001tosffvuyv03mt",
+    "name": "Chengalpattu",
+    "slug": "chengalpattu",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 13,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi9ap001sosffresn7r90",
+    "name": "Chennai",
+    "slug": "chennai",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 20,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbicd40029osffhmxnlqd0",
+    "name": "Coimbatore",
+    "slug": "coimbatore",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidj4f0033h8ff20rbv1p1",
+    "name": "Cuddalore",
+    "slug": "cuddalore",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiba90023osfffue60zlk",
+    "name": "Dharmapuri",
+    "slug": "dharmapuri",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbicjo002aosff1hphkck2",
+    "name": "Dindigul",
+    "slug": "dindigul",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbibte0026osffkoh7gri5",
+    "name": "Erode",
+    "slug": "erode",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi9o0001uosffknfkggr6",
+    "name": "Kanchipuram",
+    "slug": "kanchipuram",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 13,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbifln002rosff4w0u2flu",
+    "name": "Kanniyakumari",
+    "slug": "kanniyakumari",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidh7c002th8ffg0ppb5v2",
+    "name": "Kanyakumari",
+    "slug": "kanyakumari",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbicq4002bosffiq7pg398",
+    "name": "Karur",
+    "slug": "karur",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbibgm0024osff1j6vewvb",
+    "name": "Krishnagiri",
+    "slug": "krishnagiri",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbiew5002nosff8c4p2617",
+    "name": "Madurai",
+    "slug": "madurai",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 8,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbidso002hosffg0dr2ozv",
+    "name": "Mayiladuthurai",
+    "slug": "mayiladuthurai",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidgdf002ph8ff234760t4",
+    "name": "NTR",
+    "slug": "ntr",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 7,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbidma002gosffierflwh2",
+    "name": "Nagapattinam",
+    "slug": "nagapattinam",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbibn10025osff7pru6etw",
+    "name": "Namakkal",
+    "slug": "namakkal",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbid2u002dosffxf0scx9j",
+    "name": "Perambalur",
+    "slug": "perambalur",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubieslz009qh8ffmovniufv",
+    "name": "Perumbalur",
+    "slug": "perumbalur",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbie6e002josffn0pg8jbo",
+    "name": "Pudukkottai",
+    "slug": "pudukkottai",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubidfym002nh8ffde5o9abz",
+    "name": "Puri",
+    "slug": "puri",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiejb002losffmgoodo03",
+    "name": "Ramanathapuram",
+    "slug": "ramanathapuram",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbia0s001wosffzky5t5y0",
+    "name": "Ranipet",
+    "slug": "ranipet",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbib3w0022osffkydygkhl",
+    "name": "Salem",
+    "slug": "salem",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiecz002kosff5euu8tqm",
+    "name": "Sivaganga",
+    "slug": "sivaganga",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidg6x002oh8ff0j1ag6mc",
+    "name": "Tamil Nadu Central",
+    "slug": "tamil-nadu-central",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbif2j002oosfftzup9eoj",
+    "name": "Tenkasi",
+    "slug": "tenkasi",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbidfx002fosff3euu63ml",
+    "name": "Thanjavur",
+    "slug": "thanjavur",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 13,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbic650028osff94hnxlqg",
+    "name": "The Nilgiris",
+    "slug": "the-nilgiris",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbiako001zosff1blsnrtp",
+    "name": "Thiruvannamalai",
+    "slug": "thiruvannamalai",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbidzy002iosffa8a66ccz",
+    "name": "Thiruvarur",
+    "slug": "thiruvarur",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbiff9002qosfftht77it7",
+    "name": "Thoothukudi",
+    "slug": "thoothukudi",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbicwh002cosffgfxu180f",
+    "name": "Tiruchirappalli",
+    "slug": "tiruchirappalli",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbif8w002posff4r9coz4a",
+    "name": "Tirunelveli",
+    "slug": "tirunelveli",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiae6001yosff87jqb30u",
+    "name": "Tirupathur",
+    "slug": "tirupathur",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbibzr0027osff2dd2k7fr",
+    "name": "Tiruppur",
+    "slug": "tiruppur",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbi9ue001vosffgop18zsg",
+    "name": "Tiruvallur",
+    "slug": "tiruvallur",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 11,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidk1l0038h8ff69w8g1ad",
+    "name": "Tiruvannamalai",
+    "slug": "tiruvannamalai",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidh0u002sh8ffvrpx9jsw",
+    "name": "Tiruvarur",
+    "slug": "tiruvarur",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidhtb002wh8ffcaftu92a",
+    "name": "Una",
+    "slug": "una",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbia7j001xosffpbo8nooe",
+    "name": "Vellore",
+    "slug": "vellore",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 8,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiar70020osffpoqsx0s5",
+    "name": "Villupuram",
+    "slug": "villupuram",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubidika0030h8ff8zxvz7cs",
+    "name": "Viluppuram",
+    "slug": "viluppuram",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 9,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiepo002mosffk0lwqjse",
+    "name": "Virudhunagar",
+    "slug": "virudhunagar",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbiaxk0021osffrv754ata",
+    "name": "kallakurichi",
+    "slug": "kallakurichi",
+    "stateCode": "TN",
+    "stateName": "Tamil Nadu",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi3kz000wosffjz37yi1u",
+    "name": "Adilabad",
+    "slug": "adilabad",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi56y0015osffrh45aoax",
+    "name": "Bhadradri Kothagudem",
+    "slug": "bhadradri-kothagudem",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi7uu001kosffl6uhaxst",
+    "name": "Gadwal Jogulamba",
+    "slug": "gadwal-jogulamba",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi5q20018osffr4b23v0c",
+    "name": "Hanumakonda",
+    "slug": "hanumakonda",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi6m0001dosff6xbyq7om",
+    "name": "Hyderabad",
+    "slug": "hyderabad",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 8,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi4hk0011osffdtjsdg3i",
+    "name": "Jagtial",
+    "slug": "jagtial",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi5we0019osffuwo8pteh",
+    "name": "Jangaon",
+    "slug": "jangaon",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi50l0014osff5ozfauoy",
+    "name": "Jayashankar Bhupalpally",
+    "slug": "jayashankar-bhupalpally",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi44t000zosffac18y4ni",
+    "name": "Kamareddy",
+    "slug": "kamareddy",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi4u80013osff1al69y8d",
+    "name": "Karimnagar",
+    "slug": "karimnagar",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi8eb001nosff8ilmac78",
+    "name": "Khammam",
+    "slug": "khammam",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidf18002ih8ffnl999gg5",
+    "name": "Krishna",
+    "slug": "krishna",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 9,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi388000uosffzmlmj7t2",
+    "name": "Kumuram Bheem Asifabad",
+    "slug": "kumuram-bheem-asifabad",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubideo3002gh8ffxsk1clfs",
+    "name": "Kurnool",
+    "slug": "kurnool",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi8xt001qosff1n97kxfh",
+    "name": "Mahaboobabad",
+    "slug": "mahaboobabad",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi7bi001hosffcb50w4im",
+    "name": "Mahabubnagar",
+    "slug": "mahabubnagar",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi3em000vosffhy4qedo0",
+    "name": "Mancherial",
+    "slug": "mancherial",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi694001bosff5iza4khk",
+    "name": "Medak",
+    "slug": "medak",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi6fi001cosff5nuvwj8k",
+    "name": "Medchal-Malkajgiri",
+    "slug": "medchal-malkajgiri",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi5db0016osffg6b4y90j",
+    "name": "Mulugu",
+    "slug": "mulugu",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidf8c002jh8ffi9u9z0at",
+    "name": "NTR",
+    "slug": "ntr",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi81i001losff4j04qho2",
+    "name": "Nagarkurnool",
+    "slug": "nagarkurnool",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi8kt001oosffpnoj0ltp",
+    "name": "Nalgonda",
+    "slug": "nalgonda",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi7hv001iosffa63y4f4q",
+    "name": "Narayanpet",
+    "slug": "narayanpet",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi3rc000xosffuqqeji81",
+    "name": "Nirmal",
+    "slug": "nirmal",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi3yc000yosffummsrsj6",
+    "name": "Nizamabad",
+    "slug": "nizamabad",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi4nw0012osfflm7onwkt",
+    "name": "Peddapalli",
+    "slug": "peddapalli",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi4b60010osffm7yx8kc4",
+    "name": "Rajanna Sircilla",
+    "slug": "rajanna-sircilla",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi6sd001eosffszztt2bq",
+    "name": "Rangareddy",
+    "slug": "rangareddy",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi755001gosffpsfy5wor",
+    "name": "Sangareddy",
+    "slug": "sangareddy",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi62r001aosffx0q7csa0",
+    "name": "Siddipet",
+    "slug": "siddipet",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi87x001mosffq6ccz08y",
+    "name": "Suryapet",
+    "slug": "suryapet",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubidfet002kh8ffv2uuvnxk",
+    "name": "Telangana Central",
+    "slug": "telangana-central",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbi6yr001fosffsrp9apeh",
+    "name": "Vikarabad",
+    "slug": "vikarabad",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi7oc001josff5eqvoyph",
+    "name": "Wanaparthy",
+    "slug": "wanaparthy",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi5jo0017osffa7d4l6a9",
+    "name": "Warangal",
+    "slug": "warangal",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubievsi00a7h8ff58shre56",
+    "name": "Warangal district",
+    "slug": "warangal-district",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbi8rg001posff7xgm072y",
+    "name": "Yadadri Bhuvanagiri",
+    "slug": "yadadri-bhuvanagiri",
+    "stateCode": "TS",
+    "stateName": "Telangana",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl5qp00hlosffdtvjp2mq",
+    "name": "Dhalai",
+    "slug": "dhalai",
+    "stateCode": "TR",
+    "stateName": "Tripura",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbl6as00hoosff6iu4iyn4",
+    "name": "Gomati",
+    "slug": "gomati",
+    "stateCode": "TR",
+    "stateName": "Tripura",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl5kd00hkosffoehcje7j",
+    "name": "Khowai",
+    "slug": "khowai",
+    "stateCode": "TR",
+    "stateName": "Tripura",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubieo980094h8ffmmcoifcd",
+    "name": "Krishna",
+    "slug": "krishna",
+    "stateCode": "TR",
+    "stateName": "Tripura",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubieofp0095h8ffeg7wa76v",
+    "name": "NTR",
+    "slug": "ntr",
+    "stateCode": "TR",
+    "stateName": "Tripura",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbl64f00hnosffn6zmaasy",
+    "name": "North Tripura",
+    "slug": "north-tripura",
+    "stateCode": "TR",
+    "stateName": "Tripura",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbl5du00hjosffi803yf82",
+    "name": "Sepahijala",
+    "slug": "sepahijala",
+    "stateCode": "TR",
+    "stateName": "Tripura",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbl6h400hposff1v53s6qz",
+    "name": "South Tripura",
+    "slug": "south-tripura",
+    "stateCode": "TR",
+    "stateName": "Tripura",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubieo2s0093h8ffln636ca0",
+    "name": "Tripura Central",
+    "slug": "tripura-central",
+    "stateCode": "TR",
+    "stateName": "Tripura",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbl5xz00hmosff6r05xgxc",
+    "name": "Unakoti",
+    "slug": "unakoti",
+    "stateCode": "TR",
+    "stateName": "Tripura",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbl57i00hiosff4hurfl0f",
+    "name": "West Tripura",
+    "slug": "west-tripura",
+    "stateCode": "TR",
+    "stateName": "Tripura",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjlr40091osff78s90a13",
+    "name": "Agra",
+    "slug": "agra",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjl7x008yosffipc8vyc6",
+    "name": "Aligarh",
+    "slug": "aligarh",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjgli008cosffb984sjn7",
+    "name": "Amethi",
+    "slug": "amethi",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj95j0079osfftaswat0m",
+    "name": "Amroha",
+    "slug": "amroha",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjivz008mosffgdnvk4z7",
+    "name": "Auraiya",
+    "slug": "auraiya",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjh2n008eosffqghxb5rg",
+    "name": "Ayodhya",
+    "slug": "ayodhya",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjdr8007yosffjbg9vb4z",
+    "name": "Azamgarh",
+    "slug": "azamgarh",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbja19007eosff3u7655on",
+    "name": "Baghpat",
+    "slug": "baghpat",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjbt4007nosffqo1s6cmm",
+    "name": "Bahraich",
+    "slug": "bahraich",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbje3w0080osffr3b1f0d4",
+    "name": "Ballia",
+    "slug": "ballia",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjc5x007posffwjh07h4u",
+    "name": "Balrampur",
+    "slug": "balrampur",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjjst008qosff8c2dmuxp",
+    "name": "Banda",
+    "slug": "banda",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjh9m008fosffwerd6e0l",
+    "name": "Bara Banki",
+    "slug": "bara-banki",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubie74u006kh8ff70pdd8ku",
+    "name": "Barabanki",
+    "slug": "barabanki",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjae1007gosff2bsu8gh2",
+    "name": "Bareilly",
+    "slug": "bareilly",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjcoz007sosffpy7jzsn8",
+    "name": "Basti",
+    "slug": "basti",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj8fu0075osffiv27guez",
+    "name": "Bijnor",
+    "slug": "bijnor",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjasl007iosffuylr4ud1",
+    "name": "Budaun",
+    "slug": "budaun",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubif0rx00ayh8ffkgar1y12",
+    "name": "Bulandshahr",
+    "slug": "bulandshahr",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjeh20082osffkw56xlpk",
+    "name": "Chandauli",
+    "slug": "chandauli",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjjz6008rosffl6gutl1b",
+    "name": "Chitrakoot",
+    "slug": "chitrakoot",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjdkw007xosffwwf3aq96",
+    "name": "Deoria",
+    "slug": "deoria",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjki8008uosffm2orxkdg",
+    "name": "Etah",
+    "slug": "etah",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjimt008losffdsa3oeel",
+    "name": "Etawah",
+    "slug": "etawah",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjkuz008wosff5svnqsea",
+    "name": "Farrukhabad",
+    "slug": "farrukhabad",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjfyt0089osffpi6gcpks",
+    "name": "Fatehpur",
+    "slug": "fatehpur",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjk5i008sosffkvpi0hny",
+    "name": "Firozabad",
+    "slug": "firozabad",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj9uy007dosffazhett9w",
+    "name": "Gautam Buddha Nagar",
+    "slug": "gautam-buddha-nagar",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubie6x7006jh8ff7ziiziww",
+    "name": "Gaya",
+    "slug": "gaya",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj9ok007cosffeago1hn4",
+    "name": "Ghaziabad",
+    "slug": "ghaziabad",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjead0081osffqx35owv7",
+    "name": "Ghazipur",
+    "slug": "ghazipur",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjcc9007qosfffb6iguyp",
+    "name": "Gonda",
+    "slug": "gonda",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjd87007vosffxcwond59",
+    "name": "Gorakhpur",
+    "slug": "gorakhpur",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjjdu008oosffeymuvx8a",
+    "name": "Hamirpur",
+    "slug": "hamirpur",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj9i7007bosffvtlz3sqf",
+    "name": "Hapur",
+    "slug": "hapur",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjbeg007losffag52znj2",
+    "name": "Hardoi",
+    "slug": "hardoi",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjled008zosff17dos6n6",
+    "name": "Hathras",
+    "slug": "hathras",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubie5v3006eh8ffz1d6xc12",
+    "name": "Jabalpur",
+    "slug": "jabalpur",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjj4o008nosffpqwrbhit",
+    "name": "Jalaun",
+    "slug": "jalaun",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjf030085osffwg5v60v0",
+    "name": "Jaunpur",
+    "slug": "jaunpur",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj9bv007aosffhria5x5i",
+    "name": "Jyotiba Phule Nagar",
+    "slug": "jyotiba-phule-nagar",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjkon008vosff3em96cb9",
+    "name": "Kannauj",
+    "slug": "kannauj",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjifn008kosffm0yj8rp5",
+    "name": "Kanpur Dehat",
+    "slug": "kanpur-dehat",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbji9a008josffkatcoyql",
+    "name": "Kanpur Nagar",
+    "slug": "kanpur-nagar",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjl1k008xosff05n4koxp",
+    "name": "Kasganj",
+    "slug": "kasganj",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjgd1008bosffc787w5td",
+    "name": "Kaushambi",
+    "slug": "kaushambi",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubie69y006gh8ffoxyv200y",
+    "name": "Krishna",
+    "slug": "krishna",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjdej007wosff1up8tfp0",
+    "name": "Kushinagar",
+    "slug": "kushinagar",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjb5k007kosffylgzuinu",
+    "name": "Lakhimpur Kheri",
+    "slug": "lakhimpur-kheri",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjhjz008gosffmmxlfjkm",
+    "name": "Lucknow",
+    "slug": "lucknow",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjlks0090osffml0t2n52",
+    "name": "Mahamaya Nagar",
+    "slug": "mahamaya-nagar",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjd1u007uosffxig9uqx9",
+    "name": "Maharajganj",
+    "slug": "maharajganj",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjjmd008posffaxm1gejq",
+    "name": "Mahoba",
+    "slug": "mahoba",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjkbw008tosffndq99b8q",
+    "name": "Mainpuri",
+    "slug": "mainpuri",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubie5oo006dh8ffwni4huur",
+    "name": "Mandi",
+    "slug": "mandi",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjlxh0092osffzcdpky88",
+    "name": "Mathura",
+    "slug": "mathura",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 11,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjdxk007zosffthj8om5m",
+    "name": "Mau",
+    "slug": "mau",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbja7p007fosffiztzmr0l",
+    "name": "Meerut",
+    "slug": "meerut",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjfhr0087osffc251yszw",
+    "name": "Mirzapur",
+    "slug": "mirzapur",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj8m90076osffki07263g",
+    "name": "Moradabad",
+    "slug": "moradabad",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj8350073osffnjq892ha",
+    "name": "Muzaffarnagar",
+    "slug": "muzaffarnagar",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubie5aq006bh8ffeyphnmrx",
+    "name": "NTR",
+    "slug": "ntr",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjalp007hosfffzkbpimi",
+    "name": "Pilibhit",
+    "slug": "pilibhit",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjg55008aosffml31g7ri",
+    "name": "Pratapgarh",
+    "slug": "pratapgarh",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjfq90088osffdp0b9x6g",
+    "name": "Prayagraj",
+    "slug": "prayagraj",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbji0u008iosffp46kk6t0",
+    "name": "Rae Bareli",
+    "slug": "rae-bareli",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubie6ha006hh8ff8xdnv7pu",
+    "name": "Raipur",
+    "slug": "raipur",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj8z10078osff22zz3pag",
+    "name": "Rampur",
+    "slug": "rampur",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj7ws0072osff3kxgul79",
+    "name": "Saharanpur",
+    "slug": "saharanpur",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj8sl0077osffa8sy1pjq",
+    "name": "Sambhal",
+    "slug": "sambhal",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjcvc007tosffetx7tjkf",
+    "name": "Sant Kabir Nagar",
+    "slug": "sant-kabir-nagar",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjetr0084osffeg8xl00s",
+    "name": "Sant Ravidas Nagar",
+    "slug": "sant-ravidas-nagar",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjayz007josff6kpmqd4j",
+    "name": "Shahjahanpur",
+    "slug": "shahjahanpur",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbj89i0074osffpbfyvhku",
+    "name": "Shamli",
+    "slug": "shamli",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjbzl007oosffxe3wox8z",
+    "name": "Shravasti",
+    "slug": "shravasti",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjcim007rosffoqksx3vd",
+    "name": "Siddharth Nagar",
+    "slug": "siddharth-nagar",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjbkw007mosffe3a8kykj",
+    "name": "Sitapur",
+    "slug": "sitapur",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjf8z0086osffwi4c1wgr",
+    "name": "Sonbhadra",
+    "slug": "sonbhadra",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjgu6008dosffrtvxgsg0",
+    "name": "Sultanpur",
+    "slug": "sultanpur",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjhs5008hosffg8v4u2s0",
+    "name": "Unnao",
+    "slug": "unnao",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubie61g006fh8fftcmygfrg",
+    "name": "Uttar Pradesh Central",
+    "slug": "uttar-pradesh-central",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbjene0083osffspunvcrj",
+    "name": "Varanasi",
+    "slug": "varanasi",
+    "stateCode": "UP",
+    "stateName": "Uttar Pradesh",
+    "templeCount": 11,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjnpm009cosffra4nmmtq",
+    "name": "Almora",
+    "slug": "almora",
+    "stateCode": "UK",
+    "stateName": "Uttarakhand",
+    "templeCount": 7,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjnja009bosfff50tmi6o",
+    "name": "Bageshwar",
+    "slug": "bageshwar",
+    "stateCode": "UK",
+    "stateName": "Uttarakhand",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbjmgv0095osffku0tieta",
+    "name": "Chamoli",
+    "slug": "chamoli",
+    "stateCode": "UK",
+    "stateName": "Uttarakhand",
+    "templeCount": 8,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjnvy009dosffhj1xxzdt",
+    "name": "Champawat",
+    "slug": "champawat",
+    "stateCode": "UK",
+    "stateName": "Uttarakhand",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbjn060098osff6k2dk28n",
+    "name": "Dehradun",
+    "slug": "dehradun",
+    "stateCode": "UK",
+    "stateName": "Uttarakhand",
+    "templeCount": 7,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubie7br006lh8ff1cfin592",
+    "name": "Gomati",
+    "slug": "gomati",
+    "stateCode": "UK",
+    "stateName": "Uttarakhand",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjof0009gosff7kabpbzj",
+    "name": "Haridwar",
+    "slug": "haridwar",
+    "stateCode": "UK",
+    "stateName": "Uttarakhand",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubie7p3006nh8ffna9jg7gb",
+    "name": "NTR",
+    "slug": "ntr",
+    "stateCode": "UK",
+    "stateName": "Uttarakhand",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjo2b009eosffcy3l0ebr",
+    "name": "Nainital",
+    "slug": "nainital",
+    "stateCode": "UK",
+    "stateName": "Uttarakhand",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjn6j0099osfff8j7vm5d",
+    "name": "Pauri Garhwal",
+    "slug": "pauri-garhwal",
+    "stateCode": "UK",
+    "stateName": "Uttarakhand",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjncy009aosffaq703d8s",
+    "name": "Pithoragarh",
+    "slug": "pithoragarh",
+    "stateCode": "UK",
+    "stateName": "Uttarakhand",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjmn80096osff44g0600z",
+    "name": "Rudraprayag",
+    "slug": "rudraprayag",
+    "stateCode": "UK",
+    "stateName": "Uttarakhand",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubie82l006ph8ff6ai3vgrt",
+    "name": "Srinagar",
+    "slug": "srinagar",
+    "stateCode": "UK",
+    "stateName": "Uttarakhand",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjmtk0097osffsw2v2s0b",
+    "name": "Tehri Garhwal",
+    "slug": "tehri-garhwal",
+    "stateCode": "UK",
+    "stateName": "Uttarakhand",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbjo8o009fosfflf7jqs2l",
+    "name": "Udham Singh Nagar",
+    "slug": "udham-singh-nagar",
+    "stateCode": "UK",
+    "stateName": "Uttarakhand",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubie7im006mh8ffy732egqn",
+    "name": "Uttarakhand Central",
+    "slug": "uttarakhand-central",
+    "stateCode": "UK",
+    "stateName": "Uttarakhand",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbjmaj0094osffnmmkkiev",
+    "name": "Uttarkashi",
+    "slug": "uttarkashi",
+    "stateCode": "UK",
+    "stateName": "Uttarakhand",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubif3py00beh8ffw033lq12",
+    "name": "24 Parganas (North)",
+    "slug": "24-parganas-north",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkg1y00doosffrm2cvv1g",
+    "name": "Alipurduar",
+    "slug": "alipurduar",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbkh6s00duosff61q53n8g",
+    "name": "Baharampur",
+    "slug": "baharampur",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbkiuc00e3osffpc3uw3yi",
+    "name": "Bankura",
+    "slug": "bankura",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 20,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkhf400dvosff1gt9xfh5",
+    "name": "Birbhum",
+    "slug": "birbhum",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 8,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkg8a00dposffd35qcpvu",
+    "name": "Cooch Behar",
+    "slug": "cooch-behar",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbkgkz00drosffn97h1fyv",
+    "name": "Dakshin Dinajpur",
+    "slug": "dakshin-dinajpur",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkfiq00dlosff2o1uh0jr",
+    "name": "Darjeeling",
+    "slug": "darjeeling",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 8,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkib100e0osffnqtlachl",
+    "name": "Hooghly",
+    "slug": "hooghly",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbki4n00dzosff235d2zti",
+    "name": "Howrah",
+    "slug": "howrah",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkfvf00dnosff97voi8e0",
+    "name": "Jalpaiguri",
+    "slug": "jalpaiguri",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 5,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkj7400e5osffwxsokpuo",
+    "name": "Jhargram",
+    "slug": "jhargram",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkfp300dmosffml5c4kr0",
+    "name": "Kalimpong",
+    "slug": "kalimpong",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 0,
+    "hasTemples": false
+  },
+  {
+    "id": "cmubbkjqi00e8osffq5fjo5qh",
+    "name": "Kolkata",
+    "slug": "kolkata",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 7,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiei290087h8ffv0cfizj3",
+    "name": "Krishna",
+    "slug": "krishna",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkgrc00dsosffsnj5ie6c",
+    "name": "Malda",
+    "slug": "malda",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiehvi0086h8ff8yogq0rp",
+    "name": "Mandi",
+    "slug": "mandi",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkh0g00dtosff2r2526fq",
+    "name": "Murshidabad",
+    "slug": "murshidabad",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiei8q0088h8ffz6hc14n1",
+    "name": "NTR",
+    "slug": "ntr",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkhlg00dwosffhkcw2yfc",
+    "name": "Nadia",
+    "slug": "nadia",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 6,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkhrs00dxosffoey7v3b8",
+    "name": "North 24 Parganas",
+    "slug": "north-24-parganas",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkinu00e2osffkbjy0xxu",
+    "name": "Paschim Bardhaman",
+    "slug": "paschim-bardhaman",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkjdq00e6osffi321lj9y",
+    "name": "Paschim Medinipur",
+    "slug": "paschim-medinipur",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 9,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkihf00e1osffuy38kxaa",
+    "name": "Purba Bardhaman",
+    "slug": "purba-bardhaman",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 3,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkjk500e7osff8wwpf06r",
+    "name": "Purba Medinipur",
+    "slug": "purba-medinipur",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 4,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubieizf008ch8ffiq3ry59v",
+    "name": "Puri",
+    "slug": "puri",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkj0q00e4osffz3wj1xgz",
+    "name": "Purulia",
+    "slug": "purulia",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkhy600dyosffz66neena",
+    "name": "South 24 Parganas",
+    "slug": "south-24-parganas",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiehoz0085h8ff8fw3cyhw",
+    "name": "Una",
+    "slug": "una",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 2,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubbkgeo00dqosffl8zz2rf1",
+    "name": "Uttar Dinajpur",
+    "slug": "uttar-dinajpur",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 1,
+    "hasTemples": true
+  },
+  {
+    "id": "cmubiehhx0084h8ffsw9n691v",
+    "name": "West Bengal Central",
+    "slug": "west-bengal-central",
+    "stateCode": "WB",
+    "stateName": "West Bengal",
+    "templeCount": 0,
+    "hasTemples": false
+  }
+]

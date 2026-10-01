@@ -35,10 +35,13 @@ export async function GET(req: NextRequest) {
   const verifiedOnly = searchParams.get("verifiedOnly") === "true" || searchParams.get("verifiedOnly") === "1";
   const limit = Math.min(300, Math.max(10, parseInt(searchParams.get("limit") || "150", 10)));
 
-  const stateFilter = searchParams.get("state")?.trim() || null;
+  const rawState = searchParams.get("state")?.trim() || null;
+  const stateFilter = rawState ? (rawState.includes(",") ? rawState.split(",").pop()!.trim() : rawState) : null;
   const districtFilter = searchParams.get("district")?.trim() || null;
   const cityFilter = searchParams.get("city")?.trim() || null;
-  const qFilter = searchParams.get("q")?.trim() || null;
+  const rawQ = searchParams.get("q")?.trim() || null;
+  const qNearMatch = rawQ ? rawQ.match(/(?:temples?\s+(?:near|around|in|at|of)\s+|places?\s+(?:near|around|in|at|of)\s+|near\s+|around\s+|in\s+)(.+)/i) : null;
+  const qFilter = qNearMatch ? qNearMatch[1].trim() : rawQ;
 
   const isAllIndia = searchParams.get("allIndia") === "true" || searchParams.get("scope") === "all";
   const isBboxScope = searchParams.get("scope") === "bbox";

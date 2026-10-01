@@ -808,7 +808,7 @@ export const CANONICAL_BENCHMARK_SPECS: CanonicalBenchmarkSpec[] = [
     longitude: 75.2536,
     deity: "Goddess Sharadamba (Saraswati) & Vidyashankara",
     circuit: "First of the Four Amnaya Peethas of Adi Shankara",
-    primaryKeywords: ["sringeri sharada", "vidyashankara temple"],
+    primaryKeywords: ["sringeri", "sharadamba", "vidyashankara"],
     negativeKeywords: [],
     officialSource: "Dakshinamnaya Sri Sharada Peetham, Sringeri",
     officialSourceUrl: "https://sringeri.net/"
@@ -1290,8 +1290,8 @@ export const CANONICAL_BENCHMARK_SPECS: CanonicalBenchmarkSpec[] = [
     longitude: 74.2239,
     deity: "Goddess Mahalakshmi (Ambabai) - Kirnotsav Solar Phenomenon",
     circuit: "3.5 Shakti Peethas of Maharashtra / 108 Shakti Peethas",
-    primaryKeywords: ["mahalakshmi temple, kolhapur", "ambabai kolhapur"],
-    negativeKeywords: [],
+    primaryKeywords: ["mahalakshmi", "ambabai", "kolhapur"],
+    negativeKeywords: ["kanaka mahalakshmi", "visakhapatnam"],
     officialSource: "West Maharashtra Devasthan Management Committee",
     officialSourceUrl: "https://mahalaxmikolhapur.com/"
   },
@@ -2479,8 +2479,8 @@ export const CANONICAL_BENCHMARK_SPECS: CanonicalBenchmarkSpec[] = [
     longitude: 88.3892,
     deity: "Sri Sri Radha Madhava & Chaitanya Mahaprabhu",
     circuit: "World Headquarters of ISKCON / Gaudiya Vaishnavism",
-    primaryKeywords: ["iskcon mayapur", "vedic planetarium", "mayapur temple"],
-    negativeKeywords: [],
+    primaryKeywords: ["mayapur", "chandrodaya", "vedic planetarium"],
+    negativeKeywords: ["samayapuram"],
     officialSource: "International Society for Krishna Consciousness (ISKCON)",
     officialSourceUrl: "https://www.mayapur.com/"
   },

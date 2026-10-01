@@ -1232,6 +1232,8 @@ export function MapExplorer() {
               type: "locality",
               title: loc.name,
               subtitle: `Locality · ${loc.parent}`,
+              district: loc.district,
+              state: loc.state,
               lat: loc.latitude,
               lng: loc.longitude,
               zoom: loc.zoom || 13.5,
@@ -1241,7 +1243,7 @@ export function MapExplorer() {
 
         // 4. Exact Destinations (Places & Temples)
         if (Array.isArray(data.destinations)) {
-          for (const dest of data.destinations.slice(0, 6)) {
+          for (const dest of data.destinations.slice(0, 8)) {
             const visual = getCategoryVisual(dest.category);
             results.push({
               type: "destination",
@@ -1302,10 +1304,11 @@ export function MapExplorer() {
         void fetchViewportTemples(map, filterCategory, null, false);
       }
     } else if (s.type === "district") {
+      const cleanState = s.state ? (s.state.includes(",") ? s.state.split(",").pop()!.trim() : s.state) : undefined;
       const newLoc: ActiveLocationFilter = {
         type: "district",
         name: s.title,
-        state: s.state,
+        state: cleanState,
         lat: s.lat || 13.9299,
         lng: s.lng || 75.5681,
         zoom: s.zoom || 10.2,
@@ -1313,7 +1316,7 @@ export function MapExplorer() {
       setActiveLocation(newLoc);
       updateUrlParams({
         district: s.title,
-        state: s.state || null,
+        state: cleanState || null,
         city: null,
         q: null,
       });
@@ -1328,10 +1331,12 @@ export function MapExplorer() {
       }
       void fetchViewportTemples(map, filterCategory, newLoc, true);
     } else if (s.type === "locality") {
+      const cleanState = s.state ? (s.state.includes(",") ? s.state.split(",").pop()!.trim() : s.state) : undefined;
       const newLoc: ActiveLocationFilter = {
         type: "city",
         name: s.title,
-        state: s.state,
+        district: s.district,
+        state: cleanState,
         lat: s.lat || 15.335,
         lng: s.lng || 76.46,
         zoom: s.zoom || 13.5,
@@ -1339,8 +1344,8 @@ export function MapExplorer() {
       setActiveLocation(newLoc);
       updateUrlParams({
         city: s.title,
-        district: null,
-        state: s.state || null,
+        district: s.district || null,
+        state: cleanState || null,
         q: null,
       });
 
@@ -1428,6 +1433,8 @@ export function MapExplorer() {
               type: "locality",
               title: loc.name,
               subtitle: `Locality · ${loc.parent}`,
+              district: loc.district,
+              state: loc.state,
               lat: loc.latitude,
               lng: loc.longitude,
               zoom: loc.zoom || 13.5,
